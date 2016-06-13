@@ -1,0 +1,74 @@
+<div class="page-header">
+    <h1>{{selectedProject.number}} {{selectedProject.name}}</h1>
+</div>
+
+<div class="container">
+	<div class="row">
+		<form>
+			<div class="form-group row">
+				<label class="form-control-label col-sm-2" for="configName">Configuration Name:</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="configName" placeholder="Name" ng-model="newConfig.name">
+				</div>	
+			</div>
+		</form>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Files</h3>
+			</div>
+			<div class="panel-body">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>File</th>
+							<th></th>
+						</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="file in newConfig.files">
+								<td>{{file.centralPath}}</td>
+								<td><button type="button" class="btn btn-secondary-outline" ng-click="deleteFile(file.centralPath)">Remove</button></td>
+							</tr>
+						</tbody>
+					</table>
+				<form class ="form-horizontal">
+					<fieldset class="form-group">
+						<label class="control-label col-sm-2" for="formNewFile">New File: </label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" id="formNewFile" placeholder="File Path" ng-model="newFile">
+						</div>
+						<div class="col-sm-2">
+							<button type="button" class="btn" ng-click="addFile()">Add</button>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+		<div class="panel panel-default" ng-repeat="updater in newConfig.updaters" style="margin-top:10px;">
+			<div class="panel-heading">
+				<h3 class="panel-title">{{updater.updaterName}}</h3>
+			</div>
+			<div class="panel-body">
+				<p class="text-muted">{{updater.description}}</p>
+				<form>
+					<fieldset class="form-group">
+						<label>Updater On/Off</label></br>
+						<label class="switch">
+							<input type = "checkbox" ng-model="updater.isUpdaterOn">
+							<div class="slider round"></div>
+						</label>
+					</fieldset>
+					<fieldset class="form-group">
+						<label for="formCategory">Categories</label>
+						<ul ng-repeat="trigger in updater.categoryTriggers" class="list-unstyled">
+							<li><input type="checkbox" ng-model="trigger.isEnabled" ng-disabled="trigger.locked">{{trigger.categoryName}}</li>
+						<ul>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
+	<button type="submit" class="btn  btn-primary pull-right" ng-click="addConfiguration()" style="margin:5px;">Add Configuration</button>
+	<a href="#/projects/{{projectId}}" class="btn btn-primary pull-right" role="button" style="margin:5px;">Cancel</a>
+</form>
+</div>
