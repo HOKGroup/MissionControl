@@ -1,4 +1,5 @@
-var mongoose = require('mongoose'),
+var mongoose = require('mongoose');
+var global = require('./socket/global');
 
 Office = mongoose.model('Office');
 
@@ -20,6 +21,7 @@ OfficeService = {
   add : function(req, res) {
     Office.create(req.body, function (err, office) {
       if (err) return console.log(err);
+	  global.io.sockets.emit('add_office', req.body);
       return res.send(office);
     });
   },
@@ -32,6 +34,7 @@ OfficeService = {
       function (err, numberAffected) {
         if (err) return console.log(err);
         console.log('Updated %s instances', numberAffected.toString());
+		global.io.sockets.emit('update_office', req.body);
         return res.sendStatus(202);
     });
   },

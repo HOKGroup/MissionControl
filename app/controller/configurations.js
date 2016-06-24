@@ -1,4 +1,5 @@
-var mongoose = require('mongoose'),
+var mongoose = require('mongoose');
+var global = require('./socket/global');
 
 Configuration = mongoose.model('Configuration');
 
@@ -35,6 +36,7 @@ ConfigurationService = {
    add : function(req, res) {
     Configuration.create(req.body, function (err, result) {
       if (err) return console.log(err);
+	  global.io.sockets.emit('add_configuration', req.body);
       return res.send(result);
     });
   },
@@ -48,6 +50,7 @@ ConfigurationService = {
       function (err, numberAffected) {
         if (err) return console.log(err);
         console.log('Updated %s instances', numberAffected.toString());
+		global.io.sockets.emit('update_configuration', req.body);
         return res.sendStatus(202);
     });
   },

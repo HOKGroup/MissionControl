@@ -14,10 +14,12 @@ var express = require('express');
 var mongoose = require( 'mongoose' );
 var bodyParser = require( 'body-parser' );
 var methodOverride = require('method-override');
+var io = require('socket.io');
+var global = require('./app/controller/socket/global');
 
 var app = express();
 
-var localMongo = false;
+var localMongo = true;
 
 if(localMongo){
 	//local database
@@ -40,7 +42,7 @@ app.use(methodOverride('X-HTTP-Method-Override'));
 // set the static files location /public/img will be /img for users
 app.use(express.static(__dirname + '/public')); 
 
-require( './app/routes' )( app );
+require('./app/routes')(app);
 
 app.get( '/', function( request, response ) {
   response.sendfile('./public/index.html');
@@ -55,9 +57,19 @@ app.set( 'port', process.env.PORT || 80 );
 var server = app.listen(
   app.get( 'port' ),
   function() {
-    console.log( 'DTM Tool server '
+    console.log( 'HOK Revit Machine Control server '
                 + pkg.version
                 + ' listening at port '
                 + server.address().port + ' with '
-                + 'hosted mongo db.'); }
+                + 'hosted mongo db.'); 
+				
+	global.io = io(server);
+
+    global.io.on('connection', function(client){
+      console.log('a client connected to the socket');
+    });
+	
+				}
 );
+
+

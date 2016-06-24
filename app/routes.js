@@ -1,12 +1,12 @@
- var project = require('./models/project');
- var configuration = require('./models/configuration');
+var project = require('./models/project');
+var configuration = require('./models/configuration');
  //var projectFile = require('./models/project_file');
  //var projectUpdater = require('./models/project_updater');
  //var categoryTrigger = require('./models/category_trigger');
- var triggerRecord = require('./models/trigger_record');
+var triggerRecord = require('./models/trigger_record');
  
  module.exports = function(app) {
-	
+		
 	var projects = require('./controller/projects');
 	app.get('/api/v1/projects', projects.findAll);
 	app.get('/api/v1/projects/sort', projects.findAndSort);

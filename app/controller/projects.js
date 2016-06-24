@@ -1,4 +1,5 @@
-var mongoose = require('mongoose'),
+var mongoose = require('mongoose');
+var global = require('./socket/global');
 
 Project = mongoose.model('Project');
 
@@ -51,6 +52,7 @@ ProjectService = {
   add : function(req, res) {
     Project.create(req.body, function (err, project) {
       if (err) return console.log(err);
+	  global.io.sockets.emit('add_project', req.body);
       return res.send(project);
     });
   },
@@ -63,6 +65,7 @@ ProjectService = {
       function (err, numberAffected) {
         if (err) return console.log(err);
         console.log('Updated %s instances', numberAffected.toString());
+		global.io.sockets.emit('update_project', req.body);
         return res.sendStatus(202);
     });
   },
