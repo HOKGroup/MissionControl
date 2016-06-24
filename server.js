@@ -19,7 +19,7 @@ var global = require('./app/controller/socket/global');
 
 var app = express();
 
-var localMongo = true;
+var localMongo = false;
 
 if(localMongo){
 	//local database
