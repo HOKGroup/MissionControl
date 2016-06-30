@@ -29,7 +29,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 			updaterName:'DTM Tool',
 			description:'This tool will display an alert message when Revit users try to modify elements of selected categories.',
 			addInId:'9C4D37B2-155D-4AC8-ACCF-383D86673F1C',
-			addInName:'DTM Tool',
+			addInName:'Mission Control',
 			isUpdaterOn: true,
 			categoryTriggers:[
 			{
@@ -67,8 +67,8 @@ function($scope, $routeParams, ConfigFactory, $window){
 			updaterId:'C2C658D7-EC43-4721-8D2C-2B8C10C340E2',
 			updaterName:'CA Door',
 			description:'This tool will monitor door families to apply proper door clearance values following ADA standards for accessible design.',
-			addInId:'A27F1E68-A2AB-434C-9E31-34E79FB9A419',
-			addInName:'CA Door',
+			addInId:'9C4D37B2-155D-4AC8-ACCF-383D86673F1C',
+			addInName:'Mission Control',
 			isUpdaterOn: false,
 			categoryTriggers:[
 			{
@@ -85,8 +85,8 @@ function($scope, $routeParams, ConfigFactory, $window){
 			updaterId:'0504A758-BF15-4C90-B996-A795D92B42DB',
 			updaterName:'Revision Tracker',
 			description:'This tool will push updates to database when modification made on revision items.',
-			addInId:'3E9DE71C-B02B-414C-AC79-20DDC1212B58',
-			addInName:'Revision Tracker',
+			addInId:'9C4D37B2-155D-4AC8-ACCF-383D86673F1C',
+			addInName:'Mission Control',
 			isUpdaterOn: false,
 			categoryTriggers:[
 			{
