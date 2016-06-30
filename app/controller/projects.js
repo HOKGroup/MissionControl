@@ -37,7 +37,7 @@ ProjectService = {
   
    findByConfigurationId : function(req, res){
     var id = req.params.configid;
-    Project.find({'configurations._id':id},function(err, result) {
+    Project.find({'configurations':id},function(err, result) {
       return res.send(result);
     });
   },

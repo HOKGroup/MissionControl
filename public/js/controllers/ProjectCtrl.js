@@ -7,6 +7,7 @@ function($scope, ProjectFactory){
 	$scope.newProject= {}; 
 	$scope.selectedProject ={};
 	$scope.filteredProject={};
+	$scope.gPlace={};
 	
 	getProjects();
 	
@@ -53,7 +54,8 @@ function($scope, ProjectFactory){
 		var project = {
 			number: $scope.newProject.number,
 			name: $scope.newProject.name,
-			office: $scope.newProject.office
+			office: $scope.newProject.office,
+			address:$scope.newProject.address
 			};
 		
 			ProjectFactory.addProject(project)
@@ -64,6 +66,7 @@ function($scope, ProjectFactory){
 				$scope.newProject.number='';
 				$scope.newProject.name='';
 				$scope.newProject.office='';
+				$scope.newProject.address={};
 
 			},function(error){
 				$scope.status = 'Unable to add project: '+ error.message;

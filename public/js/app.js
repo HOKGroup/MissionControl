@@ -1,1 +1,1 @@
-angular.module('DTMApp', ['ngRoute', 'appRoutes', 'ProjectCtlr', 'ConfigCtrl', 'AddConfigCtrl', 'ProjectService', 'ConfigService']);
+angular.module('MissionControlApp', ['ngRoute', 'appRoutes', 'ProjectCtlr', 'ConfigCtrl', 'AddConfigCtrl', 'ProjectService', 'ConfigService', 'ProjectDir']);
