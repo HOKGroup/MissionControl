@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var configSchema = new Schema(
   { 
     name      : String,
-    files	:[{ centralPath:String }],
+    files	:[{   centralPath:String }],
 	updaters  :
 	[{
 		updaterId: String, 
@@ -24,6 +24,8 @@ var configSchema = new Schema(
 	}]
   }
 );
+
+configSchema.index({'files.centralPath': 'text'});
 
 var Configuration = mongoose.model( 'Configuration', configSchema );
 /*

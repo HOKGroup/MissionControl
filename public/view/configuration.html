@@ -50,6 +50,7 @@
 							<label class="control-label col-sm-2" for="formNewFile">New File: </label>
 							<div class="col-sm-8">
 								<input type="text" class="form-control" id="formNewFile" placeholder="File Path" ng-model="newFile">
+								<p class="text-warning">{{warningMsg}}</p>
 							</div>
 							<div class="col-sm-2">
 								<button type="button" class="btn" ng-click="addFile()">Add</button>

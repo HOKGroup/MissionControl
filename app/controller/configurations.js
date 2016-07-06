@@ -19,12 +19,23 @@ ConfigurationService = {
   },
 
   findByFilePath : function(req, res){
-    var id = req.params.filepath;
-    Configuration.find({'files.centralPath':id},function(err, result) {
+    var filepath = req.params.filepath; 
+    Configuration.find({'files.centralPath':filepath},function(err, result) {
       return res.send(result);
     });
   },
   
+  findByEncodedURI : function(req, res){
+    var uri = req.params.uri; 
+	var decodedUri = decodeURIComponent(uri);
+	Configuration.find({$text:{$search: decodedUri}}, { score : { $meta: "textScore" } })
+	.sort({ score : { $meta : 'textScore' } }).limit(2)
+	.exec(function(err, result){
+		if(err){console.log(err);}
+		return res.send(result);
+	});
+  },
+
   findByUpdaterId : function(req, res){
     var id = req.params.id;
 	var updaterid = req.params.updaterid;
@@ -32,6 +43,16 @@ ConfigurationService = {
       return res.send(result);
     });
   },
+  
+ /*  populateById : function(req, res){
+    var id = req.params.id;
+    Project.findOne({'_id':id})
+	.populate({ path: 'files'})
+	.exec(function(err, result) {
+		 if (err) return console.log(err);
+      return res.send(result);
+    });
+  }, */
   
    add : function(req, res) {
     Configuration.create(req.body, function (err, result) {

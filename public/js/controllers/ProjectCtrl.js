@@ -90,6 +90,16 @@ function($scope, ProjectFactory){
                 var project = $scope.projects[i];
                 if (project._id === id) {
                     $scope.projects.splice(i, 1);
+					//delete configurations
+					for(var j = 0; j < project.configurations.length; j++){
+						var configId = project.configurations[i];
+						ProjectFactory.deleteConfiguration(configId)
+						.then(function(response){
+							$scope.status = 'Configuration Deleted';
+						},function(error){
+							$scope.status = 'Unable to delete configuration' +error.message;
+						});
+					}
                     break;
                 }
             }

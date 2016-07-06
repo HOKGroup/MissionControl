@@ -4,9 +4,10 @@ app.controller('AddConfigController', ['$scope', '$routeParams','ConfigFactory',
 function($scope, $routeParams, ConfigFactory, $window){
 	$scope.status;
 	$scope.projectId = $routeParams.projectId;
-	$scope.selectedProject;
-	$scope.newConfig;
+	$scope.selectedProject={};
+	$scope.newConfig={};
 	$scope.newFile;
+	$scope.warningMsg='';
 	
 	getSelectedProject($scope.projectId);
 	setDefaultConfig();
@@ -110,13 +111,53 @@ function($scope, $routeParams, ConfigFactory, $window){
 	
 	$scope.addFile = function(){
 		var filePath = $scope.newFile;
-		if(filePath.length >0 )
-		{
-			var file= {centralPath:filePath};
-			$scope.newConfig.files.push(file);
-			$scope.status='File added';
-			$scope.newFile = '';
-		}
+		var encodedUri = encodeURIComponent(filePath);
+		$scope.warningMsg='';
+		
+		ConfigFactory.getByEncodedUri(encodedUri)
+		.then(function(response){
+			var configFound = response.data;
+			var configNames = '';
+			var configMatched = false;
+			if(configFound.length > 0)
+			{
+				for(var i = 0; i < configFound.length; i++)
+				{
+					var config = configFound[i];
+					for(var j=0; j<config.files.length; j++)
+					{
+						var file = config.files[j];
+						if(file.centralPath.toLowerCase() == filePath.toLowerCase())
+						{
+							configMatched = true;
+							configNames+=' ['+config.name+'] '; 
+							break;
+						}
+					}
+				}
+			}
+			
+			if(configMatched)
+			{
+				$scope.warningMsg= 'Warning! File already exists in other configurations.\n'+ configNames;
+			}
+			else
+			{
+				if(filePath.length >0 )
+				{
+					var file= 
+					{
+						centralPath:filePath
+					};
+					$scope.newConfig.files.push(file);
+					$scope.status='File added';
+					$scope.newFile = '';
+				}
+			}
+
+		}, function(error){
+			$scope.status = 'Unable to get configuration data: '+error.message;
+		});
 	};
 	
 	$scope.deleteFile = function(filepath){
@@ -137,20 +178,13 @@ function($scope, $routeParams, ConfigFactory, $window){
 		.then(function(response){
 			$scope.status = 'Configuration added';
 			var configId = response.data._id;
-			ConfigFactory.getProjectById($scope.projectId)
+			ConfigFactory.addConfigToProject($scope.projectId, configId)
 			.then(function(response){
-				var project = response.data;
-				project.configurations.push(configId);
-				ConfigFactory.updateProject(project)
-				.then(function(response){
-					$scope.status = 'Project updated';
-					$window.location.assign('#/projects/'+$scope.projectId);
-				}, function(error){
-					$scope.status = 'Unable to update project';
-				});
+				$scope.status = 'Project updated';
+				$window.location.assign('#/projects/'+$scope.projectId);
 			}, function(error){
-				$scope.status='Unable to get project: '+error.message;
-			});			
+				$scope.status='Unable to add to project: '+error.message;
+			});
 		}, function(error){
 			$scope.status = 'Unabl to add configuration: ' + error.message;
 		});

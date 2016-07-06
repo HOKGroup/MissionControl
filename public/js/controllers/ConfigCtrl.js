@@ -9,8 +9,9 @@ function($scope, $routeParams, ConfigFactory, $window){
 	$scope.selectedConfig;
 	$scope.filteredConfig;
 	$scope.newFile;
-	$scope.newConfig;
+	$scope.warningMsg='';
 	
+	//get populated configurations
 	getSelectedProjectConfiguration($scope.projectId);
 
 	function getSelectedProjectConfiguration(projectId) {
@@ -21,12 +22,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 			if($scope.configurations.length > 0)
 			{
 				 var config = $scope.configurations[0];
-				ConfigFactory.getConfigurationById(config._id)
-				.then(function(response) {
-					$scope.selectedConfig = response.data;
-				}, function(error){
-					$scope.status = 'Unable to get configuration by Id: '+id+'  '+error.message;
-				});
+				 getSelectedConfiguraiton(config._id);
 			}
 			
 		},function(error){
@@ -43,33 +39,68 @@ function($scope, $routeParams, ConfigFactory, $window){
 		});
 	};
 	
-	$scope.getConfigurationById = function(id){
-		ConfigFactory.getConfigurationById(id)
-		.then(function(response) {
+	function getSelectedConfiguraiton(configId){
+		ConfigFactory.getConfigurationById(configId)
+		.then(function(response){
 			$scope.selectedConfig = response.data;
-		}, function(error){
-			$scope.status = 'Unable to get configuration by Id: '+id+'  '+error.message;
+		},function(error){
+			$scope.status='Unable to get by config Id: '+configId;
 		});
 	};
+	
+	$scope.getConfigurationById = getSelectedConfiguraiton;
 
-	
-	$scope.getByFileId = function(fileId){
-		ConfigFactory.getByFileId(fileId)
-		.then(function(response) {
-			$scope.filteredConfig = response.data;
-		}, function(error){
-			$scope.status = 'Unable to get by file Id: '+fileId+'  '+error.message;
-		});
-	};
-	
 	$scope.addFile = function(){
-		var file = { centralPath: $scope.newFile };
-		if(filePath.length >0 )
-		{
-			$scope.selectedConfig.files.push(file);
-			$scope.newFile='';
-			$scope.status='File added';
-		}
+		var filePath = $scope.newFile;
+		var encodedUri = encodeURIComponent(filePath);
+		$scope.warningMsg='';
+		
+		ConfigFactory.getByEncodedUri(encodedUri)
+		.then(function(response){
+			var configFound = response.data;
+			var configNames = '';
+			var configMatched = false;
+			if(configFound.length > 0)
+			{
+				//find an exact match from text search result
+				for(var i = 0; i < configFound.length; i++)
+				{
+					var config = configFound[i];
+					for(var j=0; j<config.files.length; j++)
+					{
+						var file = config.files[j];
+						if(file.centralPath.toLowerCase() == filePath.toLowerCase())
+						{
+							configMatched = true;
+							configNames+=' ['+config.name+'] '; 
+							break;
+						}
+					}
+				}
+			}
+			
+			if(configMatched)
+			{
+				$scope.warningMsg= 'Warning! File already exists in other configurations.\n'+ configNames;
+			}
+			else
+			{
+				if(filePath.length >0 )
+				{
+					var file= 
+					{
+						centralPath:filePath
+					};
+					$scope.selectedConfig.files.push(file);
+					$scope.status='File added';
+					$scope.newFile = '';
+				}
+			}
+			
+		}, function(error){
+			$scope.status = 'Unable to get configuration data: '+error.message;
+		});
+		
 	};
 	
 	$scope.deleteFile = function(filePath){
@@ -109,6 +140,7 @@ function($scope, $routeParams, ConfigFactory, $window){
                 var config = $scope.configurations[i];
                 if (config._id === id) {
                     $scope.configurations.splice(i, 1);
+					ConfigFactory.deleteConfigFromProject($scope.projectId, id);
                     break;
                 }
             }

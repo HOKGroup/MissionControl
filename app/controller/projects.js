@@ -28,7 +28,7 @@ ProjectService = {
   populateById : function(req, res){
     var id = req.params.id;
     Project.findOne({'_id':id})
-	.populate('configurations')
+	.populate({ path: 'configurations'})
 	.exec(function(err, result) {
 		 if (err) return console.log(err);
       return res.send(result);
@@ -56,7 +56,7 @@ ProjectService = {
       return res.send(project);
     });
   },
-
+  
   update : function(req, res) {
     var id = req.params.id;
     //console.log(req.body);
@@ -70,6 +70,30 @@ ProjectService = {
     });
   },
 
+   addConfiguration : function(req, res){
+	  var projectId = req.params.id;
+	  var configId = req.params.configid;
+	  Project.update(
+		{ _id:projectId},
+		{ $push:{configurations: configId }},
+		function(err, numberAffected){
+			if(err) return console.log(err);
+			return res.sendStatus(202);
+	  });
+  },
+  
+  deleteConfiguration: function(req, res){
+	  var projectId = req.params.id;
+	  var configId=req.params.configid;
+	  Project.update(
+		{ _id:projectId},
+		{ $pull:{configurations: configId}},
+		function(err, data){
+			if(err) return console.log(err);
+			return res.sendStatus(202);
+	  });
+  },
+  
   delete : function(req, res){
     var id = req.params.id;
     Project.remove({'_id':id},function(result) {

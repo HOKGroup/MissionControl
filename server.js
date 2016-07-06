@@ -19,13 +19,13 @@ var global = require('./app/controller/socket/global');
 
 var app = express();
 
-var localMongo = false;
+var localMongo = true;
 
 if(localMongo){
 	//local database
 	var mongo_uri = 'mongodb://localhost:27017/revitmachinecontrol';
 } else{
-	var mongo_uri='mongodb://admin:admin@ds011024.mlab.com:11024/revitmachinecontrol';
+	var mongo_uri='mongodb://admin:admin@ds011495.mlab.com:11495/missioncontrol';
 }
 
 mongoose.connect(mongo_uri);
@@ -57,7 +57,7 @@ app.set( 'port', process.env.PORT || 80 );
 var server = app.listen(
   app.get( 'port' ),
   function() {
-    console.log( 'HOK Revit Machine Control server '
+    console.log( 'HOK Mission Control server '
                 + pkg.version
                 + ' listening at port '
                 + server.address().port + ' with '

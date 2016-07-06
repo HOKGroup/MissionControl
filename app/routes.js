@@ -1,6 +1,6 @@
 var project = require('./models/project');
 var configuration = require('./models/configuration');
- //var projectFile = require('./models/project_file');
+//var projectFile = require('./models/project_file');
  //var projectUpdater = require('./models/project_updater');
  //var categoryTrigger = require('./models/category_trigger');
 var triggerRecord = require('./models/trigger_record');
@@ -16,18 +16,22 @@ var triggerRecord = require('./models/trigger_record');
 	app.get('/api/v1/projects/office/:office', projects.findByOffice);
     app.post('/api/v1/projects', projects.add);
     app.put('/api/v1/projects/:id', projects.update);
+	app.put('/api/v1/projects/:id/addconfig/:configid', projects.addConfiguration);
+	app.put('/api/v1/projects/:id/deleteconfig/:configid', projects.deleteConfiguration);
     app.delete('/api/v1/projects/:id', projects.delete);
 	
 	var config = require('./controller/configurations');
 	app.get('/api/v1/configurations', config.findAll);
     app.get('/api/v1/configurations/:id', config.findById);
-	app.get('/api/v1/configurations/filepath/:filepath', config.findByFilePath);
+	//app.get('/api/v1/configurations/populate/:id', config.populateById);
+	app.get('/api/v1/configurations/filepath/:filepath*', config.findByFilePath);
+	app.get('/api/v1/configurations/uri/:uri*', config.findByEncodedURI);
 	app.get('/api/v1/configurations/:id/updaterid/:updaterid', config.findByUpdaterId);
     app.post('/api/v1/configurations', config.add);
     app.put('/api/v1/configurations/:id', config.update);
     app.delete('/api/v1/configurations/:id', config.delete);
 	
-	/*
+ /*
 	var projectfiles = require('./controller/projectfiles');
 	app.get('/api/v1/projectfiles', projectfiles.findAll);
     app.get('/api/v1/projectfiles/:id', projectfiles.findById);
@@ -35,7 +39,8 @@ var triggerRecord = require('./models/trigger_record');
     app.post('/api/v1/projectfiles', projectfiles.add);
     app.put('/api/v1/projectfiles/:id', projectfiles.update);
     app.delete('/api/v1/projectfiles/:id', projectfiles.delete);
-
+	
+ 
 	var projectupdaters = require('./controller/projectupdaters');
 	app.get('/api/v1/projectupdaters', projectupdaters.findAll);
     app.get('/api/v1/projectupdaters/:id', projectupdaters.findById);

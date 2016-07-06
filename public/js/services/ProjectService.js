@@ -33,5 +33,9 @@ app.factory('ProjectFactory', ['$http', function($http){
 		return $http.delete(urlBase + '/' + id);
 	};
 	
+	dataFactory.deleteConfiguration = function(configId){
+		return $http.delete('/api/v1/configurations/'+configId);
+	};
+	
 	return dataFactory;
 }]);
