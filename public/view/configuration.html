@@ -98,7 +98,7 @@
 							<tr ng-repeat="record in selectedRecords">
 								<td>{{record.centralPath}}</td>
 								<td>{{record.categoryName}}</td>
-								<td>{{record.edited || date:'MM/dd/yyyy h:mm:ssa'}}</td>
+								<td>{{record.edited | date:"MM/dd/yyyy h:mm:ssa" }}</td>
 								<td>{{record.editedBy}}</td>
 							</tr>
 						</table>
