@@ -7,6 +7,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 	$scope.selectedProject;
 	$scope.configurations;
 	$scope.selectedConfig;
+	$scope.selectedRecords;
 	$scope.filteredConfig;
 	$scope.newFile;
 	$scope.warningMsg='';
@@ -43,6 +44,12 @@ function($scope, $routeParams, ConfigFactory, $window){
 		ConfigFactory.getConfigurationById(configId)
 		.then(function(response){
 			$scope.selectedConfig = response.data;
+			ConfigFactory.getRecordsByConfigId(configId)
+			.then(function(response){
+				$scope.selectedRecords = response.data;
+			},function(error){
+				$scope.status ='Unable to get records by config Id: '+configId;
+			});
 		},function(error){
 			$scope.status='Unable to get by config Id: '+configId;
 		});

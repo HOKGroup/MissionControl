@@ -181,7 +181,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 			ConfigFactory.addConfigToProject($scope.projectId, configId)
 			.then(function(response){
 				$scope.status = 'Project updated';
-				$window.location.assign('#/projects/'+$scope.projectId);
+				$window.location.assign('#/projects/configurations/'+$scope.projectId);
 			}, function(error){
 				$scope.status='Unable to add to project: '+error.message;
 			});

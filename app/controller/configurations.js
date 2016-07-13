@@ -29,7 +29,7 @@ ConfigurationService = {
     var uri = req.params.uri; 
 	var decodedUri = decodeURIComponent(uri);
 	Configuration.find({$text:{$search: decodedUri}}, { score : { $meta: "textScore" } })
-	.sort({ score : { $meta : 'textScore' } }).limit(2)
+	.sort({ score : { $meta : 'textScore' } }).limit(5)
 	.exec(function(err, result){
 		if(err){console.log(err);}
 		return res.send(result);
@@ -57,7 +57,7 @@ ConfigurationService = {
    add : function(req, res) {
     Configuration.create(req.body, function (err, result) {
       if (err) return console.log(err);
-	  global.io.sockets.emit('add_configuration', req.body);
+	  //global.io.sockets.emit('add_configuration', req.body);
       return res.send(result);
     });
   },
@@ -71,7 +71,7 @@ ConfigurationService = {
       function (err, numberAffected) {
         if (err) return console.log(err);
         console.log('Updated %s instances', numberAffected.toString());
-		global.io.sockets.emit('update_configuration', req.body);
+		//global.io.sockets.emit('update_configuration', req.body);
         return res.sendStatus(202);
     });
   },

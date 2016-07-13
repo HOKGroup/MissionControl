@@ -1,0 +1,163 @@
+<div class="page-header">
+    <h1>{{selectedProject.number}} {{selectedProject.name}}</h1>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="panel panel-default" style="margin-top:10px">
+		<div class="panel-heading">
+			<h3 class="panel-title">Project Info</h3>
+		</div>
+        <div class="panel-body">
+             <form>
+				<fieldset class="form-group">
+					<label for="formProjectNumber">Project Number</label>
+					<input type="text" class="form-control" id="formProjectNumber" placeholder="00.00000.00" ng-model="selectedProject.number">
+				</fieldset>
+				<fieldset class="form-group">
+					<label for="formProjectName">Project Name</label>
+					<input type="text" class="form-control" id="formProjectName" placeholder="Project Name" ng-model="selectedProject.name">
+				</fieldset>
+				<fieldset class="form-group">
+					<label for="formOfficeSelect">Office</label>
+					<select class="form-control" id="formOfficeSelect" ng-model="selectedProject.office">
+						<option value="ATL">Atlanta</option>
+						<option value="CHI">Chicago</option>
+						<option value="HK">Hong Kong</option>
+						<option value="HOU">Houston</option>
+						<option value="LA">Los Angeles</option>
+						<option value="LON">London</option>
+						<option value="NY">New York</option>
+						<option value="PHI">Philadelphia</option>
+						<option value="SF">San Francisco</option>
+						<option value="STL">St. Louis</option>
+						<option value="WDC">Washington, D.C</option>
+					</select>
+				</fieldset>
+				<fieldset class="form-group">
+					<label for="formProjectAddress">Project Address</label>
+					<input type="text" class="form-control" id="formProjectAddress" placeholder="Enter an address to auto-complete.(Recommended)" googleplace ng-model="selectedProject.addressEntered" details="selectedProject.address">
+				</fieldset>
+				<form class ="form-horizontal">
+					<fieldset class="form-group">
+						<label class="control-label col-sm-3 text-right" for="formStreet">Street Address</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="formStreet" placeholder="Street address, P.O. box, company name" ng-model="selectedProject.address.street1">
+						</div>
+					</fieldset>
+					<fieldset class="form-group">
+						<label class="control-label col-sm-3 text-right" for="formStreet2">Street Address2</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="formStreet2" placeholder="Apartment, suite, unit, building, floor, etc." ng-model="selectedProject.address.street2">
+						</div>
+					</fieldset>
+					<fieldset class="form-group">
+						<label class="control-label col-sm-3 text-right" for="formCity">City</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="formCity" ng-model="selectedProject.address.city">
+						</div>
+					</fieldset>
+					<fieldset class="form-group">
+						<label class="control-label col-sm-3 text-right" for="formState">State</label>
+						<div class="col-sm-9">
+							<select class="form-control" id="formState" ng-model="selectedProject.address.state">
+								<option value="AL">Alabama</option>
+								<option value="AK">Alaska</option>
+								<option value="AZ">Arizona</option>
+								<option value="AR">Arkansas</option>
+								<option value="CA">California</option>
+								<option value="CO">Colorado</option>
+								<option value="CT">Connecticut</option>
+								<option value="DE">Delaware</option>
+								<option value="DC">District Of Columbia</option>
+								<option value="FL">Florida</option>
+								<option value="GA">Georgia</option>
+								<option value="HI">Hawaii</option>
+								<option value="ID">Idaho</option>
+								<option value="IL">Illinois</option>
+								<option value="IN">Indiana</option>
+								<option value="IA">Iowa</option>
+								<option value="KS">Kansas</option>
+								<option value="KY">Kentucky</option>
+								<option value="LA">Louisiana</option>
+								<option value="ME">Maine</option>
+								<option value="MD">Maryland</option>
+								<option value="MA">Massachusetts</option>
+								<option value="MI">Michigan</option>
+								<option value="MN">Minnesota</option>
+								<option value="MS">Mississippi</option>
+								<option value="MO">Missouri</option>
+								<option value="MT">Montana</option>
+								<option value="NE">Nebraska</option>
+								<option value="NV">Nevada</option>
+								<option value="NH">New Hampshire</option>
+								<option value="NJ">New Jersey</option>
+								<option value="NM">New Mexico</option>
+								<option value="NY">New York</option>
+								<option value="NC">North Carolina</option>
+								<option value="ND">North Dakota</option>
+								<option value="OH">Ohio</option>
+								<option value="OK">Oklahoma</option>
+								<option value="OR">Oregon</option>
+								<option value="PA">Pennsylvania</option>
+								<option value="RI">Rhode Island</option>
+								<option value="SC">South Carolina</option>
+								<option value="SD">South Dakota</option>
+								<option value="TN">Tennessee</option>
+								<option value="TX">Texas</option>
+								<option value="UT">Utah</option>
+								<option value="VT">Vermont</option>
+								<option value="VA">Virginia</option>
+								<option value="WA">Washington</option>
+								<option value="WV">West Virginia</option>
+								<option value="WI">Wisconsin</option>
+								<option value="WY">Wyoming</option>
+							</select>
+						</div>
+					</fieldset>
+					<fieldset class="form-group">
+						<label class="control-label col-sm-3 text-right" for="formZip">Zip Code</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="formZip" ng-model="selectedProject.address.zipCode">
+						</div>
+					</fieldset>
+					<fieldset class="form-group">
+						<label class="control-label col-sm-3 text-right" for="formContury">Contury</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="formContury" ng-model="selectedProject.address.country">
+						</div>
+					</fieldset>
+					<fieldset class="form-group">
+						<label class="control-label col-sm-3 text-right" for="formLatitude">Latitude</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" id="formLatitude" ng-model="selectedProject.address.geoLocation.latitude">
+						</div>
+						<label class="control-label col-sm-3 text-right" for="formLongitude">Longitude</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" id="formLongitude" ng-model="selectedProject.address.geoLocation.longitude">
+						</div>
+					</fieldset>
+				</form>
+			</form>
+        </div>
+    </div>
+	<div class="panel panel-danger">
+		<div class="panel-heading">
+			<h3 class="panel-title">Danger Zone</h3>
+		</div>
+		<div class="panel-body">
+			<form>
+				<div class="form-group row">
+					<label class="col-sm-8">This button will delete this PROJECT and all related CONFIGURATIONS.</label>
+					<div class="col-sm-4">
+						<button type="submit" class="btn btn-danger pull-right" ng-click="deleteProject()">Delete</button>
+					</div>	
+				</div>
+			</form>
+		</div>
+	</div>
+	<button type="submit" class="btn btn-primary pull-right" ng-click="updateProject()" style="margin:5px;"><span class="glyphicon glyphicon-ok" ></span> Update Project</button>
+	<a href="#/projects" class="btn btn-primary pull-right" role="button" style="margin:5px;">Cancel</a>
+	
+  </div>
+</div>

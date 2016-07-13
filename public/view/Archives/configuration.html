@@ -8,16 +8,16 @@
     <h1>{{selectedProject.number}} {{selectedProject.name}}</h1>
 </div>
 
-<div class="container">
-	<div class="row row-offcanvas row-offcanvas-left">
-		<div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
-			<div class="list-group">
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-3 col-md-2 sidebar">
+			<div class="list-group" style="float:left;">
 			<a ng-repeat="config in configurations" href="" class="list-group-item" ng-click="getConfigurationById(config._id)" 
 			ng-class="{'active':selectedConfig._id==config._id}">{{config.name}}</a>
+			<a class="btn btn-primary-outline" href="#/configurations/add/{{selectedProject._id}}" style="margin-top:10px;" role="button">+ Add Configuration</a><br>
 			</div>
-			<a class="btn btn-large btn-default btn-block" href="#/configurations/add/{{selectedProject._id}}"><span class="glyphicon glyphicon-plus"></span> Add Configuration</a>
 		</div>
-		<div class="col-xs-12 col-sm-9">
+		<div class="col-sm-9" style="padding:5px;">
 			<form class="form-horizontal">
 				<div class="form-group row">
 					<label class="form-control-label col-sm-3" for="configName">Configuration Name:</label>
@@ -82,29 +82,6 @@
 					</form>
 				</div>
 			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title"><a data-toggle="collapse" data-target="#collapseOne" href="#collapseOne">Editing Records</a></h3>
-				</div>
-				<div id="collapseOne" class="panel-collapse collapse in">
-					<div class ="panel-body">
-						<table class="table table-hover">
-							<tr>
-								<th>Central Path</th>
-								<th>Category Name</th>
-								<th>Edited</th>
-								<th>Edited By</th>
-							</tr>
-							<tr ng-repeat="record in selectedRecords">
-								<td>{{record.centralPath}}</td>
-								<td>{{record.categoryName}}</td>
-								<td>{{record.edited}}</td>
-								<td>{{record.editedBy}}</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</div>
 			<div class="panel panel-danger">
 				<div class="panel-heading">
 					<h3 class="panel-title">Danger Zone</h3>
@@ -120,7 +97,7 @@
 					</form>
 				</div>
 			</div>
-			<button type="submit" class="btn  btn-primary pull-right" ng-click="updateConfiguration()"><span class="glyphicon glyphicon-ok"></span> Update</button>
+			<button type="submit" class="btn  btn-primary pull-right" ng-click="updateConfiguration()">Update</button>
 		</div>
 	</div>
 </div>

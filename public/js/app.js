@@ -1,1 +1,1 @@
-angular.module('MissionControlApp', ['ngRoute', 'appRoutes', 'ProjectCtlr', 'ConfigCtrl', 'AddConfigCtrl', 'ProjectService', 'ConfigService', 'ProjectDir']);
+angular.module('MissionControlApp', ['ngRoute', 'appRoutes', 'ProjectCtlr', 'AddProjectCtlr', 'EditProjectCtlr', 'ConfigCtrl', 'AddConfigCtrl', 'ProjectService', 'ConfigService', 'ProjectDir']);

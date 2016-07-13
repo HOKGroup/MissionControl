@@ -1,1 +1,48 @@
-body { padding-top:30px;}
+html {
+  position: relative;
+  min-height: 100%;
+}
+body { 
+	padding-top:30px;
+	margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+body > .container {
+  padding: 60px 15px 0;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+.panel-heading a:after {
+    font-family:'Glyphicons Halflings';
+    content:"\e114";
+    float: right;
+    color: grey;
+}
+.panel-heading a.collapsed:after {
+    content:"\e080";
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+code {
+  font-size: 80%;
+}
+
+#main-content-container{
+	margin-bottom: 200px;
+}
+
+

@@ -63,6 +63,7 @@ var triggerRecord = require('./models/trigger_record');
 	app.get('/api/v1/triggerrecords/centralpath/:centralpath*', triggerrecords.findByFilePath);
 	app.get('/api/v1/triggerrecords/updaterid/:updaterid', triggerrecords.findByUpdaterId);
 	app.get('/api/v1/triggerrecords/uniqueid/:uniqueid', triggerrecords.findByUniqueId);
+	app.get('/api/v1/triggerrecords/configid/:configid', triggerrecords.findByConfigId);
     app.post('/api/v1/triggerrecords', triggerrecords.add);
     app.put('/api/v1/triggerrecords/:id', triggerrecords.update);
     app.delete('/api/v1/triggerrecords/:id', triggerrecords.delete);

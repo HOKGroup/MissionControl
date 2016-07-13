@@ -11,8 +11,21 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
 			templateUrl: 'view/project.html',
 			controller: 'ProjectController'
 		})
+		
+		// add project
+		.when('/projects/add', {
+			templateUrl: 'view/add_project.html',
+			controller: 'AddProjectController'
+		})
+		
+		// edit project
+		.when('/projects/edit/:projectId', {
+			templateUrl: 'view/edit_project.html',
+			controller: 'EditProjectController'
+		})
+		
 		//show configuration
-		.when('/projects/:projectId', {
+		.when('/projects/configurations/:projectId', {
 			templateUrl: 'view/configuration.html',
 			controller: 'ConfigController'
 		})

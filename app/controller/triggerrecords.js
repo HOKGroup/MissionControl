@@ -31,6 +31,17 @@ TriggerRecordService = {
       return res.send(result);
     });
   },
+  
+    findByConfigId : function(req, res){
+    var configid = req.params.configid;
+    TriggerRecord.find({'configId':configid})
+	.limit(30)
+	.exec(function(err, result) {
+		if(err) return console.log(err);
+      return res.send(result);
+    });
+  },
+  
  
   findByUniqueId : function(req, res){
     var id = req.params.uniqueid;
@@ -42,7 +53,7 @@ TriggerRecordService = {
   add : function(req, res) {
     TriggerRecord.create(req.body, function (err, result) {
       if (err) return console.log(err);
-	  global.io.sockets.emit('add_record', req.body);
+	  //global.io.sockets.emit('add_record', req.body);
       return res.send(result);
     });
   },
@@ -56,7 +67,7 @@ TriggerRecordService = {
       function (err, numberAffected) {
         if (err) return console.log(err);
         console.log('Updated %s instances', numberAffected.toString());
-		global.io.sockets.emit('update_record', req.body);
+		//global.io.sockets.emit('update_record', req.body);
         return res.sendStatus(202);
     });
   },
