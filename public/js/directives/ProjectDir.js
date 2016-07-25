@@ -145,6 +145,7 @@ myApp.directive('googleDrawingMap', function(){
 			//convert polygon features to geoJSON
 			function convertToGeoPloygon(){
 				//combine seperate polygons into one MultiPolygon
+				scope.geoPolygon={};
 				scope.geoPolygon.type = 'MultiPolygon';
 				scope.geoPolygon.coordinates=[];
 				map.data.forEach(function(feature){
