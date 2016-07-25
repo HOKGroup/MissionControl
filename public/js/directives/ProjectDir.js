@@ -16,16 +16,7 @@ myApp.directive('googleDrawingMap', function(){
 
 			var selectedLayer;
 			var loading = true;			
-			/* if(scope.address ==undefined){
-				scope.address = {};
-			}
-			if(scope.geoLocation ==undefined){
-				scope.geoLocation = {};
-			}
-			if(scope.geoPolygon ==undefined){
-				scope.geoPolygon = {};
-			}
- */
+			
 			//initialize map view
 			var centerLatLng = new google.maps.LatLng(40.7539258, -73.98540909999997); //New York
 			
@@ -58,10 +49,14 @@ myApp.directive('googleDrawingMap', function(){
 				if(scope.initialized)
 				{
 					//add point feature
-					createPointFeature(scope.geoLocation);
-
+					if(scope.geoLocation!=undefined){
+						createPointFeature(scope.geoLocation);
+					}
+					
 					//add polygon feature
-					createPolygonFeature(scope.geoPolygon);
+					if(scope.geoPolygon!=undefined){
+						createPolygonFeature(scope.geoPolygon);
+					}
 				}					  
 			}, true);
 			
@@ -268,10 +263,13 @@ myApp.directive('googleDrawingMap', function(){
 					//clear out the old mark.
 					map.data.forEach(function(feature){
 						var geometry = feature.getGeometry();
-						var geoType = geometry.getType();
-						if(geoType == "Point")
+						if(null!=geometry)
 						{
-							map.data.remove(feature);
+							var geoType = geometry.getType();
+							if(geoType == "Point")
+							{
+								map.data.remove(feature);
+							}
 						}
 					});
 					
@@ -313,6 +311,13 @@ myApp.directive('googleDrawingMap', function(){
 							componentForm[addressType] = val; //replace value
 						}
 					}
+					
+					if(componentForm.street_number == 'short_name'){ componentForm.street_number=''}
+					if(componentForm.route == 'long_name'){ componentForm.route=''}
+					if(componentForm.locality == 'long_name'){ componentForm.locality=''}
+					if(componentForm.administrative_area_level_1 == 'short_name'){ componentForm.administrative_area_level_1=''}
+					if(componentForm.country == 'long_name'){ componentForm.country=''}
+					if(componentForm.postal_code == 'short_name'){ componentForm.postal_code=''}
 					
 					address.street1= componentForm.street_number + " "+ componentForm.route;
 					address.city = componentForm.locality;
