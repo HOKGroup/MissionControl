@@ -276,9 +276,22 @@ Aggregate.prototype.near = function(arg) {
 Aggregate.prototype.unwind = function() {
   var args = utils.args(arguments);
 
-  return this.append.apply(this, args.map(function(arg) {
-    return {$unwind: (arg && arg.charAt(0) === '$') ? arg : '$' + arg};
-  }));
+  var res = [];
+  for (var i = 0; i < args.length; ++i) {
+    var arg = args[i];
+    if (arg && typeof arg === 'object') {
+      res.push({ $unwind: arg });
+    } else if (typeof arg === 'string') {
+      res.push({
+        $unwind: (arg && arg.charAt(0) === '$') ? arg : '$' + arg
+      });
+    } else {
+      throw new Error('Invalid arg "' + arg + '" to unwind(), ' +
+        'must be string or object');
+    }
+  }
+
+  return this.append.apply(this, res);
 };
 
 /**
@@ -474,6 +487,29 @@ Aggregate.prototype.cursor = function(options) {
 };
 
 /**
+ * Adds a [cursor flag](http://mongodb.github.io/node-mongodb-native/2.1/api/Cursor.html#addCursorFlag)
+ *
+ * ####Example:
+ *
+ *     var cursor = Model.aggregate(..).cursor({ batchSize: 1000 }).exec();
+ *     cursor.each(function(error, doc) {
+ *       // use doc
+ *     });
+ *
+ * @param {String} flag
+ * @param {Boolean} value
+ * @see mongodb http://mongodb.github.io/node-mongodb-native/2.1/api/Cursor.html#addCursorFlag
+ */
+
+Aggregate.prototype.addCursorFlag = function(flag, value) {
+  if (!this.options) {
+    this.options = {};
+  }
+  this.options[flag] = value;
+  return this;
+};
+
+/**
  * Executes the aggregate pipeline on the currently bound Model.
  *
  * ####Example:
@@ -552,6 +588,30 @@ Aggregate.prototype.exec = function(callback) {
           resolve(result);
         });
   });
+};
+
+/**
+ * Provides promise for aggregate.
+ *
+ * ####Example:
+ *
+ *     Model.aggregate(..).then(successCallback, errorCallback);
+ *
+ * @see Promise #promise_Promise
+ * @param {Function} [resolve] successCallback
+ * @param {Function} [reject]  errorCallback
+ * @return {Promise}
+ */
+Aggregate.prototype.then = function(resolve, reject) {
+  var _this = this;
+  var Promise = PromiseProvider.get();
+  var promise = new Promise.ES6(function(success, error) {
+    _this.exec(function(err, val) {
+      if (err) error(err);
+      else success(val);
+    });
+  });
+  return promise.then(resolve, reject);
 };
 
 /*!

@@ -35,6 +35,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 			categoryTriggers:[
 			{
 				categoryName:"Grids",
+				description:"Grid elements cannot be modified except 2D extents.",
 				isEnabled: false,
 				locked:false,
 				modifiedBy: "",
@@ -42,6 +43,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 			},
 			{
 				categoryName:"Levels",
+				description:"Level elements cannot be modified.",
 				isEnabled: false,
 				locked:false,
 				modifiedBy: "",
@@ -49,6 +51,15 @@ function($scope, $routeParams, ConfigFactory, $window){
 			},
 			{
 				categoryName:"Views",
+				description:"View template elements cannot be modified.",
+				isEnabled: false,
+				locked:false,
+				modifiedBy: "",
+				modified: Date.now()
+			},
+			{
+				categoryName:"Scope Boxes",
+				description:"Scope Boxe elements cannot be modified.",
 				isEnabled: false,
 				locked:false,
 				modifiedBy: "",
@@ -56,6 +67,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 			},
 			{
 				categoryName:"RVT Links",
+				description:"RVT Links cannot be modified.",
 				isEnabled: false,
 				locked:false,
 				modifiedBy: "",
@@ -74,6 +86,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 			categoryTriggers:[
 			{
 				categoryName:"Doors",
+				description:"Invalid Door Parameter.",
 				isEnabled: true,
 				locked:true,
 				modifiedBy: "",
@@ -92,6 +105,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 			categoryTriggers:[
 			{
 				categoryName:"Revisions",
+				description:"",
 				isEnabled: true,
 				locked:true,
 				modifiedBy: "",

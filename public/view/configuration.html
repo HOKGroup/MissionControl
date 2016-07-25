@@ -76,7 +76,10 @@
 						<fieldset class="form-group">
 							<label for="formCategory">Categories</label>
 							<ul ng-repeat="trigger in updater.categoryTriggers" class="list-unstyled">
-								<li><input type="checkbox" ng-model="trigger.isEnabled" ng-disabled="trigger.locked">{{trigger.categoryName}}</li>
+								<li>
+									<input type="checkbox" ng-model="trigger.isEnabled" ng-disabled="trigger.locked">{{trigger.categoryName}}
+									<input type="text" class="form-control" placeholder="Enter a notification message." ng-model="trigger.description">
+								</li>
 							<ul>
 						</fieldset>
 					</form>

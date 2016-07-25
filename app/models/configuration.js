@@ -16,6 +16,7 @@ var configSchema = new Schema(
 		categoryTriggers:
 		[{
 			categoryName      : String,
+			description		: String,
 			isEnabled        : Boolean,
 			locked			:Boolean,
 			modifiedBy        : String,  

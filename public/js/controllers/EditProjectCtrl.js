@@ -4,10 +4,22 @@ app.controller('EditProjectController', ['$scope', '$routeParams', 'ProjectFacto
 function($scope, $routeParams, ProjectFactory, $window){
 	$scope.status;
 	$scope.projectId = $routeParams.projectId;
-	$scope.selectedProject ={};
-	$scope.gPlace={};
-	
-	getProjectById($scope.projectId);
+	$scope.selectedProject = {
+		'address':{},
+		'geoLocation':{},
+		'geoPolygon':{}
+	};
+	$scope.initialized= false;
+
+	(function init(){
+		ProjectFactory.getProjectById($scope.projectId)
+		.then(function(response) {
+			$scope.selectedProject = response.data;
+			$scope.initialized = true;
+		}, function(error){
+			$scope.status = 'Unable to get project by Id: '+$scope.projectId+'  '+error.message;
+		});
+	})();
 	
 	function getProjectById(id){
 		ProjectFactory.getProjectById(id)

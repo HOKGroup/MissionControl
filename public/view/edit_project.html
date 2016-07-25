@@ -35,9 +35,9 @@
 					</select>
 				</fieldset>
 				<fieldset class="form-group">
-					<label for="formProjectAddress">Project Address</label>
-					<input type="text" class="form-control" id="formProjectAddress" placeholder="Enter an address to auto-complete.(Recommended)" googleplace ng-model="selectedProject.addressEntered" details="selectedProject.address">
+					<div google-drawing-map address="selectedProject.address" geo-location="selectedProject.geoLocation" geo-polygon="selectedProject.geoPolygon" initialized="initialized" style="margin:10px;"/>
 				</fieldset>
+				<form class ="form-horizontal">
 				<form class ="form-horizontal">
 					<fieldset class="form-group">
 						<label class="control-label col-sm-3 text-right" for="formStreet">Street Address</label>
@@ -130,11 +130,11 @@
 					<fieldset class="form-group">
 						<label class="control-label col-sm-3 text-right" for="formLatitude">Latitude</label>
 						<div class="col-sm-3">
-							<input type="text" class="form-control" id="formLatitude" ng-model="selectedProject.address.geoLocation.latitude">
+							<input type="text" class="form-control" id="formLatitude" ng-model="selectedProject.geoLocation.coordinates[1]">
 						</div>
 						<label class="control-label col-sm-3 text-right" for="formLongitude">Longitude</label>
 						<div class="col-sm-3">
-							<input type="text" class="form-control" id="formLongitude" ng-model="selectedProject.address.geoLocation.longitude">
+							<input type="text" class="form-control" id="formLongitude" ng-model="selectedProject.geoLocation.coordinates[0]">
 						</div>
 					</fieldset>
 				</form>
