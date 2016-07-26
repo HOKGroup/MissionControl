@@ -113,11 +113,21 @@ function($scope, $routeParams, ConfigFactory, $window){
 			}]
 		};
 		
+		var updater_single = 
+		{
+			updaterId:'90391154-67BB-452E-A1A7-A07A98B94F86',
+			updaterName:'Single Session Monitor',
+			description:'This tool will notify users if they try to open more than one work-sharing files.',
+			addInId:'9C4D37B2-155D-4AC8-ACCF-383D86673F1C',
+			addInName:'Mission Control',
+			isUpdaterOn: false
+		};
+		
 		var config =
 		{
 			name:'',
 			files:[],
-			updaters:[ updater_dtm, updater_ca, updater_revision ]
+			updaters:[ updater_dtm, updater_ca, updater_revision, updater_single ]
 		};
 		
 		$scope.newConfig = config;

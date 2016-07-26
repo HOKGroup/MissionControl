@@ -35,7 +35,7 @@ TriggerRecordService = {
     findByConfigId : function(req, res){
     var configid = req.params.configid;
     TriggerRecord.find({'configId':configid})
-	.limit(30)
+	.limit(30).sort('-edited')
 	.exec(function(err, result) {
 		if(err) return console.log(err);
       return res.send(result);

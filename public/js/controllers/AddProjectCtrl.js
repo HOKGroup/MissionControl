@@ -14,17 +14,6 @@ function($scope, ProjectFactory, $window){
 	$scope.warning_number='';
 	$scope.warning_name='';
 	
-	$scope.iniFME = function(){
-		var repositoryName = "MissionControl";
-		var workspace = "";
-		
-		FMEServer.init({
-	                server: "http://hok-119vs:8080",
-	                token: "4919b579f13ce37d6ac3917f655b8b6143f203d3"
-	    });
-
-	};
-	
 	$scope.addProject = function(){
 		if(!$scope.newProject.hasOwnProperty('number')|| !$scope.newProject.hasOwnProperty('name')
 		|| !$scope.newProject.hasOwnProperty('office')){return;}

@@ -11,6 +11,16 @@ function($scope, $routeParams, ProjectFactory, $window){
 	};
 	$scope.initialized= false;
 
+	$scope.iniFME = function(){
+		var repositoryName = "MissionControl";
+		var workspace = "";
+		
+		FMEServer.init({
+	                server: "http://hok-119vs:8080",
+	                token: "4919b579f13ce37d6ac3917f655b8b6143f203d3"
+	    });
+	};
+	
 	(function init(){
 		ProjectFactory.getProjectById($scope.projectId)
 		.then(function(response) {

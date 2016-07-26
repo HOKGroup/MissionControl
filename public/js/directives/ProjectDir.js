@@ -144,20 +144,21 @@ myApp.directive('googleDrawingMap', function(){
 
 			//convert polygon features to geoJSON
 			function convertToGeoPloygon(){
-				//combine seperate polygons into one MultiPolygon
-				scope.geoPolygon={};
-				scope.geoPolygon.type = 'MultiPolygon';
-				scope.geoPolygon.coordinates=[];
-				map.data.forEach(function(feature){
-					if(feature.getGeometry().getType() == "Polygon"){
-						feature.toGeoJson(function(obj){
-							var geometryObj = obj.geometry;
-								var coordinates = geometryObj.coordinates;
-								scope.geoPolygon.coordinates.push(coordinates);
-							});
-						}
-				});	
-					
+				scope.$apply(function(){
+					//combine seperate polygons into one MultiPolygon
+					scope.geoPolygon={};
+					scope.geoPolygon.type = 'MultiPolygon';
+					scope.geoPolygon.coordinates=[];
+					map.data.forEach(function(feature){
+						if(feature.getGeometry().getType() == "Polygon"){
+							feature.toGeoJson(function(obj){
+								var geometryObj = obj.geometry;
+									var coordinates = geometryObj.coordinates;
+									scope.geoPolygon.coordinates.push(coordinates);
+								});
+							}
+					});	
+				});
 			};
 			
 		    //data layer click event for a selected layer

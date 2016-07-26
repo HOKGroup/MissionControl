@@ -132,7 +132,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 	$scope.updateConfiguration = function(){
 		ConfigFactory.updateConfiguration($scope.selectedConfig)
 		.then(function(response){
-			$window.location.reload();
+			//$window.location.reload();
 			$scope.status = 'Configuration updated';
 		}, function(error){
 			$scope.status = 'Unabl to update configuration: ' + error.message;
