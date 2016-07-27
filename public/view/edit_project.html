@@ -9,14 +9,20 @@
 			<h3 class="panel-title">Project Info</h3>
 		</div>
         <div class="panel-body">
-             <form>
+             <form name="form" class="css-form" novalidate>
 				<fieldset class="form-group">
 					<label for="formProjectNumber">Project Number</label>
-					<input type="text" class="form-control" id="formProjectNumber" placeholder="00.00000.00" ng-model="selectedProject.number">
+					<input type="text" name="pNumber" class="form-control" id="formProjectNumber" placeholder="00.00000.00" ng-model="selectedProject.number" required>
+					<div ng-show="form.$submitted || form.pNumber.$touched">
+					  <div ng-show="form.pNumber.$error.required" class="text-danger">(*) Project Number is required.</div>
+					</div>
 				</fieldset>
 				<fieldset class="form-group">
 					<label for="formProjectName">Project Name</label>
-					<input type="text" class="form-control" id="formProjectName" placeholder="Project Name" ng-model="selectedProject.name">
+					<input type="text" name="pName" class="form-control" id="formProjectName" placeholder="Project Name" ng-model="selectedProject.name" required>
+					<div ng-show="form.$submitted || form.pName.$touched">
+					  <div ng-show="form.pName.$error.required" class="text-danger">(*) Project Name is required.</div>
+					</div>
 				</fieldset>
 				<fieldset class="form-group">
 					<label for="formOfficeSelect">Office</label>

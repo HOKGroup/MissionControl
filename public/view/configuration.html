@@ -18,11 +18,14 @@
 			<a class="btn btn-large btn-default btn-block" href="#/configurations/add/{{selectedProject._id}}"><span class="glyphicon glyphicon-plus"></span> Add Configuration</a>
 		</div>
 		<div class="col-xs-12 col-sm-9">
-			<form class="form-horizontal">
+			<form class="form-horizontal" name="form" class="css-form" novalidate>
 				<div class="form-group row">
 					<label class="form-control-label col-sm-3" for="configName">Configuration Name:</label>
 					<div class="col-sm-9">
-						<input type="text" class="form-control" id="configName" placeholder="Name" ng-model="selectedConfig.name">
+						<input type="text" name="cName" class="form-control" id="configName" placeholder="Name" ng-model="selectedConfig.name" required>
+						<div ng-show="form.$submitted || form.cName.$touched">
+						  <div ng-show="form.cName.$error.required" class="text-danger">(*) Configuration Name is required.</div>
+						</div>
 					</div>	
 				</div>
 			</form>
