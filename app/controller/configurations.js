@@ -57,7 +57,7 @@ ConfigurationService = {
    add : function(req, res) {
     Configuration.create(req.body, function (err, result) {
       if (err) return console.log(err);
-	  //global.io.sockets.emit('add_configuration', req.body);
+	  global.io.sockets.emit('add_configuration', req.body);
       return res.send(result);
     });
   },
@@ -71,7 +71,7 @@ ConfigurationService = {
       function (err, numberAffected) {
         if (err) return console.log(err);
         console.log('Updated %s instances', numberAffected.toString());
-		//global.io.sockets.emit('update_configuration', req.body);
+		global.io.sockets.emit('update_configuration', req.body);
         return res.sendStatus(202);
     });
   },
@@ -79,6 +79,7 @@ ConfigurationService = {
   delete : function(req, res){
     var id = req.params.id;
     Configuration.remove({'_id':id},function(result) {
+	  global.io.sockets.emit('delete_configuration', id);
       return res.send(result);
     });
   }

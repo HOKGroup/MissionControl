@@ -35,8 +35,10 @@ var projectSchema = new Schema(
 	geoLocation:geoSchema, //type point
 	geoPolygon:geoSchema, //type MultiPolygon
 	configurations	:[{type:Schema.Types.ObjectId, ref:'Configuration'}]
-  }
-);
+  }, 
+  {
+	  timestamps: true
+  });
 projectSchema.index({geoLocation:'2dsphere'});
 projectSchema.index({geoPolygon:'2dsphere'});
 

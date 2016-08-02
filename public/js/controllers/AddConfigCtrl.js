@@ -37,41 +37,31 @@ function($scope, $routeParams, ConfigFactory, $window){
 				categoryName:"Grids",
 				description:"Grid elements cannot be modified except 2D extents.",
 				isEnabled: false,
-				locked:false,
-				modifiedBy: "",
-				modified: Date.now()
+				locked:false
 			},
 			{
 				categoryName:"Levels",
 				description:"Level elements cannot be modified.",
 				isEnabled: false,
-				locked:false,
-				modifiedBy: "",
-				modified: Date.now()
+				locked:false
 			},
 			{
 				categoryName:"Views",
 				description:"View template elements cannot be modified.",
 				isEnabled: false,
-				locked:false,
-				modifiedBy: "",
-				modified: Date.now()
+				locked:false
 			},
 			{
 				categoryName:"Scope Boxes",
 				description:"Scope Boxe elements cannot be modified.",
 				isEnabled: false,
-				locked:false,
-				modifiedBy: "",
-				modified: Date.now()
+				locked:false
 			},
 			{
 				categoryName:"RVT Links",
 				description:"RVT Links cannot be modified.",
 				isEnabled: false,
-				locked:false,
-				modifiedBy: "",
-				modified: Date.now()
+				locked:false
 			}]
 		};
 		
@@ -88,9 +78,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 				categoryName:"Doors",
 				description:"Invalid Door Parameter.",
 				isEnabled: true,
-				locked:true,
-				modifiedBy: "",
-				modified: Date.now()
+				locked:true
 			}]
 		};
 		
@@ -107,9 +95,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 				categoryName:"Revisions",
 				description:"",
 				isEnabled: true,
-				locked:true,
-				modifiedBy: "",
-				modified: Date.now()
+				locked:true
 			}]
 		};
 		

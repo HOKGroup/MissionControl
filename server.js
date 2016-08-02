@@ -67,9 +67,8 @@ var server = app.listen(
 
     global.io.on('connection', function(client){
       console.log('a client connected to the socket');
-    });
-	
-				}
+    });	
+}
 );
 
 

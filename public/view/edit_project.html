@@ -2,7 +2,7 @@
     <h1>{{selectedProject.number}} {{selectedProject.name}}</h1>
 </div>
 
-<div class="container" onload="iniFME">
+<div class="container">
   <div class="row">
     <div class="panel panel-default" style="margin-top:10px">
 		<div class="panel-heading">
@@ -163,6 +163,7 @@
 		</div>
 	</div>
 	<button type="submit" class="btn btn-primary pull-right" ng-click="updateProject()" style="margin:5px;"><span class="glyphicon glyphicon-ok" ></span> Update Project</button>
+	<button class="btn btn-primary pull-right" ng-click="downloadPDF()" style="margin:5px;"><span class="glyphicon glyphicon-download" ></span> Download PDF</button>
 	<a href="#/projects" class="btn btn-primary pull-right" role="button" style="margin:5px;">Cancel</a>
 	
   </div>

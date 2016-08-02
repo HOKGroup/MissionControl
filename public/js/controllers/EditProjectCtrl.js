@@ -10,18 +10,14 @@ function($scope, $routeParams, ProjectFactory, $window){
 		'geoPolygon':{}
 	};
 	$scope.initialized= false;
-
-	$scope.iniFME = function(){
-		var repositoryName = "MissionControl";
-		var workspace = "";
-		
+	
+	(function init(){
+		//initialize FME
 		FMEServer.init({
 	                server: "http://hok-119vs:8080",
 	                token: "4919b579f13ce37d6ac3917f655b8b6143f203d3"
 	    });
-	};
-	
-	(function init(){
+		
 		ProjectFactory.getProjectById($scope.projectId)
 		.then(function(response) {
 			$scope.selectedProject = response.data;
@@ -39,17 +35,7 @@ function($scope, $routeParams, ProjectFactory, $window){
 			$scope.status = 'Unable to get project by Id: '+id+'  '+error.message;
 		});
 	};
-	
-	$scope.updateProject = function(){
-		ProjectFactory.updateProject($scope.selectedProject)
-		.then(function(response){
-			$scope.status = 'Project updated';
-			$window.location.assign('#/projects/');
-		}, function(error){
-			$scope.status = 'Unabl to update project: ' + error.message;
-		});
-	};
-	
+
 	$scope.deleteProject = function(){
 		ProjectFactory.deleteProject($scope.selectedProject._id)
 		.then(function(response) {
@@ -69,4 +55,30 @@ function($scope, $routeParams, ProjectFactory, $window){
 			$scope.status = 'Unable to delete project:' +error.message;
 		});
 	};
+	
+	$scope.updateProject = function(){
+		ProjectFactory.updateProject($scope.selectedProject)
+		.then(function(response){
+			$scope.status = 'Project updated';
+			$window.location.assign('#/projects/');
+		}, function(error){
+			$scope.status = 'Unabl to update project: ' + error.message;
+		});
+	};
+	
+	$scope.downloadPDF = function(){
+		var repositoryName = 'MissionControl';
+		var workspaceName = 'MissionControl_PDFCreator.fmw';
+		var parameters= 'ProjectId='+$scope.projectId;
+		
+		FMEServer.runDataDownload(repositoryName, workspaceName, parameters, showResults);
+	};
+	
+	function showResults(json){
+		var downloadURL = json.serviceResponse.url;
+		var downloadLink = angular.element('<a> HOK Mission Control - Download Project PDF </a>');
+        downloadLink.attr('href',downloadURL); 
+		downloadLink[0].click();			
+	};
+	
 }]);

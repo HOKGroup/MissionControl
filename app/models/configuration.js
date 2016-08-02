@@ -20,11 +20,13 @@ var configSchema = new Schema(
 			isEnabled        : Boolean,
 			locked			:Boolean,
 			modifiedBy        : String,  
-			modified        : Date //time
+			modified        : Date
 		}]
 	}]
-  }
-);
+  },
+  {
+	  timestamps: true
+  });
 
 configSchema.index({'files.centralPath': 'text'});
 
