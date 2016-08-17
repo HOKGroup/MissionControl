@@ -14,68 +14,76 @@
 					</div>
 				</div>	
 			</div>
-		</form>
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title">Files</h3>
-			</div>
-			<div class="panel-body">
-				<table class="table table-hover">
-					<thead>
-						<tr>
-							<th>File</th>
-							<th></th>
-						</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="file in newConfig.files">
-								<td>{{file.centralPath}}</td>
-								<td><button type="button" class="btn btn-secondary-outline" ng-click="deleteFile(file.centralPath)">Remove</button></td>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Files</h3>
+				</div>
+				<div class="panel-body">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Revit Projects</th>
+								<th></th>
 							</tr>
-						</tbody>
-					</table>
-				<form class ="form-horizontal">
-					<fieldset class="form-group">
-						<label class="control-label col-sm-2" for="formNewFile">New File: </label>
-						<div class="col-sm-8">
-							<input type="text" class="form-control" id="formNewFile" placeholder="File Path" ng-model="newFile">
-							<p class="text-danger">{{warningMsg}}</p>
-						</div>
-						<div class="col-sm-2">
-							<button type="button" class="btn" ng-click="addFile()">Add</button>
-						</div>
-					</fieldset>
-				</form>
+							</thead>
+							<tbody>
+								<tr ng-repeat="file in newConfig.files">
+									<td>{{file.centralPath}}</td>
+									<td><button type="button" class="btn btn-default" ng-click="deleteFile(file.centralPath)"><span class="glyphicon glyphicon-trash"></span></button></td>
+								</tr>
+							</tbody>
+						</table>
+					<form class ="form-horizontal">
+						<fieldset class="form-group">
+							<label class="control-label col-sm-3" for="formNewFile">Revit File: </label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="formNewFile" placeholder="Enter a central path for Revit project. (.rvt)" ng-model="newFile">
+								<p class="text-danger">{{fileWarningMsg}}</p>
+							</div>
+							<div class="col-sm-1">
+								<button type="button" class="btn btn-default" ng-click="addFile()"><span class="glyphicon glyphicon-plus"></span></button>
+							</div>
+						</fieldset>
+					</form>
+					<form class ="form-horizontal">
+						<fieldset class="form-group">
+							<label class="control-label col-sm-3" for="formNewSheetFile">Sheet Database: </label>
+							<div class = "col-sm-9">
+								<input type="text" class="form-control" id="formNewSheetFile" placeholder="Enter a file path for the SQLite sheet database. (.sqlite)" ng-model="newConfig.sheetDatabase">
+							</div>
+						</fieldset>
+					</form>
+				</div>
 			</div>
-		</div>
-		<div class="panel panel-default" ng-repeat="updater in newConfig.updaters" style="margin-top:10px;">
-			<div class="panel-heading">
-				<h3 class="panel-title">{{updater.updaterName}}</h3>
+			<div class="panel panel-default" ng-repeat="updater in newConfig.updaters" style="margin-top:10px;">
+				<div class="panel-heading">
+					<h3 class="panel-title">{{updater.updaterName}}</h3>
+				</div>
+				<div class="panel-body">
+					<p class="text-muted">{{updater.description}}</p>
+					<form>
+						<fieldset class="form-group">
+							<label>Updater On/Off</label></br>
+							<label class="switch">
+								<input type = "checkbox" ng-model="updater.isUpdaterOn">
+								<div class="slider round"></div>
+							</label>
+						</fieldset>
+						<fieldset class="form-group">
+							<label for="formCategory">Categories</label>
+							<ul ng-repeat="trigger in updater.categoryTriggers" class="list-unstyled">
+								<li>
+									<input type="checkbox" ng-model="trigger.isEnabled" ng-disabled="trigger.locked">{{trigger.categoryName}}
+									<input type="text" class="form-control" placeholder="Enter a notification message." ng-model="trigger.description">
+								</li>
+							</ul>
+						</fieldset>
+					</form>
+				</div>
 			</div>
-			<div class="panel-body">
-				<p class="text-muted">{{updater.description}}</p>
-				<form>
-					<fieldset class="form-group">
-						<label>Updater On/Off</label></br>
-						<label class="switch">
-							<input type = "checkbox" ng-model="updater.isUpdaterOn">
-							<div class="slider round"></div>
-						</label>
-					</fieldset>
-					<fieldset class="form-group">
-						<label for="formCategory">Categories</label>
-						<ul ng-repeat="trigger in updater.categoryTriggers" class="list-unstyled">
-							<li>
-								<input type="checkbox" ng-model="trigger.isEnabled" ng-disabled="trigger.locked">{{trigger.categoryName}}
-								<input type="text" class="form-control" placeholder="Enter a notification message." ng-model="trigger.description">
-							</li>
-						<ul>
-					</fieldset>
-				</form>
-			</div>
-		</div>
+			<button type="submit" class="btn  btn-primary pull-right" ng-click="addConfiguration()" style="margin:5px;"><span class="glyphicon glyphicon-plus"></span> Add Configuration</button>
+			<a href="#/projects/configurations/{{projectId}}" class="btn btn-primary pull-right" role="button" style="margin:5px;">Cancel</a>
+			<p class="text-danger">{{status}}</p>
+		</form>
 	</div>
-	<button type="submit" class="btn  btn-primary pull-right" ng-click="addConfiguration()" style="margin:5px;"><span class="glyphicon glyphicon-plus"></span> Add Configuration</button>
-	<a href="#/projects/configurations/{{projectId}}" class="btn btn-primary pull-right" role="button" style="margin:5px;">Cancel</a>
-</form>
 </div>

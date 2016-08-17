@@ -10,7 +10,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 	$scope.selectedRecords;
 	$scope.filteredConfig;
 	$scope.newFile;
-	$scope.warningMsg='';
+	$scope.fileWarningMsg='';
 	
 	//get populated configurations
 	getSelectedProjectConfiguration($scope.projectId);
@@ -60,7 +60,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 	$scope.addFile = function(){
 		var filePath = $scope.newFile;
 		var encodedUri = encodeURIComponent(filePath);
-		$scope.warningMsg='';
+		$scope.fileWarningMsg='';
 		
 		ConfigFactory.getByEncodedUri(encodedUri)
 		.then(function(response){
@@ -88,20 +88,17 @@ function($scope, $routeParams, ConfigFactory, $window){
 			
 			if(configMatched)
 			{
-				$scope.warningMsg= 'Warning! File already exists in other configurations.\n'+ configNames;
+				$scope.fileWarningMsg= 'Warning! File already exists in other configurations.\n'+ configNames;
 			}
-			else
+			else if(filePath.length >0 && filePath.includes('.rvt'))
 			{
-				if(filePath.length >0 )
-				{
-					var file= 
-					{
-						centralPath:filePath
-					};
-					$scope.selectedConfig.files.push(file);
-					$scope.status='File added';
-					$scope.newFile = '';
-				}
+				var file= {	centralPath:filePath };
+				$scope.selectedConfig.files.push(file);
+				//$scope.status='File added';
+				$scope.newFile = '';					
+			}
+			else{
+				$scope.fileWarningMsg = 'Warning! Please enter a valid file.';
 			}
 			
 		}, function(error){

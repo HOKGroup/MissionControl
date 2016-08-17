@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 var configSchema = new Schema(
   { 
     name      : String,
-    files	:[{   centralPath:String }],
+    files	:[{   centralPath:String }], //revit projects
+	sheetDatabase : String, //sheet database
 	updaters  :
 	[{
 		updaterId: String, 

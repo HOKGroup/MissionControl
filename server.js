@@ -19,11 +19,11 @@ var global = require('./app/controller/socket/global');
 
 var app = express();
 
-var localMongo = false;
+var localMongo = true;
 
 if(localMongo){
 	//local database
-	var mongo_uri = 'mongodb://localhost:27017/revitmachinecontrol';
+	var mongo_uri = 'mongodb://localhost:27017/missioncontrol';
 } else{
 	var mongo_uri='mongodb://admin:admin@ds011495.mlab.com:11495/missioncontrol';
 }

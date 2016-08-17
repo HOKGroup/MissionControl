@@ -22,10 +22,17 @@ function($scope, ProjectFactory, $window){
 			number: $scope.newProject.number,
 			name: $scope.newProject.name,
 			office: $scope.newProject.office,
-			address:$scope.newProject.address,
-			geoLocation:$scope.newProject.geoLocation,
-			geoPolygon:$scope.newProject.geoPolygon
+			address:$scope.newProject.address
 			};
+		
+		if($scope.newProject.geoLocation.hasOwnProperty('type') && $scope.newProject.geoLocation.hasOwnProperty('coordinates'))
+		{
+			project.geoLocation = $scope.newProject.geoLocation;
+		}
+		if($scope.newProject.geoPolygon.hasOwnProperty('type') && $scope.newProject.geoPolygon.hasOwnProperty('coordinates'))
+		{
+			project.geoPolygon = $scope.newProject.geoPolygon;
+		}
 		
 			ProjectFactory.addProject(project)
 			.then(function(response){

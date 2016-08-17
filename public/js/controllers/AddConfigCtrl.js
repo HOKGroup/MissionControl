@@ -7,7 +7,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 	$scope.selectedProject={};
 	$scope.newConfig={};
 	$scope.newFile;
-	$scope.warningMsg='';
+	$scope.fileWarningMsg='';
 	
 	getSelectedProject($scope.projectId);
 	setDefaultConfig();
@@ -85,10 +85,10 @@ function($scope, $routeParams, ConfigFactory, $window){
 		var updater_revision = 
 		{
 			updaterId:'0504A758-BF15-4C90-B996-A795D92B42DB',
-			updaterName:'Revision Tracker',
-			description:'This tool will push updates to database when modification made on revision items.',
-			addInId:'9C4D37B2-155D-4AC8-ACCF-383D86673F1C',
-			addInName:'Mission Control',
+			updaterName:'Sheet Tracker',
+			description:'This tool will push updates to database when modification made on sheets or revision items.',
+			addInId:'3FBC935E-FB1C-438D-9398-A6700442A5A8',
+			addInName:'Sheet Data Manager',
 			isUpdaterOn: false,
 			categoryTriggers:[
 			{
@@ -96,7 +96,14 @@ function($scope, $routeParams, ConfigFactory, $window){
 				description:"",
 				isEnabled: true,
 				locked:true
-			}]
+			},
+			{
+				categoryName:"Sheets",
+				description:"",
+				isEnabled: true,
+				locked:true
+			}
+			]
 		};
 		
 		var updater_single = 
@@ -113,6 +120,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 		{
 			name:'',
 			files:[],
+			sheetDatabase:'',
 			updaters:[ updater_dtm, updater_ca, updater_revision, updater_single ]
 		};
 		
@@ -122,7 +130,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 	$scope.addFile = function(){
 		var filePath = $scope.newFile;
 		var encodedUri = encodeURIComponent(filePath);
-		$scope.warningMsg='';
+		$scope.fileWarningMsg='';
 		
 		ConfigFactory.getByEncodedUri(encodedUri)
 		.then(function(response){
@@ -149,20 +157,17 @@ function($scope, $routeParams, ConfigFactory, $window){
 			
 			if(configMatched)
 			{
-				$scope.warningMsg= 'Warning! File already exists in other configurations.\n'+ configNames;
+				$scope.fileWarningMsg= 'Warning! File already exists in other configurations.\n'+ configNames;
 			}
-			else
+			else if(filePath.length >0  && filePath.includes('.rvt'))
 			{
-				if(filePath.length >0 )
-				{
-					var file= 
-					{
-						centralPath:filePath
-					};
-					$scope.newConfig.files.push(file);
-					$scope.status='File added';
-					$scope.newFile = '';
-				}
+				var file= { centralPath:filePath };
+				$scope.newConfig.files.push(file);
+				//$scope.status='File added';
+				$scope.newFile = '';
+			}
+			else{
+				$scope.fileWarningMsg = 'Warning! Please enter a valid file.';
 			}
 
 		}, function(error){
@@ -171,7 +176,7 @@ function($scope, $routeParams, ConfigFactory, $window){
 	};
 	
 	$scope.deleteFile = function(filepath){
-		$scope.status = 'Deleted File.';
+		//$scope.status = 'Deleted File.';
 		for (var i = 0; i < $scope.newConfig.files.length; i++) 
 		{
             var file =  $scope.newConfig.files[i];
@@ -184,19 +189,29 @@ function($scope, $routeParams, ConfigFactory, $window){
 	};
 
 	$scope.addConfiguration = function(){
-		ConfigFactory.addConfiguration($scope.newConfig)
-		.then(function(response){
-			$scope.status = 'Configuration added';
-			var configId = response.data._id;
-			ConfigFactory.addConfigToProject($scope.projectId, configId)
+		if($scope.newConfig.name.length > 0 && $scope.newConfig.files.length > 0)
+		{
+			ConfigFactory.addConfiguration($scope.newConfig)
 			.then(function(response){
-				$scope.status = 'Project updated';
-				$window.location.assign('#/projects/configurations/'+$scope.projectId);
+				$scope.status = 'Configuration added';
+				var configId = response.data._id;
+				ConfigFactory.addConfigToProject($scope.projectId, configId)
+				.then(function(response){
+					$scope.status = 'Project updated';
+					$window.location.assign('#/projects/configurations/'+$scope.projectId);
+				}, function(error){
+					$scope.status='Unable to add to project: '+error.message;
+				});
 			}, function(error){
-				$scope.status='Unable to add to project: '+error.message;
+				$scope.status = 'Unabl to add configuration: ' + error.message;
 			});
-		}, function(error){
-			$scope.status = 'Unabl to add configuration: ' + error.message;
-		});
+		}
+		else if($scope.newConfig.name.length == 0){
+			$scope.status = 'Configuration name is required.';
+		}
+		else if($scope.newConfig.files.length == 0){
+			$scope.status = 'At least one Revit file is required.';
+		}
+
 	};
 }]);
