@@ -14,7 +14,7 @@ function($scope, $routeParams, ProjectFactory, $window){
 	(function init(){
 		//initialize FME
 		FMEServer.init({
-	                server: "http://hok-119vs:8080",
+	                server: "http://fme.hok.com",
 	                token: "4919b579f13ce37d6ac3917f655b8b6143f203d3"
 	    });
 		
