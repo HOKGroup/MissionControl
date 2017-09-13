@@ -28,11 +28,28 @@ ConfigurationService = {
   findByEncodedURI : function(req, res){
     var uri = req.params.uri; 
 	var decodedUri = decodeURIComponent(uri);
-	Configuration.find({$text:{$search: decodedUri}}, { score : { $meta: "textScore" } })
-	.sort({ score : { $meta : 'textScore' } }).limit(5)
-	.exec(function(err, result){
-		if(err){console.log(err);}
-		return res.send(result);
+
+	Configuration
+        .find(
+            { $text: { $search: decodedUri }},
+            { score: { $meta: "textScore" } })
+	    .sort(
+	        { score: { $meta: 'textScore' } })
+        .limit(5)
+	    .exec(function(err, result){
+	        var response = {
+	            status: 200,
+                message: result
+            };
+	        if(err){
+	            response.status = 500;
+	            response.message = err;
+            } else if(!result){
+	            console.log("File Path wasn't found in any Configurations");
+            }
+            res
+                .status(response.status)
+                .json(response.message);
 	});
   },
 
@@ -44,19 +61,10 @@ ConfigurationService = {
     });
   },
   
- /*  populateById : function(req, res){
-    var id = req.params.id;
-    Project.findOne({'_id':id})
-	.populate({ path: 'files'})
-	.exec(function(err, result) {
-		 if (err) return console.log(err);
-      return res.send(result);
-    });
-  }, */
-  
    add : function(req, res) {
-    Configuration.create(req.body, function (err, result) {
-      if (err) return console.log(err);
+    Configuration
+        .create(req.body, function (err, result) {
+      if (err) return;
 	  global.io.sockets.emit('add_configuration', req.body);
       return res.send(result);
     });
@@ -65,12 +73,9 @@ ConfigurationService = {
 
   update : function(req, res) {
     var id = req.params.id;
-    //console.log(req.body);
-    console.log('Updating ' + id);
     Configuration.update({"_id":id}, req.body, {upsert:true},
       function (err, numberAffected) {
         if (err) return console.log(err);
-        console.log('Updated %s instances', numberAffected.toString());
 		global.io.sockets.emit('update_configuration', req.body);
         return res.sendStatus(202);
     });

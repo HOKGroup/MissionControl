@@ -1,0 +1,107 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Links Health Score:</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <div class="col-md-3">
+                            <d3-circle data="vm.ModelData.scoreData" class="cn"></d3-circle>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="small">
+                                <p>
+                                    {{vm.ModelData.description}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div id="menu">
+                                <div class="panel list-group">
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sm" data-parent="#menu">
+                                        Model Size
+                                        <span class="badge">{{vm.ModelData.modelSize}}</span>
+                                    </a>
+                                    <div id="sm" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            It's best practice to keep the model size under 200MB. It helps preserve your hardware resources, and potentially increse model
+                                            open and synch times. Model Size is often a good indicator of potential modeling issues. Use of imported objects like DWG or STL
+                                            often bloats model size giving Model Managers clues about potential issues.
+                                        </div>
+                                    </div>
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sl" data-parent="#menu">
+                                        Average Open Time
+                                        <span class="badge">{{vm.ModelData.averageOpenTime}}</span>
+                                    </a>
+                                    <div id="sl" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            This is not a measure of model health, but rather a glance at potential user "discomfort". Users tend to get frustrated at time lost,
+                                            while waiting for the model to open. If we can minimize that time, they will be able to spend it doing more meaningful things, than
+                                            waiting for Revit to open. Potential ways to speed up the model opening time, is to minimize amount of plug-ins that are being loaded at startup.
+                                        </div>
+                                    </div>
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#s2" data-parent="#menu">
+                                        Average Synch Time
+                                        <span class="badge">{{vm.ModelData.averageSynchTime}}</span>
+                                    </a>
+                                    <div id="s2" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            This is not a measure of model health, but rather a glance at potential user "discomfort". Users tend to get frustrated at time lost,
+                                            while waiting for the model to synch. Synch time can be decresed by reducing number of warnings in the model, model size, number of links etc.
+                                            All of these things contribute to time that is being needed by Revit to reconsile all of the changes. Another quick way to minimize synch time,
+                                            is to Reload Latest before Synchronizing.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="panel-group" id="p4">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p4" data-target="#collapseP4">
+                    <h4 class="panel-title">Model Open Time</h4>
+                </div>
+                <div id="collapseP4" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <d3-zoomable-line data="vm.ModelOpenTimes" format-options="vm.FormatObjectTime"></d3-zoomable-line>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="panel-group" id="p5">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p5" data-target="#collapseP5">
+                    <h4 class="panel-title">Model Synch Time</h4>
+                </div>
+                <div id="collapseP5" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <d3-zoomable-line data="vm.ModelSynchTimes" format-options="vm.FormatObjectTime"></d3-zoomable-line>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="panel-group" id="p3">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p3" data-target="#collapseP3">
+                    <h4 class="panel-title">Model Size</h4>
+                </div>
+                <div id="collapseP3" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <d3-zoomable-line data="vm.ModelSizes" format-options="vm.FormatObjectSize"></d3-zoomable-line>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

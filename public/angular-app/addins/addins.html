@@ -1,0 +1,56 @@
+<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1>Addins</h1>
+        </div>
+    </div>
+    <div class="row" ng-if="vm.d3HorizontalData !== undefined">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class=" btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
+                        <button type="button" ng-class="vm.SelectedYear === '2016' ? 'btn btn-primary' : 'btn btn-default'" ng-click="vm.ProcessData('2016');">2016</button>
+                        <button type="button" ng-class="vm.SelectedYear === '2017' ? 'btn btn-primary' : 'btn btn-default'" ng-click="vm.ProcessData('2017');">2017</button>
+                        <button type="button" ng-class="vm.SelectedYear === '2018' ? 'btn btn-primary' : 'btn btn-default'" ng-click="vm.ProcessData('2018');">2018</button>
+                    </div>
+                    <h4 class="panel-title" style="padding-top: 5px;">Plugin Use Frequency:</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body" ng-if="vm.d3HorizontalData.length > 0">
+                        <d3-horizontal-bar-chart-timeout data="vm.d3HorizontalData" margin-left="180" domain-padding="5" d3-on-click="vm.OnClick(item)" clickable="true" fill-color="vm.MainChartColor"></d3-horizontal-bar-chart-timeout>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row no-gutter">
+        <div class="col-sm-8 panel-group no-padding-left" ng-if="vm.UserDetails.length > 0">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Users: {{vm.SelectedPlugin}} / {{vm.SelectedYear}}</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <d3-horizontal-bar-chart-timeout data="vm.UserDetails" margin-left="180" domain-padding="5" clickable="false" fill-color="vm.UserChartColor"></d3-horizontal-bar-chart-timeout>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 panel-group no-padding-right" ng-if="vm.UserDetails.length > 0">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Yearly: {{vm.SelectedPlugin}}</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <d3-donut-chart data="vm.YearsAggregate"></d3-donut-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

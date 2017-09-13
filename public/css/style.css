@@ -14,16 +14,14 @@ body {
   height: 60px;
   background-color: #f5f5f5;
 }
-
 body > .container {
   padding: 60px 15px 0;
 }
 .container .text-muted {
   margin: 20px 0;
 }
-
 .panel-heading a:after {
-    font-family:'Glyphicons Halflings';
+  font-family: 'Glyphicons Halflings', serif;
     content:"\e114";
     float: right;
     color: grey;
@@ -32,23 +30,23 @@ body > .container {
     content:"\e080";
 }
 
+/*Turns on pointer cursor for collapsible panels*/
+.panel-default > .panel-heading-clickable{
+    cursor: pointer;
+}
 .footer > .container {
   padding-right: 15px;
   padding-left: 15px;
 }
-
 code {
   font-size: 80%;
 }
-
 #main-content-container{
 	margin-bottom: 200px;
 }
-
 #map{
 	height:500px;
 }
-
 .controls {
   margin-top: 10px;
   border: 1px solid transparent;
@@ -59,10 +57,9 @@ code {
   outline: none;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
-
 #pac-input {
   background-color: #fff;
-  font-family: Roboto;
+  font-family: Roboto, serif;
   font-size: 15px;
   font-weight: 300;
   margin-left: 12px;
@@ -70,12 +67,98 @@ code {
   text-overflow: ellipsis;
   width: 400px;
 }
-
 #pac-input:focus {
   border-color: #4d90fe;
 }
-
 #map-container {
   margin:10px;
 }
 
+/*Directive content centering*/
+.cn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*Used by table to highlight text values*/
+p.thick {
+  font-weight: bold;
+}
+p.normal {
+  font-weight: normal;
+}
+
+/*Grid Divider line for Health Report Main Page*/
+@media ( min-width: 768px ) {
+  .grid-divider {
+    position: relative;
+    padding: 0;
+  }
+  .grid-divider>[class*='col-'] {
+    position: static;
+  }
+  .grid-divider>[class*='col-']:nth-child(n+2):before {
+    content: "";
+    border-left: 1px solid #DDD;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+  }
+  .col-padding {
+    padding: 0 15px;
+  }
+}
+
+/*Top Padding between Divs*/
+.top-buffer {
+    margin-top:20px;
+}
+
+/*Left padded text*/
+.p.pad-left {
+    padding-left: 20px;
+}
+
+/*Removes column gutter*/
+.no-padding-left {
+  padding-left: 0
+}
+
+.no-padding-right {
+  padding-right: 0
+}
+.textAlignMiddle{
+  vertical-align: middle;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+/*Dropdown menu for Health Report*/
+.dropdown-menu{
+  width:100%;
+  left: 50%;
+  right: auto;
+  text-align: center;
+  transform: translate(-50%, 0);
+}
+
+table {
+    table-layout: fixed;
+    word-wrap: break-word;
+    width: 100%;
+}
+
+/*hides overflowing text*/
+.hide-overflow-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 100%;
+}
+
+/*Modal dialog form constraint to allow vertical resize only.*/
+textarea {
+  resize: vertical;
+}

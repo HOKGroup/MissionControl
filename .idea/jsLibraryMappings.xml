@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptLibraryMappings">
+    <file url="file://$PROJECT_DIR$" libraries="{MissionControl_v2/node_modules}" />
+    <file url="PROJECT" libraries="{MissionControl_v2/node_modules, angular-DefinitelyTyped, d3-DefinitelyTyped, express-DefinitelyTyped, google-maps-DefinitelyTyped, googlemaps-DefinitelyTyped, mongoose-DefinitelyTyped, node-DefinitelyTyped}" />
+  </component>
+</project>

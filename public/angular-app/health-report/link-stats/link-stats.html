@@ -1,0 +1,128 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Links Health Score:</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <div class="col-md-3">
+                            <d3-circle data="vm.LinkData.scoreData" class="cn"></d3-circle>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="small">
+                                <p>
+                                    {{vm.LinkData.description}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div id="menu">
+                                <div class="panel list-group">
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sm" data-parent="#menu">
+                                        Imported external content
+                                        <span ng-class="vm.LinkData.importedContentCount > 0
+                                ? 'badge progress-bar-danger'
+                                : 'badge progress-bar-success' ">{{vm.LinkData.importedContentCount}}</span>
+                                    </a>
+                                    <div id="sm" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            Importing of any DWG/STL/SKP content is considered bad practice. All external content if necessary should be linked in.
+                                            Importing content can cause decreased model performance due to excessive number of Object Styles or decrese accuracy, and cause graphic
+                                            artifacts due to large XYZ Coordinates.
+                                        </div>
+                                    </div>
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sl" data-parent="#menu">
+                                        Unused imported images
+                                        <span ng-class="vm.LinkData.unusedImageCount === 0
+                                ? 'badge progress-bar-success'
+                                : vm.LinkData.unusedImageCount <= 2 && vm.LinkData.unusedImageCount > 0
+                                ? 'badge progress-bar-warning'
+                                : 'badge progress-bar-danger' ">{{vm.LinkData.unusedImageCount}}</span>
+                                    </a>
+                                    <div id="sl" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            Imported image content can increase file size and impact model performance. It is recommended to periodically purge unused image content
+                                            from the model.
+                                        </div>
+                                    </div>
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#s2" data-parent="#menu">
+                                        Imported Object Styles
+                                        <span ng-class="vm.LinkData.importedObjectStylesCount <= 25
+                                ? 'badge progress-bar-success'
+                                : vm.LinkData.importedObjectStylesCount >25 && vm.LinkData.importedObjectStylesCount <= 50
+                                ? 'badge progress-bar-warning'
+                                : 'badge progress-bar-danger'">{{vm.LinkData.importedObjectStylesCount}}</span>
+                                    </a>
+                                    <div id="s2" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            There are typically 276 Object Styles in standard Revit file. Importing DWG content either directly or into Families may cause
+                                            this number to grow. Excessive number of Object Styles that were created via importing of external content can have negative
+                                            performance impact.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-if="vm.d3ViewStatsData.length >= 2">
+        <div class="panel-group" id="p3">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p3" data-target="#collapseP3">
+                    <p class="pull-right textAlignMiddle">Total Imported Styles</p>
+                    <span class="glyphicon glyphicon-stop pull-right" style="color: #FD8D3C"></span>
+                    <p class="pull-right textAlignMiddle">Total DWG Styles</p>
+                    <span class="glyphicon glyphicon-stop pull-right" style="color: #3182BD"></span>
+                    <h4 class="panel-title">Imported Object Styles</h4>
+                </div>
+                <div id="collapseP3" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <d3-multi-series-line-brushed data="vm.d3ViewStatsData" keys="vm.StylesKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-if="vm.LinkData.importedFiles.length !== 0">
+        <div class="panel-group" id="p1">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p1" data-target="#collapseP1">
+                    <p class="pull-right textAlignMiddle">No placed Instances</p>
+                    <span class="glyphicon glyphicon-stop pull-right" style="color: #F0AD4E"></span>
+                    <p class="pull-right textAlignMiddle">Is Imported</p>
+                    <span class="glyphicon glyphicon-stop pull-right" style="color: #D9534F"></span>
+                    <h4 class="panel-title">Imported DWGs</h4>
+                </div>
+                <div id="collapseP1" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <table class="table table-hover table-sm">
+                            <thead>
+                            <th class="col-md-1 text-center">#</th>
+                            <th class="col-md-4">File Name</th>
+                            <th class="col-md-1 text-center">Qty.</th>
+                            <th class="col-md-2 text-center">View Specific</th>
+                            <th class="col-md-2 text-center">Link/Import</th>
+                            <th class="col-md-2 text-center">Element Id</th>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="i in vm.LinkData.importedFiles | orderBy : '-elementId'" ng-class="!i.isLinked ? 'bg-danger': i.instances == 0 ? 'bg-warning' : 'table-info'">
+                                <td class="text-center">{{$index}}</td>
+                                <td>{{i.name}}</td>
+                                <td class="text-center">{{i.instances}}</td>
+                                <td class="text-center">{{i.isViewSpecific == true ? "Yes" : "No"}}</td>
+                                <td class="text-center">{{i.isLinked == true ? "Link" : "Import"}}</td>
+                                <td class="text-center">{{i.elementId}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,7 +4,7 @@
 //implemented as a node.js
 //REST API driven mongoDB web server.
 //
-//Copyright 2016 by Jinsol Kim, HOK
+//Copyright 2017 by Jinsol Kim, Konrad K Sobon, HOK
 
 //node app uri = http://localhost/80
 
@@ -16,6 +16,7 @@ var bodyParser = require( 'body-parser' );
 var methodOverride = require('method-override');
 var io = require('socket.io');
 var global = require('./app/controller/socket/global');
+
 
 var app = express();
 
@@ -52,7 +53,7 @@ app.get('/cool', function(request, response) {
   response.send(cool());
 });
 
-app.set( 'port', process.env.PORT || 80 );
+app.set( 'port', process.env.PORT || 8080 );
 
 var server = app.listen(
   app.get( 'port' ),

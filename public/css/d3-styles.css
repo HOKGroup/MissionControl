@@ -1,0 +1,101 @@
+.axisHorizontal path,
+.axisHorizontal line{
+    fill: none;
+    stroke: #d3d3d3;
+    shape-rendering: crispEdges;
+}
+.axisHorizontal .tick line{
+    stroke: #d3d3d3;
+    stroke-dasharray: 3,3;
+}
+/*Line and Multi-Series Line Chart hover-over line*/
+.mouse-line{
+    stroke: #d3d3d3;
+    stroke-dasharray: 3,3;
+}
+.goal-line{
+    stroke: #d3d3d3;
+    stroke-dasharray: 3,3;
+}
+.x.axis path,
+.x.axis line{
+    fill: none;
+    stroke: #d3d3d3;
+    shape-rendering: crispEdges;
+}
+.x.axis text{
+    font-family: Arial,serif;
+    font-size: 10px;
+}
+.y.axis path,
+.y.axis line{
+    fill: none;
+    stroke: #d3d3d3;
+    shape-rendering: crispEdges;
+}
+.y.axis text{
+    font-family: Arial,serif;
+    font-size: 10px;
+}
+.axisLegend path,
+.axisLegend line{
+    fill: none;
+    stroke: #d3d3d3;
+}
+text {
+    font: 10px sans-serif;
+}
+.line{
+    stroke-width: 1.5;
+    fill: none;
+    stroke: steelblue;
+}
+/*Gantt Chart tooltip style*/
+.tooltip {
+    box-shadow: 0 0 5px #999999;
+    position: absolute;
+    text-align: center;
+    padding: 10px;
+    color: #333;
+    margin-top: -20px;
+    font: 10px sans-serif;
+    background: #eee;
+    pointer-events: none;
+}
+/*Multi-Series Line Chart Brush Rectangle*/
+.brush .extent {
+    stroke: #fff;
+    fill-opacity: .125;
+    shape-rendering: crispEdges;
+}
+/*Defines zoomable Rectangle*/
+.zoom {
+    cursor: move;
+    fill: none;
+    pointer-events: all;
+}
+/*Used by Horizontal Bar Chart to highlight selected bar.*/
+.selectedOutline{
+    stroke: #d9534f;
+    stroke-dasharray: 3,3;
+    stroke-linecap: 'butt';
+    stroke-width: 2;
+    shape-rendering: crispEdges;
+}
+.selectedRedFill{
+    fill: #d9534f;
+}
+.selectedBlueFill{
+    fill: steelblue;
+}
+.donutLabel{
+    font: 25px sans-serif;
+    text-anchor: middle;
+    font-weight: bold;
+}
+.donutTotal{
+    font: 25px sans-serif;
+    text-anchor: middle;
+    font-weight: bold;
+    fill: #bbb;
+}

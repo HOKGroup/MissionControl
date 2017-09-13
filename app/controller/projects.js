@@ -1,3 +1,10 @@
+/**
+ * @param {{healthrecordid:string}} HTTP request param for health record id.
+ */
+/**
+ * @param {{configid:string}} HTTP request param for configuration id.
+ */
+
 var mongoose = require('mongoose');
 var global = require('./socket/global');
 
@@ -12,28 +19,121 @@ ProjectService = {
   },
 	
   findAndSort : function(req, res){
-	  var property = req.params.property;
-    Project.find({}).sort({number:1}).exec(function(err, results) {
-      return res.send(results);
-    });
+      Project
+          .find({})
+          .sort({number:1})
+          .exec(function(err, doc) {
+              var response = {
+                  status: 200,
+                  message: doc
+              };
+              if(err){
+                  response.status = 500;
+                  response.message = err;
+              } else if(!doc){
+                  response.status = 404;
+                  response.message = {"message": "No Projects were found"};
+              }
+              res
+                  .status(response.status)
+                  .json(response.message);
+          });
   },
-  
-  findById : function(req, res){
-    var id = req.params.id;
-    Project.findOne({'_id':id},function(err, result) {
-      return res.send(result);
-    });
+
+  findById: function(req, res){
+      var id = req.params.id;
+      Project
+          .findById(id)
+          .exec(function(err, doc){
+              var response = {
+                  status: 200,
+                  message: doc
+              };
+              if(err){
+                  response.status = 500;
+                  response.message = err;
+              } else if(!doc) {
+                  response.status = 404;
+                  response.message = { "message": "Project Id not found " + id};
+              }
+              res
+                  .status(response.status)
+                  .json(response.message);
+          });
   },
-  
-  populateById : function(req, res){
-    var id = req.params.id;
-    Project.findOne({'_id':id})
-	.populate({ path: 'configurations'})
-	.exec(function(err, result) {
-		 if (err) return console.log(err);
-      return res.send(result);
-    });
+
+    populateById : function (req, res) {
+      var id = req.params.id;
+      Project
+          .findById(id)
+          .populate({ path: 'configurations'})
+          .exec(function (err, doc) {
+              var response = {
+                  status: 200,
+                  message: doc
+              };
+              if(err){
+                  response.status = 500;
+                  response.message = err;
+              } else if(!doc){
+                  response.status = 404;
+                  response.message = { "message": "Project Id not found " + id};
+              }
+              res
+                  .status(response.status)
+                  .json(response.message);
+          });
   },
+
+    populateHealthRecords : function (req, res) {
+      var id = req.params.id;
+      Project
+          .findById(id)
+          .populate({ path: 'healthrecords'})
+          .exec(function (err, doc) {
+              var response = {
+                  status: 200,
+                  message: doc
+              };
+              if(err){
+                  response.status = 500;
+                  response.message = err;
+              } else if(!doc){
+                  response.status = 404;
+                  response.message = { "message": "Project Id not found " + id};
+              }
+              res
+                  .status(response.status)
+                  .json(response.message);
+          });
+  },
+
+    // populateHealthRecordsProcess : function (req, res) {
+    //     var id = req.params.id;
+    //     Project
+    //         .findById(id)
+    //         .lean()
+    //         .populate({
+    //             path: 'healthrecords',
+    //             select: '-onOpened -onSynched -openTimes -synchTimes -modelSizes -sessionLogs'
+    //         })
+    //         .exec(function (err, doc) {
+    //             var response = {
+    //                 status: 200,
+    //                 message: doc.healthrecords
+    //             };
+    //             if(err){
+    //                 response.status = 500;
+    //                 response.message = err;
+    //             } else if(!doc){
+    //                 response.status = 404;
+    //                 response.message = { "message": "Project Id not found " + id};
+    //             }
+    //             res
+    //                 .status(response.status)
+    //                 .json(response.message);
+    //         });
+    // },
   
    findByConfigurationId : function(req, res){
     var id = req.params.configid;
@@ -48,39 +148,65 @@ ProjectService = {
       return res.send(result);
     });
   },
-  
-  add : function(req, res) {
-    Project.create(req.body, function (err, project) {
-      if (err) return console.log(err);
-	  global.io.sockets.emit('add_project', req.body);
-      return res.send(project);
-    });
+
+  add : function(req, res){
+      Project
+          .create(req.body, function(err, project){
+              if(err) {
+                  res
+                      .status(400)
+                      .json(err);
+              } else {
+                  global.io.sockets.emit('add_project', req.body);
+                  res
+                      .status(201)
+                      .json(project);
+              }
+          });
   },
-  
+
   update : function(req, res) {
     var id = req.params.id;
-    //console.log(req.body);
-    console.log('Updating ' + id);
     Project.update({"_id":id}, req.body, {upsert:true},
       function (err, numberAffected) {
         if (err) return console.log(err);
-        console.log('Updated %s instances', numberAffected.toString());
 		global.io.sockets.emit('update_project', req.body);
         return res.sendStatus(202);
     });
   },
 
    addConfiguration : function(req, res){
-	  var projectId = req.params.id;
-	  var configId = req.params.configid;
-	  Project.update(
-		{ _id:projectId},
-		{ $push:{configurations: configId }},
-		function(err, numberAffected){
-			if(err) return console.log(err);
-			return res.sendStatus(202);
-	  });
-  },
+        var projectId = req.params.id;
+        var configId = req.params.configid;
+        Project
+            .update(
+                { _id:projectId},
+                { $push:{configurations: configId }}, function(err, numberAffected){
+                    if(err) return console.log(err);
+                    return res.sendStatus(202);
+                });
+    },
+
+    addHealthRecord : function(req, res){
+       var projectId = req.params.id;
+       var healthRecordId = req.params.healthrecordid;
+       Project
+           .update(
+               { _id: projectId},
+               { $push:{ healthrecords: healthRecordId }},
+               function(err, project){
+                   if(err) {
+                       console.log(err);
+                       res
+                           .status(201)
+                           .json(err);
+                   } else {
+                       res
+                           .status(201)
+                           .json();
+                   }
+               });
+   },
   
   deleteConfiguration: function(req, res){
 	  var projectId = req.params.id;
@@ -96,7 +222,8 @@ ProjectService = {
   
   delete : function(req, res){
     var id = req.params.id;
-    Project.remove({'_id':id},function(result) {
+    Project
+        .remove({'_id':id}, function(result) {
       return res.send(result);
     });
   }

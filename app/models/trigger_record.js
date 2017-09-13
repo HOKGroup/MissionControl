@@ -1,16 +1,14 @@
 var mongoose = require( 'mongoose' );
 
-var Schema = mongoose.Schema;
-
-var triggerRecordSchema = new Schema(
+var triggerRecordSchema = new mongoose.Schema(
   { 
-	configId      : Schema.Types.ObjectId,
-	centralPath	:String,
-    updaterId        : String,
-	categoryName        : String, 
-	elementUniqueId	: String,
-	edited        : Date,
-	editedBy : String
+	configId: mongoose.Schema.Types.ObjectId,
+	centralPath: String,
+    updaterId: String,
+	categoryName: String,
+	elementUniqueId: String,
+	edited: Date,
+	editedBy: String
 	}
 );
 

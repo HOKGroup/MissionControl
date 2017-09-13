@@ -1,0 +1,106 @@
+<style>
+    html {
+        overflow-y:scroll;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1>
+                {{ vm.selectedProject.number }} {{ vm.selectedProject.name }}
+                <a href="#/projects/configurations/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/parameter_32.png" height="32" width="32" style="margin-top:0" ></a>
+                <a href="#/projects/healthreport/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/health_32.png" height="32" width="32" style="margin-top:0" ng-click="vm.SelectionChanged(vm.ShowMainPage.name)"> </a>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="row row-offcanvas row-offcanvas-left">
+            <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+                <div class="list-group">
+                    <div class="btn-group" style="width: 100%" ng-if="vm.selectedProject.healthrecords.length > 0">
+                        <button class="btn btn-default dropdown-toggle btn-block" data-toggle="dropdown">
+                            {{vm.selectedFileName}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right dropdown-menu-wide">
+                            <li ng-repeat="link in vm.selectedProject.healthrecords">
+                                <a href="" ng-click="vm.SetProject(link)">{{vm.fileNameFromPath(link.centralPath)}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <a class="list-group-item" href="" ng-if="vm.FamilyData" ng-class="{'active': vm.ShowFamiliesStats.value}" ng-click="vm.SelectionChanged(vm.ShowFamiliesStats.name)">
+                        Families
+                        <span ng-class="vm.FamilyData.familyScore <= 2
+                                    ? 'badge progress-bar-danger'
+                                    : vm.FamilyData.familyScore > 2 && vm.FamilyData.familyScore <= 4
+                                    ? 'badge progress-bar-warning'
+                                    : 'badge progress-bar-success' ">
+                        {{vm.FamilyData.scoreData.passingChecks}}/{{vm.FamilyData.scoreData.newMax}}
+                    </span>
+                    </a>
+                    <a class="list-group-item" href="" ng-if="vm.WorksetData" ng-class="{'active': vm.ShowWorksetStats.value}" ng-click="vm.SelectionChanged(vm.ShowWorksetStats.name)">
+                        Worksets
+                        <span ng-class="vm.WorksetData.worksetScore <= 2
+                                    ? 'badge progress-bar-danger'
+                                    : vm.WorksetData.worksetScore > 2 && vm.WorksetData.worksetScore <= 4
+                                    ? 'badge progress-bar-warning'
+                                    : 'badge progress-bar-success' ">
+                        {{vm.WorksetData.scoreData.passingChecks}}/{{vm.WorksetData.scoreData.newMax}}
+                    </span>
+                    </a>
+                    <a class="list-group-item" href="" ng-if="vm.LinkData" ng-class="{'active': vm.ShowLinkStats.value}" ng-click="vm.SelectionChanged(vm.ShowLinkStats.name)">
+                        Links
+                        <span ng-class="vm.LinkData.linkScore <= 2
+                                    ? 'badge progress-bar-danger'
+                                    : vm.LinkData.linkScore > 2 && vm.LinkData.linkScore <= 4
+                                    ? 'badge progress-bar-warning'
+                                    : 'badge progress-bar-success' ">
+                        {{vm.LinkData.scoreData.passingChecks}}/{{vm.LinkData.scoreData.newMax}}
+                    </span>
+                    </a>
+                    <a class="list-group-item" href="" ng-if="vm.ViewData" ng-class="{'active': vm.ShowViewStats.value}" ng-click="vm.SelectionChanged(vm.ShowViewStats.name)">
+                        Views
+                        <span ng-class="vm.ViewData.viewScore <= 2
+                                    ? 'badge progress-bar-danger'
+                                    : vm.ViewData.viewScore > 2 && vm.ViewData.viewScore <= 4
+                                    ? 'badge progress-bar-warning'
+                                    : 'badge progress-bar-success' ">
+                        {{vm.ViewData.scoreData.passingChecks}}/{{vm.ViewData.scoreData.newMax}}
+                    </span>
+                    </a>
+                    <a class="list-group-item" href="" ng-if="vm.ModelData" ng-class="{'active': vm.ShowModelStats.value}" ng-click="vm.SelectionChanged(vm.ShowModelStats.name)">
+                        Model
+                        <span class="badge">{{"0/0"}}</span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-9">
+                <family-stats processed="vm.FamilyData" full="vm.selectedHealthRecord" ng-if="vm.ShowFamiliesStats.value"></family-stats>
+            </div>
+            <div class="col-xs-12 col-sm-9">
+                <workset-stats processed="vm.WorksetData" full="vm.selectedHealthRecord" ng-if="vm.ShowWorksetStats.value"></workset-stats>
+            </div>
+            <div class="col-xs-12 col-sm-9">
+                <link-stats processed="vm.LinkData" full="vm.selectedHealthRecord" ng-if="vm.ShowLinkStats.value"></link-stats>
+            </div>
+            <div class="col-xs-12 col-sm-9">
+                <view-stats processed="vm.ViewData" full="vm.selectedHealthRecord" ng-if="vm.ShowViewStats.value"></view-stats>
+            </div>
+            <div class="col-xs-12 col-sm-9">
+                <model-stats processed="vm.ModelData" full="vm.selectedHealthRecord" ng-if="vm.ShowModelStats.value"></model-stats>
+            </div>
+            <div class="col-xs-12 col-sm-9" ng-if="vm.ShowMainPage.value">
+                <div class="row grid-divider top-buffer" ng-repeat="d in vm.AllData">
+                    <div class="col-sm-3">
+                        <d3-circle class="cn" data="d.scoreData"></d3-circle>
+                    </div>
+                    <div class="col-sm-9">
+                        <h4 class="p pad-left"><b>{{d.name}}</b></h4>
+                        <p class="p pad-left">{{d.description}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

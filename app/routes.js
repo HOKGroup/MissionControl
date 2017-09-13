@@ -1,9 +1,8 @@
 var project = require('./models/project');
 var configuration = require('./models/configuration');
-//var projectFile = require('./models/project_file');
- //var projectUpdater = require('./models/project_updater');
- //var categoryTrigger = require('./models/category_trigger');
-var triggerRecord = require('./models/trigger_record');
+var triggerrecord = require('./models/trigger_record');
+var healthReport = require('./models/healthrecords-model');
+var addins = require('./models/addins-model');
  
  module.exports = function(app) {
 		
@@ -12,50 +11,26 @@ var triggerRecord = require('./models/trigger_record');
 	app.get('/api/v1/projects/sort', projects.findAndSort);
     app.get('/api/v1/projects/:id', projects.findById);
 	app.get('/api/v1/projects/populate/:id', projects.populateById);
+	app.get('/api/v1/projects/populatehr/:id', projects.populateHealthRecords);
+	// app.get('/api/v1/projects/populatehr/:id/process', projects.populateHealthRecordsProcess);
 	app.get('/api/v1/projects/configid/:configid', projects.findByConfigurationId);
 	app.get('/api/v1/projects/office/:office', projects.findByOffice);
     app.post('/api/v1/projects', projects.add);
     app.put('/api/v1/projects/:id', projects.update);
 	app.put('/api/v1/projects/:id/addconfig/:configid', projects.addConfiguration);
+	app.put('/api/v1/projects/:id/addhealthrecord/:healthrecordid', projects.addHealthRecord);
 	app.put('/api/v1/projects/:id/deleteconfig/:configid', projects.deleteConfiguration);
     app.delete('/api/v1/projects/:id', projects.delete);
 	
 	var config = require('./controller/configurations');
 	app.get('/api/v1/configurations', config.findAll);
     app.get('/api/v1/configurations/:id', config.findById);
-	//app.get('/api/v1/configurations/populate/:id', config.populateById);
 	app.get('/api/v1/configurations/filepath/:filepath*', config.findByFilePath);
 	app.get('/api/v1/configurations/uri/:uri*', config.findByEncodedURI);
 	app.get('/api/v1/configurations/:id/updaterid/:updaterid', config.findByUpdaterId);
     app.post('/api/v1/configurations', config.add);
     app.put('/api/v1/configurations/:id', config.update);
     app.delete('/api/v1/configurations/:id', config.delete);
-	
- /*
-	var projectfiles = require('./controller/projectfiles');
-	app.get('/api/v1/projectfiles', projectfiles.findAll);
-    app.get('/api/v1/projectfiles/:id', projectfiles.findById);
-	app.get('/api/v1/projectfiles/centralpath/:centralpath*', projectfiles.findByCentralPath);
-    app.post('/api/v1/projectfiles', projectfiles.add);
-    app.put('/api/v1/projectfiles/:id', projectfiles.update);
-    app.delete('/api/v1/projectfiles/:id', projectfiles.delete);
-	
- 
-	var projectupdaters = require('./controller/projectupdaters');
-	app.get('/api/v1/projectupdaters', projectupdaters.findAll);
-    app.get('/api/v1/projectupdaters/:id', projectupdaters.findById);
-	app.get('/api/v1/projectupdaters/updaterid/:updaterid', projectupdaters.findByUpdaterId);
-    app.post('/api/v1/projectupdaters', projectupdaters.add);
-    app.put('/api/v1/projectupdaters/:id', projectupdaters.update);
-    app.delete('/api/v1/projectupdaters/:id', projectupdaters.delete);
-	
-	var categorytriggers = require('./controller/categorytriggers');
-    app.get('/api/v1/categorytriggers', categorytriggers.findAll);
-    app.get('/api/v1/categorytriggers/:id', categorytriggers.findById);
-    app.post('/api/v1/categorytriggers', categorytriggers.add);
-    app.put('/api/v1/categorytriggers/:id', categorytriggers.update);
-    app.delete('/api/v1/categorytriggers/:id', categorytriggers.delete);
-*/
 
 	var triggerrecords = require('./controller/triggerrecords');
 	app.get('/api/v1/triggerrecords', triggerrecords.findAll);
@@ -69,4 +44,30 @@ var triggerRecord = require('./models/trigger_record');
     app.delete('/api/v1/triggerrecords/:id', triggerrecords.delete);
 	app.delete('/api/v1/triggerrecords/config/:configid', triggerrecords.deleteAllForConfig);
 	app.delete('/api/v1/triggerrecords/centralpath/:centralpath', triggerrecords.deleteAllForFile);
-  }
+
+	var healthReport = require('./controller/healthrecords-controller');
+    app.get('/api/v1/healthrecords', healthReport.findAll);
+    app.get('/api/v1/healthrecords/:id', healthReport.findById);
+    app.get('/api/v1/healthrecords/uri/:uri*', healthReport.findByEncodedURI);
+    app.post('/api/v1/healthrecords', healthReport.add);
+    app.post('/api/v1/healthrecords/:id/onsynched', healthReport.onSynched);
+    app.post('/api/v1/healthrecords/:id/onopened', healthReport.onOpened);
+    app.post('/api/v1/healthrecords/:id/itemcount', healthReport.postItemCount);
+    app.post('/api/v1/healthrecords/:id/viewstats', healthReport.viewStats);
+    app.get('/api/v1/healthrecords/:id/viewstats', healthReport.getViewStats);
+    app.post('/api/v1/healthrecords/:id/linkstats', healthReport.postLinkStats);
+    app.get('/api/v1/healthrecords/:id/linkstats', healthReport.getLinkStats);
+    app.post('/api/v1/healthrecords/:id/familystats', healthReport.postFamilyStats);
+    app.get('/api/v1/healthrecords/:id/familystats', healthReport.getFamilyStats);
+    app.post('/api/v1/healthrecords/:id/modelsize', healthReport.postModelSize);
+    app.post('/api/v1/healthrecords/:id/modelopentime', healthReport.postModelOpenTime);
+    app.post('/api/v1/healthrecords/:id/modelsynchtime', healthReport.postModelSynchTime);
+    app.post('/api/v1/healthrecords/:id/sessioninfo', healthReport.postModelSessionInfo);
+    app.put('/api/v1/healthrecords/:id/sessioninfo/:logid', healthReport.updateSynchedCollection);
+    app.get('/api/v1/healthrecords/:id/modelstats', healthReport.getModelStats);
+
+    var addins = require('./controller/addins-controller');
+    app.get('/api/v1/addins', addins.findAll);
+    app.post('/api/v1/addins', addins.add);
+    app.post('/api/v1/addins/:id/addlog', addins.addLog);
+  };

@@ -1,9 +1,9 @@
 var mongoose = require( 'mongoose' );
-var Schema = mongoose.Schema;
 
-var projectFileSchema = new Schema(
+var projectFileSchema = new mongoose.Schema(
    { 
-    centralPath      : String
+    centralPath: String
   }
 );
+
 var ProjectFile = mongoose.model( 'ProjectFile', projectFileSchema );

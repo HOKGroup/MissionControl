@@ -1,0 +1,80 @@
+angular.module('MissionControlApp').controller('HealthReportController', HealthReportController);
+
+function HealthReportController($routeParams, HealthRecordsFactory, HealthReportFactory){
+    var vm = this;
+    vm.projectId = $routeParams.projectId;
+    vm.ShowLinkStats = {name: "links", value: false};
+    vm.ShowFamiliesStats = {name: "families", value: false};
+    vm.ShowWorksetStats = {name: "worksets", value: false};
+    vm.ShowViewStats = {name: "views", value: false};
+    vm.ShowModelStats = {name: "models", value: false};
+    vm.ShowMainPage = {name: "main", value: true};
+    vm.HealthRecordNames = [];
+
+    var allControllers = [vm.ShowLinkStats, vm.ShowFamiliesStats, vm.ShowWorksetStats, vm.ShowViewStats, vm.ShowModelStats, vm.ShowMainPage];
+    vm.SelectionChanged = function (name) {
+        allControllers.forEach(function (item) {
+            item.value = item.name === name;
+        })
+    };
+
+    getSelectedProject(vm.projectId);
+
+    vm.fileNameFromPath = function (path){
+        if(!path) return;
+        return path.replace(/^.*[\\\/]/, '').slice(0, -4);
+    };
+
+    vm.SetProject = function (link){
+        vm.selectedHealthRecord = link;
+        vm.selectedFileName = vm.fileNameFromPath(link.centralPath);
+
+        vm.AllData = [];
+
+        var familyData = link.familyStats[link.familyStats.length - 1];
+        vm.FamilyData = HealthReportFactory.processFamilyStats(familyData);
+        if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
+
+        vm.WorksetData = HealthReportFactory.processWorksetStats(link);
+        if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
+
+        var linkData = link.linkStats[link.linkStats.length - 1];
+        vm.LinkData = HealthReportFactory.processLinkStats(linkData);
+        if(vm.LinkData) vm.AllData.push(vm.LinkData);
+
+        var viewData = link.viewStats[link.viewStats.length - 1];
+        vm.ViewData = HealthReportFactory.processViewStats(viewData);
+        if(vm.ViewData) vm.AllData.push(vm.ViewData);
+
+        vm.ModelData = HealthReportFactory.processModelStats(link);
+        if(vm.ModelData) vm.AllData.push(vm.ModelData);
+
+        // vm.SelectionChanged(vm.ShowMainPage.name);
+    };
+
+    // Retrieves project by project id
+    function getSelectedProject(projectId) {
+        HealthRecordsFactory
+            .getProjectById(projectId)
+            .then(function(response){
+                if(!response) return;
+                vm.selectedProject = response.data;
+                if(response.data.healthrecords.length > 0)
+                {
+                    HealthRecordsFactory
+                        .populateProject(projectId)
+                        .then(function(res){
+                            if(!res) return;
+                            vm.selectedProject = res.data;
+                            vm.selectedHealthRecord = vm.selectedProject.healthrecords[0];
+                            vm.selectedFileName = vm.fileNameFromPath(vm.selectedHealthRecord.centralPath);
+                            vm.SetProject(vm.selectedHealthRecord);
+                        }, function(err){
+                            console.log('Unable to load Health Records data: ' + err.message);
+                        });
+                }
+            },function(error){
+                console.log('Unable to load Health Records data: ' + error.message);
+            });
+    }
+}

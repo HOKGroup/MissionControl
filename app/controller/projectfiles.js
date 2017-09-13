@@ -35,12 +35,10 @@ ProjectFileService = {
 
   update : function(req, res) {
     var id = req.params.id;
-    //console.log(req.body);
     console.log('Updating ' + id);
     ProjectFile.update({"_id":id}, req.body, {upsert:true},
       function (err, numberAffected) {
         if (err) return console.log(err);
-        console.log('Updated %s instances', numberAffected.toString());
         return res.sendStatus(202);
     });
   },

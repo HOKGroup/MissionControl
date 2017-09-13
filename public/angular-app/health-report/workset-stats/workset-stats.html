@@ -1,0 +1,116 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Worksets Health Score:</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <div class="col-md-3">
+                            <d3-circle data="vm.WorksetData.scoreData" class="cn"></d3-circle>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="small">
+                                <p>
+                                    {{vm.WorksetData.description}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div id="menu">
+                                <div class="panel list-group">
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sm" data-parent="#menu">
+                                        Unused Worksets
+                                        <span ng-class="vm.WorksetData.unusedWorksets > 0
+                                ? 'badge progress-bar-danger'
+                                : 'badge progress-bar-success'">{{vm.WorksetData.unusedWorksets}}</span>
+                                    </a>
+                                    <div id="sm" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            Unused Worksets are Worksets in the model that have 0 elements on them. It is detrimental to model performance to create Worksets containing no or very few elements.
+                                        </div>
+                                    </div>
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sl" data-parent="#menu">
+                                        Using only default Worksets
+                                        <span ng-class="vm.WorksetData.onlyDefaultWorksets === 'Yes'
+                                ? 'badge progress-bar-danger'
+                                : 'badge progress-bar-success'">{{vm.WorksetData.onlyDefaultWorksets}}</span>
+                                    </a>
+                                    <div id="sl" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            Default Worksets are "Shared Levels and Grids" and "Workset1". If model has only these two Worksets, it's likely that it should not be a Workshared model.
+                                        </div>
+                                    </div>
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#s2" data-parent="#menu">
+                                        Bulk of content on one Workset
+                                        <span ng-class="vm.WorksetData.contentOnSingleWorkset === 'Yes'
+                                ? 'badge progress-bar-danger'
+                                : 'badge progress-bar-success'">{{vm.WorksetData.contentOnSingleWorkset}}</span>
+                                    </a>
+                                    <div id="s2" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            Bulk of content refers to 50% or more of content being placed on a single Workset. Turning off Worksets can conserve computer resources and make it run faster.
+                                            Keeping all/most of content on a single Workset does not allow for turning them off.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="panel-group" id="worksetOpen">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#worksetOpen" data-target="#collapseWorksetOpen">
+                    <p class="pull-right textAlignMiddle">On Model Synch</p>
+                    <span class="glyphicon glyphicon-chevron-down pull-right"></span>
+                    <p class="pull-right textAlignMiddle">On Model Open</p>
+                    <span class="glyphicon glyphicon-chevron-up pull-right"></span>
+                    <h4 class="panel-title">Worksets opened %</h4>
+                </div>
+                <div id="collapseWorksetOpen" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <d3-grouped-horizontal-bar-chart2 data="vm.WorksetData.worksetOpenedData" d3-on-click="vm.d3OnClick(item)" reference-line="vm.d3GoalLine"></d3-grouped-horizontal-bar-chart2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-if="vm.UserData.length > 2" id="UserChart">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Worksets Opened % : {{vm.SelectedUser}} : {{vm.WorksetsOpenedType}}</h4>
+                </div>
+                <div>
+                    <div class="panel-body">
+                        <d3-zoomable-line data="vm.UserData" format-options="vm.FormatObjectTime" domain-y="100"></d3-zoomable-line>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="panel-group" id="accordion3">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#accordion3" data-target="#collapseThree">
+                    <p class="pull-right textAlignMiddle"><50%</p>
+                    <span class="glyphicon glyphicon-stop pull-right" style="color: #5cb85c"></span>
+                    <p class="pull-right textAlignMiddle">>50%</p>
+                    <span class="glyphicon glyphicon-stop pull-right" style="color: #d9534f"></span>
+                    <h4 class="panel-title">Workset Item Counts</h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <d3-workset-item-count data="vm.WorksetData.dataWorksetItemCount" count-total="vm.WorksetData.worksetCountTotal" margin-left="150" domain-padding="100"></d3-workset-item-count>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

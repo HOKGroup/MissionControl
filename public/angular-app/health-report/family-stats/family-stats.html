@@ -1,0 +1,266 @@
+<!--<style>-->
+    <!--.parcoords {-->
+        <!--display: block;-->
+    <!--}-->
+
+    <!--.parcoords svg,-->
+    <!--.parcoords canvas {-->
+        <!--font: 10px sans-serif;-->
+        <!--position: absolute;-->
+    <!--}-->
+
+    <!--.parcoords canvas {-->
+        <!--opacity: 0.9;-->
+        <!--pointer-events: none;-->
+    <!--}-->
+
+    <!--.axis .title {-->
+        <!--font-size: 10px;-->
+        <!--transform: rotate(-21deg) translate(-5px,-6px);-->
+        <!--fill: #222;-->
+    <!--}-->
+
+    <!--.axis line,-->
+    <!--.axis path {-->
+        <!--fill: none;-->
+        <!--stroke: #ccc;-->
+        <!--stroke-width: 1px;-->
+    <!--}-->
+
+    <!--.axis .tick text {-->
+        <!--fill: #222;-->
+        <!--pointer-events: none;-->
+    <!--}-->
+
+    <!--.axis.pl_facility .tick text,-->
+    <!--.axis.pl_instrument .tick text,-->
+    <!--.axis.st_spstr .tick text {-->
+        <!--font-size: 6px;-->
+    <!--}-->
+
+    <!--.axis.pl_telescope .tick text {-->
+        <!--font-size: 5px;-->
+    <!--}-->
+
+    <!--.axis:hover line,-->
+    <!--.axis:hover path,-->
+    <!--.axis.active line,-->
+    <!--.axis.active path {-->
+        <!--fill: none;-->
+        <!--stroke: #222;-->
+        <!--stroke-width: 1px;-->
+    <!--}-->
+
+    <!--.axis:hover .title {-->
+        <!--font-weight: bold;-->
+    <!--}-->
+
+    <!--.axis:hover .tick text {-->
+        <!--opacity: 1;-->
+    <!--}-->
+
+    <!--.axis.active .title {-->
+        <!--font-weight: bold;-->
+    <!--}-->
+
+    <!--.axis.active .tick text {-->
+        <!--opacity: 1;-->
+        <!--font-weight: bold;-->
+    <!--}-->
+
+    <!--.brush .extent {-->
+        <!--fill-opacity: .3;-->
+        <!--stroke: #fff;-->
+        <!--stroke-width: 1px;-->
+    <!--}-->
+
+    <!--pre {-->
+        <!--width: 100%;-->
+        <!--height: 300px;-->
+        <!--margin: 6px 12px;-->
+        <!--tab-size: 40;-->
+        <!--font-size: 10px;-->
+        <!--overflow: auto;-->
+    <!--}-->
+<!--</style>-->
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Families Health Score:</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <div class="col-md-3">
+                            <d3-circle data="vm.FamilyData.scoreData" class="cn"></d3-circle>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="small">
+                                <p>
+                                    {{vm.FamilyData.description}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div id="menu">
+                                <div class="panel list-group">
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sm" data-parent="#menu">
+                                        Unplaced Families
+                                        <span ng-class="vm.FamilyData.unusedFamilies <= 10
+                                ? 'badge progress-bar-success'
+                                : vm.FamilyData.unusedFamilies > 10 && vm.FamilyData.unusedFamilies <= 20
+                                ? 'badge progress-bar-warning'
+                                : 'badge progress-bar-danger' ">{{vm.FamilyData.unusedFamilies}}</span>
+                                    </a>
+                                    <div id="sm" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            Families are integral part of Revit project. However, unused/unplaced Families unnecessarily bloat file size
+                                            and degrade performance. Less than 10 is green, more than 10 but less than 20 is orange while more than 20 is red.
+                                        </div>
+                                    </div>
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sl" data-parent="#menu">
+                                        InPlace Families
+                                        <span ng-class="vm.FamilyData.inPlaceFamilies <= 5
+                                ? 'badge progress-bar-success'
+                                : vm.FamilyData.inPlaceFamilies > 5 && vm.FamilyData.inPlaceFamilies <= 10
+                                ? 'badge progress-bar-warning'
+                                : 'badge progress-bar-success' ">{{vm.FamilyData.inPlaceFamilies}}</span>
+                                    </a>
+                                    <div id="sl" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            Usage of InPlace families should be limited to minimum possible. InPlace Families cannot be scheduled, hence limited in traditional
+                                            usage. They are also constrained to given model, and cannot be reused on other projects.
+                                        </div>
+                                    </div>
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#s2" data-parent="#menu">
+                                        Misnamed Families
+                                        <span ng-class="vm.FamilyData.misnamed <= 10
+                                ? 'badge progress-bar-success'
+                                : vm.FamilyData.misnamed > 10 && vm.FamilyData.misnamed <= 20
+                                ? 'badge progress-bar-warning'
+                                : 'badge progress-bar-danger'">{{vm.FamilyData.misnamed}}</span>
+                                    </a>
+                                    <div id="s2" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            It's considered good practive to use HOK created and curated families. These families will typically have a name containing "_HOK" in it.
+                                            Family naming has no performance impact, but is good practice that should be followed. Less than 10 is green, more than 10 but less
+                                            than 20 is orange while more than 20 is red.
+                                        </div>
+                                    </div>
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#s3" data-parent="#menu">
+                                        Oversized Families
+                                        <span ng-class="vm.FamilyData.oversizedFamilies <= 10
+                                ? 'badge progress-bar-success'
+                                : vm.FamilyData.oversizedFamilies > 10 && vm.FamilyData.oversizedFamilies <= 20
+                                ? 'badge progress-bar-warning'
+                                : 'badge progress-bar-danger'">{{vm.FamilyData.oversizedFamilies}}</span>
+                                    </a>
+                                    <div id="s3" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            Anything over 1MB will be considered oversized. Large families can be a good indicator of mismodelled or families with imported
+                                            CAD objects. Generally it's a good idea to keep Family file size low. Less than 10 is green, more than 10 but less than 20 is orange while more than 20 is red.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="row">-->
+        <!--<div class="panel-group">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading">-->
+                    <!--<h4 class="panel-title">Parallel Coordinates Chart</h4>-->
+                <!--</div>-->
+                <!--&lt;!&ndash;<div class="panel-body parcoords">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<svg #svgObject>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<canvas #canvasObject>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<d3-parallel-coordinates data="vm.data"></d3-parallel-coordinates>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</canvas>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</svg>&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title pull-left">Submit Task</h5>
+                    <button type="button" class="close pull-right" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label class="form-control-label">Family Info:</label>
+                            <label class="form-control">{{vm.TaskFamily.name}} - {{vm.TaskFamily.elementId}}</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="form-control-label">Recipient:</label>
+                            <input type="text" class="form-control" id="recipient-name" value="{{vm.Recipient}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="form-control-label">Message:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="vm.SubmitTask()" data-dismiss="modal">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="panel-group" id="p1">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p1" data-target="#collapseP1">
+                    <p class="pull-right textAlignMiddle">2/3 Fail</p>
+                    <span class="glyphicon glyphicon-stop pull-right" style="color: #F0AD4E"></span>
+                    <p class="pull-right textAlignMiddle">All checks Fail</p>
+                    <span class="glyphicon glyphicon-stop pull-right" style="color: #D9534F"></span>
+                    <h4 class="panel-title">Family Checks: no placed instances, >1MB size, misnamed</h4>
+                </div>
+                <div id="collapseP1" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <table class="table table-hover table-striped table-condensed datatable" ui-jq="dataTable" ui-options="vm.dataTableOpt">
+                            <thead>
+                            <tr>
+                                <th class="col-md-1 text-center">#</th>
+                                <th class="col-md-7">Name</th>
+                                <th class="col-md-1 text-center">Qty.</th>
+                                <th class="col-md-1 text-center">Size</th>
+                                <th class="col-md-2 text-center">Element Id</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="i in vm.AllFamilies | orderBy: vm.sortType : vm.sortReverse" ng-class="vm.evaluateFamily(i) == 3 ? 'bg-danger' : vm.evaluateFamily(i) == 2 ? 'bg-warning' : 'table-info'">
+                            <td class="text-center">{{$index}}</td>
+                            <td ng-mouseenter="onHover = true" ng-mouseleave="onHover = false">
+                                <p ng-class="i.name.indexOf('_HOK_I') == -1 && i.name.indexOf('_HOK_M') == -1 ? 'thick' : 'normal'">{{i.name}}
+                                    <a href=""><span ng-show="onHover" class="glyphicon glyphicon-send" data-toggle="modal" data-target="#exampleModal" ng-click="vm.ShowTaskDialog(i)"></span></a>
+                                </p>
+                            </td>
+                            <td class="text-center"><p ng-class="i.instances == 0 ? 'thick' : 'normal'">{{i.instances}}</p></td>
+                            <td class="text-center"><p ng-class="i.sizeValue > 1000000 ? 'thick' : 'normal'">{{i.size}}</p></td>
+                            <td class="text-center">{{i.elementId}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
