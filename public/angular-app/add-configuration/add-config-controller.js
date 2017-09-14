@@ -151,19 +151,19 @@ function AddConfigController($routeParams, ConfigFactory, $window){
 
         ConfigFactory
             .getByEncodedUri(encodedUri).then(function(response){
-            var configFound = response.data;
-            var configNames = '';
-            var configMatched = false;
-            if(response.status === 200 && configFound.length > 0){
-                //find an exact match from text search result
-                for(var i = 0; i < configFound.length; i++) {
-                    var config = configFound[i];
-                    for(var j=0; j<config.files.length; j++){
-                        var file = config.files[j];
-                        if(file.centralPath.toLowerCase() === filePath.toLowerCase()){
-                            configMatched = true;
-                            configNames += ' [' + config.name + '] ';
-                            break;
+                var configFound = response.data;
+                var configNames = '';
+                var configMatched = false;
+                if(response.status === 200 && configFound.length > 0){
+                    //find an exact match from text search result
+                    for(var i = 0; i < configFound.length; i++) {
+                        var config = configFound[i];
+                        for(var j = 0; j < config.files.length; j++){
+                            var file = config.files[j];
+                            if(file.centralPath.toLowerCase() === filePath.toLowerCase()){
+                                configMatched = true;
+                                configNames += ' [' + config.name + '] ';
+                                break;
                         }
                     }
                 }
@@ -205,13 +205,13 @@ function AddConfigController($routeParams, ConfigFactory, $window){
                     var configId = response.data._id;
                     ConfigFactory
                         .addConfigToProject(vm.projectId, configId)
-                        .then(function(response){
-                            $window.location.assign('#/projects/configurations/'+vm.projectId);
+                        .then(function(){
+                            $window.location.assign('#/projects/configurations/' + vm.projectId);
                         }, function(error){
-                            vm.status='Unable to add to project: '+error.message;
+                            vm.status = 'Unable to add Configuration to project: ' + error.message;
                         });
                 }, function(error){
-                    vm.status = 'Unabl to add configuration: ' + error.message;
+                    vm.status = 'Unable to create Configuration: ' + error.message;
                 });
         }
         else{

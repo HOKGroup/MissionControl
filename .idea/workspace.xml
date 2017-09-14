@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d40d46a2-b8e8-4868-9ddf-969cc90d21aa" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/controller/families-controller.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controller/configurations.js" afterPath="$PROJECT_DIR$/app/controller/configurations.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controller/healthrecords-controller.js" afterPath="$PROJECT_DIR$/app/controller/healthrecords-controller.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controller/projects.js" afterPath="$PROJECT_DIR$/app/controller/projects.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/families-model.js" afterPath="$PROJECT_DIR$/app/models/families-model.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/healthrecords-model.js" afterPath="$PROJECT_DIR$/app/models/healthrecords-model.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes.js" afterPath="$PROJECT_DIR$/app/routes.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/add-configuration/add-config-controller.js" afterPath="$PROJECT_DIR$/public/angular-app/add-configuration/add-config-controller.js" />
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -21,29 +29,73 @@
       <file leaf-file-name="families-model.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/models/families-model.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+            <state relative-caret-position="374">
+              <caret line="22" column="27" lean-forward="false" selection-start-line="22" selection-start-column="27" selection-end-line="22" selection-end-column="27" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/public/index.html">
+      <file leaf-file-name="addins-controller.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/controller/addins-controller.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="45" column="10" lean-forward="false" selection-start-line="45" selection-start-column="10" selection-end-line="45" selection-end-column="10" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="16" selection-end-column="2" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="configuration.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/models/configuration.js">
+      <file leaf-file-name="healthrecords-controller.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/controller/healthrecords-controller.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
-              <caret line="38" column="46" lean-forward="false" selection-start-line="38" selection-start-column="46" selection-end-line="38" selection-end-column="46" />
+            <state relative-caret-position="477">
+              <caret line="758" column="44" lean-forward="false" selection-start-line="758" selection-start-column="34" selection-end-line="758" selection-end-column="44" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="routes.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/routes.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="681">
+              <caret line="77" column="54" lean-forward="true" selection-start-line="77" selection-start-column="54" selection-end-line="77" selection-end-column="54" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="configurations.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/controller/configurations.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="494">
+              <caret line="87" column="4" lean-forward="true" selection-start-line="79" selection-start-column="2" selection-end-line="87" selection-end-column="4" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="families-controller.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/controller/families-controller.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="627">
+              <caret line="59" column="11" lean-forward="true" selection-start-line="59" selection-start-column="11" selection-end-line="59" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="projects.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/controller/projects.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2108">
+              <caret line="142" column="18" lean-forward="false" selection-start-line="142" selection-start-column="12" selection-end-line="142" selection-end-column="18" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -51,38 +103,28 @@
       <file leaf-file-name="healthrecords-model.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/models/healthrecords-model.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="969">
-              <caret line="57" column="54" lean-forward="false" selection-start-line="57" selection-start-column="54" selection-end-line="57" selection-end-column="54" />
+            <state relative-caret-position="460">
+              <caret line="87" column="18" lean-forward="true" selection-start-line="87" selection-start-column="18" selection-end-line="87" selection-end-column="18" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="home.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/angular-app/home/home.html">
+      <file leaf-file-name="add-configuration.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/angular-app/add-configuration/add-configuration.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="-1071">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="project-controller.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/angular-app/project/project-controller.js">
+      <file leaf-file-name="add-config-controller.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/angular-app/add-configuration/add-config-controller.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="family-stats-controller.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats-controller.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="544">
-              <caret line="32" column="33" lean-forward="false" selection-start-line="32" selection-start-column="33" selection-end-line="32" selection-end-column="33" />
+            <state relative-caret-position="681">
+              <caret line="211" column="27" lean-forward="true" selection-start-line="211" selection-start-column="27" selection-end-line="211" selection-end-column="27" />
               <folding />
             </state>
           </provider>
@@ -99,7 +141,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>selectedReco</find>
       <find>getrecords</find>
       <find>findBy</find>
       <find>findbyc</find>
@@ -129,6 +170,7 @@
       <find>pointer</find>
       <find>point</find>
       <find>output</find>
+      <find>res</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -137,12 +179,10 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/public/angular-app/d3/d3-donut-chart.js" />
         <option value="$PROJECT_DIR$/public/angular-app/health-report/model-stats/model-stats.html" />
         <option value="$PROJECT_DIR$/public/angular-app/health-report/workset-stats/workset-stats.html" />
         <option value="$PROJECT_DIR$/app/models/worksets-model.js" />
         <option value="$PROJECT_DIR$/app/controller/addins-controller.js" />
-        <option value="$PROJECT_DIR$/app/controller/configurations.js" />
         <option value="$PROJECT_DIR$/app/controller/offices.js" />
         <option value="$PROJECT_DIR$/app/controller/projectfiles.js" />
         <option value="$PROJECT_DIR$/public/angular-app/data-factory/workset-data-factory.js" />
@@ -156,8 +196,6 @@
         <option value="$PROJECT_DIR$/public/angular-app/data-factory/healthrecords-data-factory.js" />
         <option value="$PROJECT_DIR$/server.js" />
         <option value="$PROJECT_DIR$/package.json" />
-        <option value="$PROJECT_DIR$/app/controller/projects.js" />
-        <option value="$PROJECT_DIR$/app/controller/healthrecords-controller.js" />
         <option value="$PROJECT_DIR$/public/angular-app/health-report/health-report.html" />
         <option value="$PROJECT_DIR$/public/angular-app/health-report/health-report-controller.js" />
         <option value="$PROJECT_DIR$/public/angular-app/health-report/link-stats/link-stats.html" />
@@ -168,9 +206,7 @@
         <option value="$PROJECT_DIR$/public/angular-app/d3/d3-multi-series-brushed-chart.js" />
         <option value="$PROJECT_DIR$/public/css/d3-styles.css" />
         <option value="$PROJECT_DIR$/public/angular-app/filters/filters.js" />
-        <option value="$PROJECT_DIR$/app/routes.js" />
         <option value="$PROJECT_DIR$/public/angular-app/add-configuration/add-configuration.html" />
-        <option value="$PROJECT_DIR$/public/angular-app/add-configuration/add-config-controller.js" />
         <option value="$PROJECT_DIR$/public/angular-app/app.js" />
         <option value="$PROJECT_DIR$/public/angular-app/configuration/config-controller.js" />
         <option value="$PROJECT_DIR$/public/angular-app/configuration/configuration.html" />
@@ -184,10 +220,16 @@
         <option value="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats-controller.js" />
         <option value="$PROJECT_DIR$/public/angular-app/project/project-controller.js" />
         <option value="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats.html" />
-        <option value="$PROJECT_DIR$/app/models/healthrecords-model.js" />
         <option value="$PROJECT_DIR$/app/models/configuration.js" />
-        <option value="$PROJECT_DIR$/app/models/families-model.js" />
         <option value="$PROJECT_DIR$/public/index.html" />
+        <option value="$PROJECT_DIR$/app/models/healthrecords-model.js" />
+        <option value="$PROJECT_DIR$/public/angular-app/add-configuration/add-config-controller.js" />
+        <option value="$PROJECT_DIR$/app/controller/configurations.js" />
+        <option value="$PROJECT_DIR$/app/controller/projects.js" />
+        <option value="$PROJECT_DIR$/app/controller/healthrecords-controller.js" />
+        <option value="$PROJECT_DIR$/app/routes.js" />
+        <option value="$PROJECT_DIR$/app/models/families-model.js" />
+        <option value="$PROJECT_DIR$/app/controller/families-controller.js" />
       </list>
     </option>
   </component>
@@ -208,7 +250,9 @@
     <option name="width" value="1936" />
     <option name="height" value="1176" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
@@ -247,6 +291,118 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MissionControl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MissionControl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="angular-app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MissionControl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MissionControl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="angular-app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data-factory" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MissionControl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MissionControl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="angular-app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="add-configuration" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MissionControl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MissionControl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MissionControl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MissionControl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MissionControl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MissionControl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controller" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -378,7 +534,7 @@
       <workItem from="1502812148318" duration="6775000" />
       <workItem from="1503950491244" duration="92509000" />
       <workItem from="1505165971642" duration="16355000" />
-      <workItem from="1505325658672" duration="149000" />
+      <workItem from="1505325658672" duration="16575000" />
     </task>
     <task id="LOCAL-00001" summary="testing commiting from web storm">
       <created>1505325779744</created>
@@ -387,11 +543,18 @@
       <option name="project" value="LOCAL" />
       <updated>1505325779745</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="testing committing from web storm">
+      <created>1505325831205</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1505325831205</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="783706000" />
+    <option name="totallyTimeSpent" value="800132000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
@@ -403,7 +566,7 @@
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1654373" sideWeight="0.5063898" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32981783" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26366252" sideWeight="0.51896733" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20901246" sideWeight="0.51896733" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2358581" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -423,7 +586,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="testing commiting from web storm" />
-    <option name="LAST_COMMIT_MESSAGE" value="testing commiting from web storm" />
+    <MESSAGE value="testing committing from web storm" />
+    <option name="LAST_COMMIT_MESSAGE" value="testing committing from web storm" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -432,92 +596,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/public/css/d3-styles.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-65">
-          <caret line="60" column="26" lean-forward="false" selection-start-line="60" selection-start-column="26" selection-end-line="60" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/routes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="33" lean-forward="false" selection-start-line="6" selection-start-column="33" selection-end-line="6" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/add-configuration/add-configuration.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="110" column="35" lean-forward="false" selection-start-line="110" selection-start-column="35" selection-end-line="110" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/add-configuration/add-config-controller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1972">
-          <caret line="116" column="34" lean-forward="false" selection-start-line="116" selection-start-column="34" selection-end-line="116" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/libs/angular-bootstrap/ui-bootstrap-tpls.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2669">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/libs/bootstrap/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="25" column="22" lean-forward="true" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/libs/angular-route/angular-route.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="23" column="43" lean-forward="false" selection-start-line="23" selection-start-column="36" selection-end-line="23" selection-end-column="43" />
-          <folding>
-            <marker date="1494600092017" expanded="true" signature="12604:13351" ph="..." />
-            <marker date="1494600092017" expanded="true" signature="13891:14044" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="14126:14235" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="14320:14432" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="14504:15262" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="14571:14968" ph="{&quot;templateUrl&quot;: 'book.html'...}" />
-            <marker date="1494600092017" expanded="true" signature="14683:14953" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="14782:14936" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="15020:15127" ph="{&quot;templateUrl&quot;: 'chapter.html'...}" />
-            <marker date="1494600092017" expanded="true" signature="15420:16007" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="30025:30739" ph="..." />
-            <marker date="1494600092017" expanded="true" signature="30350:30420" ph="..." />
-            <marker date="1494600092017" expanded="true" signature="30798:30903" ph="..." />
-            <marker date="1494600092017" expanded="true" signature="30965:31127" ph="..." />
-            <marker date="1494600092017" expanded="true" signature="31211:31397" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="31421:31456" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="31513:31811" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="31844:31876" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="31924:31953" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="32001:32034" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="32164:32747" ph="[...]" />
-            <marker date="1494600092017" expanded="true" signature="32260:32746" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="32330:32474" ph="{&quot;templateUrl&quot;: 'book.html'...}" />
-            <marker date="1494600092017" expanded="true" signature="32529:32682" ph="{&quot;templateUrl&quot;: 'chapter.html'...}" />
-            <marker date="1494600092017" expanded="true" signature="32783:33017" ph="[...]" />
-            <marker date="1494600092017" expanded="true" signature="32877:33016" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="33053:33183" ph="[...]" />
-            <marker date="1494600092017" expanded="true" signature="33093:33182" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="33222:33355" ph="[...]" />
-            <marker date="1494600092017" expanded="true" signature="33262:33354" ph="{...}" />
-            <marker date="1494600092017" expanded="true" signature="33492:34025" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/libs/angular-ui-utils/README.md" />
-    <entry file="file://$PROJECT_DIR$/public/libs/angular-ui-utils/index.js" />
     <entry file="file://$PROJECT_DIR$/public/libs/angular-ui-utils/bower.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -827,13 +905,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/addins-model.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="14" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/models/project_file.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -848,18 +919,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/healthrecords-model.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="969">
-          <caret line="57" column="54" lean-forward="false" selection-start-line="57" selection-start-column="54" selection-end-line="57" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/models/project.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="590">
           <caret line="40" column="48" lean-forward="true" selection-start-line="40" selection-start-column="48" selection-end-line="40" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="44" column="14" lean-forward="true" selection-start-line="44" selection-start-column="14" selection-end-line="44" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/addins-model.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="39" lean-forward="true" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/healthrecords-model.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="460">
+          <caret line="87" column="18" lean-forward="true" selection-start-line="87" selection-start-column="18" selection-end-line="87" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/add-configuration/add-configuration.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1071">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -871,18 +966,78 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/families-model.js">
+    <entry file="file://$PROJECT_DIR$/public/angular-app/data-factory/config-data-factory.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+        <state relative-caret-position="544">
+          <caret line="32" column="24" lean-forward="false" selection-start-line="32" selection-start-column="8" selection-end-line="32" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.html">
+    <entry file="file://$PROJECT_DIR$/public/angular-app/add-configuration/add-config-controller.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="45" column="10" lean-forward="false" selection-start-line="45" selection-start-column="10" selection-end-line="45" selection-end-column="10" />
+        <state relative-caret-position="681">
+          <caret line="211" column="27" lean-forward="true" selection-start-line="211" selection-start-column="27" selection-end-line="211" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controller/addins-controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="16" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controller/healthrecords-controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="477">
+          <caret line="758" column="44" lean-forward="false" selection-start-line="758" selection-start-column="34" selection-end-line="758" selection-end-column="44" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controller/configurations.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="494">
+          <caret line="87" column="4" lean-forward="true" selection-start-line="79" selection-start-column="2" selection-end-line="87" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/routes.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="681">
+          <caret line="77" column="54" lean-forward="true" selection-start-line="77" selection-start-column="54" selection-end-line="77" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/families-model.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="27" lean-forward="false" selection-start-line="22" selection-start-column="27" selection-end-line="22" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controller/projects.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2108">
+          <caret line="142" column="18" lean-forward="false" selection-start-line="142" selection-start-column="12" selection-end-line="142" selection-end-column="18" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controller/families-controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="627">
+          <caret line="59" column="11" lean-forward="true" selection-start-line="59" selection-start-column="11" selection-end-line="59" selection-end-column="11" />
           <folding />
         </state>
       </provider>

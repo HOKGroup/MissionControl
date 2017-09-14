@@ -40,30 +40,30 @@ var linksStatsSchema = new mongoose.Schema({
     createdOn: Date
 });
 
-var familyStatsSchema = new mongoose.Schema({
-    suspectFamilies: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Families'
-    },
-    // suspectFamilies: [{
-    //     name: String,
-    //     size: String,
-    //     sizeValue: Number,
-    //     instances: Number,
-    //     elementId: Number,
-    //     arrayCount: {type: Number, default: 0},
-    //     refPlaneCount: {type: Number, default: 0},
-    //     voidCount: {type: Number, default: 0},
-    //     nestedFamilyCount: {type: Number, default: 0},
-    //     parametersCount: {type: Number, default: 0}
-    // }],
-    totalFamilies: Number,
-    unusedFamilies: Number,
-    oversizedFamilies: Number,
-    inPlaceFamilies: Number,
-    createdBy: String,
-    createdOn: Date
-});
+// var familyStatsSchema = new mongoose.Schema({
+//     suspectFamilies: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: 'Families'
+//     },
+//     // suspectFamilies: [{
+//     //     name: String,
+//     //     size: String,
+//     //     sizeValue: Number,
+//     //     instances: Number,
+//     //     elementId: Number,
+//     //     arrayCount: {type: Number, default: 0},
+//     //     refPlaneCount: {type: Number, default: 0},
+//     //     voidCount: {type: Number, default: 0},
+//     //     nestedFamilyCount: {type: Number, default: 0},
+//     //     parametersCount: {type: Number, default: 0}
+//     // }],
+//     totalFamilies: Number,
+//     unusedFamilies: Number,
+//     oversizedFamilies: Number,
+//     inPlaceFamilies: Number,
+//     createdBy: String,
+//     createdOn: Date
+// });
 
 var eventTimeSchema = new mongoose.Schema({
     value: Number,
@@ -85,7 +85,10 @@ var healthCheckSchema = new mongoose.Schema({
     itemCount : [worksetItemSchema],
     viewStats: [viewStatsSchema],
     linkStats: [linksStatsSchema],
-    familyStats: [familyStatsSchema],
+    familyStats: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Families'
+    },
     openTimes: [eventTimeSchema],
     synchTimes: [eventTimeSchema],
     modelSizes: [eventTimeSchema],

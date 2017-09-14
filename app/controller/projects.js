@@ -107,33 +107,6 @@ ProjectService = {
                   .json(response.message);
           });
   },
-
-    // populateHealthRecordsProcess : function (req, res) {
-    //     var id = req.params.id;
-    //     Project
-    //         .findById(id)
-    //         .lean()
-    //         .populate({
-    //             path: 'healthrecords',
-    //             select: '-onOpened -onSynched -openTimes -synchTimes -modelSizes -sessionLogs'
-    //         })
-    //         .exec(function (err, doc) {
-    //             var response = {
-    //                 status: 200,
-    //                 message: doc.healthrecords
-    //             };
-    //             if(err){
-    //                 response.status = 500;
-    //                 response.message = err;
-    //             } else if(!doc){
-    //                 response.status = 404;
-    //                 response.message = { "message": "Project Id not found " + id};
-    //             }
-    //             res
-    //                 .status(response.status)
-    //                 .json(response.message);
-    //         });
-    // },
   
    findByConfigurationId : function(req, res){
     var id = req.params.configid;

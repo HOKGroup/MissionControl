@@ -4,6 +4,9 @@
 /**
  * @param {{centralpath:string}}
  */
+/**
+ * @param {{familiesid:string}}
+ */
 var mongoose = require('mongoose');
 var HealthRecords = mongoose.model('HealthRecords');
 var global = require('./socket/global');
@@ -745,4 +748,25 @@ module.exports.updateSynchedCollection = function (req, res) {
                 });
             }
         })
+};
+
+module.exports.addFamilies = function (req, res) {
+    var healthRecordId = req.params.id;
+    var familiesId = mongoose.Types.ObjectId(req.body.key);
+    HealthRecords
+        .update(
+            { _id: healthRecordId},
+            { $set:{ familyStats: familiesId }},
+            function(err){
+                if(err) {
+                    console.log(err);
+                    res
+                        .status(201)
+                        .json(err);
+                } else {
+                    res
+                        .status(201)
+                        .json();
+                }
+            });
 };

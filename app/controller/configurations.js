@@ -64,9 +64,15 @@ ConfigurationService = {
    add : function(req, res) {
     Configuration
         .create(req.body, function (err, result) {
-      if (err) return;
-	  global.io.sockets.emit('add_configuration', req.body);
-      return res.send(result);
+            if(err) {
+                res
+                    .status(400)
+                    .json(err);
+            } else {
+                res
+                    .status(201)
+                    .json(result);
+            }
     });
   },
   
