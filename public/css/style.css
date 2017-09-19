@@ -162,3 +162,20 @@ table {
 textarea {
   resize: vertical;
 }
+
+.panel-header .radio .checkbox{
+  display: inline-block;
+}
+.panel .glyphicon,.list-group-item .glyphicon {
+  margin-right:5px;
+}
+.panel-body .radio, .checkbox {
+  display:inline-block;
+  margin-left:20px;
+  margin-bottom: 0px;
+  margin-top: 0px
+}
+.list-group-item:hover, a.list-group-item:focus {
+  text-decoration: none;
+  background-color: rgb(245, 245, 245);
+}

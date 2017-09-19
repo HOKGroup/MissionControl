@@ -22,12 +22,14 @@ var familiesSchema = new mongoose.Schema({
         isFailingChecks: Boolean,
         isDeleted: Boolean,
         tasks: [{
+            name: String,
             assignedTo: String,
             message: String,
             submittedOn: Date,
             completedOn: Date,
             submittedBy: String,
-            completedBy: String
+            completedBy: String,
+            isSelected: Boolean
         }]
     }]
 });

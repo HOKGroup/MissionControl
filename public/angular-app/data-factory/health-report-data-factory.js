@@ -6,7 +6,7 @@ function HealthReportFactory(){
             if(!data) return;
 
             var misnamed = 0;
-            data.suspectFamilies.forEach(function(item){
+            data.families.forEach(function(item){
                 if(item.name.indexOf('_HOK_I') === -1 && item.name.indexOf('_HOK_M') === -1){
                     misnamed++;
                 }

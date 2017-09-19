@@ -1,6 +1,4 @@
 var mongoose = require('mongoose');
-var global = require('./socket/global');
-
 TriggerRecord = mongoose.model('TriggerRecord');
 
 TriggerRecordService = {
@@ -53,7 +51,6 @@ TriggerRecordService = {
   add : function(req, res) {
     TriggerRecord.create(req.body, function (err, result) {
       if (err) return console.log(err);
-	  //global.io.sockets.emit('add_record', req.body);
       return res.send(result);
     });
   },
@@ -61,13 +58,11 @@ TriggerRecordService = {
 
   update : function(req, res) {
     var id = req.params.id;
-    //console.log(req.body);
     console.log('Updating ' + id);
     TriggerRecord.update({"_id":id}, req.body, {upsert:true},
       function (err, numberAffected) {
         if (err) return console.log(err);
         console.log('Updated %s instances', numberAffected.toString());
-		//global.io.sockets.emit('update_record', req.body);
         return res.sendStatus(202);
     });
   },

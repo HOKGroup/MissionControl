@@ -1,4 +1,4 @@
-angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ui.utils']).config(config);
+angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ui.utils', 'ngAnimate']).config(config);
 
 function config($routeProvider){
     $routeProvider

@@ -1,3 +1,7 @@
+/**
+ * @param {{taskid:string}}
+ */
+
 var mongoose = require('mongoose');
 var Families = mongoose.model('Families');
 
@@ -62,6 +66,7 @@ module.exports.add = function(req, res){
 
 module.exports.update = function(req, res) {
     var id = req.params.id;
+
     Families
         .update({_id: id}, req.body, {upsert: true}, function (err, result){
             if(err) {
@@ -74,4 +79,91 @@ module.exports.update = function(req, res) {
                     .json(result);
             }
         });
+};
+
+module.exports.findById = function(req, res){
+    var id = req.params.id;
+
+    Families
+        .findOne({ '_id': id },function(err, result) {
+            if(err) {
+                res
+                    .status(400)
+                    .json(err);
+            } else {
+                res
+                    .status(202)
+                    .json(result);
+            }
+        });
+};
+
+module.exports.addTask = function(req, res) {
+    var id = req.params.id;
+    var famName = req.params.name;
+
+    Families
+        .findOneAndUpdate(
+            {_id: id, 'families.name': famName},
+            {$push: {'families.$.tasks': req.body}},
+            {'new': true}) // returns newly updated collection
+        .exec(function(err, data){
+            if(err){
+                res
+                    .status(500)
+                    .json(err);
+            } else {
+                res
+                    .json(data)
+            }
+        });
+};
+
+module.exports.deleteTask = function (req, res) {
+    var id = req.params.id;
+    var famName = req.params.name;
+    var taskId = mongoose.Types.ObjectId(req.params.taskid);
+
+    Families
+        .update(
+            { _id: id, 'families.name': famName},
+            { $pull: {'families.$.tasks': { _id: taskId}}}, function(err, result){
+                if(err) {
+                    res
+                        .status(400)
+                        .json(err);
+                } else {
+                    res
+                        .status(202)
+                        .json(result);
+                }
+            }
+        )
+};
+
+module.exports.deleteMultipleTasks = function (req, res) {
+    var id = req.params.id;
+    var famName = req.params.name;
+    var taskIds = [];
+    for(var key in req.body) {
+        if(req.body.hasOwnProperty(key)){
+            taskIds.push(mongoose.Types.ObjectId(req.body[key]));
+        }
+    }
+
+    Families
+        .update(
+            { _id: id, 'families.name': famName},
+            { $pull: {'families.$.tasks': { _id: { $in: taskIds}}}}, function(err, result){
+                if(err) {
+                    res
+                        .status(400)
+                        .json(err);
+                } else {
+                    res
+                        .status(202)
+                        .json(result);
+                }
+            }
+        )
 };

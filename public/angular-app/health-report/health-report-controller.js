@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').controller('HealthReportController', HealthReportController);
 
-function HealthReportController($routeParams, HealthRecordsFactory, HealthReportFactory){
+function HealthReportController($routeParams, HealthRecordsFactory, HealthReportFactory, FamiliesFactory){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.ShowLinkStats = {name: "links", value: false};
@@ -10,6 +10,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
     vm.ShowModelStats = {name: "models", value: false};
     vm.ShowMainPage = {name: "main", value: true};
     vm.HealthRecordNames = [];
+    vm.FamilyCollection = null;
 
     var allControllers = [vm.ShowLinkStats, vm.ShowFamiliesStats, vm.ShowWorksetStats, vm.ShowViewStats, vm.ShowModelStats, vm.ShowMainPage];
     vm.SelectionChanged = function (name) {
@@ -31,9 +32,10 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
 
         vm.AllData = [];
 
-        var familyData = link.familyStats[link.familyStats.length - 1];
-        vm.FamilyData = HealthReportFactory.processFamilyStats(familyData);
-        if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
+        if(vm.FamilyCollection !== null){
+            vm.FamilyData = HealthReportFactory.processFamilyStats(vm.FamilyCollection);
+            if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
+        }
 
         vm.WorksetData = HealthReportFactory.processWorksetStats(link);
         if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
@@ -56,19 +58,30 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
     function getSelectedProject(projectId) {
         HealthRecordsFactory
             .getProjectById(projectId)
-            .then(function(response){
-                if(!response) return;
-                vm.selectedProject = response.data;
-                if(response.data.healthrecords.length > 0)
+            .then(function(resProject){
+                if(!resProject) return;
+                vm.selectedProject = resProject.data;
+                if(resProject.data.healthrecords.length > 0)
                 {
                     HealthRecordsFactory
                         .populateProject(projectId)
-                        .then(function(res){
-                            if(!res) return;
-                            vm.selectedProject = res.data;
+                        .then(function(resProject1){
+                            if(!resProject1) return;
+                            vm.selectedProject = resProject1.data;
                             vm.selectedHealthRecord = vm.selectedProject.healthrecords[0];
                             vm.selectedFileName = vm.fileNameFromPath(vm.selectedHealthRecord.centralPath);
-                            vm.SetProject(vm.selectedHealthRecord);
+
+                            if(vm.selectedHealthRecord.familyStats !== null){
+                                FamiliesFactory
+                                    .getById(vm.selectedHealthRecord.familyStats)
+                                    .then(function(resFamilies){
+                                        if(!resFamilies) return;
+                                        vm.FamilyCollection = resFamilies.data;
+                                        vm.SetProject(vm.selectedHealthRecord);
+                                    }, function(err){
+                                        console.log('Unable to load Families Data: ' + err.message);
+                                    })
+                            }
                         }, function(err){
                             console.log('Unable to load Health Records data: ' + err.message);
                         });
