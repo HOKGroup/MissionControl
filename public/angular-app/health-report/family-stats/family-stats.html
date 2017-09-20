@@ -254,18 +254,30 @@
                     </div>
                     <div class="col-md-6 no-padding-left">
                         <div class="form-group">
-                            <label for="task-name" class="form-control-label">Task Name:</label>
+                            <label for="task-name" class="form-control-label">
+                                Task Name:
+                                <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="task.name"></span>
+                                <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!task.name"></span>
+                            </label>
                             <input type="text" class="form-control" id="task-name" value="task.name" ng-model="task.name">
                         </div>
                     </div>
                     <div class="col-md-6 no-padding-right">
                         <div class="form-group">
-                            <label for="recipient-name" class="form-control-label">Recipient:</label>
+                            <label for="recipient-name" class="form-control-label">
+                                Recipient:
+                                <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="task.assignedTo"></span>
+                                <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!task.assignedTo"></span>
+                            </label>
                             <input type="text" class="form-control" id="recipient-name" value="task.assignedTo" ng-model="task.assignedTo">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="message-text" class="form-control-label">Message:</label>
+                        <label for="message-text" class="form-control-label">
+                            Message:
+                            <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="task.message"></span>
+                            <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!task.message"></span>
+                        </label>
                         <textarea class="form-control" id="message-text" ng-model="task.message"></textarea>
                     </div>
                 </form>
@@ -273,7 +285,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary pull-left" ng-click="back('', family)"><span class="glyphicon glyphicon-chevron-left">Back</span></button>
                 <button type="button" class="btn btn-secondary" ng-click="cancel()">Close</button>
-                <button type="button" class="btn btn-primary" ng-click="ok()">Submit</button>
+                <button type="button" class="btn btn-primary" ng-click="updateTask()">Update</button>
             </div>
         </div>
     </script>
@@ -281,7 +293,7 @@
     <script type="text/ng-template" id="addTask">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title pull-left">Submit Task</h5>
+                <h5 class="modal-title pull-left">Add Task</h5>
                 <button type="button" class="close pull-right" ng-click="cancel()">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -324,7 +336,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" ng-click="cancel()">Close</button>
-                <button type="button" class="btn btn-primary" ng-click="submit()">Submit</button>
+                <button type="button" class="btn btn-primary" ng-click="addTask()">Add</button>
             </div>
         </div>
     </script>
@@ -333,10 +345,8 @@
         <div class="panel-group" id="p1">
             <div class="panel panel-default">
                 <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p1" data-target="#collapseP1">
-                    <p class="pull-right textAlignMiddle">2/3 Fail</p>
-                    <span class="glyphicon glyphicon-stop pull-right" style="color: #F0AD4E"></span>
-                    <p class="pull-right textAlignMiddle">All checks Fail</p>
-                    <span class="glyphicon glyphicon-stop pull-right" style="color: #D9534F"></span>
+                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #F0AD4E"></span> 2/3 Fail</p>
+                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #D9534F"></span> All checks Fail</p>
                     <h4 class="panel-title">Family Checks: no placed instances, >1MB size, misnamed</h4>
                 </div>
                 <div id="collapseP1" class="panel-collapse collapse in">
@@ -356,7 +366,7 @@
                             <td class="text-center">{{$index}}</td>
                             <td ng-mouseenter="onHover = true" ng-mouseleave="onHover = false">
                                 <p ng-class="i.name.indexOf('_HOK_I') == -1 && i.name.indexOf('_HOK_M') == -1 ? 'thick' : 'normal'">{{i.name}}
-                                    <a href=""><span ng-show="i.tasks.length > 0 || onHover" class="glyphicon glyphicon-send" ng-click="i.tasks.length > 0 ? vm.openAllTasksWindow('',i) : vm.openAddWindow('', i)"></span></a>
+                                    <a href=""><span ng-show="i.tasks.length > 0 || onHover" class="glyphicon glyphicon-list" ng-click="i.tasks.length > 0 ? vm.openAllTasksWindow('',i) : vm.openAddWindow('', i)"></span></a>
                                 </p>
                             </td>
                             <td class="text-center"><p ng-class="i.instances == 0 ? 'thick' : 'normal'">{{i.instances}}</p></td>

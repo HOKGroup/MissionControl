@@ -7,7 +7,6 @@ function AddConfigController($routeParams, ConfigFactory, $window){
     vm.newConfig = {};
     vm.newFile;
     vm.fileWarningMsg = '';
-    vm.Submitted = false;
     vm.HasFiles = false;
     vm.status = " ";
 
@@ -149,13 +148,29 @@ function AddConfigController($routeParams, ConfigFactory, $window){
         var encodedUri = encodeURIComponent(filePath);
         vm.fileWarningMsg='';
 
+        // (Konrad) Let's make sure we are not adding the same file twice.
+        var matchingFiles = vm.newConfig.files.find(function (item) {
+            return item.centralPath === filePath;
+        });
+        if(matchingFiles !== undefined){
+            vm.fileWarningMsg = 'Warning! File already added to current configuration.';
+            return;
+        }
+
+        // (Konrad) Let's make sure we have a valid, non empty name
+        if(!filePath.length || !filePath.includes('.rvt')){
+            vm.fileWarningMsg = 'Warning! File name is not valid. Must be non-empty and include *.rvt';
+            return;
+        }
+
+        // (Konrad) Let's make sure file is not already in other configurations
         ConfigFactory
             .getByEncodedUri(encodedUri).then(function(response){
                 var configFound = response.data;
                 var configNames = '';
                 var configMatched = false;
+
                 if(response.status === 200 && configFound.length > 0){
-                    //find an exact match from text search result
                     for(var i = 0; i < configFound.length; i++) {
                         var config = configFound[i];
                         for(var j = 0; j < config.files.length; j++){
@@ -164,24 +179,21 @@ function AddConfigController($routeParams, ConfigFactory, $window){
                                 configMatched = true;
                                 configNames += ' [' + config.name + '] ';
                                 break;
+                            }
                         }
                     }
                 }
-            }
-            if(configMatched){
-                vm.fileWarningMsg = 'Warning! File already exists in other configurations.\n' + configNames;
-            } else if(filePath.length > 0 && filePath.includes('.rvt')){
-                var file1 = { centralPath: filePath };
-                vm.newConfig.files.push(file1);
-                vm.HasFiles = true;
-                vm.newFile = '';
-            } else{
-                vm.fileWarningMsg = 'Warning! Please enter a valid file.';
-            }
-
-        }, function(error){
-            vm.status = 'Unable to get configuration data: ' + error.message;
-        });
+                if(configMatched) {
+                    vm.fileWarningMsg = 'Warning! File already exists in other configurations.\n' + configNames;
+                } else{
+                    var file1 = { centralPath: filePath };
+                    vm.newConfig.files.push(file1);
+                    vm.HasFiles = true;
+                    vm.newFile = '';
+                }
+            }, function(error){
+                vm.status = 'Unable to get configuration data: ' + error.message;
+            });
     };
 
     vm.deleteFile = function(filePath){
@@ -196,7 +208,6 @@ function AddConfigController($routeParams, ConfigFactory, $window){
     };
 
     vm.addConfiguration = function(){
-        vm.Submitted = true;
         if(vm.newConfig.files.length > 0)
         {
             ConfigFactory

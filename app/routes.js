@@ -80,4 +80,5 @@ var families = require('./models/families-model');
      app.post('/api/v1/families/:id/name/:name', families.addTask);
      app.post('/api/v1/families/:id/name/:name/delete/:taskid', families.deleteTask);
      app.post('/api/v1/families/:id/name/:name/deletemany', families.deleteMultipleTasks);
+     app.post('/api/v1/families/:id/name/:name/updatetask/:taskid', families.updateTask);
   };

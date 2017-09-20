@@ -167,3 +167,40 @@ module.exports.deleteMultipleTasks = function (req, res) {
             }
         )
 };
+
+// (Konrad) For the time being as of 3.4.9 MongoDB release
+// we cannot update objects inside of nested arrays with a single call
+// That change is coming with MongoDB 3.5.12 https://jira.mongodb.org/browse/SERVER-831
+module.exports.updateTask = function (req, res) {
+    var id = req.params.id;
+    var famName = req.params.name;
+    var taskId = mongoose.Types.ObjectId(req.params.taskid);
+
+    Families
+        .update(
+            { _id: id, 'families.name': famName},
+            { $pull: {'families.$.tasks': { _id: taskId}}}, function(err){
+                if(err) {
+                    res
+                        .status(400)
+                        .json(err);
+                } else {
+                Families
+                    .findOneAndUpdate(
+                        {_id: id, 'families.name': famName},
+                        {$push: {'families.$.tasks': req.body}},
+                        {'new': true}) // returns newly updated collection
+                        .exec(function(err, data){
+                            if(err){
+                                res
+                                    .status(500)
+                                    .json(err);
+                            } else {
+                                res
+                                    .json(data)
+                            }
+                        });
+                }
+            }
+        );
+};

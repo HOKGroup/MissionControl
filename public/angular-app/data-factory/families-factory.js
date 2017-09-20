@@ -15,6 +15,10 @@ function FamiliesFactory($http){
 
         deleteMultipleTasks: function deleteMultipleTasks(familyCollectionId, familyName, taskIds) {
           return $http.post('/api/v1/families/' + familyCollectionId + '/name/' + familyName + '/deletemany', taskIds).then(complete).catch(failed);
+        },
+
+        updateTask: function updateTask(familyCollectionId, familyName, taskId, task) {
+            return $http.post('/api/v1/families/' + familyCollectionId + '/name/' + familyName + '/updatetask/' + taskId, task).then(complete).catch(failed);
         }
     };
 

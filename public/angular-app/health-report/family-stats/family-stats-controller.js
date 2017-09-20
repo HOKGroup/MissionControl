@@ -103,13 +103,19 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal) {
                     counter++;
                 }
             }
-            // (Konrad) We clear the tasks array to update UI, without reloading the page
-            $scope.family.tasks = $scope.family.tasks.filter(function (item){
-                return !item.isSelected;
-            });
 
             FamiliesFactory
-                .deleteMultipleTasks(data._id, $scope.family.name, selectedIds);
+                .deleteMultipleTasks(data._id, $scope.family.name, selectedIds)
+                .then(function (response) {
+                    if(!response) return;
+
+                    // (Konrad) We clear the tasks array to update UI, without reloading the page
+                    $scope.family.tasks = $scope.family.tasks.filter(function (item){
+                        return !item.isSelected;
+                    });
+                }, function(err){
+                    console.log('Unable to delete task: ' + err)
+                });
 
             $uibModalInstance.close();
         };
@@ -140,7 +146,37 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal) {
             modalInstance.result.then(function () {}, function () {});
         };
 
-        $scope.ok = function () {
+        $scope.updateTask = function () {
+            FamiliesFactory
+                .updateTask(data._id, $scope.family.name, $scope.task._id, $scope.task)
+                .then(function(response){
+                    if(!response) return;
+
+                    // (Konrad) We clear the tasks array to update UI, without reloading the page
+                    $scope.family.tasks = $scope.family.tasks.filter(function (item){
+                        return item._id !== $scope.task._id;
+                    });
+
+                    // (Konrad) We need to update the AllFamilies collection
+                    // in order to update the DataTable display without reloading the whole page.
+                    data = response.data;
+
+                    var newTask = data.families.find(function(item){
+                        return item.name === $scope.family.name;
+                    }).tasks.find(function(task){
+                        return task.name === $scope.task.name;
+                    });
+
+                    for(var i = 0; i < vm.AllFamilies.length; i++){
+                        if(vm.AllFamilies[i].name === $scope.family.name){
+                            vm.AllFamilies[i].tasks.push(newTask);
+                            break;
+                        }
+                    }
+                }, function (err) {
+                    console.log('Unable to update task: ' + err)
+                });
+
             $uibModalInstance.close();
         };
 
@@ -178,7 +214,7 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal) {
             name: ""
         };
 
-        $scope.submit = function () {
+        $scope.addTask = function () {
             FamiliesFactory
                 .addTask(data._id, family.name, $scope.task)
                 .then(function (response) {
