@@ -19,7 +19,15 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal) {
     };
 
     vm.dataTableOpt = {
-        "aLengthMenu": [[10, 50, 100, -1], [10, 50, 100, 'All']]
+        "aLengthMenu": [[10, 50, 100, -1], [10, 50, 100, 'All']],
+        // 'order': [[1, 'desc']] // sorted by name using AngularJS
+        'columns': [
+            null,
+            null,
+            null,
+            {'orderData': 5}, // sorts this column by data in col 5
+            null,
+            {'visible': false}] // hides col 5, used for sorting only
     };
 
     vm.openAllTasksWindow = function (size, family) {
