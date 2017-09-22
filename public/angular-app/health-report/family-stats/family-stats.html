@@ -126,7 +126,7 @@
                                 ? 'badge progress-bar-success'
                                 : vm.FamilyData.inPlaceFamilies > 5 && vm.FamilyData.inPlaceFamilies <= 10
                                 ? 'badge progress-bar-warning'
-                                : 'badge progress-bar-success' ">{{vm.FamilyData.inPlaceFamilies}}</span>
+                                : 'badge progress-bar-danger' ">{{vm.FamilyData.inPlaceFamilies}}</span>
                                     </a>
                                     <div id="sl" class="sublinks collapse">
                                         <div class="list-group-item small">
@@ -359,6 +359,7 @@
                                 <th class="col-md-1 text-center">Qty.</th>
                                 <th class="col-md-1 text-center">Size</th>
                                 <th class="col-md-2 text-center">Element Id</th>
+                                <th>Size Value</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -372,6 +373,7 @@
                             <td class="text-center"><p ng-class="i.instances == 0 ? 'thick' : 'normal'">{{i.instances}}</p></td>
                             <td class="text-center"><p ng-class="i.sizeValue > 1000000 ? 'thick' : 'normal'">{{i.size}}</p></td>
                             <td class="text-center">{{i.elementId}}</td>
+                            <td class="text-center">{{i.sizeValue}}</td>
                             </tr>
                             </tbody>
                         </table>

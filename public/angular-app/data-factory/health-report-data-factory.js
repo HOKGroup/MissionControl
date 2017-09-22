@@ -231,9 +231,20 @@ function HealthReportFactory(){
                 });
             });
 
+            output.sort(function (a, b){
+                var x = a.user.toLowerCase();
+                var y = b.user.toLowerCase();
+                return x < y ? -1 : x > y ? 1 : 0;
+            }); // sorted by name
+
+            var itemCount = data.itemCount[data.itemCount.length - 1].worksets;
+            itemCount.sort(function(a,b){
+                return a.count - b.count;
+            }).reverse(); // sorted by count
+
             // (Konrad) This section collects all data about Workset Item Counts (horizontal bar chart)
             // Returns most recently added workset count information (response.data.itemCount.length-1)
-            var worksetItemCountData = data.itemCount[data.itemCount.length - 1].worksets;
+            var worksetItemCountData = itemCount;
             var onlyDefaultWorksets = "No";
             var contentOnSingleWorkset = "No";
             var unusedWorksets = 0;
@@ -287,12 +298,12 @@ function HealthReportFactory(){
      */
     function FormatNumber(n) {
         var ranges = [
-            { divider: 1e18 , suffix: 'Pb' },
-            { divider: 1e15 , suffix: 'Eb' },
-            { divider: 1e12 , suffix: 'Tb' },
-            { divider: 1e9 , suffix: 'Gb' },
-            { divider: 1e6 , suffix: 'Mb' },
-            { divider: 1e3 , suffix: 'kb' }
+            { divider: 1.4615016373309029182036848327163e+48 , suffix: 'Pb' },
+            { divider: 1208925819614629174706176 , suffix: 'Eb' },
+            { divider: 1099511627776 , suffix: 'Tb' },
+            { divider: 1073741824 , suffix: 'Gb' },
+            { divider: 1048576 , suffix: 'Mb' },
+            { divider: 1024 , suffix: 'Kb' } // file size is actually stored in powers of 1024 bytes
         ];
 
         for (var i = 0; i < ranges.length; i++) {
