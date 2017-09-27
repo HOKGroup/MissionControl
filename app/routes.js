@@ -77,6 +77,8 @@ var families = require('./models/families-model');
      app.get('/api/v1/families/uri/:uri*', families.findByEncodedURI);
      app.post('/api/v1/families', families.add);
      app.put('/api/v1/families/:id', families.update);
+     app.put('/api/v1/families/:id/updateOne', families.updateOne);
+     // app.put('/api/v1/families/:id/multiupdate1', families.updateMultipleFamilies1);
      app.post('/api/v1/families/:id/name/:name', families.addTask);
      app.post('/api/v1/families/:id/name/:name/delete/:taskid', families.deleteTask);
      app.post('/api/v1/families/:id/name/:name/deletemany', families.deleteMultipleTasks);

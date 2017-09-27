@@ -10,12 +10,9 @@ module.exports.findAll = function(req, res){
         .find()
         .exec(function(err, data){
             if(err){
-                res
-                    .status(500)
-                    .json(err);
+                res.status(500).json(err);
             } else {
-                res
-                    .json(data)
+                res.status(200).json(data)
             }
         });
 };
@@ -43,9 +40,7 @@ module.exports.findByEncodedURI = function(req, res){
             } else if(!result){
                 console.log("File Path wasn't found in any Families Collections");
             }
-            res
-                .status(response.status)
-                .json(response.message);
+            res.status(response.status).json(response.message);
         });
 };
 
@@ -53,13 +48,9 @@ module.exports.add = function(req, res){
     Families
         .create(req.body, function(err, familyData){
             if(err) {
-                res
-                    .status(400)
-                    .json(err);
+                res.status(400).json(err);
             } else {
-                res
-                    .status(201)
-                    .json(familyData);
+                res.status(201).json(familyData);
             }
         });
 };
@@ -70,13 +61,9 @@ module.exports.update = function(req, res) {
     Families
         .update({_id: id}, req.body, {upsert: true}, function (err, result){
             if(err) {
-                res
-                    .status(400)
-                    .json(err);
+                res.status(400).json(err);
             } else {
-                res
-                    .status(202)
-                    .json(result);
+                res.status(202).json(result);
             }
         });
 };
@@ -87,13 +74,9 @@ module.exports.findById = function(req, res){
     Families
         .findOne({ '_id': id },function(err, result) {
             if(err) {
-                res
-                    .status(400)
-                    .json(err);
+                res.status(400).json(err);
             } else {
-                res
-                    .status(202)
-                    .json(result);
+                res.status(202).json(result);
             }
         });
 };
@@ -109,12 +92,9 @@ module.exports.addTask = function(req, res) {
             {'new': true}) // returns newly updated collection
         .exec(function(err, data){
             if(err){
-                res
-                    .status(500)
-                    .json(err);
+                res.status(500).json(err);
             } else {
-                res
-                    .json(data)
+                res.json(data)
             }
         });
 };
@@ -129,13 +109,9 @@ module.exports.deleteTask = function (req, res) {
             { _id: id, 'families.name': famName},
             { $pull: {'families.$.tasks': { _id: taskId}}}, function(err, result){
                 if(err) {
-                    res
-                        .status(400)
-                        .json(err);
+                    res.status(400).json(err);
                 } else {
-                    res
-                        .status(202)
-                        .json(result);
+                    res.status(202).json(result);
                 }
             }
         )
@@ -156,16 +132,104 @@ module.exports.deleteMultipleTasks = function (req, res) {
             { _id: id, 'families.name': famName},
             { $pull: {'families.$.tasks': { _id: { $in: taskIds}}}}, function(err, result){
                 if(err) {
-                    res
-                        .status(400)
-                        .json(err);
+                    res.status(400).json(err);
                 } else {
-                    res
-                        .status(202)
-                        .json(result);
+                    res.status(202).json(result);
                 }
             }
         )
+};
+
+// TODO: I really need to figure out to make a single call and update multiple objects.
+module.exports.updateOne = function (req, res) {
+    var id = req.params.id;
+    var family = req.body['key'];
+
+    Families
+        .update(
+            {_id: id, 'families._id': mongoose.Types.ObjectId(family.Id)},
+            {$set: {
+                'families.$.name': family.name,
+                'families.$.isNameVerified': family.isNameVerified
+            }},
+            { upsert: true }, function(err, result){
+                if(err) {
+                    res.status(400).json(err);
+                } else {
+                    res.status(202).json(result);
+                }
+            }
+        );
+};
+
+module.exports.updateMultipleFamilies1 = function (req, res) {
+    var id = req.params.id;
+    var bulkOps = [];
+
+    // var famId = {};
+    // var family = {};
+
+    // var ordered = Families.collection.initializeUnorderedBulkOp();
+
+    for(var key in req.body) {
+        if(req.body.hasOwnProperty(key)){
+            // for (var i=0; i<req.body[key].length; i++){
+            //     family = req.body[key][i];
+            //     famId = mongoose.Types.ObjectId(family.Id);
+            // }
+            bulkOps = req.body[key].map(function(item){
+                return {
+                    'updateOne': {
+                        'filter': {'_id': id, 'families._id': mongoose.Types.ObjectId(item.Id)},
+                        'update': {'$set': {'families.$.name': item.name}}
+                    }
+                }
+            })
+            // for (var i=0; i<req.body[key].length; i++){
+            //     var item = req.body[key][i];
+            //     ordered.find(
+            //         {'_id': mongoose.Types.ObjectId(item.Id)})
+            //         .updateOne(
+            //             {$set: {'name': item.name}})
+            // }
+        }
+    }
+
+    // ordered.execute(function(err, result){
+    //     if(err){
+    //         res.status(400).json(err);
+    //     } else {
+    //         res.status(202).json(result);
+    //     }
+    // });
+
+    Families.collection
+        .bulkWrite(
+            bulkOps, function(err, result){
+                if(err) {
+                    res.status(400).json(err);
+                } else {
+                    res.status(202).json(result);
+                }
+            })
+
+    // Families
+    //     .update(
+    //         {_id: id, 'families._id': famId},
+    //         {$set: {'families.$.name': family.name}}, function(err, result){
+    //             if(err) {
+    //                 res
+    //                     .status(400)
+    //                     .json(err);
+    //             } else {
+    //                 res
+    //                     .status(202)
+    //                     .json(result);
+    //             }
+    //         }
+    //     )
+
+
 };
 
 // (Konrad) For the time being as of 3.4.9 MongoDB release
@@ -176,14 +240,16 @@ module.exports.updateTask = function (req, res) {
     var famName = req.params.name;
     var taskId = mongoose.Types.ObjectId(req.params.taskid);
 
+    console.log(famName);
+    console.log(taskId);
+    console.log(req.body);
+
     Families
         .update(
             { _id: id, 'families.name': famName},
             { $pull: {'families.$.tasks': { _id: taskId}}}, function(err){
                 if(err) {
-                    res
-                        .status(400)
-                        .json(err);
+                    res.status(400).json(err);
                 } else {
                 Families
                     .findOneAndUpdate(
@@ -192,12 +258,9 @@ module.exports.updateTask = function (req, res) {
                         {'new': true}) // returns newly updated collection
                         .exec(function(err, data){
                             if(err){
-                                res
-                                    .status(500)
-                                    .json(err);
+                                res.status(500).json(err);
                             } else {
-                                res
-                                    .json(data)
+                                res.status(202).json(data)
                             }
                         });
                 }
