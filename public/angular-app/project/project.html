@@ -15,8 +15,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="x in vm.projects">
-                <td><a href="#/projects/edit/{{ x._id }}">{{ x.number }}</a></td>
+            <tr ng-repeat="x in vm.projects" ng-click="vm.go('/projects/edit/' + x._id)">
+                <td>{{ x.number }}</td>
                 <td>{{ x.name }}</td>
                 <td class="text-center">{{ x.office }}</td>
                 <td>{{ x.address.city }}, {{ x.address.state }}</td>

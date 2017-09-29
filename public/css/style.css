@@ -179,3 +179,9 @@ textarea {
   text-decoration: none;
   background-color: rgb(245, 245, 245);
 }
+
+[ng-click],
+[data-ng-click],
+[x-ng-click] {
+  cursor: pointer;
+}

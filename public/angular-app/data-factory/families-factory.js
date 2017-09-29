@@ -9,8 +9,8 @@ function FamiliesFactory($http){
             return $http.get('/api/v1/families/' + familiesDataId).then(complete).catch(failed);
         },
 
-        addTask: function addTask(familyCollectionId, familyName, task) {
-            return $http.post('/api/v1/families/' + familyCollectionId + '/name/' + familyName, task).then(complete).catch(failed);
+        addTask: function addTask(familyCollectionId, famId, task) {
+            return $http.post('/api/v1/families/' + familyCollectionId + '/family/' + famId, task).then(complete).catch(failed);
         },
 
         deleteMultipleTasks: function deleteMultipleTasks(familyCollectionId, familyName, taskIds) {

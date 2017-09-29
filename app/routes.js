@@ -79,7 +79,7 @@ var families = require('./models/families-model');
      app.put('/api/v1/families/:id', families.update);
      app.put('/api/v1/families/:id/updateOne', families.updateOne);
      // app.put('/api/v1/families/:id/multiupdate1', families.updateMultipleFamilies1);
-     app.post('/api/v1/families/:id/name/:name', families.addTask);
+     app.post('/api/v1/families/:id/family/:famid', families.addTask);
      app.post('/api/v1/families/:id/name/:name/delete/:taskid', families.deleteTask);
      app.post('/api/v1/families/:id/name/:name/deletemany', families.deleteMultipleTasks);
      app.post('/api/v1/families/:id/name/:name/updatetask/:taskid', families.updateTask);

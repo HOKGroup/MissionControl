@@ -6,8 +6,6 @@
 //
 //Copyright 2017 by Jinsol Kim, Konrad K Sobon, HOK
 
-//node app uri = http://localhost/80
-
 var pkg = require('./package.json');
 var cool = require('cool-ascii-faces');
 var express = require('express');
@@ -17,13 +15,10 @@ var methodOverride = require('method-override');
 var io = require('socket.io');
 var global = require('./app/controller/socket/global');
 
-
 var app = express();
-
 var localMongo = true;
 
 if(localMongo){
-	//local database
 	var mongo_uri = 'mongodb://localhost:27017/missioncontrol';
 } else{
 	var mongo_uri='mongodb://admin:admin@ds011495.mlab.com:11495/missioncontrol';
@@ -44,7 +39,6 @@ app.use(methodOverride('X-HTTP-Method-Override'));
 app.use(express.static(__dirname + '/public')); 
 
 require('./app/routes')(app);
-
 app.get( '/', function( request, response ) {
   response.sendfile('./public/index.html');
 });
@@ -56,20 +50,32 @@ app.get('/cool', function(request, response) {
 app.set( 'port', process.env.PORT || 8080 );
 
 var server = app.listen(
-  app.get( 'port' ),
-  function() {
-    console.log( 'HOK Mission Control server '
+    app.get( 'port' ),
+    function() {
+        console.log( 'HOK Mission Control server '
                 + pkg.version
                 + ' listening at port '
                 + server.address().port + ' with '
-                + 'hosted mongo db.'); 
-				
-	global.io = io(server);
+                + 'hosted mongo db.');
 
-    global.io.on('connection', function(client){
-      console.log('a client connected to the socket');
-    });	
-}
+      global.io = io(server);
+
+      global.io.on('connection', function(client){
+          console.log('Revit client connected to the socket.');
+
+          client.on('message',function(event){
+              console.log('Received message from Revit client.',event);
+          });
+
+          client.on('disconnect',function(){
+              console.log('Revit client disconnected.');
+          });
+      });
+
+      global.io.on('error', function (err) {
+          console.log(err);
+      });
+  }
 );
 
 

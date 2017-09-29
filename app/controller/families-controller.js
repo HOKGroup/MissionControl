@@ -1,8 +1,10 @@
 /**
- * @param {{taskid:string}}
+ * @param {{ taskid: string }} Task Id
+ * @param {{ famid: string }} Family Id
  */
 
 var mongoose = require('mongoose');
+var global = require('./socket/global');
 var Families = mongoose.model('Families');
 
 module.exports.findAll = function(req, res){
@@ -83,17 +85,39 @@ module.exports.findById = function(req, res){
 
 module.exports.addTask = function(req, res) {
     var id = req.params.id;
-    var famName = req.params.name;
+
+    // Families
+    //     .findOneAndUpdate(
+    //             {_id: id, 'families.elementId': req.params.famid},
+    //             {$push: {'families.$.tasks': req.body}},
+    //             // {new: true},
+    //             {
+    //                 new: true,
+    //                 'projection': {
+    //                     'families': {
+    //                         '$elemMatch': {'elementId': req.params.famid}
+    //                     }
+    //                 }
+    //             }
+    //     )
+    //     .exec(function(err, data){
+    //                 if(err){
+    //                     res.status(500).json(err);
+    //                 } else {
+    //                     res.json(data)
+    //                 }
+    //             });
 
     Families
         .findOneAndUpdate(
-            {_id: id, 'families.name': famName},
+            {_id: id, 'families.elementId': req.params.famid},
             {$push: {'families.$.tasks': req.body}},
             {'new': true}) // returns newly updated collection
         .exec(function(err, data){
             if(err){
                 res.status(500).json(err);
             } else {
+                global.io.sockets.emit('task_added', { 'body': data, 'familyId': req.params.famid });
                 res.json(data)
             }
         });
@@ -134,6 +158,7 @@ module.exports.deleteMultipleTasks = function (req, res) {
                 if(err) {
                     res.status(400).json(err);
                 } else {
+                    global.io.sockets.emit('task_deleted', req.body);
                     res.status(202).json(result);
                 }
             }

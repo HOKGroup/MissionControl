@@ -224,12 +224,12 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal) {
 
         $scope.addTask = function () {
             FamiliesFactory
-                .addTask(data._id, family.name, $scope.task)
+                .addTask(data._id, family.elementId, $scope.task)
                 .then(function (response) {
                     if (!response)return;
 
                     //(Konrad) We need to update the AllFamilies collection
-                    // in order to update the DataTable display without reloading the whole page.
+                    // in order to update the DataTable display without reloading the whole page
                     data = response.data;
 
                     var newTask = data.families.find(function(item){

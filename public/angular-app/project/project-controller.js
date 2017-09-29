@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').controller('ProjectController', ProjectController);
 
-function ProjectController(ProjectFactory){
+function ProjectController(ProjectFactory, $location){
     var vm = this;
     vm.status = "Success";
     vm.dataTableOpt = {
@@ -8,6 +8,10 @@ function ProjectController(ProjectFactory){
     };
 
     getProjects();
+
+    vm.go = function(path){
+        $location.path(path);
+    };
 
     function getProjects() {
         ProjectFactory.getProjects()
