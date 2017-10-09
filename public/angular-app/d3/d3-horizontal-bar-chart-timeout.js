@@ -4,11 +4,12 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChartTimeout', ['d
         scope: {
             data: "=",
             countTotal: '=',
-            marginLeft: '=',
-            domainPadding: '=',
-            onClick: '&d3OnClick',
-            clickable: '=',
-            fillColor: '='
+            marginLeft: '=', // left margin
+            axisTop: '=', // bool, shows extra axis on top
+            domainPadding: '=', // pads extra values to domain
+            onClick: '&d3OnClick', // click function
+            clickable: '=', // used for styling
+            fillColor: '=' // bar fill color
         },
         link: function(scope, ele) {
             var refreshScope = function() {
@@ -45,12 +46,19 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChartTimeout', ['d
                 svg.selectAll("*").remove();
 
                 // setup variables
-                var margin = {top: 5, right: 30, bottom: 15, left: scope.marginLeft},
+                var margin = {top: 10, right: 30, bottom: 20, left: scope.marginLeft},
                     width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right,
                     height;
 
-                if(data.length <= 2) height = 100;
-                else height = data.length * 20;
+                if(scope.axisTop){
+                    margin.top = 20;
+                }
+
+                if(data.length <= 2) {
+                    height = 100 - margin.top - margin.bottom;
+                } else{
+                    height = (data.length * 20) - margin.top - margin.bottom;
+                }
 
                 // set the height based on the calculations above
                 svg.attr('height', height + margin.top + margin.bottom);
@@ -68,7 +76,8 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChartTimeout', ['d
                     .selectAll("bar")
                     .data(data).enter()
                     .append("rect")
-                    .attr("x", margin.left)
+                    .attr("transform", "translate(" +  margin.left + "," + margin.top + ")")
+                    .attr("x", 0)
                     .attr("width", 0)
                     .attr("y", function (d) { return y(d.name); })
                     .attr("fill", scope.fillColor)
@@ -96,21 +105,29 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChartTimeout', ['d
                     .attr("width", function(d){return x(d.count);});
 
                 svg.append("g")
-                     .attr("class", "x axis")
-                    .attr("transform", "translate(" +  margin.left + "," + (height) + ")")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(" +  margin.left + "," + (height + margin.top) + ")")
                     .call(d3.axisBottom(x));
+
+                if(scope.axisTop){
+                    svg.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                        .call(d3.axisTop(x))
+                }
 
                 svg.append("g")
                     .selectAll("labels")
                     .data(data).enter()
                     .append("text")
-                    .attr("x", 150)
+                    .attr("transform", "translate(0", + (margin.top) + ")")
+                    .attr("x", 0)
                     .attr("y", function(d){
                         var width = getPixelWidth(d.name);
                         var lineCount = Math.ceil(width / margin.left);
                         var center = (y(d.name) + (y.bandwidth() / 2)) - (lineCount * 4);
                         var offset = (y(d.name) + (y.bandwidth() / 2));
-                        return lineCount > 1 ? center : offset;
+                        return lineCount > 1 ? center + margin.top : offset + margin.top;
                     })
                     .attr("text-anchor", "end")
                     .attr("dy", ".35em")
@@ -123,7 +140,7 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChartTimeout', ['d
                     .data(data).enter()
                     .append("text")
                     .attr("x", function(d){return x(d.count) + margin.left;})
-                    .attr("y", function(d){return y(d.name) + (y.bandwidth() / 2);})
+                    .attr("y", function(d){return y(d.name) + (y.bandwidth() / 2) + margin.top;})
                     .attr("dx", 5)
                     .attr("dy", ".35em")
                     .text(function(d){return d.count;})

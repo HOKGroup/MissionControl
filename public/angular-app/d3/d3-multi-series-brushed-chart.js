@@ -37,8 +37,8 @@ angular.module('MissionControlApp').directive('d3MultiSeriesLineBrushed', ['d3',
                 // Setup basic chart variables.                   //
                 ////////////////////////////////////////////////////
 
-                var margin = {top: 10, right: 10, bottom: 100, left: 40},
-                    margin2 = {top: 330, right: 10, bottom: 20, left: 40},
+                var margin = {top: 10, right: 30, bottom: 100, left: 40},
+                    margin2 = {top: 330, right: 30, bottom: 20, left: 40},
                     width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right,
                     height = 400 - margin.top - margin.bottom,
                     height2 = 400 - margin2.top - margin2.bottom;

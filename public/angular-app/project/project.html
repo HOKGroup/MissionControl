@@ -5,13 +5,13 @@
         </div>
     </div>
     <div class="row" ng-if="vm.projects.length > 0">
-        <table class="table table-hover table-condensed datatable" ui-jq="dataTable" ui-options="vm.dataTableOpt">
+        <table datatable="ng" dt-options="vm.dtOptions2" dt-column-defs="vm.dtColumnDefs2" class="table table-hover table-condensed datatable">
             <thead>
             <tr>
                 <th class="col-md-2">Project Number</th>
                 <th class="col-md-6">Project Name</th>
-                <th class="col-md-2 text-center">Office</th>
-                <th class="col-md-2">Project Address</th>
+                <th class="col-md-1 text-center">Office</th>
+                <th class="col-md-3">Project Address</th>
             </tr>
             </thead>
             <tbody>

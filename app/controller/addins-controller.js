@@ -31,12 +31,13 @@ module.exports.add = function(req, res){
         });
 };
 
+//TODO: This can be turned into an Update $push call
 var _addAddinLog = function (req, res, addins){
     addins.usageLogs.push({
         pluginName: req.body.pluginName,
         user: req.body.user,
         revitVersion: req.body.revitVersion,
-        executionTime: parseInt(req.body.executionTime, 10),
+        office: req.body.office,
         createdOn: Date.now()
     });
 

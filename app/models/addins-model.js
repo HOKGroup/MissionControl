@@ -4,7 +4,7 @@ var usageLogSchema = new mongoose.Schema({
     pluginName: String,
     user: String,
     revitVersion: String,
-    executionTime: Number,
+    office: String,
     createdOn: Date
 });
 

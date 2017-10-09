@@ -250,42 +250,51 @@
                 <form>
                     <div class="form-group">
                         <label class="form-control-label">Family Info:</label>
-                        <label class="form-control">{{family.name}} - {{family.elementId}}</label>
+                        <label class="form-control">{{family.name}}</label>
                     </div>
                     <div class="col-md-6 no-padding-left">
                         <div class="form-group">
                             <label for="task-name" class="form-control-label">
                                 Task Name:
-                                <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="task.name"></span>
-                                <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!task.name"></span>
+                                <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="task.name && !task.completedBy"></span>
+                                <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!task.name && !task.completedBy"></span>
                             </label>
-                            <input type="text" class="form-control" id="task-name" value="task.name" ng-model="task.name">
+                            <input type="text" class="form-control" id="task-name" value="task.name" ng-model="task.name" ng-disabled="task.completedBy">
                         </div>
                     </div>
                     <div class="col-md-6 no-padding-right">
                         <div class="form-group">
                             <label for="recipient-name" class="form-control-label">
                                 Recipient:
-                                <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="task.assignedTo"></span>
-                                <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!task.assignedTo"></span>
+                                <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="task.assignedTo && !task.completedBy"></span>
+                                <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!task.assignedTo && !task.completedBy"></span>
                             </label>
-                            <input type="text" class="form-control" id="recipient-name" value="task.assignedTo" ng-model="task.assignedTo">
+                            <input type="text" class="form-control" id="recipient-name" value="task.assignedTo" ng-model="task.assignedTo" ng-disabled="task.completedBy">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="message-text" class="form-control-label">
                             Message:
-                            <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="task.message"></span>
-                            <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!task.message"></span>
+                            <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="task.message && !task.completedBy"></span>
+                            <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!task.message && !task.completedBy"></span>
                         </label>
-                        <textarea class="form-control" id="message-text" ng-model="task.message"></textarea>
+                        <textarea class="form-control" id="message-text" ng-model="task.message" ng-disabled="task.completedBy"></textarea>
+                    </div>
+                    <div class="form-group" ng-if="task.completedBy">
+                        <label for="comments-text" class="form-control-label">
+                            Comments:
+                            <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="task.message && !task.completedBy"></span>
+                            <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!task.message && !task.completedBy"></span>
+                        </label>
+                        <textarea class="form-control" id="comments-text" ng-model="task.comments" ng-disabled="task.completedBy"></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary pull-left" ng-click="back('', family)"><span class="glyphicon glyphicon-chevron-left">Back</span></button>
                 <button type="button" class="btn btn-secondary" ng-click="cancel()">Close</button>
-                <button type="button" class="btn btn-primary" ng-click="updateTask()">Update</button>
+                <button type="button" class="btn btn-primary" ng-click="reopenTask()" ng-if="task.completedBy">Re-Open</button>
+                <button type="button" class="btn btn-primary" ng-click="updateTask()" ng-if="!task.completedBy">Update</button>
             </div>
         </div>
     </script>
@@ -302,7 +311,7 @@
                 <form>
                     <div class="form-group">
                         <label class="form-control-label">Family Info:</label>
-                        <label class="form-control">{{family.name}} - {{family.elementId}}</label>
+                        <label class="form-control">{{family.name}}</label>
                     </div>
                     <div class="col-md-6 no-padding-left">
                         <div class="form-group">
@@ -351,29 +360,30 @@
                 </div>
                 <div id="collapseP1" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <table class="table table-hover table-striped table-condensed datatable" ui-jq="dataTable" ui-options="vm.dataTableOpt">
+                        <table datatable="ng" dt-options="vm.dtOptions" dt-column-defs="vm.dtColumnDefs" class="table table-hover table-condensed datatable">
                             <thead>
                             <tr>
                                 <th class="col-md-1 text-center">#</th>
-                                <th class="col-md-7">Name</th>
+                                <th class="col-md-9">Name</th>
                                 <th class="col-md-1 text-center">Qty.</th>
                                 <th class="col-md-1 text-center">Size</th>
-                                <th class="col-md-2 text-center">Element Id</th>
                                 <th>Size Value</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="i in vm.AllFamilies | orderBy: 'name' : false" ng-class="vm.evaluateFamily(i) == 3 ? 'bg-danger' : vm.evaluateFamily(i) == 2 ? 'bg-warning' : 'table-info'">
-                            <td class="text-center">{{$index}}</td>
-                            <td ng-mouseenter="onHover = true" ng-mouseleave="onHover = false">
-                                <p ng-class="i.name.indexOf('_HOK_I') == -1 && i.name.indexOf('_HOK_M') == -1 ? 'thick' : 'normal'">{{i.name}}
-                                    <a href=""><span ng-show="i.tasks.length > 0 || onHover" class="glyphicon glyphicon-list" ng-click="i.tasks.length > 0 ? vm.openAllTasksWindow('',i) : vm.openAddWindow('', i)"></span></a>
-                                </p>
-                            </td>
-                            <td class="text-center"><p ng-class="i.instances == 0 ? 'thick' : 'normal'">{{i.instances}}</p></td>
-                            <td class="text-center"><p ng-class="i.sizeValue > 1000000 ? 'thick' : 'normal'">{{i.size}}</p></td>
-                            <td class="text-center">{{i.elementId}}</td>
-                            <td class="text-center">{{i.sizeValue}}</td>
+                                <td class="text-center">{{$index}}</td>
+                                <td ng-mouseenter="onHover = true" ng-mouseleave="onHover = false">
+                                    <p ng-class="vm.evaluateName(i) ? 'normal' : 'thick'">
+                                        {{i.name}}
+                                        <a href="">
+                                            <span ng-show="i.tasks.length > 0 || onHover" class="glyphicon glyphicon-tasks" ng-click="i.tasks.length > 0 ? vm.openAllTasksWindow('',i) : vm.openAddWindow('', i)"></span>
+                                        </a>
+                                    </p>
+                                </td>
+                                <td class="text-center"><p ng-class="vm.evaluateInstances(i) ? 'normal' : 'thick'">{{i.instances}}</p></td>
+                                <td class="text-center"><p ng-class="vm.evaluateSize(i) ? 'normal' : 'thick'">{{i.size}}</p></td>
+                                <td class="text-center">{{i.sizeValue}}</td>
                             </tr>
                             </tbody>
                         </table>

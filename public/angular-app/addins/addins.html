@@ -23,32 +23,71 @@
             </div>
         </div>
     </div>
-    <div class="row no-gutter">
-        <div class="col-sm-8 panel-group no-padding-left" ng-if="vm.UserDetails.length > 0">
+    <div class="row" ng-if="vm.UserDetails.length > 0 || vm.SelectedPlugin">
+        <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title">Users: {{vm.SelectedPlugin}} / {{vm.SelectedYear}}</h4>
-                </div>
-                <div class="panel-collapse">
-                    <div class="panel-body">
-                        <d3-horizontal-bar-chart-timeout data="vm.UserDetails" margin-left="180" domain-padding="5" clickable="false" fill-color="vm.UserChartColor"></d3-horizontal-bar-chart-timeout>
+                    <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
+                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                            {{vm.SelectedOffice}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 50px">
+                            <li ng-repeat="office in vm.officeFilters">
+                                <a href="" ng-click="vm.SetOfficeFilter(office)">{{office.name}}</a>
+                            </li>
+                        </ul>
                     </div>
+                    <h4 class="panel-title" style="padding-top: 5px;">Users: {{vm.SelectedPlugin}} / {{vm.SelectedYear}}</h4>
                 </div>
-            </div>
-        </div>
-        <div class="col-sm-4 panel-group no-padding-right" ng-if="vm.UserDetails.length > 0">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">Yearly: {{vm.SelectedPlugin}}</h4>
-                </div>
-                <div class="panel-collapse">
-                    <div class="panel-body">
-                        <d3-donut-chart data="vm.YearsAggregate"></d3-donut-chart>
+                <div class="panel-collapse" ng-if="vm.UserDetails.length > 0">
+                    <div class="panel-body" style="max-height: 500px; overflow-y: scroll">
+                        <d3-horizontal-bar-chart-timeout data="vm.UserDetails" margin-left="180" domain-padding="5" clickable="false" fill-color="vm.UserChartColor" axis-top="true"></d3-horizontal-bar-chart-timeout>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!--<div class="row" ng-if="vm.UserDetails.length > 0">-->
+        <!--<div class="panel-group">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading">-->
+                    <!--<h4 class="panel-title">Yearly: {{vm.SelectedPlugin}}</h4>-->
+                <!--</div>-->
+                <!--<div class="panel-collapse">-->
+                    <!--<div class="panel-body">-->
+                        <!--<d3-donut-chart data="vm.YearsAggregate"></d3-donut-chart>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row no-gutter">-->
+        <!--<div class="col-sm-8 panel-group no-padding-left" ng-if="vm.UserDetails.length > 0">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading">-->
+                    <!--<h4 class="panel-title">Users: {{vm.SelectedPlugin}} / {{vm.SelectedYear}}</h4>-->
+                <!--</div>-->
+                <!--<div class="panel-collapse">-->
+                    <!--<div class="panel-body">-->
+                        <!--<d3-horizontal-bar-chart-timeout data="vm.UserDetails" margin-left="180" domain-padding="5" clickable="false" fill-color="vm.UserChartColor"></d3-horizontal-bar-chart-timeout>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="col-sm-4 panel-group no-padding-right" ng-if="vm.UserDetails.length > 0">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading">-->
+                    <!--<h4 class="panel-title">Yearly: {{vm.SelectedPlugin}}</h4>-->
+                <!--</div>-->
+                <!--<div class="panel-collapse">-->
+                    <!--<div class="panel-body">-->
+                        <!--<d3-donut-chart data="vm.YearsAggregate"></d3-donut-chart>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
 </div>
 
 

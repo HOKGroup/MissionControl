@@ -1,17 +1,26 @@
 angular.module('MissionControlApp').controller('ProjectController', ProjectController);
 
-function ProjectController(ProjectFactory, $location){
+function ProjectController(ProjectFactory, $location, DTColumnDefBuilder){
     var vm = this;
     vm.status = "Success";
-    vm.dataTableOpt = {
-        "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, 'All']]
-    };
 
     getProjects();
 
     vm.go = function(path){
         $location.path(path);
     };
+
+    vm.dtOptions2 = {
+        paginationType: 'simple_numbers',
+        lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'All']]
+    };
+
+    vm.dtColumnDefs2 = [
+        DTColumnDefBuilder.newColumnDef(0), //number
+        DTColumnDefBuilder.newColumnDef(1), //name
+        DTColumnDefBuilder.newColumnDef(2), //office
+        DTColumnDefBuilder.newColumnDef(3) //address
+    ];
 
     function getProjects() {
         ProjectFactory.getProjects()

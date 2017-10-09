@@ -3,8 +3,8 @@ angular.module('MissionControlApp').directive('d3ZoomableLine', ['d3', function(
         restrict: 'E',
         scope: {
             data: '=',
-            formatOptions: '=',
-            domainY: '=' // Y
+            domainY: '=', //Y
+            callbackMethod: '&formatValue'
         },
         link: function(scope, ele) {
             var svg = d3.select(ele[0])
@@ -35,8 +35,8 @@ angular.module('MissionControlApp').directive('d3ZoomableLine', ['d3', function(
                 svg.selectAll("*").remove();
 
                 // setup variables
-                var margin = {top: 20, right: 20, bottom: 110, left: 40},
-                    margin2 = {top: 330, right: 20, bottom: 30, left: 40},
+                var margin = {top: 20, right: 25, bottom: 110, left: 50},
+                    margin2 = {top: 330, right: 25, bottom: 30, left: 50},
                     width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right,
                     height = 400 - margin.top - margin.bottom,
                     height2 = 400 - margin2.top - margin2.bottom;
@@ -57,12 +57,27 @@ angular.module('MissionControlApp').directive('d3ZoomableLine', ['d3', function(
                     y = d3.scaleLinear().range([height, 1]),
                     y2 = d3.scaleLinear().range([height2, 1]);
 
+                x.domain(d3.extent(data, function(d) { return d.date; }));
+                if(scope.domainY){
+                    y.domain([0, scope.domainY]);
+                } else {
+                    y.domain([0, d3.max(data, function(d) { return d.value; })]);
+                }
+                x2.domain(x.domain());
+                y2.domain(y.domain());
+
+                var ticksNum = 10;
+                var yAxisTicks = [];
+                var yDomain = [0, d3.max(data, function(d) { return d.value; })];
+                for (var i = 0; i < ticksNum; i++ ){
+                    yAxisTicks.push((yDomain[1] - yDomain[0]) / (ticksNum - 1)* i + yDomain[0]);
+                }
+
                 var xAxis = d3.axisBottom(x).ticks(5).tickFormat(dateFormat),
                     xAxis2 = d3.axisBottom(x2).ticks(5).tickFormat(dateFormat),
-                    yAxis = d3.axisLeft(y)
-                        .tickFormat(function (d) {
-                            return d3.format(scope.formatOptions.specifier)(d * scope.formatOptions.multiplier) + scope.formatOptions.suffix;
-                        });
+                    yAxis = d3.axisLeft(y).tickValues(yAxisTicks).tickFormat(function(d){
+                        return scope.callbackMethod({item: d});
+                    });
 
                 var brush = d3.brushX()
                     .extent([[0, 0], [width, height2]])
@@ -97,15 +112,6 @@ angular.module('MissionControlApp').directive('d3ZoomableLine', ['d3', function(
                 var context = svg.append("g")
                     .attr("class", "context")
                     .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
-
-                x.domain(d3.extent(data, function(d) { return d.date; }));
-                if(scope.domainY){
-                    y.domain([0, scope.domainY]);
-                } else {
-                    y.domain([0, d3.max(data, function(d) { return d.value; })]);
-                }
-                x2.domain(x.domain());
-                y2.domain(y.domain());
 
                 focus.append("path")
                     .datum(data)
@@ -152,7 +158,8 @@ angular.module('MissionControlApp').directive('d3ZoomableLine', ['d3', function(
                     .attr("stroke-width", "1px");
 
                 tooltip.append("text")
-                    .attr("transform", "translate(5, -5)");
+                    .attr("transform", "translate(0, -7)")
+                    .attr("text-anchor", "middle");
 
                 svg.append("rect")
                     .attr("class", "zoom")
@@ -173,7 +180,7 @@ angular.module('MissionControlApp').directive('d3ZoomableLine', ['d3', function(
                         d1 = data[i],
                         d = x0 - d0.date > d1.date - x0 ? d1 : d0;
                     tooltip.attr("transform", "translate(" + (x(d.date) + margin.left) + "," + (y(d.value) + margin.top) + ")");
-                    tooltip.select("text").text(d3.format(scope.formatOptions.specifier)(d.value * scope.formatOptions.multiplier) + scope.formatOptions.suffix);
+                    tooltip.select("text").text(scope.callbackMethod({item: d.value}));
                     tooltip.select(".mouse-line").attr("y2", height - y(d.value));
                 }
 

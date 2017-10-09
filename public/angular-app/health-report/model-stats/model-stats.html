@@ -70,7 +70,7 @@
                 </div>
                 <div id="collapseP4" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <d3-zoomable-line data="vm.ModelOpenTimes" format-options="vm.FormatObjectTime"></d3-zoomable-line>
+                        <d3-zoomable-line data="vm.ModelOpenTimes" format-value="vm.formatDuration(item)"></d3-zoomable-line>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                 </div>
                 <div id="collapseP5" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <d3-zoomable-line data="vm.ModelSynchTimes" format-options="vm.FormatObjectTime"></d3-zoomable-line>
+                        <d3-zoomable-line data="vm.ModelSynchTimes" format-value="vm.formatDuration(item)"></d3-zoomable-line>
                     </div>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                 </div>
                 <div id="collapseP3" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <d3-zoomable-line data="vm.ModelSizes" format-options="vm.FormatObjectSize"></d3-zoomable-line>
+                        <d3-zoomable-line data="vm.ModelSizes" format-value="vm.formatValue(item)"></d3-zoomable-line>
                     </div>
                 </div>
             </div>

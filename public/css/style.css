@@ -20,15 +20,6 @@ body > .container {
 .container .text-muted {
   margin: 20px 0;
 }
-.panel-heading a:after {
-  font-family: 'Glyphicons Halflings', serif;
-    content:"\e114";
-    float: right;
-    color: grey;
-}
-.panel-heading a.collapsed:after {
-    content:"\e080";
-}
 
 /*Turns on pointer cursor for collapsible panels*/
 .panel-default > .panel-heading-clickable{
@@ -134,13 +125,20 @@ p.normal {
   padding-left: 5px;
 }
 
-/*Dropdown menu for Health Report*/
-.dropdown-menu{
+/*Dropdown menu for Health Report - centered*/
+.dropdown-menu-centered{
   width:100%;
   left: 50%;
   right: auto;
   text-align: center;
   transform: translate(-50%, 0);
+}
+
+/*Scrollable menu for long lists*/
+.scrollable-menu {
+  height: auto;
+  max-height: 195px;
+  overflow-x: hidden;
 }
 
 table {
@@ -172,8 +170,8 @@ textarea {
 .panel-body .radio, .checkbox {
   display:inline-block;
   margin-left:20px;
-  margin-bottom: 0px;
-  margin-top: 0px
+  margin-bottom: 0;
+  margin-top: 0
 }
 .list-group-item:hover, a.list-group-item:focus {
   text-decoration: none;
@@ -184,4 +182,14 @@ textarea {
 [data-ng-click],
 [x-ng-click] {
   cursor: pointer;
+}
+
+.project-link {
+  color: black;
+}
+
+/*Link decoration for the project page*/
+.project-link:hover{
+  color: #2A5DB0;
+  text-decoration: none;
 }

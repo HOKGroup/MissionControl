@@ -156,7 +156,10 @@
 					</form>
 			</div>
 		</div>
-		<button type="submit" class="btn btn-primary pull-right" ng-click="vm.addProject()" style="margin:5px;"><span class="glyphicon glyphicon-plus"></span> Add Project</button>
+		<button type="submit" class="btn btn-primary pull-right" ng-click="vm.addProject()" style="margin:5px;" ng-disabled="!vm.newProject.name || !vm.newProject.number || !vm.newProject.office">
+			<span class="glyphicon glyphicon-plus"></span>
+			Add Project
+		</button>
 		<a href="#/projects" class="btn btn-primary pull-right" role="button" style="margin:5px;">Cancel</a>
 	</form>
 </div>

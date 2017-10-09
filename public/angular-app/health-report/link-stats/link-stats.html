@@ -96,23 +96,21 @@
                 </div>
                 <div id="collapseP1" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <table class="table table-hover table-sm">
+                        <table datatable="ng" dt-options="vm.dtOptions1" dt-column-defs="vm.dtColumnDefs1" class="table table-hover table-condensed datatable">
                             <thead>
                             <th class="col-md-1 text-center">#</th>
-                            <th class="col-md-4">File Name</th>
+                            <th class="col-md-6">File Name</th>
                             <th class="col-md-1 text-center">Qty.</th>
                             <th class="col-md-2 text-center">View Specific</th>
                             <th class="col-md-2 text-center">Link/Import</th>
-                            <th class="col-md-2 text-center">Element Id</th>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="i in vm.LinkData.importedFiles | orderBy : '-elementId'" ng-class="!i.isLinked ? 'bg-danger': i.instances == 0 ? 'bg-warning' : 'table-info'">
+                            <tr ng-repeat="i in vm.LinkData.importedFiles | orderBy : 'name' : false" ng-class="!i.isLinked ? 'bg-danger': i.instances == 0 ? 'bg-warning' : 'table-info'">
                                 <td class="text-center">{{$index}}</td>
                                 <td>{{i.name}}</td>
                                 <td class="text-center">{{i.instances}}</td>
                                 <td class="text-center">{{i.isViewSpecific == true ? "Yes" : "No"}}</td>
                                 <td class="text-center">{{i.isLinked == true ? "Link" : "Import"}}</td>
-                                <td class="text-center">{{i.elementId}}</td>
                             </tr>
                             </tbody>
                         </table>

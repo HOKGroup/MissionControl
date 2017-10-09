@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').factory('HealthReportFactory', HealthReportFactory);
 
-function HealthReportFactory(){
+function HealthReportFactory(UtilityService){
     return {
         processFamilyStats: function processFamilyStats(data){
             if(!data) return;
@@ -162,7 +162,7 @@ function HealthReportFactory(){
             if(data.openTimes.length <= 1) return;
             if(data.synchTimes.length <= 1) return;
 
-            var modelSize = FormatNumber(data.modelSizes[data.modelSizes.length-1].value);
+            var modelSize = UtilityService.formatNumber(data.modelSizes[data.modelSizes.length-1].value);
             var avgOpenTime = parseFloat((SumProperty(data.openTimes, "value") * 0.001) / data.openTimes.length).toFixed(1) + "s";
             var avgSynchTime = parseFloat((SumProperty(data.synchTimes, "value") * 0.001) / data.openTimes.length).toFixed(1) + "s";
 
@@ -290,13 +290,12 @@ function HealthReportFactory(){
                 description: desc,
                 name: "Worksets:"
             };
-        }
-    };
+        },
 
-    /**
-     * @return {string}
-     */
-    function FormatNumber(n) {
+        /**
+         * @return {string}
+         */
+        formatNumber: function (n) {
         var ranges = [
             { divider: 1.4615016373309029182036848327163e+48 , suffix: 'Pb' },
             { divider: 1208925819614629174706176 , suffix: 'Eb' },
@@ -313,7 +312,8 @@ function HealthReportFactory(){
             }
         }
         return n.toString();
-    }
+        }
+    };
 
     function SumProperty(items, prop){
         return items.reduce(function (a, b) {

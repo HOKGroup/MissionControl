@@ -11,6 +11,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
     vm.ShowMainPage = {name: "main", value: true};
     vm.HealthRecordNames = [];
     vm.FamilyCollection = null;
+    var currentSelection = vm.ShowMainPage.name;
 
     var allControllers = [vm.ShowLinkStats, vm.ShowFamiliesStats, vm.ShowWorksetStats, vm.ShowViewStats, vm.ShowModelStats, vm.ShowMainPage];
     vm.SelectionChanged = function (name) {
@@ -29,29 +30,43 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
     vm.SetProject = function (link){
         vm.selectedHealthRecord = link;
         vm.selectedFileName = vm.fileNameFromPath(link.centralPath);
-
         vm.AllData = [];
 
-        if(vm.FamilyCollection !== null){
-            vm.FamilyData = HealthReportFactory.processFamilyStats(vm.FamilyCollection);
-            if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
+        if(vm.selectedHealthRecord.familyStats !== null){
+            FamiliesFactory
+                .getById(vm.selectedHealthRecord.familyStats)
+                .then(function(resFamilies1){
+                    if(!resFamilies1){
+                        return;
+                    }else{
+                        vm.FamilyCollection = resFamilies1.data;
+                    }
+
+                    if(vm.FamilyCollection !== null){
+                        vm.FamilyData = HealthReportFactory.processFamilyStats(vm.FamilyCollection);
+                        if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
+                    }
+
+                    vm.WorksetData = HealthReportFactory.processWorksetStats(link);
+                    if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
+
+                    var linkData = link.linkStats[link.linkStats.length - 1];
+                    vm.LinkData = HealthReportFactory.processLinkStats(linkData);
+                    if(vm.LinkData) vm.AllData.push(vm.LinkData);
+
+                    var viewData = link.viewStats[link.viewStats.length - 1];
+                    vm.ViewData = HealthReportFactory.processViewStats(viewData);
+                    if(vm.ViewData) vm.AllData.push(vm.ViewData);
+
+                    vm.ModelData = HealthReportFactory.processModelStats(link);
+                    if(vm.ModelData) vm.AllData.push(vm.ModelData);
+
+                    vm.SelectionChanged(vm.ShowMainPage.name);
+
+                }, function(err){
+                    console.log('Unable to load Families Data: ' + err.message);
+                })
         }
-
-        vm.WorksetData = HealthReportFactory.processWorksetStats(link);
-        if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
-
-        var linkData = link.linkStats[link.linkStats.length - 1];
-        vm.LinkData = HealthReportFactory.processLinkStats(linkData);
-        if(vm.LinkData) vm.AllData.push(vm.LinkData);
-
-        var viewData = link.viewStats[link.viewStats.length - 1];
-        vm.ViewData = HealthReportFactory.processViewStats(viewData);
-        if(vm.ViewData) vm.AllData.push(vm.ViewData);
-
-        vm.ModelData = HealthReportFactory.processModelStats(link);
-        if(vm.ModelData) vm.AllData.push(vm.ModelData);
-
-        // vm.SelectionChanged(vm.ShowMainPage.name);
     };
 
     // Retrieves project by project id
@@ -89,5 +104,9 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
             },function(error){
                 console.log('Unable to load Health Records data: ' + error.message);
             });
+    }
+
+    function setFamilyStats(){
+
     }
 }

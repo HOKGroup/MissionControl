@@ -1,16 +1,40 @@
 var app = angular.module('MissionControlApp').controller('FamilyStatsController', FamilyStatsController);
 
-function FamilyStatsController($routeParams, FamiliesFactory, $uibModal) {
+function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket, DTColumnDefBuilder) {
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.FamilyData = this.processed;
     var data = this.full;
 
+    Socket.on('task_updated', function(data){
+        console.log('task_updated');
+    });
+
     vm.AllFamilies = data.families.filter(function (item) {
         return !item.isDeleted && item.isFailingChecks;
     });
 
+    vm.dtOptions = {
+        paginationType: 'simple_numbers',
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']]
+    };
+
+    vm.dtColumnDefs = [
+        DTColumnDefBuilder.newColumnDef(0), //index
+        DTColumnDefBuilder.newColumnDef(1), //name
+        DTColumnDefBuilder.newColumnDef(2), //instances
+        DTColumnDefBuilder.newColumnDef(3).withOption('orderData', '4'), //size
+        DTColumnDefBuilder.newColumnDef(4).notVisible() //sizeValue
+    ];
+
     vm.evaluateFamily = function (f) {
+        if(f.tasks.length > 0){
+            var override = f.tasks.find(function(item){
+                return item.completedBy !== null;
+            });
+            if(override !== null) return 0;
+        }
+
         var score = 0;
         if (f.sizeValue > 1000000) score++;
         if (f.name.indexOf('_HOK_I') === -1 && f.name.indexOf('_HOK_M') === -1) score++;
@@ -18,16 +42,37 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal) {
         return score;
     };
 
-    vm.dataTableOpt = {
-        "aLengthMenu": [[10, 50, 100, -1], [10, 50, 100, 'All']],
-        // 'order': [[1, 'desc']] // sorted by name using AngularJS
-        'columns': [
-            null,
-            null,
-            null,
-            {'orderData': 5}, // sorts this column by data in col 5
-            null,
-            {'visible': false}] // hides col 5, used for sorting only
+    vm.evaluateName = function(f){
+        if(f.tasks.length > 0){
+            var override = f.tasks.find(function(item){
+                return item.completedBy !== null;
+            });
+            if(override) return true;
+        }
+
+        return f.name.indexOf('_HOK_I') !== -1 || f.name.indexOf('_HOK_M') !== -1
+    };
+
+    vm.evaluateInstances = function(f){
+        if(f.tasks.length > 0){
+            var override = f.tasks.find(function(item){
+                return item.completedBy !== null;
+            });
+            if(override) return true;
+        }
+
+        return f.instances > 0;
+    };
+
+    vm.evaluateSize = function(f){
+        if(f.tasks.length > 0){
+            var override = f.tasks.find(function(item){
+                return item.completedBy !== null;
+            });
+            if(override) return true;
+        }
+
+        return f.sizeValue < 1000000;
     };
 
     vm.openAllTasksWindow = function (size, family) {
@@ -155,35 +200,17 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal) {
         };
 
         $scope.updateTask = function () {
-            FamiliesFactory
-                .updateTask(data._id, $scope.family.name, $scope.task._id, $scope.task)
-                .then(function(response){
-                    if(!response) return;
+            updateTask($scope.family, $scope.task);
 
-                    // (Konrad) We clear the tasks array to update UI, without reloading the page
-                    $scope.family.tasks = $scope.family.tasks.filter(function (item){
-                        return item._id !== $scope.task._id;
-                    });
+            $uibModalInstance.close();
+        };
 
-                    // (Konrad) We need to update the AllFamilies collection
-                    // in order to update the DataTable display without reloading the whole page.
-                    data = response.data;
+        $scope.reopenTask = function () {
+            var task = $scope.task;
+            task.completedBy = null;
+            task.completedOn = null;
 
-                    var newTask = data.families.find(function(item){
-                        return item.name === $scope.family.name;
-                    }).tasks.find(function(task){
-                        return task.name === $scope.task.name;
-                    });
-
-                    for(var i = 0; i < vm.AllFamilies.length; i++){
-                        if(vm.AllFamilies[i].name === $scope.family.name){
-                            vm.AllFamilies[i].tasks.push(newTask);
-                            break;
-                        }
-                    }
-                }, function (err) {
-                    console.log('Unable to update task: ' + err)
-                });
+            updateTask($scope.family, task);
 
             $uibModalInstance.close();
         };
@@ -224,7 +251,7 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal) {
 
         $scope.addTask = function () {
             FamiliesFactory
-                .addTask(data._id, family.elementId, $scope.task)
+                .addTask(data._id, family.name, $scope.task)
                 .then(function (response) {
                     if (!response)return;
 
@@ -254,5 +281,37 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal) {
         $scope.cancel = function () {
             $uibModalInstance.dismiss('cancel');
         };
-    }
+    };
+
+    var updateTask = function(family, task){
+        FamiliesFactory
+            .updateTask(data._id, family.name, task._id, task)
+            .then(function(response){
+                if(!response) return;
+
+                // (Konrad) We clear the tasks array to update UI, without reloading the page
+                family.tasks = family.tasks.filter(function (item){
+                    return item._id !== task._id;
+                });
+
+                // (Konrad) We need to update the AllFamilies collection
+                // in order to update the DataTable display without reloading the whole page.
+                data = response.data;
+
+                var newTask = data.families.find(function(item){
+                    return item.name === family.name;
+                }).tasks.find(function(item){
+                    return item.name === task.name;
+                });
+
+                for(var i = 0; i < vm.AllFamilies.length; i++){
+                    if(vm.AllFamilies[i].name === family.name){
+                        vm.AllFamilies[i].tasks.push(newTask);
+                        break;
+                    }
+                }
+            }, function (err) {
+                console.log('Unable to update task: ' + err)
+            });
+    };
 }

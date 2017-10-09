@@ -1,6 +1,6 @@
 /**
  * @param {{ taskid: string }} Task Id
- * @param {{ famid: string }} Family Id
+ * @param {{ name: string }} Family Name
  */
 
 var mongoose = require('mongoose');
@@ -110,36 +110,72 @@ module.exports.addTask = function(req, res) {
 
     Families
         .findOneAndUpdate(
-            {_id: id, 'families.elementId': req.params.famid},
+            {_id: id, 'families.name': req.params.name},
             {$push: {'families.$.tasks': req.body}},
             {'new': true}) // returns newly updated collection
         .exec(function(err, data){
             if(err){
                 res.status(500).json(err);
             } else {
-                global.io.sockets.emit('task_added', { 'body': data, 'familyId': req.params.famid });
+                global.io.sockets.emit('task_added', { 'body': data, 'familyName': req.params.name });
                 res.json(data)
             }
         });
 };
 
-module.exports.deleteTask = function (req, res) {
+// (Konrad) For the time being as of 3.4.9 MongoDB release
+// we cannot update objects inside of nested arrays with a single call
+// That change is coming with MongoDB 3.5.12 https://jira.mongodb.org/browse/SERVER-831
+module.exports.updateTask = function (req, res) {
     var id = req.params.id;
-    var famName = req.params.name;
     var taskId = mongoose.Types.ObjectId(req.params.taskid);
 
     Families
         .update(
-            { _id: id, 'families.name': famName},
-            { $pull: {'families.$.tasks': { _id: taskId}}}, function(err, result){
+            { _id: id, 'families.name': req.params.name},
+            { $pull: {'families.$.tasks': { _id: taskId}}}, function(err){
                 if(err) {
-                    res.status(400).json(err);
+                    res.status(500).json(err);
                 } else {
-                    res.status(202).json(result);
+                    Families
+                        .findOneAndUpdate(
+                            {_id: id, 'families.name': req.params.name}, // use fam name here since it's unique
+                            {$push: {'families.$.tasks': req.body}},
+                            {'new': true}) // returns newly updated collection
+                        .exec(function(err, data){
+                            if(err){
+                                res.status(500).json(err);
+                            } else {
+                                global.io.sockets.emit('task_updated', {
+                                    'body': data,
+                                    'familyName': req.params.name,
+                                    'oldTaskId': req.params.taskid});
+                                res.status(202).json(data)
+                            }
+                        });
                 }
             }
-        )
+        );
 };
+
+// (Konrad) Not used
+// module.exports.deleteTask = function (req, res) {
+//     var id = req.params.id;
+//     var famName = req.params.name;
+//     var taskId = mongoose.Types.ObjectId(req.params.taskid);
+//
+//     Families
+//         .update(
+//             { _id: id, 'families.name': famName},
+//             { $pull: {'families.$.tasks': { _id: taskId}}}, function(err, result){
+//                 if(err) {
+//                     res.status(400).json(err);
+//                 } else {
+//                     res.status(202).json(result);
+//                 }
+//             }
+//         )
+// };
 
 module.exports.deleteMultipleTasks = function (req, res) {
     var id = req.params.id;
@@ -165,27 +201,27 @@ module.exports.deleteMultipleTasks = function (req, res) {
         )
 };
 
-// TODO: I really need to figure out to make a single call and update multiple objects.
-module.exports.updateOne = function (req, res) {
-    var id = req.params.id;
-    var family = req.body['key'];
-
-    Families
-        .update(
-            {_id: id, 'families._id': mongoose.Types.ObjectId(family.Id)},
-            {$set: {
-                'families.$.name': family.name,
-                'families.$.isNameVerified': family.isNameVerified
-            }},
-            { upsert: true }, function(err, result){
-                if(err) {
-                    res.status(400).json(err);
-                } else {
-                    res.status(202).json(result);
-                }
-            }
-        );
-};
+// // TODO: I really need to figure out to make a single call and update multiple objects.
+// module.exports.updateOne = function (req, res) {
+//     var id = req.params.id;
+//     var family = req.body['key'];
+//
+//     Families
+//         .update(
+//             {_id: id, 'families._id': mongoose.Types.ObjectId(family.Id)},
+//             {$set: {
+//                 'families.$.name': family.name,
+//                 'families.$.isNameVerified': family.isNameVerified
+//             }},
+//             { upsert: true }, function(err, result){
+//                 if(err) {
+//                     res.status(400).json(err);
+//                 } else {
+//                     res.status(202).json(result);
+//                 }
+//             }
+//         );
+// };
 
 module.exports.updateMultipleFamilies1 = function (req, res) {
     var id = req.params.id;
@@ -255,40 +291,4 @@ module.exports.updateMultipleFamilies1 = function (req, res) {
     //     )
 
 
-};
-
-// (Konrad) For the time being as of 3.4.9 MongoDB release
-// we cannot update objects inside of nested arrays with a single call
-// That change is coming with MongoDB 3.5.12 https://jira.mongodb.org/browse/SERVER-831
-module.exports.updateTask = function (req, res) {
-    var id = req.params.id;
-    var famName = req.params.name;
-    var taskId = mongoose.Types.ObjectId(req.params.taskid);
-
-    console.log(famName);
-    console.log(taskId);
-    console.log(req.body);
-
-    Families
-        .update(
-            { _id: id, 'families.name': famName},
-            { $pull: {'families.$.tasks': { _id: taskId}}}, function(err){
-                if(err) {
-                    res.status(400).json(err);
-                } else {
-                Families
-                    .findOneAndUpdate(
-                        {_id: id, 'families.name': famName},
-                        {$push: {'families.$.tasks': req.body}},
-                        {'new': true}) // returns newly updated collection
-                        .exec(function(err, data){
-                            if(err){
-                                res.status(500).json(err);
-                            } else {
-                                res.status(202).json(data)
-                            }
-                        });
-                }
-            }
-        );
 };
