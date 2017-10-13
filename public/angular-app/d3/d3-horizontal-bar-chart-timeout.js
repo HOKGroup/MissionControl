@@ -54,8 +54,8 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChartTimeout', ['d
                     margin.top = 20;
                 }
 
-                if(data.length <= 2) {
-                    height = 100 - margin.top - margin.bottom;
+                if(data.length <= 5) {
+                    height = 120 - margin.top - margin.bottom;
                 } else{
                     height = (data.length * 20) - margin.top - margin.bottom;
                 }

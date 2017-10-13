@@ -1,6 +1,6 @@
 var app = angular.module('MissionControlApp').controller('FamilyStatsController', FamilyStatsController);
 
-function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket, DTColumnDefBuilder) {
+function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket, DTColumnDefBuilder, DTInstances) {
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.FamilyData = this.processed;
@@ -14,9 +14,24 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket,
         return !item.isDeleted && item.isFailingChecks;
     });
 
+    vm.pcoordinatesData = [];
+    vm.AllFamilies.forEach(function(item){
+        vm.pcoordinatesData.push({
+            name: item.name,
+            "Size": item.sizeValue,
+            "Instances": item.instances,
+            "Parameters": item.parametersCount,
+            "Nested Families": item.nestedFamilyCount,
+            "Voids": item.voidCount,
+            "Ref. Planes": item.refPlaneCount,
+            "Arrays": item.arrayCount
+        })
+    });
+
     vm.dtOptions = {
         paginationType: 'simple_numbers',
-        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']]
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+        stateSave: true
     };
 
     vm.dtColumnDefs = [
@@ -26,6 +41,29 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket,
         DTColumnDefBuilder.newColumnDef(3).withOption('orderData', '4'), //size
         DTColumnDefBuilder.newColumnDef(4).notVisible() //sizeValue
     ];
+
+    var dtInstance;
+    DTInstances.getLast().then(function(inst) {
+        dtInstance = inst;
+    });
+
+    vm.FilterTable = function () {
+        if(dtInstance) {dtInstance.reloadData();}
+    };
+
+    vm.OnBrush = function(item){
+        vm.AllFamilies = data.families.filter(function(x){
+            var found = false;
+            for (var i = 0; i < item.length; i++){
+                if(item[i].name === x.name){
+                    found = true;
+                    break;
+                }
+            }
+            return found;
+        });
+        if(dtInstance) {dtInstance.reloadData();}
+    };
 
     vm.evaluateFamily = function (f) {
         if(f.tasks.length > 0){

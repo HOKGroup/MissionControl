@@ -68,7 +68,7 @@ angular.module('MissionControlApp').directive('d3Circle', ['d3', function(d3) {
                     .attr("fill", "#000")
                     .attr("y", 50)
                     .attr("x", 60)
-                    .style("font-size", 30)
+                    .style("font-size", 25)
                     .attr("alignment-baseline", "central")
                     .attr("text-anchor", "middle")
                     .text(data.count);

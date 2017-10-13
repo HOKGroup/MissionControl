@@ -35,8 +35,8 @@ angular.module('MissionControlApp').directive('d3ZoomableLine', ['d3', function(
                 svg.selectAll("*").remove();
 
                 // setup variables
-                var margin = {top: 20, right: 25, bottom: 110, left: 50},
-                    margin2 = {top: 330, right: 25, bottom: 30, left: 50},
+                var margin = {top: 20, right: 25, bottom: 110, left: 55},
+                    margin2 = {top: 330, right: 25, bottom: 30, left: 55},
                     width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right,
                     height = 400 - margin.top - margin.bottom,
                     height2 = 400 - margin2.top - margin2.bottom;
@@ -177,8 +177,9 @@ angular.module('MissionControlApp').directive('d3ZoomableLine', ['d3', function(
                     var x0 = x.invert(d3.mouse(this)[0]),
                         i = bisectDate(data, x0, 1),
                         d0 = data[i - 1],
-                        d1 = data[i],
-                        d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+                        d1 = data[i];
+                    if(!d1) return;
+                    var d = x0 - d0.date > d1.date - x0 ? d1 : d0;
                     tooltip.attr("transform", "translate(" + (x(d.date) + margin.left) + "," + (y(d.value) + margin.top) + ")");
                     tooltip.select("text").text(scope.callbackMethod({item: d.value}));
                     tooltip.select(".mouse-line").attr("y2", height - y(d.value));

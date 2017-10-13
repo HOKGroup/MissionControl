@@ -66,6 +66,26 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
                 }, function(err){
                     console.log('Unable to load Families Data: ' + err.message);
                 })
+        }else{
+            vm.FamilyCollection = null;
+            vm.FamilyData = null;
+            vm.ShowFamiliesStats.value = false;
+
+            vm.WorksetData = HealthReportFactory.processWorksetStats(link);
+            if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
+
+            var linkData = link.linkStats[link.linkStats.length - 1];
+            vm.LinkData = HealthReportFactory.processLinkStats(linkData);
+            if(vm.LinkData) vm.AllData.push(vm.LinkData);
+
+            var viewData = link.viewStats[link.viewStats.length - 1];
+            vm.ViewData = HealthReportFactory.processViewStats(viewData);
+            if(vm.ViewData) vm.AllData.push(vm.ViewData);
+
+            vm.ModelData = HealthReportFactory.processModelStats(link);
+            if(vm.ModelData) vm.AllData.push(vm.ModelData);
+
+            vm.SelectionChanged(vm.ShowMainPage.name);
         }
     };
 
@@ -96,6 +116,8 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
                                     }, function(err){
                                         console.log('Unable to load Families Data: ' + err.message);
                                     })
+                            }else{
+                                vm.SetProject(vm.selectedHealthRecord);
                             }
                         }, function(err){
                             console.log('Unable to load Health Records data: ' + err.message);

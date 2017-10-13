@@ -61,6 +61,8 @@ function HealthReportFactory(UtilityService){
         },
 
         processLinkStats: function (data) {
+            if(!data) return;
+
             var passingChecks = 0;
             data.totalImportedDwg === 0
                 ? passingChecks += 2
@@ -100,6 +102,8 @@ function HealthReportFactory(UtilityService){
         },
 
         processViewStats: function (data) {
+            if(!data) return;
+
             var viewsNotOnSheet = data.totalViews - data.viewsOnSheet;
             var schedulesOnSheet = data.totalSchedules - data.schedulesOnSheet;
 
@@ -163,8 +167,8 @@ function HealthReportFactory(UtilityService){
             if(data.synchTimes.length <= 1) return;
 
             var modelSize = UtilityService.formatNumber(data.modelSizes[data.modelSizes.length-1].value);
-            var avgOpenTime = parseFloat((SumProperty(data.openTimes, "value") * 0.001) / data.openTimes.length).toFixed(1) + "s";
-            var avgSynchTime = parseFloat((SumProperty(data.synchTimes, "value") * 0.001) / data.openTimes.length).toFixed(1) + "s";
+            var avgOpenTime = UtilityService.formatDuration(SumProperty(data.openTimes, "value") / data.openTimes.length);
+            var avgSynchTime = UtilityService.formatDuration(SumProperty(data.synchTimes, "value") / data.openTimes.length);
 
             var modelScoreData = {
                 passingChecks: 7,
@@ -189,6 +193,9 @@ function HealthReportFactory(UtilityService){
         },
 
         processWorksetStats: function (data) {
+            if(!data) return;
+            if(data.itemCount.length === 0) return;
+
             var opened = CalculateTotals(data.onOpened);
             var output = [];
             opened.forEach(function(item) {

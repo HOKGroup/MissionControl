@@ -1,45 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d40d46a2-b8e8-4868-9ddf-969cc90d21aa" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/angular-app/data-factory/socket-factory.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/angular-app/data-factory/utility-service.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/libs/angular-ui-utils/.bower.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/libs/angular-ui-utils/.travis.yml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/libs/angular-ui-utils/CHANGELOG.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/libs/angular-ui-utils/bower.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/libs/angular-ui-utils/ui-utils-ieshiv.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/libs/angular-ui-utils/ui-utils-ieshiv.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/libs/angular-ui-utils/ui-utils.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/libs/angular-ui-utils/ui-utils.min.js" afterPath="" />
+    <list default="true" id="d40d46a2-b8e8-4868-9ddf-969cc90d21aa" name="Default" comment="finished up family task assignments, cleaned up addins page, updated all data tables">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controller/addins-controller.js" afterPath="$PROJECT_DIR$/app/controller/addins-controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controller/families-controller.js" afterPath="$PROJECT_DIR$/app/controller/families-controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/addins-model.js" afterPath="$PROJECT_DIR$/app/models/addins-model.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/families-model.js" afterPath="$PROJECT_DIR$/app/models/families-model.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes.js" afterPath="$PROJECT_DIR$/app/routes.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/add-project/add-project.html" afterPath="$PROJECT_DIR$/public/angular-app/add-project/add-project.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/addins/addins-controller.js" afterPath="$PROJECT_DIR$/public/angular-app/addins/addins-controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/addins/addins.html" afterPath="$PROJECT_DIR$/public/angular-app/addins/addins.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/app.js" afterPath="$PROJECT_DIR$/public/angular-app/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/configuration/configuration.html" afterPath="$PROJECT_DIR$/public/angular-app/configuration/configuration.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/d3/d3-circle-chart.js" afterPath="$PROJECT_DIR$/public/angular-app/d3/d3-circle-chart.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/d3/d3-horizontal-bar-chart-timeout.js" afterPath="$PROJECT_DIR$/public/angular-app/d3/d3-horizontal-bar-chart-timeout.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/d3/d3-line-zoomable-chart.js" afterPath="$PROJECT_DIR$/public/angular-app/d3/d3-line-zoomable-chart.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/d3/d3-multi-series-brushed-chart.js" afterPath="$PROJECT_DIR$/public/angular-app/d3/d3-multi-series-brushed-chart.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/data-factory/families-factory.js" afterPath="$PROJECT_DIR$/public/angular-app/data-factory/families-factory.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/d3/d3-parallel-coordinates-chart.js" afterPath="$PROJECT_DIR$/public/angular-app/d3/d3-parallel-coordinates-chart.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/data-factory/health-report-data-factory.js" afterPath="$PROJECT_DIR$/public/angular-app/data-factory/health-report-data-factory.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/edit-project/edit-project.html" afterPath="$PROJECT_DIR$/public/angular-app/edit-project/edit-project.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/data-factory/utility-service.js" afterPath="$PROJECT_DIR$/public/angular-app/data-factory/utility-service.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats-controller.js" afterPath="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats-controller.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats.html" afterPath="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/health-report/health-report-controller.js" afterPath="$PROJECT_DIR$/public/angular-app/health-report/health-report-controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/health-report/health-report.html" afterPath="$PROJECT_DIR$/public/angular-app/health-report/health-report.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/health-report/link-stats/link-stats-controller.js" afterPath="$PROJECT_DIR$/public/angular-app/health-report/link-stats/link-stats-controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/health-report/link-stats/link-stats.html" afterPath="$PROJECT_DIR$/public/angular-app/health-report/link-stats/link-stats.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/health-report/model-stats/model-stats-controller.js" afterPath="$PROJECT_DIR$/public/angular-app/health-report/model-stats/model-stats-controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/health-report/model-stats/model-stats.html" afterPath="$PROJECT_DIR$/public/angular-app/health-report/model-stats/model-stats.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/project/project-controller.js" afterPath="$PROJECT_DIR$/public/angular-app/project/project-controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/project/project.html" afterPath="$PROJECT_DIR$/public/angular-app/project/project.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/style.css" afterPath="$PROJECT_DIR$/public/css/style.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/index.html" afterPath="$PROJECT_DIR$/public/index.html" />
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
@@ -56,22 +28,34 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="d3-horizontal-bar-chart-timeout.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-horizontal-bar-chart-timeout.js">
+      <file leaf-file-name="health-report-controller.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/health-report-controller.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-986">
-              <caret line="5" column="28" lean-forward="false" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
+            <state relative-caret-position="301">
+              <caret line="71" column="47" lean-forward="true" selection-start-line="69" selection-start-column="12" selection-end-line="71" selection-end-column="47" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="d3-horizontal-bar-chart.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-horizontal-bar-chart.js">
+      <file leaf-file-name="utility-service.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/angular-app/data-factory/utility-service.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1654">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="250">
+              <caret line="16" column="64" lean-forward="true" selection-start-line="16" selection-start-column="64" selection-end-line="16" selection-end-column="64" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="health-report.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/health-report.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="312">
+              <caret line="31" column="75" lean-forward="false" selection-start-line="31" selection-start-column="65" selection-end-line="31" selection-end-column="75" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -79,46 +63,71 @@
       <file leaf-file-name="d3-line-zoomable-chart.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-line-zoomable-chart.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="79" column="23" lean-forward="true" selection-start-line="79" selection-start-column="23" selection-end-line="79" selection-end-column="23" />
+            <state relative-caret-position="340">
+              <caret line="38" column="74" lean-forward="true" selection-start-line="38" selection-start-column="74" selection-end-line="38" selection-end-column="74" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="addins.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/angular-app/addins/addins.html">
+      <file leaf-file-name="d3-circle-chart.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-circle-chart.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="33" column="33" lean-forward="true" selection-start-line="33" selection-start-column="33" selection-end-line="33" selection-end-column="33" />
+            <state relative-caret-position="627">
+              <caret line="70" column="42" lean-forward="false" selection-start-line="70" selection-start-column="42" selection-end-line="70" selection-end-column="42" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="d3-parallel-coordinates-chart.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-parallel-coordinates-chart.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="471">
+              <caret line="197" column="17" lean-forward="true" selection-start-line="40" selection-start-column="16" selection-end-line="197" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="family-stats-controller.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats-controller.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="680">
+              <caret line="64" column="49" lean-forward="true" selection-start-line="64" selection-start-column="49" selection-end-line="64" selection-end-column="49" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="health-report-data-factory.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/angular-app/data-factory/health-report-data-factory.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="169" column="25" lean-forward="true" selection-start-line="168" selection-start-column="12" selection-end-line="170" selection-end-column="124" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="family-stats.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="519">
+              <caret line="294" column="22" lean-forward="true" selection-start-line="294" selection-start-column="22" selection-end-line="294" selection-end-column="22" />
               <folding>
                 <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#2;n#div#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="workset-stats.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/workset-stats/workset-stats.html">
+      <file leaf-file-name="model-stats-controller.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/model-stats/model-stats-controller.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="75" column="46" lean-forward="false" selection-start-line="75" selection-start-column="36" selection-end-line="75" selection-end-column="46" />
+            <state relative-caret-position="85">
+              <caret line="5" column="33" lean-forward="false" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="33" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="d3-grouped-horizontal-bar-chart.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-grouped-horizontal-bar-chart.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -173,8 +182,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/public/angular-app/d3/d3-parallel-coordinates-chart.js" />
-        <option value="$PROJECT_DIR$/app/models/configuration.js" />
         <option value="$PROJECT_DIR$/app/models/healthrecords-model.js" />
         <option value="$PROJECT_DIR$/app/controller/configurations.js" />
         <option value="$PROJECT_DIR$/app/controller/projects.js" />
@@ -201,19 +208,10 @@
         <option value="$PROJECT_DIR$/app/controller/families-controller.js" />
         <option value="$PROJECT_DIR$/public/angular-app/add-project/add-project.html" />
         <option value="$PROJECT_DIR$/public/angular-app/project/project-controller.js" />
-        <option value="$PROJECT_DIR$/public/angular-app/app.js" />
         <option value="$PROJECT_DIR$/public/angular-app/health-report/link-stats/link-stats.html" />
-        <option value="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats.html" />
-        <option value="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats-controller.js" />
         <option value="$PROJECT_DIR$/public/angular-app/health-report/link-stats/link-stats-controller.js" />
-        <option value="$PROJECT_DIR$/public/angular-app/health-report/health-report-controller.js" />
         <option value="$PROJECT_DIR$/public/angular-app/d3/d3-multi-series-brushed-chart.js" />
-        <option value="$PROJECT_DIR$/public/index.html" />
-        <option value="$PROJECT_DIR$/public/angular-app/data-factory/health-report-data-factory.js" />
         <option value="$PROJECT_DIR$/public/angular-app/health-report/model-stats/model-stats-controller.js" />
-        <option value="$PROJECT_DIR$/public/angular-app/health-report/model-stats/model-stats.html" />
-        <option value="$PROJECT_DIR$/public/angular-app/d3/d3-line-zoomable-chart.js" />
-        <option value="$PROJECT_DIR$/public/angular-app/data-factory/utility-service.js" />
         <option value="$PROJECT_DIR$/public/angular-app/configuration/configuration.html" />
         <option value="$PROJECT_DIR$/public/angular-app/project/project.html" />
         <option value="$PROJECT_DIR$/public/angular-app/edit-project/edit-project.html" />
@@ -224,6 +222,17 @@
         <option value="$PROJECT_DIR$/public/angular-app/addins/addins-controller.js" />
         <option value="$PROJECT_DIR$/public/angular-app/addins/addins.html" />
         <option value="$PROJECT_DIR$/public/angular-app/d3/d3-horizontal-bar-chart-timeout.js" />
+        <option value="$PROJECT_DIR$/public/index.html" />
+        <option value="$PROJECT_DIR$/public/angular-app/app.js" />
+        <option value="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats.html" />
+        <option value="$PROJECT_DIR$/public/angular-app/d3/d3-parallel-coordinates-chart.js" />
+        <option value="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats-controller.js" />
+        <option value="$PROJECT_DIR$/public/angular-app/health-report/health-report-controller.js" />
+        <option value="$PROJECT_DIR$/public/angular-app/health-report/model-stats/model-stats.html" />
+        <option value="$PROJECT_DIR$/public/angular-app/data-factory/health-report-data-factory.js" />
+        <option value="$PROJECT_DIR$/public/angular-app/data-factory/utility-service.js" />
+        <option value="$PROJECT_DIR$/public/angular-app/d3/d3-line-zoomable-chart.js" />
+        <option value="$PROJECT_DIR$/public/angular-app/d3/d3-circle-chart.js" />
       </list>
     </option>
   </component>
@@ -368,7 +377,29 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="workset-stats" />
+              <option name="myItemId" value="model-stats" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MissionControl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MissionControl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="angular-app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data-factory" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -468,8 +499,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -596,7 +627,8 @@
       <workItem from="1505165971642" duration="16355000" />
       <workItem from="1505325658672" duration="61719000" />
       <workItem from="1505848559764" duration="37096000" />
-      <workItem from="1506438753156" duration="123346000" />
+      <workItem from="1506438753156" duration="127254000" />
+      <workItem from="1507755359185" duration="35490000" />
     </task>
     <task id="LOCAL-00001" summary="testing commiting from web storm">
       <created>1505325779744</created>
@@ -661,11 +693,18 @@
       <option name="project" value="LOCAL" />
       <updated>1506722971892</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="finished up family task assignments, cleaned up addins page, updated all data tables">
+      <created>1507556607109</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1507556607109</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1005718000" />
+    <option name="totallyTimeSpent" value="1045116000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -679,14 +718,12 @@
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
     <layout>
-      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32981783" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18809272" sideWeight="0.49361023" order="3" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32981783" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27229148" sideWeight="0.48103267" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32981783" sideWeight="0.49789253" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32981783" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1654373" sideWeight="0.5063898" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32981783" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1654373" sideWeight="0.5063898" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31255993" sideWeight="0.51896733" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -695,7 +732,9 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32981783" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32981783" sideWeight="0.49789253" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -715,7 +754,8 @@
     <MESSAGE value="Minor fixes to family table allowing for better sorting 2" />
     <MESSAGE value="updates to tasks from .net side" />
     <MESSAGE value="setup for socket protocol." />
-    <option name="LAST_COMMIT_MESSAGE" value="setup for socket protocol." />
+    <MESSAGE value="finished up family task assignments, cleaned up addins page, updated all data tables" />
+    <option name="LAST_COMMIT_MESSAGE" value="finished up family task assignments, cleaned up addins page, updated all data tables" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -724,65 +764,23 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/socket.io-client/History.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-3621">
-            <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-            <folding />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/socket.io/History.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="0">
             <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-            <folding />
           </first_editor>
           <second_editor />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/controller/socket/communicator.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="10" column="30" lean-forward="false" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/communicator-client/communicator-client.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="8" column="4" lean-forward="false" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controller/socket/roomedit3d.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="10" column="20" lean-forward="false" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/data-factory/healthrecords-data-factory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controller/socket/communicator.js" />
+    <entry file="file://$PROJECT_DIR$/public/angular-app/communicator-client/communicator-client.js" />
+    <entry file="file://$PROJECT_DIR$/app/controller/socket/roomedit3d.js" />
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
           <caret line="23" column="17" lean-forward="true" selection-start-line="23" selection-start-column="17" selection-end-line="23" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -790,7 +788,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="4" column="7" lean-forward="false" selection-start-line="4" selection-start-column="7" selection-end-line="4" selection-end-column="7" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -806,7 +803,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -830,44 +826,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="809">
           <caret line="145" column="53" lean-forward="true" selection-start-line="145" selection-start-column="53" selection-end-line="145" selection-end-column="53" />
-          <folding>
-            <element signature="n#style#0;n#span#0;n#label#0;n#fieldset#0;n#div#1;n#div#0;n#form#0;n#div#1;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#span#1;n#label#0;n#fieldset#0;n#div#1;n#div#0;n#form#0;n#div#1;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#span#0;n#label#0;n#fieldset#1;n#div#1;n#div#0;n#form#0;n#div#1;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#span#1;n#label#0;n#fieldset#1;n#div#1;n#div#0;n#form#0;n#div#1;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#span#0;n#label#0;n#fieldset#2;n#div#1;n#div#0;n#form#0;n#div#1;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#span#1;n#label#0;n#fieldset#2;n#div#1;n#div#0;n#form#0;n#div#1;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#button#0;n#form#0;n#div#1;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#a#0;n#form#0;n#div#1;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/libs/angular-datatables/demo/src/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/libs/angular-datatables/src/angular-datatables.directive.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/public/libs/angular-datatables/demo/src/index.html" />
+    <entry file="file://$PROJECT_DIR$/public/libs/angular-datatables/src/angular-datatables.directive.ts" />
     <entry file="file://$PROJECT_DIR$/public/libs/datatables.net/js/jquery.dataTables.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="425">
           <caret line="27" column="17" lean-forward="false" selection-start-line="27" selection-start-column="17" selection-end-line="27" selection-end-column="17" />
-          <folding>
-            <marker date="1504895792453" expanded="true" signature="156778:156803" ph="..." />
-            <marker date="1504895792453" expanded="true" signature="157025:157050" ph="..." />
-            <marker date="1504895792453" expanded="true" signature="424468:424476" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -875,15 +842,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="6" column="51" lean-forward="true" selection-start-line="6" selection-start-column="51" selection-end-line="6" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="10" lean-forward="true" selection-start-line="24" selection-start-column="10" selection-end-line="24" selection-end-column="10" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -891,7 +849,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="471">
           <caret line="78" column="52" lean-forward="false" selection-start-line="78" selection-start-column="46" selection-end-line="78" selection-end-column="52" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -899,15 +856,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="284">
           <caret line="62" column="12" lean-forward="true" selection-start-line="62" selection-start-column="12" selection-end-line="62" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats-controller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="53" lean-forward="false" selection-start-line="18" selection-start-column="53" selection-end-line="18" selection-end-column="53" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -931,7 +879,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="241">
           <caret line="98" column="131" lean-forward="false" selection-start-line="98" selection-start-column="131" selection-end-line="98" selection-end-column="131" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -939,14 +886,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-141">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/health-report-controller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="40" column="26" lean-forward="true" selection-start-line="40" selection-start-column="26" selection-end-line="40" selection-end-column="26" />
           <folding />
         </state>
       </provider>
@@ -959,35 +898,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="99" column="60" lean-forward="false" selection-start-line="99" selection-start-column="60" selection-end-line="99" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/data-factory/health-report-data-factory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="164" column="55" lean-forward="false" selection-start-line="164" selection-start-column="28" selection-end-line="164" selection-end-column="55" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-circle-chart.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-directive.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
           <caret line="9" column="22" lean-forward="false" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="22" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1009,43 +923,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/model-stats/model-stats-controller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="21" lean-forward="false" selection-start-line="17" selection-start-column="7" selection-end-line="17" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/model-stats/model-stats.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="72" column="105" lean-forward="false" selection-start-line="72" selection-start-column="105" selection-end-line="72" selection-end-column="105" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/data-factory/utility-service.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="10" lean-forward="true" selection-start-line="19" selection-start-column="10" selection-end-line="19" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4828">
-          <caret line="362" column="129" lean-forward="false" selection-start-line="362" selection-start-column="129" selection-end-line="362" selection-end-column="129" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/angular-app/configuration/configuration.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
           <caret line="20" column="86" lean-forward="true" selection-start-line="20" selection-start-column="86" selection-end-line="20" selection-end-column="86" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1053,7 +934,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
           <caret line="24" column="16" lean-forward="true" selection-start-line="24" selection-start-column="16" selection-end-line="24" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1061,7 +941,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
           <caret line="161" column="156" lean-forward="false" selection-start-line="161" selection-start-column="156" selection-end-line="161" selection-end-column="156" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1069,7 +948,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="7" column="19" lean-forward="true" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1077,17 +955,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
           <caret line="52" column="9" lean-forward="true" selection-start-line="52" selection-start-column="9" selection-end-line="52" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/health-report.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="25" column="110" lean-forward="false" selection-start-line="25" selection-start-column="92" selection-end-line="25" selection-end-column="110" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1095,34 +962,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-7">
           <caret line="145" column="26" lean-forward="true" selection-start-line="145" selection-start-column="26" selection-end-line="145" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/addins/addins-controller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="29" column="45" lean-forward="true" selection-start-line="29" selection-start-column="45" selection-end-line="29" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/addins/addins.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="33" column="33" lean-forward="true" selection-start-line="33" selection-start-column="33" selection-end-line="33" selection-end-column="33" />
-          <folding>
-            <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#2;n#div#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/workset-stats/workset-stats.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
+        <state relative-caret-position="1275">
           <caret line="75" column="46" lean-forward="false" selection-start-line="75" selection-start-column="36" selection-end-line="75" selection-end-column="46" />
           <folding />
         </state>
@@ -1133,31 +978,157 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-line-zoomable-chart.js">
+    <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-horizontal-bar-chart.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="79" column="23" lean-forward="true" selection-start-line="79" selection-start-column="23" selection-end-line="79" selection-end-column="23" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="115" column="75" lean-forward="false" selection-start-line="115" selection-start-column="75" selection-end-line="115" selection-end-column="75" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/data-factory/healthrecords-data-factory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-horizontal-bar-chart-timeout.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-986">
-          <caret line="5" column="28" lean-forward="false" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
+        <state relative-caret-position="238">
+          <caret line="86" column="53" lean-forward="true" selection-start-line="86" selection-start-column="28" selection-end-line="86" selection-end-column="53" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-horizontal-bar-chart.js">
+    <entry file="file://$PROJECT_DIR$/public/angular-app/addins/addins-controller.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1654">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="136">
+          <caret line="116" column="32" lean-forward="true" selection-start-line="116" selection-start-column="4" selection-end-line="116" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="30" lean-forward="false" selection-start-line="7" selection-start-column="30" selection-end-line="7" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/addins/addins.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="69" lean-forward="true" selection-start-line="15" selection-start-column="44" selection-end-line="15" selection-end-column="69" />
+          <folding>
+            <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-parallel-coordinates-chart.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="471">
+          <caret line="197" column="17" lean-forward="true" selection-start-line="40" selection-start-column="16" selection-end-line="197" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/health-report.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="31" column="75" lean-forward="false" selection-start-line="31" selection-start-column="65" selection-end-line="31" selection-end-column="75" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats-controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="680">
+          <caret line="64" column="49" lean-forward="true" selection-start-line="64" selection-start-column="49" selection-end-line="64" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/model-stats/model-stats-controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="33" lean-forward="false" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/data-factory/health-report-data-factory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="169" column="25" lean-forward="true" selection-start-line="168" selection-start-column="12" selection-end-line="170" selection-end-column="124" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/model-stats/model-stats.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-34">
+          <caret line="46" column="91" lean-forward="false" selection-start-line="46" selection-start-column="91" selection-end-line="46" selection-end-column="91" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/health-report-controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="301">
+          <caret line="71" column="47" lean-forward="true" selection-start-line="69" selection-start-column="12" selection-end-line="71" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="519">
+          <caret line="294" column="22" lean-forward="true" selection-start-line="294" selection-start-column="22" selection-end-line="294" selection-end-column="22" />
+          <folding>
+            <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/data-factory/utility-service.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="16" column="64" lean-forward="true" selection-start-line="16" selection-start-column="64" selection-end-line="16" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-line-zoomable-chart.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="38" column="74" lean-forward="true" selection-start-line="38" selection-start-column="74" selection-end-line="38" selection-end-column="74" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/d3/d3-circle-chart.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="627">
+          <caret line="70" column="42" lean-forward="false" selection-start-line="70" selection-start-column="42" selection-end-line="70" selection-end-column="42" />
           <folding />
         </state>
       </provider>
