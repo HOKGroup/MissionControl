@@ -1,6 +1,6 @@
 var app = angular.module('MissionControlApp').controller('FamilyStatsController', FamilyStatsController);
 
-function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket, DTColumnDefBuilder, DTInstances) {
+function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket, DTColumnDefBuilder, DTInstances, UtilityService) {
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.FamilyData = this.processed;
@@ -31,7 +31,8 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket,
     vm.dtOptions = {
         paginationType: 'simple_numbers',
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
-        stateSave: true
+        stateSave: true,
+        deferRender: true
     };
 
     vm.dtColumnDefs = [
@@ -48,7 +49,7 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket,
     });
 
     vm.FilterTable = function () {
-        if(dtInstance) {dtInstance.reloadData();}
+        if(dtInstance) {dtInstance.reloadData(false);}
     };
 
     vm.OnBrush = function(item){
@@ -62,7 +63,11 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket,
             }
             return found;
         });
-        if(dtInstance) {dtInstance.reloadData();}
+        // if(dtInstance) {dtInstance.reloadData();}
+    };
+
+    vm.formatValue = function(item){
+        return UtilityService.formatNumber(item);
     };
 
     vm.evaluateFamily = function (f) {

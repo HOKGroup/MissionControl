@@ -85,29 +85,6 @@ ProjectService = {
           });
   },
 
-    populateHealthRecords : function (req, res) {
-      var id = req.params.id;
-      Project
-          .findById(id)
-          .populate({ path: 'healthrecords'})
-          .exec(function (err, doc) {
-              var response = {
-                  status: 200,
-                  message: doc
-              };
-              if(err){
-                  response.status = 500;
-                  response.message = err;
-              } else if(!doc){
-                  response.status = 404;
-                  response.message = { "message": "Project Id not found " + id};
-              }
-              res
-                  .status(response.status)
-                  .json(response.message);
-          });
-  },
-  
    findByConfigurationId : function(req, res){
     var id = req.params.configid;
     Project.find({'configurations':id},function(err, result) {
@@ -138,6 +115,52 @@ ProjectService = {
           });
   },
 
+  populateHealthRecords : function (req, res) {
+      var id = req.params.id;
+      Project
+          .findById(id)
+          .populate({ path: 'healthrecords'})
+          .exec(function (err, doc) {
+              var response = {
+                  status: 200,
+                  message: doc
+              };
+              if(err){
+                  response.status = 500;
+                  response.message = err;
+              } else if(!doc){
+                  response.status = 404;
+                  response.message = { "message": "Project Id not found " + id};
+              }
+              res
+                  .status(response.status)
+                  .json(response.message);
+          });
+  },
+
+  populateSheets : function (req, res) {
+      var id = req.params.id;
+      Project
+          .findById(id)
+          .populate({ path: 'sheets'})
+          .exec(function (err, doc) {
+              var response = {
+                  status: 200,
+                  message: doc
+              };
+              if(err){
+                  response.status = 500;
+                  response.message = err;
+              } else if(!doc){
+                  response.status = 404;
+                  response.message = { "message": "Project Id not found " + id};
+              }
+              res
+                  .status(response.status)
+                  .json(response.message);
+          });
+  },
+
   update : function(req, res) {
     var id = req.params.id;
     Project.update({"_id":id}, req.body, {upsert:true},
@@ -158,8 +181,7 @@ ProjectService = {
                     if(err) return console.log(err);
                     return res.sendStatus(202);
                 });
-    },
-
+   },
     addHealthRecord : function(req, res){
        var projectId = req.params.id;
        var healthRecordId = req.params.healthrecordid;
@@ -180,6 +202,23 @@ ProjectService = {
                    }
                });
    },
+
+    addSheets : function(req, res){
+        var projectId = req.params.id;
+        var sheetsId = req.params.sheetsid;
+        Project
+            .update(
+                { _id: projectId},
+                { $push:{ sheets: sheetsId }},
+                function(err, project){
+                    if(err) {
+                        console.log(err);
+                        res.status(201).json(err);
+                    } else {
+                        res.status(201).json();
+                    }
+                });
+    },
   
   deleteConfiguration: function(req, res){
 	  var projectId = req.params.id;

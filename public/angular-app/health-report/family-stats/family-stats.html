@@ -76,7 +76,7 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-danger pull-left" ng-click="delete()"><span class="glyphicon glyphicon-trash"></span> Delete</button>
             <button type="button" class="btn btn-secondary" ng-click="cancel()">Close</button>
-            <button type="button" class="btn btn-primary" ng-click="addTask()">Add Task</button>
+            <button type="button" class="btn btn-primary" ng-click="addTask()"><span class="glyphicon glyphicon-plus"></span> Add Task</button>
         </div>
     </div>
 </script>
@@ -188,7 +188,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" ng-click="cancel()">Close</button>
-            <button type="button" class="btn btn-primary" ng-click="addTask()">Add</button>
+            <button type="button" class="btn btn-primary" ng-click="addTask()"><span class="glyphicon glyphicon-plus"></span> Add</button>
         </div>
     </div>
 </script>
@@ -286,11 +286,11 @@
                     <div class=" btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
                         <button type="button" ng-class="vm.SelectedYear === '2016' ? 'btn btn-primary' : 'btn btn-primary'" ng-click="vm.FilterTable()">Filter</button>
                     </div>
-                    <h4 class="panel-title" style="padding-top: 5px;">Parallel Coordinates Chart</h4>
+                    <h4 class="panel-title" style="padding-top: 5px;">Select: Filter Families by Multiple Parameters.</h4>
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <d3-parallel-coordinates data="vm.pcoordinatesData" d3-on-brush="vm.OnBrush(item)"></d3-parallel-coordinates>
+                        <d3-parallel-coordinates data="vm.pcoordinatesData" format-value="vm.formatValue(item)" d3-on-brush="vm.OnBrush(item)"></d3-parallel-coordinates>
                     </div>
                 </div>
             </div>

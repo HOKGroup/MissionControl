@@ -4,6 +4,7 @@ var triggerrecord = require('./models/trigger_record');
 var healthReport = require('./models/healthrecords-model');
 var addins = require('./models/addins-model');
 var families = require('./models/families-model');
+var sheets = require('./models/sheets-model');
 
  module.exports = function(app) {
      var projects = require('./controller/projects');
@@ -12,12 +13,14 @@ var families = require('./models/families-model');
      app.get('/api/v1/projects/:id', projects.findById);
      app.get('/api/v1/projects/populate/:id', projects.populateById);
      app.get('/api/v1/projects/populatehr/:id', projects.populateHealthRecords);
+     app.get('/api/v1/projects/populatesheets/:id', projects.populateSheets);
      app.get('/api/v1/projects/configid/:configid', projects.findByConfigurationId);
      app.get('/api/v1/projects/office/:office', projects.findByOffice);
      app.post('/api/v1/projects', projects.add);
      app.put('/api/v1/projects/:id', projects.update);
      app.put('/api/v1/projects/:id/addconfig/:configid', projects.addConfiguration);
      app.put('/api/v1/projects/:id/addhealthrecord/:healthrecordid', projects.addHealthRecord);
+     app.put('/api/v1/projects/:id/addsheets/:sheetsid', projects.addSheets);
      app.put('/api/v1/projects/:id/deleteconfig/:configid', projects.deleteConfiguration);
      app.delete('/api/v1/projects/:id', projects.delete);
 
@@ -73,9 +76,9 @@ var families = require('./models/families-model');
 
      var families = require('./controller/families-controller');
      app.get('/api/v1/families', families.findAll);
+     app.post('/api/v1/families', families.add);
      app.get('/api/v1/families/:id', families.findById);
      app.get('/api/v1/families/uri/:uri*', families.findByEncodedURI);
-     app.post('/api/v1/families', families.add);
      app.put('/api/v1/families/:id', families.update);
      // app.put('/api/v1/families/:id/updateOne', families.updateOne);
      // app.put('/api/v1/families/:id/multiupdate1', families.updateMultipleFamilies1);
@@ -83,4 +86,10 @@ var families = require('./models/families-model');
      app.post('/api/v1/families/:id/family/:name/updatetask/:taskid', families.updateTask);
      // app.post('/api/v1/families/:id/name/:name/delete/:taskid', families.deleteTask);
      app.post('/api/v1/families/:id/family/:name/deletemany', families.deleteMultipleTasks);
+
+     var sheets = require('./controller/sheets-controller');
+     app.get('/api/v1/sheets', sheets.findAll);
+     app.post('/api/v1/sheets', sheets.add);
+     app.get('/api/v1/sheets/uri/:uri*', sheets.findByEncodedURI);
+     app.post('/api/v1/sheets/:id/sheetchanges', sheets.updateChanges)
   };

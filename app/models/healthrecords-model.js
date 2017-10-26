@@ -25,45 +25,20 @@ var viewStatsSchema = new mongoose.Schema({
 });
 
 var linksStatsSchema = new mongoose.Schema({
-    totalImportedDwg: Number,
+    totalImportedDwg: Number, //total number of ImportInstance objects
     importedDwgFiles:[{
         name: String,
         elementId: Number,
         instances: Number,
         isViewSpecific: Boolean,
         isLinked: Boolean}],
-    unusedLinkedImages: Number,
-    totalDwgStyles: Number,
-    totalImportedStyles: Number,
-    totalLinkedModels: Number,
-    totalLinkedDwg: Number,
+    unusedLinkedImages: Number, //all ImageTypes that were not used
+    totalDwgStyles: Number,//all Styles with "dwg" in name
+    totalImportedStyles: Number,//all Styles under "Imports in Families"
+    totalLinkedModels: Number,//all CADLinkType + all RevitLinkType objects
+    totalLinkedDwg: Number,//all CADLinkType objects
     createdOn: Date
 });
-
-// var familyStatsSchema = new mongoose.Schema({
-//     suspectFamilies: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: 'Families'
-//     },
-//     // suspectFamilies: [{
-//     //     name: String,
-//     //     size: String,
-//     //     sizeValue: Number,
-//     //     instances: Number,
-//     //     elementId: Number,
-//     //     arrayCount: {type: Number, default: 0},
-//     //     refPlaneCount: {type: Number, default: 0},
-//     //     voidCount: {type: Number, default: 0},
-//     //     nestedFamilyCount: {type: Number, default: 0},
-//     //     parametersCount: {type: Number, default: 0}
-//     // }],
-//     totalFamilies: Number,
-//     unusedFamilies: Number,
-//     oversizedFamilies: Number,
-//     inPlaceFamilies: Number,
-//     createdBy: String,
-//     createdOn: Date
-// });
 
 var eventTimeSchema = new mongoose.Schema({
     value: Number,

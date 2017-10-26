@@ -26,14 +26,18 @@ var projectSchema = new mongoose.Schema({
 		zipCode: String,
 		placeId: String //google place ID
 	},
-	    geoLocation: geoSchema, //type point
-	    geoPolygon: geoSchema, //type MultiPolygon
-	    configurations: [{
-    		type: mongoose.Schema.Types.ObjectId,
-			ref: 'Configuration'}],
-		healthrecords: [{
-    		type: mongoose.Schema.Types.ObjectId,
-			ref: 'HealthRecords'}]
+	geoLocation: geoSchema, //type point
+	geoPolygon: geoSchema, //type MultiPolygon
+	configurations: [{
+    	type: mongoose.Schema.Types.ObjectId,
+		ref: 'Configuration'}],
+	healthrecords: [{
+    	type: mongoose.Schema.Types.ObjectId,
+		ref: 'HealthRecords'}],
+    sheets: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Sheets'
+    }]
   },
   {
 	  timestamps: true

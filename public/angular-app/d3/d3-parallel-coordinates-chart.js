@@ -3,7 +3,8 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
         restrict: 'E',
         scope: {
             data: '=',
-            onBrush: '&d3OnBrush' // click function
+            onBrush: '&d3OnBrush', // click function
+            callbackMethod: '&formatValue' // format function
         },
         link: function(scope, ele) {
             var svg = d3.select(ele[0])
@@ -38,14 +39,14 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
                 //     {name: "someName4", param1: 10, param2: 10, param3: 10},
                 //     {name: "someName5", param1: 12, param2: 23, param3: 12}];
 
-                var margin = {top: 20, right: 10, bottom: 10, left: 20},
+                var margin = {top: 20, right: 10, bottom: 10, left: 30},
                     width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right,
                     height = 400 - margin.top - margin.bottom;
 
                 // set the height based on the calculations above
                 svg.attr('height', height + margin.top + margin.bottom);
 
-                var x = d3.scaleBand().rangeRound([0, width]).padding(1),
+                var x = d3.scalePoint().range([margin.left, width+margin.right]),
                     y = {},
                     dragging = {},
                     selected;
@@ -55,8 +56,6 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
                     foreground,
                     extents;
 
-                // TODO: This part needs re-writing to account for the fact that we are
-                // TODO: ...not dealing with CSV file.
                 x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
                     if(d === "name") {
                         return false;
@@ -72,7 +71,7 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
                 // Add grey background lines for context.
                 background = svg.append("g")
                     .attr("class", "background")
-                    .attr("transform", "translate(0," + margin.top + ")")
+                    .attr("transform", "translate(" + (margin.left-margin.right) + "," + margin.top + ")")
                     .selectAll("path")
                     .data(data)
                     .enter().append("path")
@@ -81,7 +80,7 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
                 // Add blue foreground lines for focus.
                 foreground = svg.append("g")
                     .attr("class", "foreground")
-                    .attr("transform", "translate(0," + margin.top + ")")
+                    .attr("transform", "translate(" + (margin.left-margin.right) + "," + margin.top + ")")
                     .selectAll("path")
                     .data(data)
                     .enter().append("path")
@@ -92,7 +91,7 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
                     .data(dimensions)
                     .enter().append("g")
                     .attr("class", "dimension")
-                    .attr("transform", function(d) {  return "translate(" + x(d) + ")"; })
+                    .attr("transform", function(d) {  return "translate(" + (x(d)+margin.left-margin.right) + ")"; })
                     .call(d3.drag()
                         .subject(function(d) { return {x: x(d)}; })
                         .on("start", function(d) {
@@ -121,7 +120,24 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
                 // Add an axis and title.
                 g.append("g")
                     .attr("class", "y axis")
-                    .each(function(d) {  d3.select(this).call(d3.axisLeft(y[d]));})
+                    .each(function(d) {
+                        var ticksNum = 10;
+                        var yAxisTicks = [];
+                        var yDomain = y[d].domain();
+                        if(d === "Size"){
+                            for (var i = 0; i < ticksNum; i++ ){
+                                yAxisTicks.push((yDomain[1] - yDomain[0]) / (ticksNum - 1)* i + yDomain[0]);
+                            }
+                            d3.select(this).call(d3.axisLeft(y[d]).tickValues(yAxisTicks).tickFormat(function (size) {
+                                return scope.callbackMethod({item: size});
+                            }));
+                        }else{
+                            for (var i = 0; i < ticksNum; i++ ){
+                                yAxisTicks.push((yDomain[1] - yDomain[0]) / (ticksNum - 1)* i + yDomain[0]);
+                            }
+                            d3.select(this).call(d3.axisLeft(y[d]).tickValues(yAxisTicks));
+                        }
+                    })
                     .attr("transform", "translate(0," + margin.top + ")")
                     .append("text")
                     .style("text-anchor", "middle")
@@ -135,7 +151,8 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
                     .each(function(d) {
                         d3.select(this)
                             .call(y[d].brush = d3.brushY().extent([[-8, 0], [8,height]])
-                                .on("brush start", brushstart)
+                                .on("start", brushstart)
+                                .on("brush", gobrush)
                                 .on("brush", brush_parallel_chart));
                     })
                     .selectAll("rect")
@@ -158,7 +175,24 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
                     }));
                 }
 
-                function brushstart() {
+                function brushstart(selectionName) {
+                    foreground.style("display", "none");
+
+                    var dimensionsIndex = dimensions.indexOf(selectionName);
+
+                    extents[dimensionsIndex] = [0, 0];
+
+                    foreground.style("display", function(d) {
+                        return dimensions.every(function(p, i) {
+                            if(extents[i][0]===0 && extents[i][0]===0) {
+                                return true;
+                            }
+                            return extents[i][1] <= d[p] && d[p] <= extents[i][0];
+                        }) ? null : "none";
+                    });
+                }
+
+                function gobrush() {
                     d3.event.sourceEvent.stopPropagation();
                 }
 

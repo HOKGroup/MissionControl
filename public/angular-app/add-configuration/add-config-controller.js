@@ -82,7 +82,8 @@ function AddConfigController($routeParams, ConfigFactory, $window){
                     }]
             };
 
-        var updater_revision =
+        // (Konrad) This is Sheet Tracker
+        var updater_sheet =
             {
                 updaterId: '0504A758-BF15-4C90-B996-A795D92B42DB',
                 updaterName: 'Sheet Tracker',
@@ -91,12 +92,12 @@ function AddConfigController($routeParams, ConfigFactory, $window){
                 addInName: 'Sheet Data Manager',
                 isUpdaterOn: false,
                 categoryTriggers:[
-                    {
-                        categoryName: "Revisions",
-                        description: "",
-                        isEnabled: false,
-                        locked: false
-                    },
+                    // {
+                    //     categoryName: "Revisions",
+                    //     description: "",
+                    //     isEnabled: false,
+                    //     locked: false
+                    // },
                     {
                         categoryName: "Sheets",
                         description: "",
@@ -139,7 +140,7 @@ function AddConfigController($routeParams, ConfigFactory, $window){
             files: [],
             sheetDatabase: '',
             sharedParamMonitor: monitor_sharedParameters,
-            updaters: [updater_dtm, updater_ca, updater_revision, monitor_linkUnload, updater_healthRecords]
+            updaters: [updater_dtm, updater_ca, updater_sheet, monitor_linkUnload, updater_healthRecords]
         };
     }
 

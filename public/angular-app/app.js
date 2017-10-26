@@ -64,4 +64,10 @@ function config($routeProvider){
             controller: 'HealthReportController',
             controllerAs: 'vm'
         })
+        // Sheets page
+        .when('/projects/sheets/:projectId', {
+            templateUrl: 'angular-app/sheets/sheets.html',
+            controller: 'SheetsController',
+            controllerAs: 'vm'
+        })
 }

@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').controller('AddProjectController', AddProjectController);
 
-function AddProjectController(ConfigFactory, ProjectFactory, $window, $route){
+function AddProjectController(ProjectFactory, $window, SheetsFactory){
     var vm = this;
     vm.status = "Success!";
     vm.newProject = {
@@ -39,8 +39,9 @@ function AddProjectController(ConfigFactory, ProjectFactory, $window, $route){
         project.healthrecords = [];
         project.configurations = [];
 
-        ConfigFactory
-            .addConfiguration(vm.newConfig);
+        //TODO: Is this doing anything here?
+        // ConfigFactory
+        //     .addConfiguration(vm.newConfig);
 
         ProjectFactory
             .addProject(project).then(function(response){

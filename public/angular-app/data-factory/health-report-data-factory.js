@@ -81,13 +81,15 @@ function HealthReportFactory(UtilityService){
             var linkScoreData = {
                 passingChecks: passingChecks,
                 count: data.totalImportedDwg,
-                label: "Revit Links",
+                label: "Import Instances",
                 newMax: 6};
 
-            var desc = "Revit allows linking of external content. However, excessively linking of RVT/DWG/NWC files " +
-                "can impact file performance even if the file is otherwise well maintained. Each linked model should " +
-                "be placed on its own Workset to allow it to be closed, and conserve resources. Models should under no " +
-                "circumstances be imported.";
+            var desc = "Excessive linking of RVT/DWG/NWC files " +
+                "can impact file performance even if the file is otherwise well maintained. Each linked Revit model should " +
+                "be placed on its own Workset to allow it to be closed, and conserve resources. " +
+                "This model has " + (data.totalLinkedModels - data.totalLinkedDwg) + " Linked Revit Models, " +
+                "and " + data.totalLinkedDwg + " Linked CAD Files. These links were placed " + data.totalImportedDwg + " times." +
+                "\n*Not all links have to be placed.";
 
             return {
                 importedContentCount: data.totalImportedDwg,

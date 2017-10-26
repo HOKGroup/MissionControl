@@ -31,6 +31,11 @@ function UtilityService(){
                 ++u;
             } while (Math.abs(bytes) >= thresh && u < units.length - 1);
             return bytes.toFixed(1) + units[u];
+        },
+
+        fileNameFromPath: function (path) {
+            if(!path) return;
+            return path.replace(/^.*[\\\/]/, '').slice(0, -4); //removed file extension
         }
     };
 }
