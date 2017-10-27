@@ -1,31 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d40d46a2-b8e8-4868-9ddf-969cc90d21aa" name="Default" comment="start of parallel coordinates filter for families, fixes to line chart scales, duration formatting utilities,">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/controller/sheets-controller.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/models/sheets-model.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/angular-app/data-factory/sheets-factory.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/angular-app/sheets/sheets-controller.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/angular-app/sheets/sheets.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/_graphics/AD/icons.afdesign" afterPath="$PROJECT_DIR$/_graphics/AD/icons.afdesign" />
+    <list default="true" id="d40d46a2-b8e8-4868-9ddf-969cc90d21aa" name="Default" comment="added sheets tool, datatable, edit single sheet, edit multiple sheets, filter sheets by model, highlight and stage sheets for changes, setup for mongo side and routes to update sheets and stage changes.">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controller/projects.js" afterPath="$PROJECT_DIR$/app/controller/projects.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/healthrecords-model.js" afterPath="$PROJECT_DIR$/app/models/healthrecords-model.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/project.js" afterPath="$PROJECT_DIR$/app/models/project.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes.js" afterPath="$PROJECT_DIR$/app/routes.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/add-configuration/add-config-controller.js" afterPath="$PROJECT_DIR$/public/angular-app/add-configuration/add-config-controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/add-project/add-project-controller.js" afterPath="$PROJECT_DIR$/public/angular-app/add-project/add-project-controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/app.js" afterPath="$PROJECT_DIR$/public/angular-app/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/configuration/configuration.html" afterPath="$PROJECT_DIR$/public/angular-app/configuration/configuration.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/d3/d3-parallel-coordinates-chart.js" afterPath="$PROJECT_DIR$/public/angular-app/d3/d3-parallel-coordinates-chart.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/data-factory/health-report-data-factory.js" afterPath="$PROJECT_DIR$/public/angular-app/data-factory/health-report-data-factory.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/data-factory/utility-service.js" afterPath="$PROJECT_DIR$/public/angular-app/data-factory/utility-service.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/edit-project/edit-project.html" afterPath="$PROJECT_DIR$/public/angular-app/edit-project/edit-project.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/filters/filters.js" afterPath="$PROJECT_DIR$/public/angular-app/filters/filters.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats-controller.js" afterPath="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats-controller.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats.html" afterPath="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/health-report/health-report.html" afterPath="$PROJECT_DIR$/public/angular-app/health-report/health-report.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/index.html" afterPath="$PROJECT_DIR$/public/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/sheets/sheets.html" afterPath="$PROJECT_DIR$/public/angular-app/sheets/sheets.html" />
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -41,11 +19,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="sheets-controller.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="sheets-controller.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/angular-app/sheets/sheets-controller.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="25" column="54" lean-forward="true" selection-start-line="25" selection-start-column="54" selection-end-line="25" selection-end-column="54" />
+            <state relative-caret-position="255">
+              <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -104,19 +82,20 @@
       <file leaf-file-name="health-report.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/health-report.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="12" column="226" lean-forward="false" selection-start-line="12" selection-start-column="226" selection-end-line="12" selection-end-column="226" />
+            <state relative-caret-position="289">
+              <caret line="17" column="21" lean-forward="true" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sheets.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="sheets.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/angular-app/sheets/sheets.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="309">
-              <caret line="128" column="104" lean-forward="false" selection-start-line="128" selection-start-column="104" selection-end-line="128" selection-end-column="104" />
+            <state relative-caret-position="243">
+              <caret line="61" column="55" lean-forward="true" selection-start-line="61" selection-start-column="55" selection-end-line="61" selection-end-column="55" />
               <folding>
+                <element signature="n#style#0;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#td#0;n#tr#0;n#tbody#0;n#table#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
               </folding>
@@ -242,9 +221,9 @@
         <option value="$PROJECT_DIR$/app/models/sheets-model.js" />
         <option value="$PROJECT_DIR$/app/controller/sheets-controller.js" />
         <option value="$PROJECT_DIR$/public/angular-app/data-factory/utility-service.js" />
-        <option value="$PROJECT_DIR$/public/angular-app/sheets/sheets.html" />
         <option value="$PROJECT_DIR$/public/angular-app/filters/filters.js" />
         <option value="$PROJECT_DIR$/public/angular-app/sheets/sheets-controller.js" />
+        <option value="$PROJECT_DIR$/public/angular-app/sheets/sheets.html" />
       </list>
     </option>
   </component>
@@ -671,7 +650,7 @@
       <workItem from="1505848559764" duration="37096000" />
       <workItem from="1506438753156" duration="127254000" />
       <workItem from="1507755359185" duration="42602000" />
-      <workItem from="1508782361971" duration="71837000" />
+      <workItem from="1508782361971" duration="73852000" />
     </task>
     <task id="LOCAL-00001" summary="testing commiting from web storm">
       <created>1505325779744</created>
@@ -750,11 +729,18 @@
       <option name="project" value="LOCAL" />
       <updated>1507931841613</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="added sheets tool, datatable, edit single sheet, edit multiple sheets, filter sheets by model, highlight and stage sheets for changes, setup for mongo side and routes to update sheets and stage changes.">
+      <created>1509056310069</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1509056310069</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1124065000" />
+    <option name="totallyTimeSpent" value="1126080000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -806,7 +792,8 @@
     <MESSAGE value="setup for socket protocol." />
     <MESSAGE value="finished up family task assignments, cleaned up addins page, updated all data tables" />
     <MESSAGE value="start of parallel coordinates filter for families, fixes to line chart scales, duration formatting utilities," />
-    <option name="LAST_COMMIT_MESSAGE" value="start of parallel coordinates filter for families, fixes to line chart scales, duration formatting utilities," />
+    <MESSAGE value="added sheets tool, datatable, edit single sheet, edit multiple sheets, filter sheets by model, highlight and stage sheets for changes, setup for mongo side and routes to update sheets and stage changes." />
+    <option name="LAST_COMMIT_MESSAGE" value="added sheets tool, datatable, edit single sheet, edit multiple sheets, filter sheets by model, highlight and stage sheets for changes, setup for mongo side and routes to update sheets and stage changes." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1181,14 +1168,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/health-report.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="226" lean-forward="false" selection-start-line="12" selection-start-column="226" selection-end-line="12" selection-end-column="226" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/health-report-controller.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="383">
@@ -1213,17 +1192,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/sheets/sheets.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="128" column="104" lean-forward="false" selection-start-line="128" selection-start-column="104" selection-end-line="128" selection-end-column="104" />
-          <folding>
-            <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#td#0;n#tr#0;n#tbody#0;n#table#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/angular-app/filters/filters.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -1242,9 +1210,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/angular-app/sheets/sheets-controller.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="25" column="54" lean-forward="true" selection-start-line="25" selection-start-column="54" selection-end-line="25" selection-end-column="54" />
+        <state relative-caret-position="255">
+          <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/health-report.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="21" lean-forward="true" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/sheets/sheets.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="61" column="55" lean-forward="true" selection-start-line="61" selection-start-column="55" selection-end-line="61" selection-end-column="55" />
+          <folding>
+            <element signature="n#style#0;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#0;n#tr#0;n#tbody#0;n#table#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

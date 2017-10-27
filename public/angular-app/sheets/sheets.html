@@ -96,20 +96,24 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
+                        <button type="button" class="btn btn-primary" ng-click="vm.editMultipleSheets('large', vm.selectedItems)" ng-if="vm.selectedItems.length > 1">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                            Multi-Edit
+                        </button>
+                        <button type="button" class="btn btn-primary" ng-click="vm.editSheet('large', vm.selectedItems[0])" ng-if="vm.selectedItems.length === 1">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                            Single-Edit
+                        </button>
                         <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
                             {{vm.selectedModel}}
                             <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 50px">
+                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 100px">
                             <li ng-repeat="file in vm.availableModels">
                                 <a href="" ng-click="vm.SetCurrentModelFilter(file)">{{file}}</a>
                             </li>
                         </ul>
                     </div>
-                    <!--<div class=" btn-group btn-group-xs pull-right" role="group" aria-hidden="true">-->
-                        <!--<button type="button" class="btn btn-primary" ng-click="vm.editMultipleSheets('large', vm.selectedItems)" ng-if="vm.selectedItems.length > 1"><span class="glyphicon glyphicon-pencil"></span>Multi-Edit</button>-->
-                        <!--<button type="button" class="btn btn-primary" ng-click="vm.editSheet('large', vm.selectedItems[0])" ng-if="vm.selectedItems.length === 1"><span class="glyphicon glyphicon-pencil"></span>Single-Edit</button>-->
-                    <!--</div>-->
                     <h4 class="panel-title" style="padding-top: 5px;">Sheets</h4>
                 </div>
                 <div class="panel-collapse">
