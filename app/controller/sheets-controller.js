@@ -31,31 +31,25 @@ module.exports.add = function(req, res){
         });
 };
 
-module.exports.findByEncodedURI = function(req, res){
-    var uri = req.params.uri;
-    var decodedUri = decodeURIComponent(uri);
-
+module.exports.findByCentralPath = function(req, res){
+    //(Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
+    var uri = req.params.uri.replace(/\|/g, "\\\\");
     Sheets
         .find(
-            { $text: { $search: decodedUri }},
-            { score: { $meta: "textScore" } })
-        .sort(
-            { score: { $meta: 'textScore' } })
-        .limit(5)
-        .lean()
-        .exec(function(err, result){
-            var response = {
-                status: 200,
-                message: result
-            };
-            if(err){
-                response.status = 500;
-                response.message = err;
-            } else if(!result){
-                console.log("File Path wasn't found in any Sheets Collections");
+            {"centralPath": {'$regex': uri, '$options': 'i'}}, function (err, result) {
+                var response = {
+                    status: 200,
+                    message: result
+                };
+                if(err){
+                    response.status = 500;
+                    response.message = err;
+                } else if(!result){
+                    console.log("File Path wasn't found in any Families Collections");
+                }
+                res.status(response.status).json(response.message);
             }
-            res.status(response.status).json(response.message);
-        });
+        )
 };
 
 /**
@@ -68,13 +62,14 @@ module.exports.findByEncodedURI = function(req, res){
 var updateObject = function (req, res, sheets) {
     if(!Array.isArray(req.body)){
         // single sheet edit
-        console.log("Editing Single...");
         var newObject = {
             name: req.body.name,
             number: req.body.number,
             revisionNumber: req.body.revisionNumber,
             uniqueId: req.body.uniqueId,
-            identifier: req.body.identifier
+            identifier: req.body.identifier,
+            assignedTo: req.body.assignedTo,
+            message: req.body.message
         };
 
         if(sheets.sheetsChanges.length === 0){
@@ -88,20 +83,23 @@ var updateObject = function (req, res, sheets) {
                 sheets.sheetsChanges[index].number = req.body.number;
                 sheets.sheetsChanges[index].revisionNumber = req.body.revisionNumber;
                 sheets.sheetsChanges[index].identifier = req.body.identifier;
+                sheets.sheetsChanges[index].assignedTo = req.body.assignedTo;
+                sheets.sheetsChanges[index].message = req.body.message;
             } else {
                 sheets.sheetsChanges.push(newObject)
             }
         }
     } else {
         req.body.forEach(function(item){
-            console.log("Editing Multiple...");
             // multiple sheet edit
             var newObject = {
                 name: item.name,
                 number: item.number,
                 revisionNumber: item.revisionNumber,
                 uniqueId: item.uniqueId,
-                identifier: item.identifier
+                identifier: item.identifier,
+                assignedTo: item.assignedTo,
+                message: item.message
             };
 
             if(sheets.sheetsChanges.length === 0){
@@ -115,6 +113,8 @@ var updateObject = function (req, res, sheets) {
                     sheets.sheetsChanges[index].number = item.number;
                     sheets.sheetsChanges[index].revisionNumber = item.revisionNumber;
                     sheets.sheetsChanges[index].identifier = item.identifier;
+                    sheets.sheetsChanges[index].assignedTo = item.assignedTo;
+                    sheets.sheetsChanges[index].message = item.message;
                 } else {
                     sheets.sheetsChanges.push(newObject)
                 }
@@ -126,7 +126,7 @@ var updateObject = function (req, res, sheets) {
         if(err){
             res.status(500).json(err);
         } else {
-            global.io.sockets.emit('sheet_changes_updated', { 'body': sheetsUpdated, 'uniqueId': req.body.uniqueId });
+            global.io.sockets.emit('sheetTask_updated', { 'body': sheetsUpdated, 'identifier': req.body.identifier });
             res.status(200).json(sheetsUpdated);
         }
     });

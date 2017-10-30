@@ -90,6 +90,6 @@ var sheets = require('./models/sheets-model');
      var sheets = require('./controller/sheets-controller');
      app.get('/api/v1/sheets', sheets.findAll);
      app.post('/api/v1/sheets', sheets.add);
-     app.get('/api/v1/sheets/uri/:uri*', sheets.findByEncodedURI);
+     app.get('/api/v1/sheets/centralpath/:uri*', sheets.findByCentralPath);
      app.post('/api/v1/sheets/:id/sheetchanges', sheets.updateChanges)
   };

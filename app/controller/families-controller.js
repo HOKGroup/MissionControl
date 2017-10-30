@@ -86,28 +86,6 @@ module.exports.findById = function(req, res){
 module.exports.addTask = function(req, res) {
     var id = req.params.id;
 
-    // Families
-    //     .findOneAndUpdate(
-    //             {_id: id, 'families.elementId': req.params.famid},
-    //             {$push: {'families.$.tasks': req.body}},
-    //             // {new: true},
-    //             {
-    //                 new: true,
-    //                 'projection': {
-    //                     'families': {
-    //                         '$elemMatch': {'elementId': req.params.famid}
-    //                     }
-    //                 }
-    //             }
-    //     )
-    //     .exec(function(err, data){
-    //                 if(err){
-    //                     res.status(500).json(err);
-    //                 } else {
-    //                     res.json(data)
-    //                 }
-    //             });
-
     Families
         .findOneAndUpdate(
             {_id: id, 'families.name': req.params.name},
@@ -117,7 +95,7 @@ module.exports.addTask = function(req, res) {
             if(err){
                 res.status(500).json(err);
             } else {
-                global.io.sockets.emit('task_added', { 'body': data, 'familyName': req.params.name });
+                global.io.sockets.emit('familyTask_added', { 'body': data, 'familyName': req.params.name });
                 res.json(data)
             }
         });
@@ -146,7 +124,7 @@ module.exports.updateTask = function (req, res) {
                             if(err){
                                 res.status(500).json(err);
                             } else {
-                                global.io.sockets.emit('task_updated', {
+                                global.io.sockets.emit('familyTask_updated', {
                                     'body': data,
                                     'familyName': req.params.name,
                                     'oldTaskId': req.params.taskid});

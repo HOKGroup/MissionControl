@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d40d46a2-b8e8-4868-9ddf-969cc90d21aa" name="Default" comment="added sheets tool, datatable, edit single sheet, edit multiple sheets, filter sheets by model, highlight and stage sheets for changes, setup for mongo side and routes to update sheets and stage changes.">
+    <list default="true" id="d40d46a2-b8e8-4868-9ddf-969cc90d21aa" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controller/families-controller.js" afterPath="$PROJECT_DIR$/app/controller/families-controller.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controller/sheets-controller.js" afterPath="$PROJECT_DIR$/app/controller/sheets-controller.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/sheets-model.js" afterPath="$PROJECT_DIR$/app/models/sheets-model.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes.js" afterPath="$PROJECT_DIR$/app/routes.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/angular-app/sheets/sheets.html" afterPath="$PROJECT_DIR$/public/angular-app/sheets/sheets.html" />
     </list>
     <ignored path="$PROJECT_DIR$/node_modules/" />
@@ -22,58 +26,8 @@
       <file leaf-file-name="sheets-controller.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/angular-app/sheets/sheets-controller.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="addins.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/angular-app/addins/addins.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="39" column="26" lean-forward="true" selection-start-line="29" selection-start-column="20" selection-end-line="39" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="health-report-controller.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/health-report-controller.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="383">
-              <caret line="27" column="6" lean-forward="true" selection-start-line="24" selection-start-column="4" selection-end-line="27" selection-end-column="6" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="utility-service.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/angular-app/data-factory/utility-service.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="23" lean-forward="false" selection-start-line="2" selection-start-column="9" selection-end-line="2" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="health-report-data-factory.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/angular-app/data-factory/health-report-data-factory.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="658">
-              <caret line="91" column="19" lean-forward="false" selection-start-line="91" selection-start-column="19" selection-end-line="91" selection-end-column="19" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="healthrecords-data-factory.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/angular-app/data-factory/healthrecords-data-factory.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" column="9" lean-forward="true" selection-start-line="10" selection-start-column="9" selection-end-line="10" selection-end-column="9" />
+            <state relative-caret-position="306">
+              <caret line="158" column="56" lean-forward="false" selection-start-line="158" selection-start-column="56" selection-end-line="158" selection-end-column="56" />
               <folding />
             </state>
           </provider>
@@ -83,17 +37,17 @@
         <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/health-report.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="289">
-              <caret line="17" column="21" lean-forward="true" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+              <caret line="17" column="21" lean-forward="false" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sheets.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="sheets.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/angular-app/sheets/sheets.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="61" column="55" lean-forward="true" selection-start-line="61" selection-start-column="55" selection-end-line="61" selection-end-column="55" />
+            <state relative-caret-position="394">
+              <caret line="40" column="30" lean-forward="true" selection-start-line="40" selection-start-column="30" selection-end-line="40" selection-end-column="30" />
               <folding>
                 <element signature="n#style#0;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
@@ -103,11 +57,69 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="filters.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/angular-app/filters/filters.js">
+      <file leaf-file-name="family-stats.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="7" lean-forward="false" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
+            <state relative-caret-position="342">
+              <caret line="185" column="22" lean-forward="true" selection-start-line="178" selection-start-column="16" selection-end-line="185" selection-end-column="22" />
+              <folding>
+                <element signature="n#script#0;n#!!top" expanded="false" />
+                <element signature="n#script#1;n#!!top" expanded="false" />
+                <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="routes.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/routes.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="556">
+              <caret line="92" column="64" lean-forward="false" selection-start-line="92" selection-start-column="64" selection-end-line="92" selection-end-column="64" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sheets-controller.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/controller/sheets-controller.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="493">
+              <caret line="128" column="79" lean-forward="false" selection-start-line="128" selection-start-column="66" selection-end-line="128" selection-end-column="79" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sheets-model.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/models/sheets-model.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="28" column="21" lean-forward="true" selection-start-line="28" selection-start-column="21" selection-end-line="28" selection-end-column="21" />
+              <folding>
+                <element signature="e#0#49#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="families-model.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/models/families-model.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="629">
+              <caret line="37" column="46" lean-forward="true" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="46" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="families-controller.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/controller/families-controller.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="97" column="56" lean-forward="false" selection-start-line="97" selection-start-column="40" selection-end-line="97" selection-end-column="56" />
               <folding />
             </state>
           </provider>
@@ -116,7 +128,7 @@
       <file leaf-file-name="family-stats-controller.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats-controller.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
+            <state relative-caret-position="816">
               <caret line="48" column="7" lean-forward="true" selection-start-line="45" selection-start-column="4" selection-end-line="48" selection-end-column="7" />
               <folding />
             </state>
@@ -176,7 +188,6 @@
         <option value="$PROJECT_DIR$/public/angular-app/data-factory/socket-factory.js" />
         <option value="$PROJECT_DIR$/app/models/families-model.js" />
         <option value="$PROJECT_DIR$/public/angular-app/data-factory/families-factory.js" />
-        <option value="$PROJECT_DIR$/app/controller/families-controller.js" />
         <option value="$PROJECT_DIR$/public/angular-app/add-project/add-project.html" />
         <option value="$PROJECT_DIR$/public/angular-app/project/project-controller.js" />
         <option value="$PROJECT_DIR$/public/angular-app/health-report/link-stats/link-stats-controller.js" />
@@ -215,15 +226,16 @@
         <option value="$PROJECT_DIR$/app/models/proposed-model.js" />
         <option value="$PROJECT_DIR$/app/controller/proposed-controller.js" />
         <option value="$PROJECT_DIR$/app/controller/sheets-changes-controller.js" />
-        <option value="$PROJECT_DIR$/app/routes.js" />
         <option value="$PROJECT_DIR$/public/angular-app/data-factory/sheets-factory.js" />
         <option value="$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats.html" />
-        <option value="$PROJECT_DIR$/app/models/sheets-model.js" />
-        <option value="$PROJECT_DIR$/app/controller/sheets-controller.js" />
         <option value="$PROJECT_DIR$/public/angular-app/data-factory/utility-service.js" />
         <option value="$PROJECT_DIR$/public/angular-app/filters/filters.js" />
         <option value="$PROJECT_DIR$/public/angular-app/sheets/sheets-controller.js" />
+        <option value="$PROJECT_DIR$/app/controller/families-controller.js" />
+        <option value="$PROJECT_DIR$/app/routes.js" />
+        <option value="$PROJECT_DIR$/app/models/sheets-model.js" />
         <option value="$PROJECT_DIR$/public/angular-app/sheets/sheets.html" />
+        <option value="$PROJECT_DIR$/app/controller/sheets-controller.js" />
       </list>
     </option>
   </component>
@@ -650,7 +662,8 @@
       <workItem from="1505848559764" duration="37096000" />
       <workItem from="1506438753156" duration="127254000" />
       <workItem from="1507755359185" duration="42602000" />
-      <workItem from="1508782361971" duration="73852000" />
+      <workItem from="1508782361971" duration="73876000" />
+      <workItem from="1509370547832" duration="10579000" />
     </task>
     <task id="LOCAL-00001" summary="testing commiting from web storm">
       <created>1505325779744</created>
@@ -736,11 +749,18 @@
       <option name="project" value="LOCAL" />
       <updated>1509056310069</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="small fix to sheets display">
+      <created>1509144527100</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1509144527100</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1126080000" />
+    <option name="totallyTimeSpent" value="1136683000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -758,8 +778,8 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32981783" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27229148" sideWeight="0.48103267" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32981783" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32981783" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1654373" sideWeight="0.5063898" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32981783" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31255993" sideWeight="0.51896733" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -793,7 +813,8 @@
     <MESSAGE value="finished up family task assignments, cleaned up addins page, updated all data tables" />
     <MESSAGE value="start of parallel coordinates filter for families, fixes to line chart scales, duration formatting utilities," />
     <MESSAGE value="added sheets tool, datatable, edit single sheet, edit multiple sheets, filter sheets by model, highlight and stage sheets for changes, setup for mongo side and routes to update sheets and stage changes." />
-    <option name="LAST_COMMIT_MESSAGE" value="added sheets tool, datatable, edit single sheet, edit multiple sheets, filter sheets by model, highlight and stage sheets for changes, setup for mongo side and routes to update sheets and stage changes." />
+    <MESSAGE value="small fix to sheets display" />
+    <option name="LAST_COMMIT_MESSAGE" value="small fix to sheets display" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -806,7 +827,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1462">
           <caret line="86" column="53" lean-forward="false" selection-start-line="86" selection-start-column="53" selection-end-line="86" selection-end-column="53" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -814,7 +834,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1700">
           <caret line="100" column="98" lean-forward="false" selection-start-line="100" selection-start-column="63" selection-end-line="100" selection-end-column="98" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -822,7 +841,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="15" column="6" lean-forward="true" selection-start-line="13" selection-start-column="4" selection-end-line="15" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -830,7 +848,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1309">
           <caret line="77" column="64" lean-forward="false" selection-start-line="77" selection-start-column="54" selection-end-line="77" selection-end-column="64" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -838,7 +855,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="173" column="57" lean-forward="false" selection-start-line="173" selection-start-column="57" selection-end-line="173" selection-end-column="57" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -846,15 +862,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="10" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/families-model.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="15" lean-forward="false" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -862,7 +869,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-918">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -870,7 +876,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
           <caret line="43" column="47" lean-forward="false" selection-start-line="43" selection-start-column="47" selection-end-line="43" selection-end-column="47" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -878,7 +883,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
           <caret line="19" column="53" lean-forward="false" selection-start-line="19" selection-start-column="53" selection-end-line="19" selection-end-column="53" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -886,7 +890,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="578">
           <caret line="82" column="36" lean-forward="false" selection-start-line="82" selection-start-column="31" selection-end-line="82" selection-end-column="36" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -894,7 +897,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="94" column="54" lean-forward="false" selection-start-line="94" selection-start-column="54" selection-end-line="94" selection-end-column="54" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -902,7 +904,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2618">
           <caret line="154" column="35" lean-forward="true" selection-start-line="154" selection-start-column="35" selection-end-line="154" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -910,7 +911,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="556">
           <caret line="70" column="30" lean-forward="true" selection-start-line="70" selection-start-column="30" selection-end-line="70" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -918,7 +918,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="40" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -926,7 +925,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="13" column="46" lean-forward="false" selection-start-line="13" selection-start-column="38" selection-end-line="13" selection-end-column="46" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -934,10 +932,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="7" column="171" lean-forward="true" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="171" />
-          <folding>
-            <element signature="n#style#0;n#a#2;n#h1#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#img#0;n#a#2;n#h1#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -945,14 +939,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="5" column="88" lean-forward="true" selection-start-line="5" selection-start-column="88" selection-end-line="5" selection-end-column="88" />
-          <folding>
-            <element signature="n#style#0;n#a#1;n#h1#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#img#0;n#a#1;n#h1#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#a#2;n#h1#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#img#0;n#a#2;n#h1#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#a#3;n#h1#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#img#0;n#a#3;n#h1#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -960,7 +946,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1411">
           <caret line="19" column="21" lean-forward="false" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -968,7 +953,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1734">
           <caret line="102" column="40" lean-forward="true" selection-start-line="102" selection-start-column="40" selection-end-line="102" selection-end-column="40" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -976,7 +960,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -984,7 +967,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
           <caret line="17" column="88" lean-forward="true" selection-start-line="17" selection-start-column="45" selection-end-line="17" selection-end-column="88" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -992,7 +974,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-467">
           <caret line="144" column="35" lean-forward="false" selection-start-line="144" selection-start-column="35" selection-end-line="144" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1000,7 +981,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1008,7 +988,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="556">
           <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="47" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1016,7 +995,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="352">
           <caret line="29" column="10" lean-forward="false" selection-start-line="29" selection-start-column="10" selection-end-line="29" selection-end-column="10" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1024,7 +1002,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="21" column="9" lean-forward="true" selection-start-line="21" selection-start-column="9" selection-end-line="21" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1032,9 +1009,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-787">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1042,7 +1016,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-150">
           <caret line="86" column="56" lean-forward="false" selection-start-line="86" selection-start-column="56" selection-end-line="86" selection-end-column="56" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1050,41 +1023,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/sheet-changes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="30" column="12" lean-forward="false" selection-start-line="30" selection-start-column="12" selection-end-line="30" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controller/sheets-changes-controller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/sheet-changes.js" />
+    <entry file="file://$PROJECT_DIR$/app/controller/sheets-changes-controller.js" />
     <entry file="file://$PROJECT_DIR$/app/controller/healthrecords-controller.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="99" column="7" lean-forward="true" selection-start-line="89" selection-start-column="4" selection-end-line="99" selection-end-column="7" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/routes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="573">
-          <caret line="93" column="46" lean-forward="false" selection-start-line="93" selection-start-column="46" selection-end-line="93" selection-end-column="46" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1092,27 +1039,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
           <caret line="19" column="58" lean-forward="true" selection-start-line="19" selection-start-column="58" selection-end-line="19" selection-end-column="58" />
-          <folding>
-            <element signature="e#0#49#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controller/families-controller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="119" column="102" lean-forward="true" selection-start-line="119" selection-start-column="16" selection-end-line="119" selection-end-column="102" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="614">
-          <caret line="79" column="14" lean-forward="true" selection-start-line="79" selection-start-column="14" selection-end-line="79" selection-end-column="14" />
-          <folding>
-            <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1120,7 +1046,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="73" column="80" lean-forward="false" selection-start-line="73" selection-start-column="21" selection-end-line="73" selection-end-column="80" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1128,33 +1053,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="7" column="3" lean-forward="true" selection-start-line="2" selection-start-column="0" selection-end-line="7" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/sheets-model.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#49#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controller/sheets-controller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="99" column="27" lean-forward="false" selection-start-line="99" selection-start-column="27" selection-end-line="99" selection-end-column="27" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/angular-app/data-factory/health-report-data-factory.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="658">
+        <state relative-caret-position="1547">
           <caret line="91" column="19" lean-forward="false" selection-start-line="91" selection-start-column="19" selection-end-line="91" selection-end-column="19" />
           <folding />
         </state>
@@ -1170,8 +1074,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/health-report-controller.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="27" column="6" lean-forward="true" selection-start-line="24" selection-start-column="4" selection-end-line="27" selection-end-column="6" />
+        <state relative-caret-position="459">
+          <caret line="27" column="6" lean-forward="false" selection-start-line="24" selection-start-column="4" selection-end-line="27" selection-end-column="6" />
           <folding />
         </state>
       </provider>
@@ -1186,8 +1090,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/angular-app/addins/addins.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="39" column="26" lean-forward="true" selection-start-line="29" selection-start-column="20" selection-end-line="39" selection-end-column="26" />
+        <state relative-caret-position="663">
+          <caret line="39" column="26" lean-forward="false" selection-start-line="29" selection-start-column="20" selection-end-line="39" selection-end-column="26" />
           <folding />
         </state>
       </provider>
@@ -1202,16 +1106,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats-controller.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
+        <state relative-caret-position="816">
           <caret line="48" column="7" lean-forward="true" selection-start-line="45" selection-start-column="4" selection-end-line="48" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/angular-app/sheets/sheets-controller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1219,19 +1115,83 @@
     <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/health-report.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
-          <caret line="17" column="21" lean-forward="true" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+          <caret line="17" column="21" lean-forward="false" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/families-model.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="629">
+          <caret line="37" column="46" lean-forward="true" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/routes.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="556">
+          <caret line="92" column="64" lean-forward="false" selection-start-line="92" selection-start-column="64" selection-end-line="92" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/sheets-model.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="28" column="21" lean-forward="true" selection-start-line="28" selection-start-column="21" selection-end-line="28" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#49#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/health-report/family-stats/family-stats.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="185" column="22" lean-forward="true" selection-start-line="178" selection-start-column="16" selection-end-line="185" selection-end-column="22" />
+          <folding>
+            <element signature="n#script#0;n#!!top" expanded="false" />
+            <element signature="n#script#1;n#!!top" expanded="false" />
+            <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/angular-app/sheets/sheets.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="61" column="55" lean-forward="true" selection-start-line="61" selection-start-column="55" selection-end-line="61" selection-end-column="55" />
+        <state relative-caret-position="394">
+          <caret line="40" column="30" lean-forward="true" selection-start-line="40" selection-start-column="30" selection-end-line="40" selection-end-column="30" />
           <folding>
             <element signature="n#style#0;n#ul#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#td#0;n#tr#0;n#tbody#0;n#table#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/angular-app/sheets/sheets-controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="158" column="56" lean-forward="false" selection-start-line="158" selection-start-column="56" selection-end-line="158" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controller/families-controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="97" column="56" lean-forward="false" selection-start-line="97" selection-start-column="40" selection-end-line="97" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controller/sheets-controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="128" column="79" lean-forward="false" selection-start-line="128" selection-start-column="66" selection-end-line="128" selection-end-column="79" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
