@@ -19,12 +19,12 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="form-group">
-                            <label for="sheet_name" class="form-control-label">Sheet Number:</label>
+                        <div ng-class="isChanged() ? 'form-group has-warning' : 'form-group'">
+                            <label for="sheet_name" class="control-label">Sheet Number:</label>
                             <input type="text" class="form-control" id="sheet_name" value="sheet.number" ng-model="sheet.number">
                         </div>
-                        <div class="form-group">
-                            <label for="sheet_number" class="form-control-label">Sheet Name:</label>
+                        <div ng-class="isChanged() ? 'form-group has-warning' : 'form-group'">
+                            <label for="sheet_number" class="control-label">Sheet Name:</label>
                             <input type="text" class="form-control" id="sheet_number" value="sheet.name" ng-model="sheet.name">
                         </div>
                         <div class="col-md-6 no-padding-left">
@@ -35,13 +35,21 @@
                         </div>
                         <div class="col-md-6 no-padding-right">
                             <div class="form-group">
-                                <label for="recipient_name" class="form-control-label">Recipient:</label>
-                                <input type="text" id="recipient_name" class="form-control" value="{{sheet.assignedTo}}" ng-model="sheet.assignedTo">
+                                <label for="recipient_name" class="form-control-label">
+                                    Recipient:
+                                    <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="sheet.assignedTo"></span>
+                                    <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!sheet.assignedTo"></span>
+                                </label>
+                                <input type="text" name="recipient" id="recipient_name" class="form-control" value="{{sheet.assignedTo}}" ng-model="sheet.assignedTo" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="message_text" class="form-control-label">Message:</label>
-                            <textarea id="message_text" class="form-control" ng-model="sheet.message"></textarea>
+                            <label for="message_text" class="form-control-label">
+                                Message:
+                                <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="sheet.message"></span>
+                                <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!sheet.message"></span>
+                            </label>
+                            <textarea id="message_text" class="form-control" ng-model="sheet.message" required></textarea>
                         </div>
                     </div>
                 </div>
@@ -49,7 +57,9 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" ng-click="cancel()">Close</button>
-            <button type="button" class="btn btn-primary" ng-click="submit()"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+            <button type="button" ng-class="!sheet.message || !sheet.assignedTo ? 'btn btn-secondary disabled' : 'btn btn-primary'" ng-click="submit()"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+            <button type="button" ng-class="!sheet.message || !sheet.assignedTo ? 'btn btn-secondary pull-left disabled' : 'btn btn-danger pull-left'" ng-click="delete()"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+            <button type="button" class="btn btn-primary pull-left" ng-click="clear()"><span class="glyphicon glyphicon-erase"></span> Clear</button>
         </div>
     </div>
 </script>
@@ -63,18 +73,6 @@
             </button>
         </div>
         <div class="modal-body">
-            <!--<div class="panel panel-default">-->
-                <!--<div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#editMultiSheet" data-target="#collapseMultiSheet">-->
-                    <!--<h4 class="panel-title">Preview:</h4>-->
-                <!--</div>-->
-                <!--<div id="collapseMultiSheet" class="panel-collapse collapse out">-->
-                    <!--<div class="panel-body">-->
-                        <!--<ul style="padding-left: 10px">-->
-                            <!--<li ng-repeat="sheet in sheets">{{sheet.number}}-{{sheet.name}}</li>-->
-                        <!--</ul>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">Edits:</h4>
@@ -122,6 +120,10 @@
                             <span class="glyphicon glyphicon-pencil"></span>
                             Single-Edit
                         </button>
+                        <button type="button" class="btn btn-primary" ng-click="vm.addSheet('lg')">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            Add Sheet
+                        </button>
                         <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
                             {{vm.selectedModel}}
                             <span class="caret"></span>
@@ -148,13 +150,13 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="sheet in vm.allSheets | orderBy: 'name' : false | filter: vm.filterFile" ng-class="vm.isChanged(sheet.identifier) ? 'bg-warning' : 'table-info'">
+                            <tr ng-repeat="sheet in vm.allSheets | orderBy: 'number' : false | filter: vm.filterFile" ng-class="vm.isChanged(sheet.identifier) === 'noChanges' ? 'table-info' : vm.isChanged(sheet.identifier) === 'deleted' ? 'bg-danger strike' : 'bg-warning'">
                                 <td style="padding-left: 30px">
                                     <input type="checkbox" ng-model="sheet.isSelected" ng-click="vm.toggleOne(sheet)">
                                 </td>
                                 <td ng-click="vm.selectedItems.length == 0 ? vm.editSheet('large', sheet) : vm.selectedItems.length == 1 ? vm.editSheet('large', vm.selectedItems[0]) : vm.editMultipleSheets('large', vm.selectedItems)">{{sheet.number}}</td>
                                 <td ng-click="vm.selectedItems.length == 0 ? vm.editSheet('large', sheet) : vm.selectedItems.length == 1 ? vm.editSheet('large', vm.selectedItems[0]) : vm.editMultipleSheets('large', vm.selectedItems)">{{sheet.name}}</td>
-                                <td ng-click="vm.selectedItems.length == 0 ? vm.editSheet('large', sheet) : vm.selectedItems.length == 1 ? vm.editSheet('large', vm.selectedItems[0]) : vm.editMultipleSheets('large', vm.selectedItems)">{{sheet.revisionNumber}}</td>
+                                <td class="text-center" ng-click="vm.selectedItems.length == 0 ? vm.editSheet('large', sheet) : vm.selectedItems.length == 1 ? vm.editSheet('large', vm.selectedItems[0]) : vm.editMultipleSheets('large', vm.selectedItems)">{{sheet.revisionNumber}}</td>
                             </tr>
                             </tbody>
                         </table>

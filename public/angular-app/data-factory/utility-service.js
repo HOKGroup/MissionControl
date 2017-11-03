@@ -3,7 +3,7 @@ angular.module('MissionControlApp').factory('UtilityService', UtilityService);
 function UtilityService(){
     return {
         formatDuration: function (ms) {
-            if(ms <= 0) return "0s";
+            if (ms <= 0) return "0s";
 
             var seconds = ms / 1000;
             var hours = parseInt(seconds / 3600).toFixed(0); // 3,600 seconds in 1 hour
@@ -12,9 +12,9 @@ function UtilityService(){
             seconds = (seconds % 60).toFixed(0);
 
             var output = "";
-            if(hours !== "0") output = hours + "h:";
-            if(minutes !== "0") output = output + minutes + "m:";
-            if(seconds !== "0") output = output + seconds + "s";
+            if (hours !== "0") output = hours + "h:";
+            if (minutes !== "0") output = output + minutes + "m:";
+            if (seconds !== "0") output = output + seconds + "s";
 
             return output;
         },
@@ -34,8 +34,20 @@ function UtilityService(){
         },
 
         fileNameFromPath: function (path) {
-            if(!path) return;
+            if (!path) return;
             return path.replace(/^.*[\\\/]/, '').slice(0, -4); //removed file extension
+        },
+
+        range: function (start, step, count) {
+            var range = [];
+            for (var i = 0; i < count; i++) {
+                range.push(start + (i * step));
+            }
+            return range;
+        },
+
+        move: function(array, from, to) {
+            array.splice(to, 0, array.splice(from, 1)[0]);
         }
-    };
+    }
 }

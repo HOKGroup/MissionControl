@@ -19,6 +19,10 @@ function SheetsFactory($http){
 
         updateChanges: function updateChanges(id, sheet) {
             return $http.post('/api/v1/sheets/' + id + '/sheetchanges', sheet).then(complete).catch(failed);
+        },
+
+        deleteChanges: function deleteChanges(id, sheet) {
+            return $http.put('/api/v1/sheets/'+ id + '/deletechanges', sheet).then(complete).catch(failed);
         }
     };
 

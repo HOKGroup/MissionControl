@@ -8,25 +8,13 @@ var sheetItemSchema = new mongoose.Schema({
     number: String,
     uniqueId: String,
     revisionNumber: String, // Unique Id matching one of the Revisions
-    isSelected: Boolean,
-    identifier: String // Unique identifier for sheet across models. CentralPath + UniqueId
-});
-
-var sheetTaskSchema = new mongoose.Schema({
-    name: String,
-    number: String,
-    uniqueId: String,
-    revisionNumber: String, // Unique Id matching one of the Revisions
-    isSelected: Boolean,
+    isSelected: Boolean, // used by UI since either sheetItem or sheetTask can be stored in UI they both need it
     identifier: String, // Unique identifier for sheet across models. CentralPath + UniqueId
 
+    isPlaceholder: Boolean,
+    isDeleted: Boolean,
     assignedTo: String,
-    message: String,
-    comments: String,
-    submittedBy: String,
-    completedBy: String,
-    submittedOn: Date,
-    completedOn: Date
+    message: String
 });
 
 var revisionItemSchema = new mongoose.Schema({
@@ -44,7 +32,7 @@ var sheetsSchema = new mongoose.Schema(
     {
         centralPath: String,
         sheets: [sheetItemSchema],
-        sheetsChanges: [sheetTaskSchema],
+        sheetsChanges: [sheetItemSchema],
         revisions: [revisionItemSchema]
     }
 );

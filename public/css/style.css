@@ -119,6 +119,11 @@ p.normal {
 .no-padding-right {
   padding-right: 0
 }
+
+.no-padding-bottom {
+  padding-bottom: 0
+}
+
 .textAlignMiddle{
   vertical-align: middle;
   padding-right: 5px;
@@ -192,4 +197,19 @@ textarea {
 .project-link:hover{
   color: #2A5DB0;
   text-decoration: none;
+}
+
+/*For Sheets table row. When deleted.*/
+.strike {
+  text-decoration: line-through;
+}
+
+/*For Add Sheet custom operator buttons*/
+.nohover:hover{
+  background-color: initial;
+  cursor: default;
+}
+
+.popover {
+  min-width: 200px;
 }

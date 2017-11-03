@@ -92,6 +92,23 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, DTIns
         });
     };
 
+    vm.addSheet = function (size) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'angular-app/sheets/add-sheet.html',
+            controller: 'AddSheetController',
+            size: size,
+            resolve: {
+                sheets: function () {
+                    return [];
+            }}
+        }).result.then(function(){
+            //after modal succeeded
+        }).catch(function(){
+            //if modal dismissed
+        });
+    };
+
     vm.editMultipleSheets = function (size, sheets) {
         $uibModal.open({
             animation: true,
@@ -166,7 +183,64 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, DTIns
             });
 
             $uibModalInstance.close();
-        }
+        };
+
+        $scope.isChanged = function() {
+            return $scope.sheet.identifier in vm.changed;
+        };
+
+        $scope.clear = function () {
+            if(vm.changed[$scope.sheet.identifier]){
+                SheetsFactory
+                    .deleteChanges($scope.sheet.collectionId, $scope.sheet)
+                    .then(function(response){
+                        if(!response) return;
+
+                        // (Konrad) These two props were added at runtime. Used for filtering and posting to DB
+                        var fileName = vm.changed[$scope.sheet.identifier].fileName;
+                        var collectionId = vm.changed[$scope.sheet.identifier].collectionId;
+
+                        // (Konrad) Add sheet to vm.allSheets to add unchanged to table.
+                        var originalSheet = response.data.sheets.find(function (item){
+                            return item.identifier === $scope.sheet.identifier;
+                        });
+                        originalSheet['collectionId'] = collectionId;
+                        originalSheet['fileName'] = fileName;
+
+                        var index = vm.allSheets.findIndex(function (item) {
+                            return item.identifier === $scope.sheet.identifier;
+                        });
+                        if(index !== -1) vm.allSheets[index] = originalSheet;
+
+                        // (Konrad) Remove sheet from changed collection.
+                        // That will clear filter override for table.
+                        delete vm.changed[$scope.sheet.identifier];
+
+                    }, function (error) {
+                        console.log('Unable to delete staged changes.' + error.message);
+                    });
+            } else {
+                // (Konrad) There might be some changes made on screen but not submitted to DB. Let's clear that.
+                //TODO: Do we need to implement something here?
+            }
+
+            $uibModalInstance.close();
+        };
+
+        $scope.delete = function () {
+            $scope.sheet.isDeleted = true;
+            SheetsFactory
+                .updateChanges($scope.sheet.collectionId, $scope.sheet)
+                .then(function(response){
+                    if(!response) return;
+
+                    vm.changed[$scope.sheet.identifier] = $scope.sheet;
+                }, function (err) {
+                    console.log('Unable to update Single Sheet: ' + err.message)
+                });
+
+            $uibModalInstance.close();
+        };
     };
 
     /**
@@ -175,7 +249,12 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, DTIns
      * @param identifier
      */
     vm.isChanged = function (identifier) {
-        return identifier in vm.changed;
+        if(identifier in vm.changed){
+            if(vm.changed[identifier].isDeleted) return 'deleted';
+            else return 'modified'
+        } else {
+            return 'noChanges'
+        }
     };
 
     /**
@@ -200,9 +279,12 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, DTIns
                             vm.changed = {};
                             vm.allSheets = [];
                             vm.checklist = {};
+                            vm.sheets = {};
 
                             vm.selectedProject.sheets.forEach(function(item){
+                                // (Konrad) Select all model names for filtering.
                                 vm.availableModels.push(UtilityService.fileNameFromPath(item.centralPath));
+
                                 item.sheetsChanges.forEach(function(changed){
                                     changed['collectionId'] = item._id;
                                     changed['fileName'] = UtilityService.fileNameFromPath(item.centralPath);
@@ -211,11 +293,12 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, DTIns
                                     vm.allSheets.push(changed)
                                 });
                                 item.sheets.forEach(function(sheet){
+                                    sheet['collectionId'] = item._id;
+                                    sheet['fileName'] = UtilityService.fileNameFromPath(item.centralPath);
+                                    vm.sheets[sheet.identifier] = sheet; // stores all sheets originally pulled from db.
                                     if(sheet.identifier in vm.checklist){
-                                        // skip
+                                        // ignored
                                     } else {
-                                        sheet['collectionId'] = item._id;
-                                        sheet['fileName'] = UtilityService.fileNameFromPath(item.centralPath);
                                         vm.checklist[sheet.identifier] = sheet; // add rest of elements that were not changed yet
                                         vm.allSheets.push(sheet)
                                     }

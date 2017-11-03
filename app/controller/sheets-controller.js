@@ -69,7 +69,8 @@ var updateObject = function (req, res, sheets) {
             uniqueId: req.body.uniqueId,
             identifier: req.body.identifier,
             assignedTo: req.body.assignedTo,
-            message: req.body.message
+            message: req.body.message,
+            isDeleted: req.body.isDeleted
         };
 
         if(sheets.sheetsChanges.length === 0){
@@ -85,6 +86,7 @@ var updateObject = function (req, res, sheets) {
                 sheets.sheetsChanges[index].identifier = req.body.identifier;
                 sheets.sheetsChanges[index].assignedTo = req.body.assignedTo;
                 sheets.sheetsChanges[index].message = req.body.message;
+                sheets.sheetsChanges[index].isDeleted = req.body.isDeleted;
             } else {
                 sheets.sheetsChanges.push(newObject)
             }
@@ -99,7 +101,8 @@ var updateObject = function (req, res, sheets) {
                 uniqueId: item.uniqueId,
                 identifier: item.identifier,
                 assignedTo: item.assignedTo,
-                message: item.message
+                message: item.message,
+                isDeleted: item.isDeleted
             };
 
             if(sheets.sheetsChanges.length === 0){
@@ -115,6 +118,7 @@ var updateObject = function (req, res, sheets) {
                     sheets.sheetsChanges[index].identifier = item.identifier;
                     sheets.sheetsChanges[index].assignedTo = item.assignedTo;
                     sheets.sheetsChanges[index].message = item.message;
+                    sheets.sheetsChanges[index].isDeleted = item.isDeleted;
                 } else {
                     sheets.sheetsChanges.push(newObject)
                 }
@@ -154,6 +158,83 @@ module.exports.updateChanges = function (req, res) {
                 res
                     .status(response.status)
                     .json(response.message);
+            }
+        });
+};
+
+/**
+ * Removes approved Sheet from staging, and updates collection.
+ * @param req
+ * @param res
+ * @param objects
+ */
+var approveSheetChanges = function (req, res, objects) {
+    var index = objects.sheets.findIndex(function (item) {
+        return item.identifier === req.body.identifier;
+    });
+
+    if(index !== -1){
+        // (Konrad) Update all SheetItem properties
+        objects.sheets[index].name = req.body.name;
+        objects.sheets[index].number = req.body.number;
+    }
+
+    var index2 = objects.sheetsChanges.findIndex(function (item) {
+        return item.identifier === req.body.identifier;
+    });
+
+    if(index2 !== -1){
+        objects.sheetsChanges.splice(index2, 1);
+    }
+
+    objects.save(function (err, sheetsUpdated) {
+        if(err){
+            res.status(500).json(err);
+        } else {
+            global.io.sockets.emit('sheetTask_approved', { 'body': sheetsUpdated, 'identifier': req.body.identifier });
+            res.status(200).json(sheetsUpdated);
+        }
+    });
+};
+
+module.exports.approveChanges = function (req, res) {
+    Sheets
+        .findById(req.params.id)
+        .select('sheets sheetsChanges')
+        .exec(function (err, doc){
+            var response = {
+                status: 200,
+                message: []
+            };
+            if (err){
+                response.status = 500;
+                response.message = err;
+            } else if(!doc){
+                response.status = 404;
+                response.message = {"message": "SheetsChanges Id not found."}
+            }
+            if(doc){
+                approveSheetChanges(req, res, doc);
+            } else {
+                res
+                    .status(response.status)
+                    .json(response.message);
+            }
+        });
+};
+
+module.exports.deleteChanges = function (req, res) {
+    Sheets
+        .findOneAndUpdate(
+            { _id: req.params.id },
+            { $pull: { 'sheetsChanges': { 'identifier': req.body.identifier }}},
+            { new: true})
+        .exec(function(err, data){
+            if(err){
+                res.status(500).json(err);
+            } else {
+                global.io.sockets.emit('sheetTask_deleted', { 'identifier': req.body.identifier });
+                res.status(202).json(data)
             }
         });
 };

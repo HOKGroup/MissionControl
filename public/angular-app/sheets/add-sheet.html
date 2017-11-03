@@ -1,0 +1,144 @@
+<!--PREFIX SUFFIX POPOVER-->
+<script type="text/ng-template" id="prefixSuffix.html">
+    <div class="btn-group" style="width: 100%">
+        <label for="prefix_suffix" class="form-control-label">Prefix/Suffix Value:</label>
+        <input type="text" class="form-control" id="prefix_suffix" value="currentOperator.value" ng-model="currentOperator.value">
+    </div>
+    <hr style="margin-bottom: 5px">
+    <div class="btn-group">
+        <a ng-click="moveLeft($index)" ng-if="showLeftArrow($index)"><span class="glyphicon glyphicon-triangle-left"></span></a>
+        <a ng-click="deleteOperator($index)"><span class="glyphicon glyphicon-trash"></span></a>
+        <a ng-click="moveRight($index)" ng-if="showRightArrow($index)"><span class="glyphicon glyphicon-triangle-right"></span></a>
+    </div>
+</script>
+
+<!--NUMBER SERIES POPOVER-->
+<script type="text/ng-template" id="numberSeries.html">
+    <div class="btn-group" style="width: 100%">
+        <label for="series_start" class="form-control-label">Start:</label>
+        <input type="number" min="0" class="form-control" id="series_start" value="currentOperator.start" ng-model="currentOperator.start">
+        <label for="series_step" class="form-control-label">Step:</label>
+        <input type="number" min="1" class="form-control" id="series_step" value="currentOperator.step" ng-model="currentOperator.step">
+    </div>
+    <hr style="margin-bottom: 5px">
+    <div class="btn-group">
+        <a ng-click="moveLeft($index)" ng-if="showLeftArrow($index)"><span class="glyphicon glyphicon-triangle-left"></span></a>
+        <a ng-click="deleteOperator($index)"><span class="glyphicon glyphicon-trash"></span></a>
+        <a ng-click="moveRight($index)" ng-if="showRightArrow($index)"><span class="glyphicon glyphicon-triangle-right"></span></a>
+    </div>
+</script>
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title pull-left">Add Sheet</h5>
+        <button type="button" class="close pull-right" ng-click="cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">Add Sheet</h4>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+
+                    <!--COUNT-->
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="sheet_count" class="form-control-label">Sheet Count:</label>
+                            <input type="number" min="1" class="form-control" id="sheet_count" value="template.count" ng-model="template.count">
+                        </div>
+                    </div>
+
+                    <!--RECIPIENT-->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="recipient_name" class="form-control-label">
+                                Recipient:
+                                <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="template.assignedTo"></span>
+                                <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!template.assignedTo"></span>
+                            </label>
+                            <input type="text" name="recipient" id="recipient_name" class="form-control" value="{{template.assignedTo}}" ng-model="template.assignedTo" required>
+                        </div>
+                    </div>
+
+                    <!--PLACEHOLDER-->
+                    <div class="col-md-3 no-padding-left no-padding-right no-padding-bottom" style="margin-bottom: 0">
+                        <div class="form-group no-padding-bottom" style="margin-bottom: 0">
+                            <label class="form-control-label">Placeholder:</label>
+                            <button class="btn btn-default dropdown-toggle" style="width: 100%" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                {{template.isPlaceholder ? 'Yes' : 'No'}}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-centered">
+                                <li><a href="" ng-click="setPlaceholder(true)">Yes</a></li>
+                                <li><a href="" ng-click="setPlaceholder(false)">No</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!--NUMBER-->
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <label class="form-control-label">Sheet Number Components:</label>
+                            <div>
+                                <button ng-repeat="operator in currentNumberOperators" ng-click="setCurrentOperator(operator)" class="btn btn-default">
+                                <span ng-click="" uib-popover-template="operator.templateUrl" popover-placement="{{popoverOptions.placement}}" popover-trigger="popoverOptions.triggers" popover-class="popover">
+                                    {{getButtonLabel(operator)}}
+                                </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 no-padding-left no-padding-right no-padding-bottom" style="margin-bottom: 0">
+                        <div class="form-group no-padding-bottom" style="margin-bottom: 0">
+                            <label class="form-control-label">Components:</label>
+                            <button class="btn btn-default dropdown-toggle" style="width: 100%" data-toggle="dropdown">
+                                Type
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-centered">
+                                <li ng-repeat="type in operators">
+                                    <a href="" ng-click="addOperator(type, 'number')">{{type}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!--NAME-->
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <label class="form-control-label">Sheet Name Components:</label>
+                            <div>
+                                <button ng-repeat="operator in currentNameOperators" ng-click="setCurrentOperator(operator)" class="btn btn-default">
+                                <span ng-click="" uib-popover-template="operator.templateUrl" popover-placement="{{popoverOptions.placement}}" popover-trigger="popoverOptions.triggers">
+                                    {{getButtonLabel(operator)}}
+                                </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 no-padding-left no-padding-right no-padding-bottom" style="margin-bottom: 0">
+                        <div class="form-group no-padding-bottom" style="margin-bottom: 0">
+                            <label class="form-control-label">Components:</label>
+                            <button class="btn btn-default dropdown-toggle" style="width: 100%" data-toggle="dropdown">
+                                Type
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-centered" style="margin-top: 0">
+                                <li ng-repeat="type in operators">
+                                    <a href="" ng-click="addOperator(type, 'name')">{{type}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" ng-click="cancel()">Close</button>
+        <button type="button" class="btn btn-primary pull-left" ng-click="process()"><span class="glyphicon glyphicon-refresh"></span> Process</button>
+    </div>
+</div>
