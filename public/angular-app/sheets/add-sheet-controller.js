@@ -2,30 +2,108 @@
  * Created by konrad.sobon on 2017-11-02.
  */
 
-angular.module('MissionControlApp')
-    .controller('AddSheetController', AddSheetController);
+angular.module('MissionControlApp').controller('AddSheetController', AddSheetController);
 
-function AddSheetController($scope, $uibModalInstance, $sce, UtilityService, sheets) {
-    $scope.sheet = sheets;
-    $scope.template = {
+function AddSheetController($uibModalInstance, UtilityService, models) {
+    var vm = this;
+
+    // (Konrad) We can exclude 'All' from the model list.
+    vm.models = models.filter(function(item){
+        return item.name !== 'All'
+    });
+
+    vm.selectedModel = vm.models[0];
+
+    vm.template = {
         count: 1,
         assignedTo: '',
-        isPlaceholder: true
+        isPlaceholder: false
     };
-    $scope.operators = [
+    vm.popoverOptions = {
+        placement: 'right',
+        triggers: 'outsideClick'
+    };
+    vm.operators = [
         'Prefix/Suffix',
         'Number Series'
     ];
-    $scope.currentOperator = {};
-    $scope.currentNumberOperators = []; // all operators added to sheet number
-    $scope.currentNameOperators = []; // all operators added to sheet name
+    vm.currentOperator = {};
+    vm.currentNumberOperators = [
+        {
+            name: 'Prefix/Suffix',
+            value: 'A',
+            templateUrl: 'prefixSuffix.html',
+            section: 'number'
+        },
+        {
+            name: 'Number Series',
+            start: 100,
+            step: 1,
+            range: [100],
+            templateUrl: 'numberSeries.html',
+            section: 'number'
+        }
+    ]; // all operators added to sheet number
+    vm.currentNameOperators = [
+        {
+            name: 'Prefix/Suffix',
+            value: 'SHEET NAME',
+            templateUrl: 'prefixSuffix.html',
+            section: 'name'
+        }
+    ]; // all operators added to sheet name
+    vm.selectedSheetType = 'Architecture';
+    vm.availableSheetTypes = [
+        'Architecture',
+        'Interiors',
+        'Structure'
+    ];
 
-    $scope.setPlaceholder = function(value) {
-        $scope.template.isPlaceholder = value;
+    vm.setSheetTypeTemplate = function (type) {
+        vm.selectedSheetType = type;
+
+        // (Konrad) Clean current setup
+        vm.currentNumberOperators = [];
+        vm.currentNameOperators = [];
+
+        // (Konrad) Get prefix
+        var prefix = '';
+        if(type === 'Architecture') prefix = 'A';
+        if(type === 'Interiors') prefix = 'I';
+        if(type === 'Structure') prefix = 'S';
+
+        // (Konrad) Create new setup.
+        vm.currentNumberOperators = [
+            {
+                name: 'Prefix/Suffix',
+                value: prefix,
+                templateUrl: 'prefixSuffix.html',
+                section: 'number'
+            },
+            {
+                name: 'Number Series',
+                start: 100,
+                step: 1,
+                templateUrl: 'numberSeries.html',
+                section: 'number'
+            }
+        ];
+        vm.currentNameOperators = [
+            {
+                name: 'Prefix/Suffix',
+                value: 'SHEET NAME',
+                templateUrl: 'prefixSuffix.html',
+                section: 'name'
+            }
+        ];
     };
 
-    $scope.addOperator = function (type, section) {
-        var array = section === 'name' ? $scope.currentNameOperators : $scope.currentNumberOperators;
+    vm.setPlaceholder = function(value) {
+        vm.template.isPlaceholder = value;
+    };
+
+    vm.addOperator = function (type, section) {
+        var array = section === 'name' ? vm.currentNameOperators : vm.currentNumberOperators;
         if(type === 'Prefix/Suffix'){
             array.push(
                 {
@@ -39,8 +117,9 @@ function AddSheetController($scope, $uibModalInstance, $sce, UtilityService, she
             array.push(
                 {
                     name: 'Number Series',
-                    start: 0,
+                    start: 100,
                     step: 1,
+                    range: [100],
                     templateUrl: 'numberSeries.html',
                     section: section
                 }
@@ -48,82 +127,90 @@ function AddSheetController($scope, $uibModalInstance, $sce, UtilityService, she
         }
     };
 
-    $scope.deleteOperator = function (index) {
-        var array = $scope.currentOperator.section === 'name' ? $scope.currentNameOperators : $scope.currentNumberOperators;
+    vm.deleteOperator = function (index) {
+        var array = vm.currentOperator.section === 'name' ? vm.currentNameOperators : vm.currentNumberOperators;
         array.splice(index, 1);
     };
 
-    $scope.showRightArrow = function (index) {
-        var array = $scope.currentOperator.section === 'name' ? $scope.currentNameOperators : $scope.currentNumberOperators;
+    vm.showRightArrow = function (index) {
+        var array = vm.currentOperator.section === 'name' ? vm.currentNameOperators : vm.currentNumberOperators;
         return index < array.length - 1;
     };
 
-    $scope.showLeftArrow = function (index) {
+    vm.showLeftArrow = function (index) {
         return index > 0;
     };
 
-    $scope.moveLeft = function (index) {
-        var array = $scope.currentOperator.section === 'name' ? $scope.currentNameOperators : $scope.currentNumberOperators;
+    vm.moveLeft = function (index) {
+        var array = vm.currentOperator.section === 'name' ? vm.currentNameOperators : vm.currentNumberOperators;
         UtilityService.move(array, index, index-1);
     };
 
-    $scope.moveRight = function (index) {
-        var array = $scope.currentOperator.section === 'name' ? $scope.currentNameOperators : $scope.currentNumberOperators;
+    vm.moveRight = function (index) {
+        var array = vm.currentOperator.section === 'name' ? vm.currentNameOperators : vm.currentNumberOperators;
         UtilityService.move(array, index, index+1);
     };
 
-    $scope.getButtonLabel = function (operator) {
+    vm.getButtonLabel = function (operator) {
         if(operator.name === 'Prefix/Suffix'){
             if(operator.value.length > 0) return operator.value;
             else return operator.name;
         } else if (operator.name === 'Number Series'){
-            var range = UtilityService.range(operator.start, operator.step, $scope.template.count);
+            var range = UtilityService.range(operator.start, operator.step, vm.template.count);
+            operator.range = range; // save new range into operator
             if(range.length >= 2) return range[0] + '-' + range[range.length - 1];
             else if(range.length === 1) return range[0];
             else return operator.name;
         }
     };
 
-    $scope.setCurrentOperator = function (operator) {
-        $scope.currentOperator = operator;
+    vm.setCurrentOperator = function (operator) {
+        vm.currentOperator = operator;
     };
 
-    $scope.process = function () {
-        alert($scope.currentOperator.value);
+    vm.create = function () {
+        var newSheets = [];
+        for(var i = 0; i < vm.template.count; i++){
+            var sheetName = buildName(vm.currentNameOperators, i);
+            var sheetNumber = buildName(vm.currentNumberOperators, i);
+            newSheets.push(
+                {
+                    name: sheetName,
+                    number: sheetNumber,
+                    uniqueId: '',
+                    revisionNumber: '',
+                    isSelected: false,
+                    identifier: '',
+                    isPlaceholder: vm.template.isPlaceholder,
+                    isDeleted: false,
+                    assignedTo: vm.template.assignedTo,
+                    message: ''
+                }
+            )
+        }
+
+        $uibModalInstance.close({collectionId: vm.selectedModel.collectionId, sheets: newSheets});
     };
 
-    $scope.dynamicPopover = {
-        content: 'Hello, World!',
-        templateUrl: 'myPopoverTemplate.html',
-        title: 'Title SuperLong'
+    var buildName = function(operators, index){
+        var name = '';
+        operators.forEach(function(item){
+            if(item.name === 'Prefix/Suffix'){
+                name = name + item.value;
+            } else if (item.name === 'Number Series'){
+                name = name + item.range[index];
+            }
+        });
+
+        return name;
     };
 
-    $scope.popoverOptions = {
-        placement: 'right',
-        triggers: 'outsideClick'
+    vm.clear = function () {
+        vm.currentNumberOperators = [];
+        vm.currentNameOperators = [];
     };
 
-    $scope.placement = {
-        options: [
-            'top',
-            'top-left',
-            'top-right',
-            'bottom',
-            'bottom-left',
-            'bottom-right',
-            'left',
-            'left-top',
-            'left-bottom',
-            'right',
-            'right-top',
-            'right-bottom'
-        ],
-        selected: 'top'
-    };
-
-    $scope.htmlPopover = $sce.trustAsHtml('<b style="color: red">I can</b> have <div class="label label-success">HTML</div> content');
-
-    $scope.cancel = function () {
+    vm.cancel = function () {
         $uibModalInstance.dismiss('cancel');
     };
 }

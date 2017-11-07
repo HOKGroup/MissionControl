@@ -19,7 +19,7 @@
         <div class="row row-offcanvas row-offcanvas-left">
             <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
                 <div class="list-group">
-                    <div class="btn-group" style="width: 100%" ng-if="vm.selectedProject.healthrecords.length > 0">
+                    <div class="btn-group" style="width: 100%" ng-if="vm.FamilyData || vm.WorksetData || vm.LinkData || vm.ViewData || vm.ModelData">
                         <button class="btn btn-default dropdown-toggle btn-block" data-toggle="dropdown">
                             {{vm.selectedFileName}}
                             <span class="caret"></span>

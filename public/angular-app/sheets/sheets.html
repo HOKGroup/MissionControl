@@ -57,9 +57,9 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" ng-click="cancel()">Close</button>
-            <button type="button" ng-class="!sheet.message || !sheet.assignedTo ? 'btn btn-secondary disabled' : 'btn btn-primary'" ng-click="submit()"><span class="glyphicon glyphicon-ok"></span> Submit</button>
-            <button type="button" ng-class="!sheet.message || !sheet.assignedTo ? 'btn btn-secondary pull-left disabled' : 'btn btn-danger pull-left'" ng-click="delete()"><span class="glyphicon glyphicon-trash"></span> Delete</button>
-            <button type="button" class="btn btn-primary pull-left" ng-click="clear()"><span class="glyphicon glyphicon-erase"></span> Clear</button>
+            <button type="button" class="btn btn-primary" ng-disabled="!sheet.message || !sheet.assignedTo" ng-click="submit()"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+            <button type="button" class="btn btn-danger pull-left" ng-disabled="!sheet.message || !sheet.assignedTo" ng-click="delete()"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+            <button type="button" class="btn btn-danger pull-left" ng-click="clear()"><span class="glyphicon glyphicon-erase"></span> Clear</button>
         </div>
     </div>
 </script>
@@ -125,12 +125,12 @@
                             Add Sheet
                         </button>
                         <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            {{vm.selectedModel}}
+                            {{vm.selectedModel.name}}
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 100px">
                             <li ng-repeat="file in vm.availableModels">
-                                <a href="" ng-click="vm.SetCurrentModelFilter(file)">{{file}}</a>
+                                <a href="" ng-click="vm.SetCurrentModelFilter(file)">{{file.name}}</a>
                             </li>
                         </ul>
                     </div>
@@ -150,7 +150,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="sheet in vm.allSheets | orderBy: 'number' : false | filter: vm.filterFile" ng-class="vm.isChanged(sheet.identifier) === 'noChanges' ? 'table-info' : vm.isChanged(sheet.identifier) === 'deleted' ? 'bg-danger strike' : 'bg-warning'">
+                            <tr ng-repeat="sheet in vm.allSheets | orderBy: 'number' : false | filter: vm.filterFile" ng-class="vm.isChanged(sheet)">
                                 <td style="padding-left: 30px">
                                     <input type="checkbox" ng-model="sheet.isSelected" ng-click="vm.toggleOne(sheet)">
                                 </td>
