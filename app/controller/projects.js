@@ -103,14 +103,9 @@ ProjectService = {
       Project
           .create(req.body, function(err, project){
               if(err) {
-                  res
-                      .status(400)
-                      .json(err);
+                  res.status(400).json(err);
               } else {
-                  global.io.sockets.emit('add_project', req.body);
-                  res
-                      .status(201)
-                      .json(project);
+                  res.status(201).json(project);
               }
           });
   },

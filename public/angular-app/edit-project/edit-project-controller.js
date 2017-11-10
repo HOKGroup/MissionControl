@@ -50,7 +50,8 @@ function EditProjectController($routeParams, ProjectFactory, $window){
                             vm.status = 'Unable to delete configuration' +error.message;
                         });
                 }
-                $window.location.assign('#/projects/');
+                // (Konrad) Makes sure that resources are reloaded.
+                $window.location.href = '#/projects/';
             }, function(error){
                 vm.status = 'Unable to delete project:' +error.message;
             });
@@ -69,7 +70,7 @@ function EditProjectController($routeParams, ProjectFactory, $window){
     vm.downloadPDF = function(){
         var repositoryName = 'MissionControl';
         var workspaceName = 'MissionControl_PDFCreator.fmw';
-        var parameters= 'ProjectId='+vm.projectId;
+        var parameters= 'ProjectId=' + vm.projectId;
 
         FMEServer.runDataDownload(repositoryName, workspaceName, parameters, showResults);
     };

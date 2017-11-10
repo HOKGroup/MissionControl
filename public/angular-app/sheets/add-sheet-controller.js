@@ -25,7 +25,8 @@ function AddSheetController($uibModalInstance, UtilityService, models) {
     };
     vm.operators = [
         'Prefix/Suffix',
-        'Number Series'
+        'Number Series',
+        'Letter Series'
     ];
     vm.currentOperator = {};
     vm.currentNumberOperators = [
@@ -124,6 +125,17 @@ function AddSheetController($uibModalInstance, UtilityService, models) {
                     section: section
                 }
             )
+        } else if (type === 'Letter Series'){
+            array.push(
+                {
+                    name: 'Letter Series',
+                    start: 'A',
+                    step: 1,
+                    range: ['A'],
+                    templateUrl: 'letterSeries.html',
+                    section: section
+                }
+            )
         }
     };
 
@@ -160,6 +172,12 @@ function AddSheetController($uibModalInstance, UtilityService, models) {
             operator.range = range; // save new range into operator
             if(range.length >= 2) return range[0] + '-' + range[range.length - 1];
             else if(range.length === 1) return range[0];
+            else return operator.name;
+        } else if (operator.name === 'Letter Series'){
+            var charRange = UtilityService.charRange(operator.start, operator.step, vm.template.count);
+            operator.range = charRange; // save new range into operator
+            if(charRange.length >= 2) return charRange[0] + '-' + charRange[charRange.length - 1];
+            else if (charRange.length === 1) return charRange[0];
             else return operator.name;
         }
     };
@@ -198,6 +216,8 @@ function AddSheetController($uibModalInstance, UtilityService, models) {
             if(item.name === 'Prefix/Suffix'){
                 name = name + item.value;
             } else if (item.name === 'Number Series'){
+                name = name + item.range[index];
+            } else if (item.name === 'Letter Series'){
                 name = name + item.range[index];
             }
         });

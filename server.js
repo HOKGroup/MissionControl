@@ -61,15 +61,16 @@ var server = app.listen(
       global.io = io(server);
 
       global.io.on('connection', function(client){
-          console.log('Revit client connected to the socket.');
+          console.log('Client connected to the socket.');
 
-          client.on('message',function(event){
-              console.log('Received message from Revit client.',event);
-          });
+          // client.once('sheetTask_approved',function(event){
+          //     console.log('Received message from Revit client.',event);
+          // });
 
-          client.on('disconnect',function(){
-              console.log('Revit client disconnected.');
-          });
+          // client.once('disconnect',function(){
+          //     console.log('Revit client disconnected.');
+          // });
+
       });
 
       global.io.on('error', function (err) {

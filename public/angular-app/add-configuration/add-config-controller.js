@@ -10,6 +10,12 @@ function AddConfigController($routeParams, ConfigFactory, $window){
     vm.HasFiles = false;
     vm.status = " ";
 
+    // (Konrad) Could be useful to allow image upload for a project directory etc.
+    // vm.files = [];
+    // $scope.$watchCollection('vm.files', function(newCol, oldCol, scope) {
+    //     console.log(vm.files);
+    // });
+
     getSelectedProject(vm.projectId);
     setDefaultConfig();
 
@@ -23,6 +29,9 @@ function AddConfigController($routeParams, ConfigFactory, $window){
             });
     }
 
+    /**
+     * Creates a default configuration setttings.
+     */
     function setDefaultConfig(){
         var updater_dtm =
             {
@@ -159,7 +168,7 @@ function AddConfigController($routeParams, ConfigFactory, $window){
         }
 
         // (Konrad) Let's make sure we have a valid, non empty name
-        if(!filePath.length || !filePath.includes('.rvt')){
+        if(!filePath || !filePath.length || !filePath.includes('.rvt')){
             vm.fileWarningMsg = 'Warning! File name is not valid. Must be non-empty and include *.rvt';
             return;
         }
@@ -167,11 +176,13 @@ function AddConfigController($routeParams, ConfigFactory, $window){
         // (Konrad) Let's make sure file is not already in other configurations
         ConfigFactory
             .getByEncodedUri(encodedUri).then(function(response){
+                if(!response || response.status !== 200) return;
+
                 var configFound = response.data;
                 var configNames = '';
                 var configMatched = false;
 
-                if(response.status === 200 && configFound.length > 0){
+                if(configFound.length > 0){
                     for(var i = 0; i < configFound.length; i++) {
                         var config = configFound[i];
                         for(var j = 0; j < config.files.length; j++){
@@ -218,7 +229,7 @@ function AddConfigController($routeParams, ConfigFactory, $window){
                     ConfigFactory
                         .addConfigToProject(vm.projectId, configId)
                         .then(function(){
-                            $window.location.assign('#/projects/configurations/' + vm.projectId);
+                            $window.location.href = '#/projects/configurations/' + vm.projectId;
                         }, function(error){
                             vm.status = 'Unable to add Configuration to project: ' + error.message;
                         });

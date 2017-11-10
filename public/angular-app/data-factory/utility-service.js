@@ -46,6 +46,16 @@ function UtilityService(){
             return range;
         },
 
+        charRange: function(start, step, count){
+            var data = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+            var startIndex = data.indexOf(start);
+            var range = [];
+            for (var i = 0; i < count; i++){
+                range.push(data[startIndex + (i * step)]);
+            }
+            return range;
+        },
+
         move: function(array, from, to) {
             array.splice(to, 0, array.splice(from, 1)[0]);
         }

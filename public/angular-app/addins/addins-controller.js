@@ -66,11 +66,9 @@ function AddinsController(AddinsFactory) {
         },{});
 
         var list = getTotals(output);
-        list.sort(function (a, b){
-            var x = a.name.toLowerCase();
-            var y = b.name.toLowerCase();
-            return x < y ? -1 : x > y ? 1 : 0;
-        }); // sorted by name
+        list.sort(function(a,b){
+            return a.count - b.count;
+        }).reverse(); // sorted by count
 
         vm.d3HorizontalData = list;
         vm.SelectedYear = year;
@@ -101,17 +99,12 @@ function AddinsController(AddinsFactory) {
             return sums;
         }, {});
 
-        // (Konrad) Second we need to get total for each version of a given plugin
-        // Used for Donut Chart
-        var output1 = vm.AddinLogs.reduce(function (sums, entry) {
-            if(entry.pluginName === vm.SelectedPlugin){
-                sums[entry.revitVersion] = (sums[entry.revitVersion] || 0) + 1;
-            }
-            return sums;
-        }, {});
+        var totals = getTotals(output);
+        totals.sort(function(a,b){
+            return a.count - b.count;
+        }).reverse(); // sorted by count
 
-        vm.YearsAggregate = getTotals(output1);
-        vm.UserDetails = getTotals(output);
+        vm.UserDetails = totals;
     };
 
     vm.OnClick = function(item){
@@ -126,17 +119,12 @@ function AddinsController(AddinsFactory) {
             return sums;
         }, {});
 
-        // (Konrad) Second we need to get total for each version of a given plugin
-        // Used for Donut Chart
-        var output1 = vm.AddinLogs.reduce(function (sums, entry) {
-            if(entry.pluginName === item.name){
-                sums[entry.revitVersion] = (sums[entry.revitVersion] || 0) + 1;
-            }
-            return sums;
-        }, {});
+        var totals = getTotals(output);
+        totals.sort(function(a,b){
+            return a.count - b.count;
+        }).reverse(); // sorted by count
 
-        vm.YearsAggregate = getTotals(output1);
-        vm.UserDetails = getTotals(output);
+        vm.UserDetails = totals;
         vm.SelectedPlugin = item.name;
     };
 

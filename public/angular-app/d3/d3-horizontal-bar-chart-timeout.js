@@ -48,16 +48,11 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChartTimeout', ['d
                 // setup variables
                 var margin = {top: 10, right: 30, bottom: 20, left: scope.marginLeft},
                     width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right,
-                    height;
+                    height = data.length * 20,
+                    barHeight = 17;
 
-                if(scope.axisTop){
+                if(scope.axisTop && data.length > 15){
                     margin.top = 20;
-                }
-
-                if(data.length <= 5) {
-                    height = 120 - margin.top - margin.bottom;
-                } else{
-                    height = (data.length * 20) - margin.top - margin.bottom;
                 }
 
                 // set the height based on the calculations above
@@ -67,10 +62,9 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChartTimeout', ['d
                     .domain([0, d3.max(data, function(d){return d.count;}) + scope.domainPadding])
                     .range([0, width]);
 
-                var y = d3.scaleBand()
+                var y = d3.scalePoint()
                     .domain(data.map(function (d) { return d.name; }))
-                    .rangeRound([0, height])
-                    .paddingInner(0.15);
+                    .range([0, height-barHeight]);
 
                 svg.append("g")
                     .selectAll("bar")
@@ -81,7 +75,7 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChartTimeout', ['d
                     .attr("width", 0)
                     .attr("y", function (d) { return y(d.name); })
                     .attr("fill", scope.fillColor)
-                    .attr("height", y.bandwidth())
+                    .attr("height", barHeight)
                     .on("click", function(d){
                         if(scope.clickable){
                             scope.onClick({item: d});
@@ -109,7 +103,7 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChartTimeout', ['d
                     .attr("transform", "translate(" +  margin.left + "," + (height + margin.top) + ")")
                     .call(d3.axisBottom(x));
 
-                if(scope.axisTop){
+                if(scope.axisTop && data.length > 15){
                     svg.append("g")
                         .attr("class", "x axis")
                         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
@@ -120,13 +114,12 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChartTimeout', ['d
                     .selectAll("labels")
                     .data(data).enter()
                     .append("text")
-                    .attr("transform", "translate(0", + (margin.top) + ")")
                     .attr("x", 0)
                     .attr("y", function(d){
                         var width = getPixelWidth(d.name);
                         var lineCount = Math.ceil(width / margin.left);
-                        var center = (y(d.name) + (y.bandwidth() / 2)) - (lineCount * 4);
-                        var offset = (y(d.name) + (y.bandwidth() / 2));
+                        var center = (y(d.name) + (barHeight / 2)) - (lineCount * 4);
+                        var offset = (y(d.name) + (barHeight / 2));
                         return lineCount > 1 ? center + margin.top : offset + margin.top;
                     })
                     .attr("text-anchor", "end")
@@ -140,7 +133,7 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChartTimeout', ['d
                     .data(data).enter()
                     .append("text")
                     .attr("x", function(d){return x(d.count) + margin.left;})
-                    .attr("y", function(d){return y(d.name) + (y.bandwidth() / 2) + margin.top;})
+                    .attr("y", function(d){return y(d.name) + (barHeight / 2) + margin.top;})
                     .attr("dx", 5)
                     .attr("dy", ".35em")
                     .text(function(d){return d.count;})

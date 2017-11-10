@@ -46,7 +46,7 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
                 // set the height based on the calculations above
                 svg.attr('height', height + margin.top + margin.bottom);
 
-                var x = d3.scalePoint().range([margin.left, width+margin.right]),
+                var x = d3.scalePoint().range([margin.left, width + margin.right]),
                     y = {},
                     dragging = {},
                     selected;

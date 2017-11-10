@@ -15,7 +15,8 @@ function AddProjectController(ProjectFactory, $window, SheetsFactory){
     vm.warning_name = '';
 
     vm.addProject = function(){
-        if(!vm.newProject.hasOwnProperty('number') || !vm.newProject.hasOwnProperty('name')
+        if(!vm.newProject.hasOwnProperty('number')
+            || !vm.newProject.hasOwnProperty('name')
             || !vm.newProject.hasOwnProperty('office')){
             console.log("Missing number, name, office");
             return;
@@ -39,19 +40,14 @@ function AddProjectController(ProjectFactory, $window, SheetsFactory){
         project.healthrecords = [];
         project.configurations = [];
 
-        //TODO: Is this doing anything here?
-        // ConfigFactory
-        //     .addConfiguration(vm.newConfig);
-
         ProjectFactory
             .addProject(project).then(function(response){
-                if(response.status === 201){
-                    vm.status = 'Project added';
-                    $window.location.assign('/#/projects')
-                }
+                if(!response || response.status !== 201) return;
+
+                $window.location.assign('#/configurations/add/' + response.data._id);
             }).catch(function(error){
-            vm.status = 'Unable to add project: ' + error.message;
-            console.log(error)
+                vm.status = 'Unable to add project: ' + error.message;
+                console.log(error)
             });
     };
 }

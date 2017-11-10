@@ -6,7 +6,7 @@ if (!Array.prototype.find) {
     Object.defineProperty(Array.prototype, 'find', {
         value: function(predicate) {
             // 1. Let O be ? ToObject(this value).
-            if (this == null) {
+            if (this === null) {
                 throw new TypeError('"this" is null or not defined');
             }
 
@@ -44,4 +44,11 @@ if (!Array.prototype.find) {
             return undefined;
         }
     });
+}
+
+if (!String.prototype.includes) {
+    String.prototype.includes = function() {
+        'use strict';
+        return String.prototype.indexOf.apply(this, arguments) !== -1;
+    };
 }

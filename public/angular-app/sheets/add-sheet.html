@@ -28,8 +28,25 @@
     </div>
 </script>
 
+<!--LETTER SERIES POPOVER-->
+<script type="text/ng-template" id="letterSeries.html">
+    <div class="btn-group" style="width: 100%">
+        <label for="char_series_start" class="form-control-label">Start:</label>
+        <input type="text" class="form-control" id="char_series_start" value="vm.currentOperator.start" ng-model="vm.currentOperator.start">
+        <label for="char_series_step" class="form-control-label">Step:</label>
+        <input type="number" min="1" class="form-control" id="char_series_step" value="vm.currentOperator.step" ng-model="vm.currentOperator.step">
+    </div>
+    <hr style="margin-bottom: 5px">
+    <div class="btn-group">
+        <a ng-click="vm.moveLeft($index)" ng-if="vm.showLeftArrow($index)"><span class="glyphicon glyphicon-triangle-left"></span></a>
+        <a ng-click="vm.deleteOperator($index)"><span class="glyphicon glyphicon-trash"></span></a>
+        <a ng-click="vm.moveRight($index)" ng-if="vm.showRightArrow($index)"><span class="glyphicon glyphicon-triangle-right"></span></a>
+    </div>
+</script>
+
+<!--ADD SHEET MODAL-->
 <div class="modal-content">
-    <div class="modal-header">
+    <div class="modal-header" id="header">
         <h5 class="modal-title pull-left">Add Sheet</h5>
         <button type="button" class="close pull-right" ng-click="vm.cancel()">
             <span aria-hidden="true">&times;</span>

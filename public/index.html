@@ -109,6 +109,7 @@
 	<!--Directives-->
 	<script src="angular-app/health-report/health-report-directives.js"></script>
 	<script src="angular-app/project-map/google-drawing-map-directive.js"></script>
+	<!--<script src="angular-app/directives/file-selection.js"></script>-->
 
 	<!--D3 Directives-->
 	<script src="angular-app/d3/d3-horizontal-bar-chart.js"></script>
@@ -123,11 +124,13 @@
 	<script src="angular-app/d3/d3-parallel-coordinates-chart.js"></script>
 
 	<script type="text/javascript">
-        $(document).ready(function() {
-            $(".nav a").on("click", function(){
-                $(".nav").find(".active").removeClass("active");
-                $(this).parent().addClass("active");
-            });
+        $(".nav a").on("click", function(){
+            $(".nav").find(".active").removeClass("active");
+            $(this).parent().addClass("active");
+        });
+        $(".navbar-brand").on("click", function(){
+            $(".nav").find(".active").removeClass("active");
+            $('.nav a[href="/"]').parent().addClass("active");
         });
 	</script>
 </body>

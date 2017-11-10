@@ -199,6 +199,7 @@ var approveSheetChanges = function (req, res, objects) {
         if(err){
             res.status(500).json(err);
         } else {
+            console.log("sheetTask_approved");
             global.io.sockets.emit('sheetTask_approved', { 'body': sheetsUpdated, 'identifier': req.body.identifier });
             res.status(200).json(sheetsUpdated);
         }
@@ -232,9 +233,9 @@ module.exports.approveChanges = function (req, res) {
 };
 
 var approveCreateNewSheet = function (req, res, objects) {
-    // (Konrad) This body won't have an identifier that will match sheetChanges. We can use number instead.
+    // (Konrad) This body won't have an identifier that will match sheetChanges. We can use number/name instead.
     var index = objects.sheetsChanges.findIndex(function (item) {
-        return item.number === req.body.number;
+        return item.identifier === '' && item.name === req.body.name && item.number === req.body.number;
     });
     if(index !== -1){
         objects.sheetsChanges.splice(index, 1);
@@ -247,6 +248,7 @@ var approveCreateNewSheet = function (req, res, objects) {
         if(err){
             res.status(500).json(err);
         } else {
+            console.log("sheetTask_approved");
             global.io.sockets.emit('sheetTask_approved', { 'body': sheetsUpdated, 'identifier': req.body.identifier });
             res.status(200).json(sheetsUpdated);
         }
