@@ -1,14 +1,12 @@
 angular.module('MissionControlApp').controller('WorksetsController', WorksetsController);
 
-function WorksetsController($routeParams){
+function WorksetsController($routeParams, UtilityService){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.UserData = [];
 
-    vm.FormatObjectTime = {
-        specifier: ".0r", // decimal notation, rounded to significant digits
-        multiplier: 1, // convert from ms
-        suffix: "%" // seconds
+    vm.formatDuration = function(item){
+        return UtilityService.formatPercentage(item);
     };
 
     vm.WorksetData = this.processed;

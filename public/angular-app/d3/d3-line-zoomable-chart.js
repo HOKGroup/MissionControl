@@ -68,7 +68,12 @@ angular.module('MissionControlApp').directive('d3ZoomableLine', ['d3', function(
 
                 var ticksNum = 10;
                 var yAxisTicks = [];
-                var yDomain = [0, d3.max(data, function(d) { return d.value; })];
+                var yDomain;
+                if(scope.domainY){
+                    yDomain = [0, scope.domainY];
+                } else {
+                    yDomain = [0, d3.max(data, function(d) { return d.value; })];
+                }
                 for (var i = 0; i < ticksNum; i++ ){
                     yAxisTicks.push((yDomain[1] - yDomain[0]) / (ticksNum - 1)* i + yDomain[0]);
                 }

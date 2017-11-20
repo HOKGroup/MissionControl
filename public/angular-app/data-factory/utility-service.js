@@ -2,6 +2,10 @@ angular.module('MissionControlApp').factory('UtilityService', UtilityService);
 
 function UtilityService(){
     return {
+        formatPercentage: function (value) {
+            return parseInt(value).toFixed(0) + '%';
+        },
+
         formatDuration: function (ms) {
             if (ms <= 0) return "0s";
 
