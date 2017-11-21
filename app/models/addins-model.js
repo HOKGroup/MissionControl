@@ -5,7 +5,13 @@ var usageLogSchema = new mongoose.Schema({
     user: String,
     revitVersion: String,
     office: String,
-    createdOn: Date
+    createdOn: Date,
+    detailInfo: [
+        {
+            name: String,
+            value: String
+        }
+    ]
 });
 
 var addinsSchema = new mongoose.Schema({

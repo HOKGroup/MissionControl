@@ -48,6 +48,23 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #d9534f"></span> Never</p>
+                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #f0ad4e"></span> CurrentSessionOnly</p>
+                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #5cb85c"></span> Always</p>
+                    <h4 class="panel-title" style="padding-top: 5px;">Addin Manager: Plugin Usage</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body" style="max-height: 500px; overflow-y: scroll">
+                        <d3-normalized-horizontal-bar-chart data="vm.AddinManagerStats" margin-left="180"></d3-normalized-horizontal-bar-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--<div class="row" ng-if="vm.UserDetails.length > 0">-->
         <!--<div class="panel-group">-->
             <!--<div class="panel panel-default">-->

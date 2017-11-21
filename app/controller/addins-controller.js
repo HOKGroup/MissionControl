@@ -38,18 +38,15 @@ var _addAddinLog = function (req, res, addins){
         user: req.body.user,
         revitVersion: req.body.revitVersion,
         office: req.body.office,
-        createdOn: Date.now()
+        createdOn: Date.now(),
+        detailInfo: req.body.detailInfo
     });
 
     addins.save(function (err, addinsUpdated) {
         if(err){
-            res
-                .status(500)
-                .json(err);
+            res.status(500).json(err);
         } else {
-            res
-                .status(200)
-                .json(addinsUpdated.usageLogs[addinsUpdated.usageLogs.length - 1]);
+            res.status(200).json(addinsUpdated.usageLogs[addinsUpdated.usageLogs.length - 1]);
         }
     });
 };
@@ -74,9 +71,7 @@ module.exports.addLog = function (req, res) {
             if(doc){
                 _addAddinLog(req, res, doc);
             } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
+                res.status(response.status).json(response.message);
             }
         });
 };
