@@ -118,6 +118,9 @@ function AddinsController(AddinsFactory) {
                 if(entry.pluginName === item.name
                     && entry.revitVersion === vm.SelectedYear
                     && isOfficeMatch(entry.office, vm.SelectedOffice)){
+
+                    sums[entry.user] = (sums[entry.user] || 0) + 1;
+
                     for(var i = 0; i < entry.detailInfo.length; i++){
                         var detailItem = entry.detailInfo[i];
                         if(addinManagerDetails.hasOwnProperty(detailItem.name))
@@ -155,6 +158,7 @@ function AddinsController(AddinsFactory) {
                         }
                     }
                 }
+                return sums;
             } else {
                 if(entry.pluginName === item.name
                     && entry.revitVersion === vm.SelectedYear

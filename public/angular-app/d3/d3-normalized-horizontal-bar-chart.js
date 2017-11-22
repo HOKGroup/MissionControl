@@ -6,9 +6,7 @@ angular.module('MissionControlApp').directive('d3NormalizedHorizontalBarChart', 
         restrict: 'E',
         scope: {
             data: '=',
-            marginLeft: '=', // left margin
-            onBrush: '&d3OnBrush', // click function
-            callbackMethod: '&formatValue' // format function
+            marginLeft: '=' // left margin
         },
         link: function(scope, ele) {
             var svg = d3.select(ele[0])
@@ -55,8 +53,9 @@ angular.module('MissionControlApp').directive('d3NormalizedHorizontalBarChart', 
                 var x = d3.scaleLinear()
                     .rangeRound([width, 0]);
 
+                // TODO: This is potentially an issue. Colors are in order. Red, Green, Orange
                 var z = d3.scaleOrdinal()
-                    .range(["#d9534f", "#f0ad4e", "#5cb85c"]);
+                    .range(["#d9534f", "#5cb85c", "#f0ad4e"]);
 
                 var stack = d3.stack()
                     .offset(d3.stackOffsetExpand);
@@ -83,16 +82,37 @@ angular.module('MissionControlApp').directive('d3NormalizedHorizontalBarChart', 
                     .attr("width", function(d) { return x(d[0]) - x(d[1]); })
                     .attr("height", y.bandwidth());
 
+                // (Konrad) Given that "serie" groups the data by keys, it will be served to us in order
+                // We can use that to count every data.length and then jump to next items in keys.
+                var counter = 0;
+                var index = 0;
                 serie.selectAll("valueLabels")
-                    .data(function (d) { return d; })
+                    .data(function(d) { return d; })
                     .enter().append("text")
-                    .attr("x", function(d) {
-                        if(d[1] === 0) return 0;
-                        else return (x(d[0]) - x(d[1])) / 2;
-                    })
-                    .attr("y", function (d) { return y(d.data.name); })
+                    .attr("text-anchor", "middle")
+                    .attr("alignment-baseline", "middle")
                     .style("fill", "black")
-                    .text("1"); //TODO: How to fix this?
+                    .attr("y", function(d) { return y(d.data.name) + (y.bandwidth() / 2); })
+                    .attr("x", function(d) {
+                        if(d[1] === 0){
+                            return 0;
+                        } else {
+                            var width = x(d[0]) - x(d[1]);
+                            return x(d[1]) + (width / 2);
+                        }
+                    })
+                    .text(function(d){
+                        var key;
+                        if(counter < data.length){
+                            key = keys[index];
+                        } else {
+                            index++;
+                            counter = 0;
+                            key = keys[index];
+                        }
+                        counter++;
+                        return d.data[key] === 0 ? '' : d.data[key];
+                    });
 
                 g.append("g")
                     .attr("class", "x axis")
@@ -100,8 +120,15 @@ angular.module('MissionControlApp').directive('d3NormalizedHorizontalBarChart', 
                     .call(d3.axisBottom(x).ticks(10, "%"));
 
                 g.append("g")
-                    .attr("class", "y axis")
-                    .call(d3.axisLeft(y));
+                    .selectAll("labels")
+                    .data(data).enter()
+                    .append("text")
+                    .attr("x", 0)
+                    .attr("y", function(d) { return y(d.name) + (y.bandwidth() / 2); })
+                    .attr("text-anchor", "end")
+                    .attr("dy", ".35em")
+                    .attr("dx", -5)
+                    .text(function(d){return d.name;});
             };
         }
     };
