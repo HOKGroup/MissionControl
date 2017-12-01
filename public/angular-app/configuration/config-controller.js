@@ -71,15 +71,17 @@ function ConfigController($routeParams, ConfigFactory, $window){
 
     vm.addFile = function(){
         var filePath = vm.newFile;
-        var encodedUri = encodeURIComponent(filePath);
         vm.fileWarningMsg='';
 
+        var centralPath = filePath.replace(/\\/g, '|');
         ConfigFactory
-            .getByEncodedUri(encodedUri).then(function(response){
+            .getByCentralPath(centralPath).then(function(response){
+                if(!response || response.status !== 200) return;
+
                 var configFound = response.data;
                 var configNames = '';
                 var configMatched = false;
-                if(response.status === 200 && configFound.length > 0){
+                if(configFound.length > 0){
                     //find an exact match from text search result
                     for(var i = 0; i < configFound.length; i++) {
                         var config = configFound[i];

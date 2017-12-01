@@ -155,8 +155,7 @@ function AddConfigController($routeParams, ConfigFactory, $window){
 
     vm.addFile = function(){
         var filePath = vm.newFile;
-        var encodedUri = encodeURIComponent(filePath);
-        vm.fileWarningMsg='';
+        vm.fileWarningMsg = '';
 
         // (Konrad) Let's make sure we are not adding the same file twice.
         var matchingFiles = vm.newConfig.files.find(function (item) {
@@ -174,8 +173,9 @@ function AddConfigController($routeParams, ConfigFactory, $window){
         }
 
         // (Konrad) Let's make sure file is not already in other configurations
+        var centralPath = filePath.replace(/\\/g, '|');
         ConfigFactory
-            .getByEncodedUri(encodedUri).then(function(response){
+            .getByCentralPath(centralPath).then(function(response){
                 if(!response || response.status !== 200) return;
 
                 var configFound = response.data;

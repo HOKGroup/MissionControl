@@ -213,3 +213,8 @@ textarea {
 .popover {
   min-width: 200px;
 }
+
+/*Handles overflow in input fields.*/
+input[type=text]{
+  text-overflow: ellipsis;
+}

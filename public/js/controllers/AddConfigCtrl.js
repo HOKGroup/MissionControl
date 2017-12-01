@@ -129,50 +129,44 @@ function($scope, $routeParams, ConfigFactory, $window){
 	
 	$scope.addFile = function(){
 		var filePath = $scope.newFile;
-		var encodedUri = encodeURIComponent(filePath);
+		// var encodedUri = encodeURIComponent(filePath);
 		$scope.fileWarningMsg='';
-		
-		ConfigFactory.getByEncodedUri(encodedUri)
-		.then(function(response){
-			var configFound = response.data;
-			var configNames = '';
-			var configMatched = false;
-			if(configFound.length > 0)
-			{
-				for(var i = 0; i < configFound.length; i++)
-				{
-					var config = configFound[i];
-					for(var j=0; j<config.files.length; j++)
-					{
-						var file = config.files[j];
-						if(file.centralPath.toLowerCase() == filePath.toLowerCase())
-						{
-							configMatched = true;
-							configNames+=' ['+config.name+'] '; 
-							break;
+
+        var centralPath = filePath.replace(/\\/g, '|');
+		ConfigFactory
+			.getByCentralPath(centralPath).then(function(response){
+            	if(!response || response.status !== 200) return;
+
+				var configFound = response.data;
+				var configNames = '';
+				var configMatched = false;
+				if(configFound.length > 0){
+					for(var i = 0; i < configFound.length; i++){
+						var config = configFound[i];
+						for(var j=0; j<config.files.length; j++) {
+							var file = config.files[j];
+							if(file.centralPath.toLowerCase() == filePath.toLowerCase()) {
+								configMatched = true;
+								configNames+=' ['+config.name+'] ';
+								break;
+							}
 						}
 					}
 				}
-			}
-			
-			if(configMatched)
-			{
-				$scope.fileWarningMsg= 'Warning! File already exists in other configurations.\n'+ configNames;
-			}
-			else if(filePath.length >0  && filePath.includes('.rvt'))
-			{
-				var file= { centralPath:filePath };
-				$scope.newConfig.files.push(file);
-				//$scope.status='File added';
-				$scope.newFile = '';
-			}
-			else{
-				$scope.fileWarningMsg = 'Warning! Please enter a valid file.';
-			}
-
-		}, function(error){
-			$scope.status = 'Unable to get configuration data: '+error.message;
-		});
+				if(configMatched) {
+					$scope.fileWarningMsg= 'Warning! File already exists in other configurations.\n'+ configNames;
+				}
+				else if(filePath.length >0  && filePath.includes('.rvt')){
+					var file= { centralPath:filePath };
+					$scope.newConfig.files.push(file);
+					$scope.newFile = '';
+				}
+				else{
+					$scope.fileWarningMsg = 'Warning! Please enter a valid file.';
+				}
+			}, function(error){
+				$scope.status = 'Unable to get configuration data: '+error.message;
+			});
 	};
 	
 	$scope.deleteFile = function(filepath){

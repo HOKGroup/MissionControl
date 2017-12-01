@@ -18,8 +18,8 @@ function ConfigFactory($http){
             return $http.get('/api/v1/configurations/' + id).then(complete).catch(failed);
         },
 
-        getByEncodedUri: function getByEncodedUri(uri) {
-            return $http.get('/api/v1/configurations/uri/' + uri).then(complete).catch(failed);
+        getByCentralPath: function getByCentralPath(centralPath) {
+            return $http.get('/api/v1/configurations/centralpath/' + centralPath).then(complete).catch(failed);
         },
 
         getByUpdaterId: function getByUpdaterId(updaterId) {

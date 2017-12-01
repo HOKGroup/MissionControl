@@ -109,7 +109,7 @@ angular.module('MissionControlApp').directive('d3WorksetItemCount', ['d3', funct
                     .attr("dy", ".35em")
                     .attr("dx", -5)
                     .text(function(d){return d.name;})
-                    .call(wrap, margin.left);
+                    .call(wrap);
 
                 svg.append("g")
                     .selectAll("valueLabels")
@@ -128,31 +128,84 @@ angular.module('MissionControlApp').directive('d3WorksetItemCount', ['d3', funct
                 function getPixelWidth(text){
                     var canvas = document.createElement('canvas');
                     var ctx = canvas.getContext("2d");
-                    return width = ctx.measureText(text).width;}
-
-                function wrap(text, width) {
-                    text.each(function() {
-                        var text = d3.select(this),
-                            words = text.text().split(/\s+/).reverse(),
-                            word,
-                            line = [],
-                            lineNumber = 0,
-                            lineHeight = 1.1, // ems
-                            y = text.attr("y"),
-                            dy = parseFloat(text.attr("dy")),
-                            tspan = text.text(null).append("tspan").attr("x", margin.left).attr("y", y).attr("dx", -5).attr("dy", dy + "em");
-                        while (word = words.pop()) {
-                            line.push(word);
-                            tspan.text(line.join(" "));
-                            if (tspan.node().getComputedTextLength() > width) {
-                                line.pop();
-                                tspan.text(line.join(" "));
-                                line = [word];
-                                tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dx", -5).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-                            }
-                        }
-                    });
+                    return width = ctx.measureText(text).width;
                 }
+
+                function wrap() {
+                    var self = d3.select(this);
+                    var textWidth = this.getComputedTextLength();    // Width of text in pixel.
+                    console.log(textWidth);
+                    // var initialText = self.text(), 							// Initial text.
+                    //     textLength = initialText.length, 					// Length of text in characters.
+                    //     text = initialText,
+                    //     precision = 10, //textWidth / width, 				// Adjustable precision.
+                    //     maxIterations = 100; // width;						// Set iterations limit.
+                    //
+                    // while (maxIterations > 0 && text.length > 0 && Math.abs(width - textWidth) > precision) {
+                    //
+                    //     text = /*text.slice(0,-1); =*/(textWidth >= width) ? text.slice(0, -textLength * 0.15) : initialText.slice(0, textLength * 1.15);
+                    //     self.text(text + '...');
+                    //     textWidth = self.node().getComputedTextLength();
+                    //     textLength = text.length;
+                    //     maxIterations--;
+                    // }
+                    // console.log(width - textWidth);
+                }
+
+                // function wrap(text, width) {
+                //     text.each(function() {
+                //         var text = d3.select(this),
+                //             words = text.text().split(/\s+/).reverse(),
+                //             word,
+                //             line = [],
+                //             lineNumber = 0,
+                //             lineHeight = 1.1, // ems
+                //             y = text.attr("y"),
+                //             dy = parseFloat(text.attr("dy")),
+                //             tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dx", -5).attr("dy", dy + "em");
+                //         console.log(words);
+                //         while (word = words.pop()) {
+                //             line.push(word);
+                //             tspan.text(line.join(" "));
+                //             if (tspan.node().getComputedTextLength() > width) {
+                //                 line.pop();
+                //                 tspan.text(line.join(" "));
+                //                 line = [word];
+                //                 tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dx", -5).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                //                 console.log(lineNumber);
+                //             }
+                //         }
+                //     });
+
+                // function getPixelWidth(text){
+                //     var canvas = document.createElement('canvas');
+                //     var ctx = canvas.getContext("2d");
+                //     return width = ctx.measureText(text).width;}
+                //
+                // function wrap(text, width) {
+                //     console.log(text);
+                //     text.each(function() {
+                //         var text = d3.select(this),
+                //             words = text.text().split(/\s+/).reverse(),
+                //             word,
+                //             line = [],
+                //             lineNumber = 0,
+                //             lineHeight = 1.1, // ems
+                //             y = text.attr("y"),
+                //             dy = parseFloat(text.attr("dy")),
+                //             tspan = text.text(null).append("tspan").attr("x", margin.left).attr("y", y).attr("dx", -5).attr("dy", dy + "em");
+                //         while (word = words.pop()) {
+                //             line.push(word);
+                //             tspan.text(line.join(" "));
+                //             if (tspan.node().getComputedTextLength() > width) {
+                //                 line.pop();
+                //                 tspan.text(line.join(" "));
+                //                 line = [word];
+                //                 tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dx", -5).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                //             }
+                //         }
+                //     });
+                // }
             };
         }
     };

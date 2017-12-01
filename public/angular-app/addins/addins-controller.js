@@ -111,50 +111,57 @@ function AddinsController(AddinsFactory) {
         // (Konrad) First we need to get just plugins that match the name/year filters per user
         // Used for Bar Chart
         var addinManagerDetails = {};
-        var output = vm.AddinLogs.reduce(function (sums, entry) {
+        var users = [];
+        var output = vm.AddinLogs.reduceRight(function (sums, entry) {
             if(item.name === 'AddinManager')
             {
                 // (Konrad) This plugin publishes extra information we can use to make a normalized bar chart.
+                // The idea here is that for each tool we create a normalized bar, that shows how many users
+                // have given tool set to Always. Never and InSessionOnly. Each user is logged only once. Last
+                // set of data published by user is used (reduceRight iterates from end to get most recent).
                 if(entry.pluginName === item.name
                     && entry.revitVersion === vm.SelectedYear
                     && isOfficeMatch(entry.office, vm.SelectedOffice)){
 
-                    sums[entry.user] = (sums[entry.user] || 0) + 1;
-
-                    for(var i = 0; i < entry.detailInfo.length; i++){
-                        var detailItem = entry.detailInfo[i];
-                        if(addinManagerDetails.hasOwnProperty(detailItem.name))
-                        {
-                            switch (detailItem.value){
-                                case 'Never':
-                                    addinManagerDetails[detailItem.name].never += 1;
-                                    break;
-                                case 'Always':
-                                    addinManagerDetails[detailItem.name].always += 1;
-                                    break;
-                                case 'ThisSessionOnly':
-                                    addinManagerDetails[detailItem.name].thisSessionOnly += 1;
-                                    break;
+                    sums[entry.user] = (sums[entry.user] || 0) + 1; // data needed by user specific chart.
+                    if(entry.detailInfo.length > 0 && users.indexOf(entry.user) === -1) // log exists and wasn't added yet
+                    {
+                        users.push(entry.user); // store user
+                        for(var i = 0; i < entry.detailInfo.length; i++){
+                            var detailItem = entry.detailInfo[i];
+                            if(addinManagerDetails.hasOwnProperty(detailItem.name))
+                            {
+                                switch (detailItem.value){
+                                    case 'Never':
+                                        addinManagerDetails[detailItem.name].never += 1;
+                                        break;
+                                    case 'Always':
+                                        addinManagerDetails[detailItem.name].always += 1;
+                                        break;
+                                    case 'ThisSessionOnly':
+                                        addinManagerDetails[detailItem.name].thisSessionOnly += 1;
+                                        break;
+                                }
+                            } else {
+                                var pluginDetail = {
+                                    name: detailItem.name,
+                                    never: 0,
+                                    always: 0,
+                                    thisSessionOnly: 0
+                                };
+                                switch (detailItem.value){
+                                    case 'Never':
+                                        pluginDetail.never = 1;
+                                        break;
+                                    case 'Always':
+                                        pluginDetail.always = 1;
+                                        break;
+                                    case 'ThisSessionOnly':
+                                        pluginDetail.thisSessionOnly = 1;
+                                        break;
+                                }
+                                addinManagerDetails[detailItem.name] = pluginDetail;
                             }
-                        } else {
-                            var pluginDetail = {
-                                name: detailItem.name,
-                                never: 0,
-                                always: 0,
-                                thisSessionOnly: 0
-                            };
-                            switch (detailItem.value){
-                                case 'Never':
-                                    pluginDetail.never = 1;
-                                    break;
-                                case 'Always':
-                                    pluginDetail.always = 1;
-                                    break;
-                                case 'ThisSessionOnly':
-                                    pluginDetail.thisSessionOnly = 1;
-                                    break;
-                            }
-                            addinManagerDetails[detailItem.name] = pluginDetail;
                         }
                     }
                 }
