@@ -4,97 +4,37 @@
     }
 </style>
 
-<script type="text/ng-template" id="editSingleSheet">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title pull-left">Edit Sheet</h5>
-            <button type="button" class="close pull-right" ng-click="cancel()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">{{sheet.number}}-{{sheet.name}}</h4>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <div ng-class="isChanged() ? 'form-group has-warning' : 'form-group'">
-                            <label for="sheet_name" class="control-label">Sheet Number:</label>
-                            <input type="text" class="form-control" id="sheet_name" value="sheet.number" ng-model="sheet.number">
-                        </div>
-                        <div ng-class="isChanged() ? 'form-group has-warning' : 'form-group'">
-                            <label for="sheet_number" class="control-label">Sheet Name:</label>
-                            <input type="text" class="form-control" id="sheet_number" value="sheet.name" ng-model="sheet.name">
-                        </div>
-                        <div class="col-md-6 no-padding-left">
-                            <div class="form-group">
-                                <label for="sheet_revision" class="form-control-label">Current Revision:</label>
-                                <input type="text" class="form-control" id="sheet_revision" value="sheet.revisionNumber" ng-model="sheet.revisionNumber" disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-6 no-padding-right">
-                            <div class="form-group">
-                                <label for="recipient_name" class="form-control-label">
-                                    Recipient:
-                                    <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="sheet.assignedTo"></span>
-                                    <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!sheet.assignedTo"></span>
-                                </label>
-                                <input type="text" name="recipient" id="recipient_name" class="form-control" value="{{sheet.assignedTo}}" ng-model="sheet.assignedTo" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="message_text" class="form-control-label">
-                                Message:
-                                <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="sheet.message"></span>
-                                <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!sheet.message"></span>
-                            </label>
-                            <textarea id="message_text" class="form-control" ng-model="sheet.message" required></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" ng-click="cancel()">Close</button>
-            <button type="button" class="btn btn-primary" ng-disabled="!sheet.message || !sheet.assignedTo" ng-click="submit()"><span class="glyphicon glyphicon-ok"></span> Submit</button>
-            <button type="button" class="btn btn-danger pull-left" ng-disabled="!sheet.message || !sheet.assignedTo" ng-click="delete()"><span class="glyphicon glyphicon-trash"></span> Delete</button>
-            <button type="button" class="btn btn-danger pull-left" ng-click="clear()"><span class="glyphicon glyphicon-erase"></span> Clear</button>
-        </div>
-    </div>
-</script>
-
-<script type="text/ng-template" id="editMultipleSheets">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title pull-left">Edit Multiple Rows</h5>
-            <button type="button" class="close pull-right" ng-click="cancel()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">Edits:</h4>
-                </div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="multi_sheet_number" class="form-control-label">Sheet Number:</label>
-                        <input type="text" class="form-control" id="multi_sheet_number" value="Uneditable" disabled>
-                        <label for="multi_sheet_name" class="form-control-label">Sheet Name:</label>
-                        <input type="text" class="form-control" id="multi_sheet_name" value="name" ng-model="name">
-                        <label for="multi_sheet_revision" class="form-control-label">Sheet Revision:</label>
-                        <input type="text" class="form-control" id="multi_sheet_revision" value="Uneditable" disabled>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" ng-click="cancel()">Close</button>
-            <button type="button" class="btn btn-primary" ng-click="submit()"><span class="glyphicon glyphicon-ok"></span> Submit</button>
-        </div>
-    </div>
-</script>
+<!--<script type="text/ng-template" id="editMultipleSheets">-->
+    <!--<div class="modal-content">-->
+        <!--<div class="modal-header">-->
+            <!--<h5 class="modal-title pull-left">Edit Multiple Rows</h5>-->
+            <!--<button type="button" class="close pull-right" ng-click="cancel()">-->
+                <!--<span aria-hidden="true">&times;</span>-->
+            <!--</button>-->
+        <!--</div>-->
+        <!--<div class="modal-body">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading">-->
+                    <!--<h4 class="panel-title">Edits:</h4>-->
+                <!--</div>-->
+                <!--<div class="panel-body">-->
+                    <!--<div class="form-group">-->
+                        <!--<label for="multi_sheet_number" class="form-control-label">Sheet Number:</label>-->
+                        <!--<input type="text" class="form-control" id="multi_sheet_number" value="Uneditable" disabled>-->
+                        <!--<label for="multi_sheet_name" class="form-control-label">Sheet Name:</label>-->
+                        <!--<input type="text" class="form-control" id="multi_sheet_name" value="name" ng-model="name">-->
+                        <!--<label for="multi_sheet_revision" class="form-control-label">Sheet Revision:</label>-->
+                        <!--<input type="text" class="form-control" id="multi_sheet_revision" value="Uneditable" disabled>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="modal-footer">-->
+            <!--<button type="button" class="btn btn-secondary" ng-click="cancel()">Close</button>-->
+            <!--<button type="button" class="btn btn-primary" ng-click="submit()"><span class="glyphicon glyphicon-ok"></span> Submit</button>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</script>-->
 
 <div class="container">
     <div class="row">
@@ -136,6 +76,7 @@
                     </div>
                     <h4 class="panel-title" style="padding-top: 5px;">Sheets</h4>
                 </div>
+                <!--SHEETS TABLE-->
                 <div class="panel-collapse">
                     <div class="panel-body">
                         <table id="table2" datatable="ng" dt-options="vm.dtSheetsOptions" dt-column-defs="vm.dtSheetsColumnDefs" class="table table-hover table-condensed datatable">
@@ -150,13 +91,13 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="sheet in vm.allSheets | orderBy: 'number' : false | filter: vm.filterFile" ng-class="vm.isChanged(sheet)">
+                            <tr ng-repeat="sheet in vm.allSheets | orderBy: 'number' : false | filter: vm.filterFile" ng-class="vm.AssignClass(sheet)">
                                 <td style="padding-left: 30px">
                                     <input type="checkbox" ng-model="sheet.isSelected" ng-click="vm.toggleOne(sheet)">
                                 </td>
-                                <td ng-click="vm.selectedItems.length == 0 ? vm.editSheet('large', sheet) : vm.selectedItems.length == 1 ? vm.editSheet('large', vm.selectedItems[0]) : vm.editMultipleSheets('large', vm.selectedItems)">{{sheet.number}}</td>
-                                <td ng-click="vm.selectedItems.length == 0 ? vm.editSheet('large', sheet) : vm.selectedItems.length == 1 ? vm.editSheet('large', vm.selectedItems[0]) : vm.editMultipleSheets('large', vm.selectedItems)">{{sheet.name}}</td>
-                                <td class="text-center" ng-click="vm.selectedItems.length == 0 ? vm.editSheet('large', sheet) : vm.selectedItems.length == 1 ? vm.editSheet('large', vm.selectedItems[0]) : vm.editMultipleSheets('large', vm.selectedItems)">{{sheet.revisionNumber}}</td>
+                                <td ng-click="vm.launchSheetEditor(sheet)">{{vm.AssignDisplayValue(sheet, 'number')}}</td>
+                                <td ng-click="vm.launchSheetEditor(sheet)">{{vm.AssignDisplayValue(sheet, 'name')}}</td>
+                                <td class="text-center" ng-click="vm.launchSheetEditor(sheet)">{{vm.AssignDisplayValue(sheet, 'revisionNumber')}}</td>
                             </tr>
                             </tbody>
                         </table>

@@ -52,6 +52,73 @@ module.exports.findByCentralPath = function(req, res){
         )
 };
 
+var deleteSheetTask = function (req, res, doc) {
+    // req.body is always an array
+    req.body.forEach(function (item) {
+        var sheet = doc.sheets.find(function (x) {
+            return x.identifier === item.identifier;
+        });
+        var taskIndex = sheet.tasks.findIndex(function (x) {
+            return x._id.toString() === item._id.toString();
+        });
+        if(taskIndex !== -1){
+            sheet.tasks.splice(taskIndex, 1);
+        }
+    });
+
+    doc.save(function (err, sheetsUpdated) {
+        if(err){
+            res.status(500).json(err);
+        } else {
+            // global.io.sockets.emit('sheetTask_updated', { 'body': sheetsUpdated, 'identifier': '' });
+            res.status(200).json(sheetsUpdated);
+        }
+    });
+};
+
+var updateSheetTask = function (req, res, doc) {
+    // req.body is always an array
+    req.body.forEach(function(item){
+        var sheet = doc.sheets.find(function(x){
+            return x.identifier === item.identifier;
+        });
+        var index = sheet.tasks.findIndex(function(x){
+            return x._id.toString() === item._id.toString();
+        });
+        if(index !== -1){
+            sheet.tasks[index] = item;
+        }
+    });
+
+    doc.save(function (err, sheetsUpdated) {
+        if(err){
+            res.status(500).json(err);
+        } else {
+            // global.io.sockets.emit('sheetTask_updated', { 'body': sheetsUpdated, 'identifier': '' });
+            res.status(200).json(sheetsUpdated);
+        }
+    });
+};
+
+var addSheetTask = function(req, res, doc){
+    // req.body is always an array
+    req.body.forEach(function(item){
+        var sheet = doc.sheets.find(function(x){
+            return x.identifier === item.identifier;
+        });
+        sheet.tasks.push(item);
+    });
+
+    doc.save(function (err, sheetsUpdated) {
+        if(err){
+            res.status(500).json(err);
+        } else {
+            // global.io.sockets.emit('sheetTask_updated', { 'body': sheetsUpdated, 'identifier': '' });
+            res.status(200).json(sheetsUpdated);
+        }
+    });
+};
+
 /**
  * Puts sheets with proposed changes into sheetChanges collection,
  * or updates them if they already exist.
@@ -144,10 +211,15 @@ var updateObject = function (req, res, sheets) {
     }
 };
 
+/**
+ * Method used to submit sheet task/changes.
+ * @param req
+ * @param res
+ */
 module.exports.updateChanges = function (req, res) {
     Sheets
         .findById(req.params.id)
-        .select('sheetsChanges')
+        .select('sheets')
         .exec(function (err, doc){
             var response = {
                 status: 200,
@@ -158,10 +230,10 @@ module.exports.updateChanges = function (req, res) {
                 response.message = err;
             } else if(!doc){
                 response.status = 404;
-                response.message = {"message": "SheetsChanges Id not found."}
+                response.message = {"message": "Sheets Id not found."}
             }
             if(doc){
-                updateObject(req, res, doc);
+                addSheetTask(req, res, doc);
             } else {
                 res
                     .status(response.status)
@@ -169,6 +241,60 @@ module.exports.updateChanges = function (req, res) {
             }
         });
 };
+
+module.exports.deleteTasks = function (req, res) {
+    Sheets
+        .findById(req.params.id)
+        .select('sheets')
+        .exec(function (err, doc){
+            var response = {
+                status: 200,
+                message: []
+            };
+            if (err){
+                response.status = 500;
+                response.message = err;
+            } else if(!doc){
+                response.status = 404;
+                response.message = {"message": "Sheets Id not found."}
+            }
+            if(doc){
+                deleteSheetTask(req, res, doc);
+            } else {
+                res
+                    .status(response.status)
+                    .json(response.message);
+            }
+        });
+};
+
+module.exports.updateSheetTask = function (req, res) {
+    Sheets
+        .findById(req.params.id)
+        .select('sheets')
+        .exec(function (err, doc){
+            var response = {
+                status: 200,
+                message: []
+            };
+            if (err){
+                response.status = 500;
+                response.message = err;
+            } else if(!doc){
+                response.status = 404;
+                response.message = {"message": "Sheets Id not found."}
+            }
+            if(doc){
+                updateSheetTask(req, res, doc);
+            } else {
+                res
+                    .status(response.status)
+                    .json(response.message);
+            }
+        });
+};
+
+
 
 /**
  * Removes approved Sheet from staging, and updates collection.

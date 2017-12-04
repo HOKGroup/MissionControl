@@ -79,19 +79,84 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
         }
     };
 
-    vm.editSheet = function (size, sheet) {
+    /**
+     * When user clicks on table row, this will reconsile which dialog should launch.
+     * @param sheet
+     */
+    vm.launchSheetEditor = function(sheet){
+        var selected = vm.allSheets.filter(function(item){
+            return item.isSelected;
+        });
+
+        if(selected.length === 1){
+            if(selected[0] === sheet){
+                sheet.tasks.length > 0 ? vm.showAllTasks('lg', sheet) : vm.editSheet('lg', sheet, 'Add Task')
+            } else {
+                vm.showAllTasks('lg', sheet);
+            }
+        } else if (selected.length === 0){
+            sheet.tasks.length > 0 ? vm.showAllTasks('lg', sheet) : vm.editSheet('lg', sheet, 'Add Task')
+        } else {
+            vm.showAllTasks('lg', sheet);
+        }
+    };
+
+    /**
+     * Shows all tasks created for this sheet.
+     * @param size
+     * @param sheet
+     */
+    vm.showAllTasks = function (size, sheet) {
         $uibModal.open({
             animation: true,
-            templateUrl: 'editSingleSheet',
-            controller: modalEditSheetCtrl,
+            templateUrl: 'angular-app/sheets/all-tasks.html',
+            controller: 'AllTasksController as vm',
             size: size,
             resolve: {
-                sheet: function () {
+                sheet: function (){
                     return sheet;
-                }
-            }
-        }).result.then(function(){
-            //after modal succeeded
+                }}
+        }).result.then(function(request){
+            if(!request) return;
+
+            var updatedSheet = request.response.data.sheets.find(function(item){
+                return item.identifier === sheet.identifier;
+            });
+            sheet.tasks = updatedSheet.tasks;
+
+            console.log("Event called when all tasks get closed...")
+
+        }).catch(function(){
+            //if modal dismissed
+        });
+    };
+
+    /**
+     * Method called when single sheet is being edited.
+     * @param size
+     * @param sheet
+     * @param action
+     */
+    vm.editSheet = function(size, sheet, action){
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'angular-app/sheets/edit-sheet.html',
+            controller: 'EditSheetController as vm',
+            size: size,
+            resolve: {
+                action: function () {
+                    return action;
+                },
+                sheet: function (){
+                    return sheet;
+                }}
+        }).result.then(function(request){
+            if(!request) return;
+
+            var updatedSheet = request.response.data.sheets.find(function(item){
+                return item.identifier === sheet.identifier;
+            });
+            sheet.tasks = updatedSheet.tasks;
         }).catch(function(){
             //if modal dismissed
         });
@@ -143,224 +208,93 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
         });
     };
 
-    vm.editMultipleSheets = function (size, sheets) {
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'editMultipleSheets',
-            controller: modalEditMultipleSheetsCtrl,
-            size: size,
-            resolve: {
-                sheets: function () {
-                    return sheets;
-                }
+    // vm.editMultipleSheets = function (size, sheets) {
+    //     $uibModal.open({
+    //         animation: true,
+    //         templateUrl: 'editMultipleSheets',
+    //         controller: modalEditMultipleSheetsCtrl,
+    //         size: size,
+    //         resolve: {
+    //             sheets: function () {
+    //                 return sheets;
+    //             }
+    //         }
+    //     }).result.then(function(){
+    //         //after modal succeeded
+    //     }).catch(function(){
+    //         //if modal dismissed
+    //     });
+    // };
+
+    // var modalEditMultipleSheetsCtrl = function ($scope, $uibModalInstance, $uibModal, sheets) {
+    //     $scope.sheets = sheets;
+    //     $scope.name;
+    //
+    //     $scope.cancel = function () {
+    //         $uibModalInstance.dismiss('cancel');
+    //     };
+    //
+    //     $scope.submit = function () {
+    //         //(Konrad) Since sheets can come from different models, they also can
+    //         // be stored in different collections we need to group them by collectionId
+    //         var groups = {};
+    //         vm.selectedItems.forEach(function(item){
+    //             item.name = $scope.name; // update sheet name
+    //             var list = groups[item.collectionId];
+    //             if(list){
+    //                 list.push(item);
+    //             } else {
+    //                 groups[item.collectionId] = [item]
+    //             }
+    //         });
+    //
+    //         for (var collection in groups){
+    //             var sheets = groups[collection];
+    //             SheetsFactory
+    //                 .updateChanges(collection, sheets)
+    //                 .then(function (sheetResponse) {
+    //                     if(!sheetResponse) return;
+    //                 }, function (err) {
+    //                     console.log('Unable to update Multiple Sheets: ' + err.message);
+    //                 });
+    //         }
+    //
+    //         $uibModalInstance.close();
+    //     }
+    // };
+
+    /**
+     * Assigns proper row class to table.
+     * @param sheet
+     * @returns {string}
+     * @constructor
+     */
+    vm.AssignClass = function (sheet) {
+        if(sheet.tasks.length > 0){
+            var task = sheet.tasks[sheet.tasks.length - 1]; // latest task is the last one
+            if(task.isDeleted){
+                return 'bg-danger strike';
+            } else {
+                return 'bg-warning';
             }
-        }).result.then(function(){
-            //after modal succeeded
-        }).catch(function(){
-            //if modal dismissed
-        });
-    };
-
-    var modalEditMultipleSheetsCtrl = function ($scope, $uibModalInstance, $uibModal, sheets) {
-        $scope.sheets = sheets;
-        $scope.name;
-
-        $scope.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
-        };
-
-        $scope.submit = function () {
-            //(Konrad) Since sheets can come from different models, they also can
-            // be stored in different collections we need to group them by collectionId
-            var groups = {};
-            vm.selectedItems.forEach(function(item){
-                item.name = $scope.name; // update sheet name
-                var list = groups[item.collectionId];
-                if(list){
-                    list.push(item);
-                } else {
-                    groups[item.collectionId] = [item]
-                }
-            });
-
-            for (var collection in groups){
-                var sheets = groups[collection];
-                SheetsFactory
-                    .updateChanges(collection, sheets)
-                    .then(function (sheetResponse) {
-                        if(!sheetResponse) return;
-                    }, function (err) {
-                        console.log('Unable to update Multiple Sheets: ' + err.message);
-                    });
-            }
-
-            $uibModalInstance.close();
+        } else {
+            return 'table-info';
         }
     };
 
     /**
-     * Edit Sheet Modal Controller.
-     * @param $scope
-     * @param $uibModalInstance
-     * @param $uibModal
+     * If row/sheet has tasks it will assign proper values to name/number/revision.
      * @param sheet
+     * @param propName
+     * @returns {*}
+     * @constructor
      */
-    var modalEditSheetCtrl = function ($scope, $uibModalInstance, $uibModal, sheet) {
-        $scope.sheet = sheet;
-
-        $scope.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
-        };
-
-        /**
-         * Method called when Edit Sheet is submitted.
-         */
-        $scope.submit = function () {
-            SheetsFactory
-                .updateChanges($scope.sheet.collectionId, $scope.sheet)
-                .then(function(sheetResponse){
-                    if(!sheetResponse) return;
-
-                    // (Konrad) If I am editing a new sheet, the identifier will be '';
-                    // We won't be able to just override it, so we need to track it down somehow.
-                    if($scope.sheet.identifier === '')
-                    {
-                        for (var property in vm.changed) {
-                            if (vm.changed.hasOwnProperty(property)) {
-                                var item = vm.changed[property];
-                                if(item.identifier === '' && item.name === $scope.sheet.name && item.number === $scope.sheet.number){
-                                    item = $scope.sheet;
-                                }
-                            }
-                        }
-                    } else {
-                        vm.changed[$scope.sheet.identifier] = $scope.sheet;
-                    }
-
-            }, function (err) {
-                console.log('Unable to update Single Sheet: ' + err.message)
-            });
-
-            $uibModalInstance.close();
-        };
-
-        $scope.isChanged = function() {
-            return $scope.sheet.identifier in vm.changed;
-        };
-
-        /**
-         * This method gets called when user decides to clear changes from a sheet.
-         * If sheet that this method is called on is new sheet, then it will be deleted.
-         */
-        $scope.clear = function () {
-            if($scope.sheet.identifier === '')
-            {
-                SheetsFactory
-                    .deleteNewSheet($scope.sheet.collectionId, $scope.sheet)
-                    .then(function (deleteResponse) {
-                        if(!deleteResponse) return;
-
-                        var changedIndex = Object.keys(vm.changed).map(function (key) { return vm.changed[key]; }).findIndex(function(item){
-                            return item.identifier === '' && item.name === $scope.sheet.name && item.number === $scope.sheet.number;
-                        });
-
-                        if(changedIndex !== -1) delete vm.changed[changedIndex];
-
-                        var tableIndex = vm.allSheets.findIndex(function (item) {
-                            return item.identifier === '' && item.name === $scope.sheet.name && item.number === $scope.sheet.number;
-                        });
-                        delete vm.allSheets[tableIndex];
-                    })
-            } else {
-                if(vm.changed[$scope.sheet.identifier]){
-                    SheetsFactory
-                        .deleteChanges($scope.sheet.collectionId, $scope.sheet)
-                        .then(function(response){
-                            if(!response) return;
-
-                            // (Konrad) These two props were added at runtime. Used for filtering and posting to DB
-                            var fileName = vm.changed[$scope.sheet.identifier].fileName;
-                            var collectionId = vm.changed[$scope.sheet.identifier].collectionId;
-
-                            // (Konrad) Add sheet to vm.allSheets to add unchanged to table.
-                            var originalSheet = response.data.sheets.find(function (item){
-                                return item.identifier === $scope.sheet.identifier;
-                            });
-                            originalSheet['collectionId'] = collectionId;
-                            originalSheet['fileName'] = fileName;
-
-                            var index = vm.allSheets.findIndex(function (item) {
-                                return item.identifier === $scope.sheet.identifier;
-                            });
-                            if(index !== -1) vm.allSheets[index] = originalSheet;
-
-                            // (Konrad) Remove sheet from changed collection.
-                            // That will clear filter override for table.
-                            delete vm.changed[$scope.sheet.identifier];
-
-                        }, function (error) {
-                            console.log('Unable to delete staged changes.' + error.message);
-                        });
-                } else {
-                    // (Konrad) There might be some changes made on screen but not submitted to DB. Let's clear that.
-                    // TODO: Do we need to implement something here?
-                }
-            }
-
-            $uibModalInstance.close();
-
-            // (Konrad) For some reason after the sheet is deleted the vm.allSheets variable
-            // becomes undefined. The only way to validate it is to reload the whole page.
-            $route.reload();
-        };
-
-        /**
-         * Method called when sheet is marked for deletion.
-         */
-        $scope.delete = function () {
-            $scope.sheet.isDeleted = true;
-            SheetsFactory
-                .updateChanges($scope.sheet.collectionId, $scope.sheet)
-                .then(function(response){
-                    if(!response) return;
-
-                    // (Konrad) If I am editing a new sheet, the identifier will be '';
-                    // We won't be able to just override it, so we need to track it down somehow.
-                    if($scope.sheet.identifier === '')
-                    {
-                        for (var property in vm.changed) {
-                            if (vm.changed.hasOwnProperty(property)) {
-                                var item = vm.changed[property];
-                                if(item.identifier === '' && item.name === $scope.sheet.name && item.number === $scope.sheet.number){
-                                    item = $scope.sheet;
-                                }
-                            }
-                        }
-                    } else {
-                        vm.changed[$scope.sheet.identifier] = $scope.sheet;
-                    }
-
-                }, function (err) {
-                    console.log('Unable to update Single Sheet: ' + err.message)
-                });
-
-            $uibModalInstance.close();
-        };
-    };
-
-    /**
-     * Checks if given sheet exists in vm.changed. Used by UI to style rows.
-     * @returns {boolean}
-     * @param sheet
-     */
-    vm.isChanged = function (sheet) {
-        var id = sheet.identifier;
-        if(id in vm.changed){
-            if(vm.changed[id].isDeleted) return 'bg-danger strike';
-            else if(id === '') return 'bg-success'; // new sheets don't have identifier yet.
-            else return 'bg-warning'
+    vm.AssignDisplayValue = function (sheet, propName) {
+        if(sheet.tasks.length > 0){
+            var task = sheet.tasks[sheet.tasks.length - 1]; // latest task is the last one
+            return task[propName];
         } else {
-            return 'table-info'
+            return sheet[propName];
         }
     };
 
@@ -383,39 +317,21 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
                             if(!sheetsResponse) return;
 
                             vm.selectedProject = sheetsResponse.data;
-                            vm.changed = {}; // stores sheets with proposed changes (changes/deletions).
-                            vm.allSheets = []; // stores all sheets currently in table.
-                            // TODO: We can probably get rid of that and just stick to filter and isSelected
-                            vm.checklist = {}; // stores sheets used for checking/unchecking
-                            vm.sheets = {}; // stores all sheets originally pulled from db.
+                            vm.allSheets = [];
+                            vm.selectedProject.sheets.forEach(function (item) {
 
-                            vm.selectedProject.sheets.forEach(function(item){
                                 // (Konrad) Select all model names for filtering.
-                                vm.availableModels.push(
-                                    {
-                                        name: UtilityService.fileNameFromPath(item.centralPath),
-                                        collectionId: item._id
-                                    }
-                                );
-
-                                item.sheetsChanges.forEach(function(changed){
-                                    changed['collectionId'] = item._id; // needed to identify what MongoDB collection item belongs to
-                                    changed['fileName'] = UtilityService.fileNameFromPath(item.centralPath); // used by the model filter
-                                    vm.changed[changed.identifier] = changed;
-                                    vm.checklist[changed.identifier] = changed;
-                                    vm.allSheets.push(changed);
+                                vm.availableModels.push({
+                                    name: UtilityService.fileNameFromPath(item.centralPath),
+                                    collectionId: item._id
                                 });
-                                item.sheets.forEach(function(sheet){
+
+                                // (Konrad) Assign CollectionId and File Name to all sheets.
+                                item.sheets.forEach(function (sheet) {
                                     sheet['collectionId'] = item._id;
                                     sheet['fileName'] = UtilityService.fileNameFromPath(item.centralPath);
-                                    vm.sheets[sheet.identifier] = sheet;
-                                    if(sheet.identifier in vm.changed){
-                                        // ignored
-                                    } else {
-                                        vm.checklist[sheet.identifier] = sheet; // add rest of elements that were not changed yet
-                                        vm.allSheets.push(sheet)
-                                    }
-                                });
+                                    vm.allSheets.push(sheet);
+                                })
                             });
                             if(vm.availableModels.length > 0) vm.selectedModel = vm.availableModels[0];
                         }, function (error) {

@@ -204,6 +204,10 @@ textarea {
   text-decoration: line-through;
 }
 
+.strike label{
+  text-decoration: line-through;
+}
+
 /*For Add Sheet custom operator buttons*/
 .nohover:hover{
   background-color: initial;

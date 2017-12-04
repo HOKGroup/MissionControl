@@ -31,6 +31,14 @@ function SheetsFactory($http){
 
         deleteChanges: function deleteChanges(id, sheet) {
             return $http.put('/api/v1/sheets/'+ id + '/deletechanges', sheet).then(complete).catch(failed);
+        },
+
+        deleteTasks: function deleteTasks(id, tasks) {
+            return $http.post('/api/v1/sheets/'+ id + '/deletetasks', tasks).then(complete).catch(failed);
+        },
+
+        updateTasks: function updateTasks(id, tasks) {
+            return $http.post('/api/v1/sheets/'+ id + '/updateTasks', tasks).then(complete).catch(failed);
         }
     };
 

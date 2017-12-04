@@ -93,4 +93,6 @@ var sheets = require('./models/sheets-model');
      app.post('/api/v1/sheets/:id/sheetchanges/approvenewsheet', sheets.approveNewSheets);
      app.put('/api/v1/sheets/:id/deletechanges', sheets.deleteChanges);
      app.post('/api/v1/sheets/:id/deletechanges/deletenewsheet', sheets.deleteNewSheet);
+     app.post('/api/v1/sheets/:id/deletetasks', sheets.deleteTasks);
+     app.post('/api/v1/sheets/:id/updatetasks', sheets.updateSheetTask);
   };
