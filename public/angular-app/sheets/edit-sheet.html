@@ -1,0 +1,57 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title pull-left">{{vm.title}}</h5>
+        <button type="button" class="close pull-right" ng-click="vm.cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">{{vm.sheet.number}} - {{vm.sheet.name}}</h4>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div ng-class="vm.isChanged('number') ? 'form-group has-warning' : 'form-group'">
+                        <label for="sheet_name" class="control-label">Sheet Number:</label>
+                        <input type="text" class="form-control" id="sheet_name" value="vm.sheet.number" ng-model="vm.sheet.number" ng-disabled="vm.sheet.completedBy">
+                    </div>
+                    <div ng-class="vm.isChanged('name') ? 'form-group has-warning' : 'form-group'">
+                        <label for="sheet_number" class="control-label">Sheet Name:</label>
+                        <input type="text" class="form-control" id="sheet_number" value="vm.sheet.name" ng-model="vm.sheet.name" ng-disabled="vm.sheet.completedBy">
+                    </div>
+                    <div class="col-md-6 no-padding-left">
+                        <div class="form-group">
+                            <label for="sheet_revision" class="form-control-label">Current Revision:</label>
+                            <input type="text" class="form-control" id="sheet_revision" value="vm.sheet.revisionNumber" ng-model="vm.sheet.revisionNumber" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6 no-padding-right">
+                        <div class="form-group">
+                            <label for="recipient_name" class="form-control-label">
+                                Recipient:
+                                <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.sheet.assignedTo"></span>
+                                <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.sheet.assignedTo"></span>
+                            </label>
+                            <input type="text" name="recipient" id="recipient_name" class="form-control" value="{{vm.sheet.assignedTo}}" ng-model="vm.sheet.assignedTo" ng-disabled="vm.sheet.completedBy" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message_text" class="form-control-label">
+                            Message:
+                            <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.sheet.message"></span>
+                            <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.sheet.message"></span>
+                        </label>
+                        <textarea id="message_text" class="form-control" ng-model="vm.sheet.message" ng-disabled="vm.sheet.completedBy" required></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
+        <button type="button" class="btn btn-primary" ng-disabled="!vm.sheet.message || !vm.sheet.assignedTo" ng-click="vm.submit()" ng-if="!vm.sheet.completedBy"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+        <button type="button" class="btn btn-primary" ng-click="vm.reopen()" ng-if="vm.sheet.completedBy">Re-Open</button>
+        <button type="button" class="btn btn-danger pull-left" ng-disabled="!vm.sheet.message || !vm.sheet.assignedTo" ng-click="vm.delete()"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+    </div>
+</div>
