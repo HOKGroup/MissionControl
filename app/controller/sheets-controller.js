@@ -52,171 +52,12 @@ module.exports.findByCentralPath = function(req, res){
         )
 };
 
-var deleteSheetTask = function (req, res, doc) {
-    // req.body is always an array
-    req.body.forEach(function (item) {
-        var sheet = doc.sheets.find(function (x) {
-            return x.identifier === item.identifier;
-        });
-        var taskIndex = sheet.tasks.findIndex(function (x) {
-            return x._id.toString() === item._id.toString();
-        });
-        if(taskIndex !== -1){
-            sheet.tasks.splice(taskIndex, 1);
-        }
-    });
-
-    doc.save(function (err, sheetsUpdated) {
-        if(err){
-            res.status(500).json(err);
-        } else {
-            // global.io.sockets.emit('sheetTask_updated', { 'body': sheetsUpdated, 'identifier': '' });
-            res.status(200).json(sheetsUpdated);
-        }
-    });
-};
-
-var updateSheetTask = function (req, res, doc) {
-    // req.body is always an array
-    req.body.forEach(function(item){
-        var sheet = doc.sheets.find(function(x){
-            return x.identifier === item.identifier;
-        });
-        var index = sheet.tasks.findIndex(function(x){
-            return x._id.toString() === item._id.toString();
-        });
-        if(index !== -1){
-            sheet.tasks[index] = item;
-        }
-    });
-
-    doc.save(function (err, sheetsUpdated) {
-        if(err){
-            res.status(500).json(err);
-        } else {
-            // global.io.sockets.emit('sheetTask_updated', { 'body': sheetsUpdated, 'identifier': '' });
-            res.status(200).json(sheetsUpdated);
-        }
-    });
-};
-
-var addSheetTask = function(req, res, doc){
-    // req.body is always an array
-    req.body.forEach(function(item){
-        var sheet = doc.sheets.find(function(x){
-            return x.identifier === item.identifier;
-        });
-        sheet.tasks.push(item);
-    });
-
-    doc.save(function (err, sheetsUpdated) {
-        if(err){
-            res.status(500).json(err);
-        } else {
-            // global.io.sockets.emit('sheetTask_updated', { 'body': sheetsUpdated, 'identifier': '' });
-            res.status(200).json(sheetsUpdated);
-        }
-    });
-};
-
-/**
- * Puts sheets with proposed changes into sheetChanges collection,
- * or updates them if they already exist.
- * @param req
- * @param res
- * @param sheets
- */
-var updateObject = function (req, res, sheets) {
-    if(!Array.isArray(req.body)){
-        // single sheet edit
-        var newObject = {
-            name: req.body.name,
-            number: req.body.number,
-            revisionNumber: req.body.revisionNumber,
-            uniqueId: req.body.uniqueId,
-            identifier: req.body.identifier,
-            assignedTo: req.body.assignedTo,
-            message: req.body.message,
-            isDeleted: req.body.isDeleted
-        };
-
-        if(sheets.sheetsChanges.length === 0){
-            sheets.sheetsChanges.push(newObject);
-        } else {
-            var index = sheets.sheetsChanges.findIndex(function(item){
-                return item.identifier === req.body.identifier;
-            });
-            if(index !== -1){
-                sheets.sheetsChanges[index].name = req.body.name;
-                sheets.sheetsChanges[index].number = req.body.number;
-                sheets.sheetsChanges[index].revisionNumber = req.body.revisionNumber;
-                sheets.sheetsChanges[index].identifier = req.body.identifier;
-                sheets.sheetsChanges[index].assignedTo = req.body.assignedTo;
-                sheets.sheetsChanges[index].message = req.body.message;
-                sheets.sheetsChanges[index].isDeleted = req.body.isDeleted;
-            } else {
-                sheets.sheetsChanges.push(newObject)
-            }
-        }
-
-        sheets.save(function (err, sheetsUpdated) {
-            if(err){
-                res.status(500).json(err);
-            } else {
-                global.io.sockets.emit('sheetTask_updated', { 'body': sheetsUpdated, 'identifier': req.body.identifier });
-                res.status(200).json(sheetsUpdated);
-            }
-        });
-    } else {
-        req.body.forEach(function(item){
-            // multiple sheet edit
-            // TODO: Is it necessary to create new object here? Doesn't item already have all the required properties?
-            var newObject = {
-                name: item.name,
-                number: item.number,
-                revisionNumber: item.revisionNumber,
-                uniqueId: item.uniqueId,
-                identifier: item.identifier,
-                assignedTo: item.assignedTo,
-                message: item.message,
-                isDeleted: item.isDeleted
-            };
-
-            var index = sheets.sheetsChanges.findIndex(function(x){
-                if(item.identifier.length === 0) return false;
-                else return x.identifier === item.identifier;
-            });
-
-            if(index !== -1){
-                sheets.sheetsChanges[index].name = item.name;
-                sheets.sheetsChanges[index].number = item.number;
-                sheets.sheetsChanges[index].revisionNumber = item.revisionNumber;
-                sheets.sheetsChanges[index].identifier = item.identifier;
-                sheets.sheetsChanges[index].assignedTo = item.assignedTo;
-                sheets.sheetsChanges[index].message = item.message;
-                sheets.sheetsChanges[index].isDeleted = item.isDeleted;
-            } else {
-                sheets.sheetsChanges.push(newObject)
-            }
-        });
-
-        sheets.save(function (err, sheetsUpdated) {
-            if(err){
-                res.status(500).json(err);
-            } else {
-                global.io.sockets.emit('sheetTask_updated', { 'body': sheetsUpdated, 'identifier': '' });
-                res.status(200).json(sheetsUpdated);
-            }
-        });
-    }
-};
-
 /**
  * Method used to submit sheet task/changes.
  * @param req
  * @param res
  */
-module.exports.updateChanges = function (req, res) {
+module.exports.addSheetTask = function (req, res) {
     Sheets
         .findById(req.params.id)
         .select('sheets')
@@ -235,11 +76,26 @@ module.exports.updateChanges = function (req, res) {
             if(doc){
                 addSheetTask(req, res, doc);
             } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
+                res.status(response.status).json(response.message);
             }
         });
+};
+
+var addSheetTask = function(req, res, doc){
+    var sheet = doc.sheets.find(function(x){
+        return x.identifier === req.body.identifier;
+    });
+    delete req.body._id; // make sure that _id is re-generated
+    sheet.tasks.push(req.body);
+
+    doc.save(function (err, sheetsUpdated) {
+        if(err){
+            res.status(500).json(err);
+        } else {
+            global.io.sockets.emit('sheetTask_added', { 'body': sheetsUpdated, 'identifier': req.body.identifier });
+            res.status(200).json(sheetsUpdated);
+        }
+    });
 };
 
 module.exports.deleteTasks = function (req, res) {
@@ -261,11 +117,36 @@ module.exports.deleteTasks = function (req, res) {
             if(doc){
                 deleteSheetTask(req, res, doc);
             } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
+                res.status(response.status).json(response.message);
             }
         });
+};
+
+var deleteSheetTask = function (req, res, doc) {
+    // req.body is always an array
+    var sheet = doc.sheets.find(function (x) {
+        return x.identifier === req.body[0].identifier;
+    });
+
+    var deleted = [];
+    req.body.forEach(function (item) {
+        var taskIndex = sheet.tasks.findIndex(function (x) {
+            return x._id.toString() === item._id.toString();
+        });
+        if(taskIndex !== -1){
+            sheet.tasks.splice(taskIndex, 1);
+            deleted.push(item._id.toString());
+        }
+    });
+
+    doc.save(function (err, sheetsUpdated) {
+        if(err){
+            res.status(500).json(err);
+        } else {
+            global.io.sockets.emit('sheetTask_deleted', {'identifier': req.body[0].identifier, "deleted": deleted });
+            res.status(200).json(sheetsUpdated);
+        }
+    });
 };
 
 module.exports.updateSheetTask = function (req, res) {
@@ -287,13 +168,31 @@ module.exports.updateSheetTask = function (req, res) {
             if(doc){
                 updateSheetTask(req, res, doc);
             } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
+                res.status(response.status).json(response.message);
             }
         });
 };
 
+var updateSheetTask = function (req, res, doc) {
+    var sheet = doc.sheets.find(function(x){
+        return x.identifier === req.body.identifier;
+    });
+    var index = sheet.tasks.findIndex(function(x){
+        return x._id.toString() === req.body._id.toString();
+    });
+    if(index !== -1){
+        sheet.tasks[index] = req.body;
+    }
+
+    doc.save(function (err, sheetsUpdated) {
+        if(err){
+            res.status(500).json(err);
+        } else {
+            global.io.sockets.emit('sheetTask_updated', { 'body': sheetsUpdated, 'identifier': req.body.identifier, '_id': req.body._id.toString()});
+            res.status(200).json(sheetsUpdated);
+        }
+    });
+};
 
 
 /**
@@ -534,6 +433,19 @@ module.exports.deleteNewSheet = function (req, res) {
                 res
                     .status(response.status)
                     .json(response.message);
+            }
+        });
+};
+
+module.exports.update = function(req, res) {
+    var id = req.params.id;
+
+    Sheets
+        .update({_id: id}, req.body, {upsert: true}, function (err, result){
+            if(err) {
+                res.status(400).json(err);
+            } else {
+                res.status(202).json(result);
             }
         });
 };

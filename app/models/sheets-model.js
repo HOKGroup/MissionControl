@@ -12,6 +12,9 @@ var sheetItemSchema = new mongoose.Schema({
     identifier: String, // Unique identifier for sheet across models. CentralPath + UniqueId
     isPlaceholder: Boolean,
     isDeleted: Boolean,
+    collectionId: String, // id of the MongoDB collection for quicker retrieval
+    centralPath: String, // central path of the model that sheet belongs to
+    fileName: String, // file name of the central model for filtering UI
     tasks: [{
         name: String,
         number: String,
@@ -21,7 +24,9 @@ var sheetItemSchema = new mongoose.Schema({
         identifier: String,
         isPlaceholder: Boolean,
         isDeleted: Boolean,
-
+        collectionId: String, // id of the MongoDB collection for quicker retrieval
+        centralPath: String, // central path of the model that sheet belongs to
+        fileName: String, // file name of the central model for filtering UI
         assignedTo: String,
         message: String,
         comments: String,

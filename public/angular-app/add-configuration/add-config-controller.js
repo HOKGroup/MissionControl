@@ -77,7 +77,7 @@ function AddConfigController($routeParams, ConfigFactory, $window){
         var updater_ca =
             {
                 updaterId: 'C2C658D7-EC43-4721-8D2C-2B8C10C340E2',
-                updaterName: 'CA Door',
+                updaterName: 'California Door',
                 description: 'This tool will monitor door families to apply proper door clearance values following ADA standards for accessible design.',
                 addInId: '9C4D37B2-155D-4AC8-ACCF-383D86673F1C',
                 addInName: 'Mission Control',
@@ -123,7 +123,7 @@ function AddConfigController($routeParams, ConfigFactory, $window){
                 description: 'This tool will prevent users from Unloading Linked Revit files for "all users" which causes such Linked File to be unloaded by default when opening project.',
                 addInId: '9C4D37B2-155D-4AC8-ACCF-383D86673F1C',
                 addInName: 'Mission Control',
-                isUpdaterOn: false
+                isUpdaterOn: true
             };
 
         var updater_healthRecords = {

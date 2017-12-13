@@ -17,7 +17,7 @@ function SheetsFactory($http){
             return $http.post('/api/v1/sheets', sheetsData).then(complete).catch(failed);
         },
 
-        updateChanges: function updateChanges(id, sheet) {
+        addSheetTask: function addSheetTask(id, sheet) {
             return $http.post('/api/v1/sheets/' + id + '/sheetchanges', sheet).then(complete).catch(failed);
         },
 
@@ -38,7 +38,7 @@ function SheetsFactory($http){
         },
 
         updateTasks: function updateTasks(id, tasks) {
-            return $http.post('/api/v1/sheets/'+ id + '/updateTasks', tasks).then(complete).catch(failed);
+            return $http.post('/api/v1/sheets/'+ id + '/updatetasks', tasks).then(complete).catch(failed);
         }
     };
 

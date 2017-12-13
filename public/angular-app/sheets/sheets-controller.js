@@ -265,6 +265,9 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
 
     /**
      * Assigns proper row class to table.
+     * Red if sheet was marked for deletion.
+     * Orange if it was edited.
+     * Green if it was added.
      * @param sheet
      * @returns {string}
      * @constructor
@@ -272,6 +275,7 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
     vm.AssignClass = function (sheet) {
         if(sheet.tasks.length > 0){
             var task = sheet.tasks[sheet.tasks.length - 1]; // latest task is the last one
+            if(task.completedBy) return 'table-info';
             if(task.isDeleted){
                 return 'bg-danger strike';
             } else {
@@ -292,7 +296,8 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
     vm.AssignDisplayValue = function (sheet, propName) {
         if(sheet.tasks.length > 0){
             var task = sheet.tasks[sheet.tasks.length - 1]; // latest task is the last one
-            return task[propName];
+            if(!task.completedBy) return task[propName]; // only return task props when task is not completed
+            else return sheet[propName];
         } else {
             return sheet[propName];
         }
@@ -328,9 +333,10 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
 
                                 // (Konrad) Assign CollectionId and File Name to all sheets.
                                 item.sheets.forEach(function (sheet) {
-                                    sheet['collectionId'] = item._id;
-                                    sheet['fileName'] = UtilityService.fileNameFromPath(item.centralPath);
-                                    vm.allSheets.push(sheet);
+                                    if(!sheet.isDeleted){
+                                        sheet['collectionId'] = item._id;
+                                        vm.allSheets.push(sheet);
+                                    }
                                 })
                             });
                             if(vm.availableModels.length > 0) vm.selectedModel = vm.availableModels[0];

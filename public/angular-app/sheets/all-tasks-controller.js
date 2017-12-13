@@ -37,7 +37,7 @@ function AllTasksController($uibModalInstance, $uibModal, SheetsFactory, sheet) 
      */
     vm.editSheet = function(size, sheet, action){
         $uibModalInstance.dismiss('cancel');
-        sheet['collectionId'] = vm.sheet.collectionId;
+        // sheet['collectionId'] = vm.sheet.collectionId;
         $uibModal.open({
             animation: true,
             templateUrl: 'angular-app/sheets/edit-sheet.html',
