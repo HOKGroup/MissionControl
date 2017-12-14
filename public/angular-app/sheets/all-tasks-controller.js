@@ -32,12 +32,13 @@ function AllTasksController($uibModalInstance, $uibModal, SheetsFactory, sheet) 
     /**
      * Edit single sheet.
      * @param size
-     * @param sheet
+     * @param task
      * @param action
      */
-    vm.editSheet = function(size, sheet, action){
+    vm.editSheetTask = function(size, task, action){
+        task['sheetId'] = vm.sheet._id; // adds sheet _id so we can find what sheet task belongs to later
+
         $uibModalInstance.dismiss('cancel');
-        // sheet['collectionId'] = vm.sheet.collectionId;
         $uibModal.open({
             animation: true,
             templateUrl: 'angular-app/sheets/edit-sheet.html',
@@ -48,7 +49,7 @@ function AllTasksController($uibModalInstance, $uibModal, SheetsFactory, sheet) 
                     return action;
                 },
                 sheet: function (){
-                    return sheet;
+                    return task;
                 }}
         }).result.then(function(request){
             if(!request) return;

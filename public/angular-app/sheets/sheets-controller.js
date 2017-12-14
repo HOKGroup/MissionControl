@@ -178,26 +178,28 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
             }}
         }).result.then(function(request){
             if(!request) return;
-
+            console.log(request.sheets);
             SheetsFactory
                 .addSheets(request.collectionId, request.sheets)
                 .then(function (sheetResponse) {
                     if(!sheetResponse) return;
+                    console.log(sheetResponse);
 
-                    var file = vm.availableModels.find(function(item){
-                        return item.collectionId === request.collectionId;
-                    });
-
-                    // (Konrad) Push it into vm.changed and vm.allSheets
-                    for(var i=0; i < request.sheets.length; i++){
-                        var newSheet = request.sheets[i];
-                        newSheet['collectionId'] = request.collectionId; // needed to identify what MongoDB collection item belongs to
-                        newSheet['fileName'] = file.name; // used by the model filter
-
-                        // (Konrad) We are adding multiple items with '' id.
-                        vm.changed[newSheet.identifier] = newSheet;
-                        vm.allSheets.push(newSheet);
-                    }
+                    //TODO
+                    // var file = vm.availableModels.find(function(item){
+                    //     return item.collectionId === request.collectionId;
+                    // });
+                    //
+                    // // (Konrad) Push it into vm.changed and vm.allSheets
+                    // for(var i=0; i < request.sheets.length; i++){
+                    //     var newSheet = request.sheets[i];
+                    //     newSheet['collectionId'] = request.collectionId; // needed to identify what MongoDB collection item belongs to
+                    //     newSheet['fileName'] = file.name; // used by the model filter
+                    //
+                    //     // (Konrad) We are adding multiple items with '' id.
+                    //     vm.changed[newSheet.identifier] = newSheet;
+                    //     vm.allSheets.push(newSheet);
+                    // }
 
                 }, function (err) {
                     console.log('Unable to create Multiple Sheets: ' + err.message);
@@ -272,17 +274,18 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
      * @returns {string}
      * @constructor
      */
-    vm.AssignClass = function (sheet) {
+    vm.assignClass = function (sheet) {
         if(sheet.tasks.length > 0){
             var task = sheet.tasks[sheet.tasks.length - 1]; // latest task is the last one
-            if(task.completedBy) return 'table-info';
+            if(task.completedBy) return 'table-info'; // task was completed no formatting
+            if(task.identifier === '') return 'bg-success'; // new sheet (green)
             if(task.isDeleted){
-                return 'bg-danger strike';
+                return 'bg-danger strike'; // sheet was deleted (red)
             } else {
-                return 'bg-warning';
+                return 'bg-warning'; // sheet was changed (orange)
             }
         } else {
-            return 'table-info';
+            return 'table-info'; // no changes
         }
     };
 
@@ -293,13 +296,36 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
      * @returns {*}
      * @constructor
      */
-    vm.AssignDisplayValue = function (sheet, propName) {
+    vm.assignDisplayValue = function (sheet, propName) {
         if(sheet.tasks.length > 0){
             var task = sheet.tasks[sheet.tasks.length - 1]; // latest task is the last one
             if(!task.completedBy) return task[propName]; // only return task props when task is not completed
             else return sheet[propName];
         } else {
             return sheet[propName];
+        }
+    };
+
+    /**
+     * It's possible that change was approved and stored in DB, but user hasn't sycnhed
+     * to central yet, so actual sheet data was not updated with changes causing a mismatch.
+     * This will display an alert icon next to it to notify users of such occurrences.
+     * @return {boolean}
+     */
+    vm.propertiesMatch = function (sheet) {
+        if(sheet.tasks.length > 0){
+            var task = sheet.tasks[sheet.tasks.length - 1];
+            if(task.completedBy){
+                var nameMatch = task.name === sheet.name;
+                var numberMatch = task.number === sheet.number;
+                var revMatch = task.revisionNumber === sheet.revisionNumber;
+                var deleted = task.isDeleted === sheet.isDeleted;
+                return !(nameMatch && numberMatch && revMatch && deleted);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     };
 
@@ -328,10 +354,11 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
                                 // (Konrad) Select all model names for filtering.
                                 vm.availableModels.push({
                                     name: UtilityService.fileNameFromPath(item.centralPath),
-                                    collectionId: item._id
+                                    collectionId: item._id,
+                                    centralPath: item.centralPath
                                 });
 
-                                // (Konrad) Assign CollectionId and File Name to all sheets.
+                                // (Konrad) Assign CollectionId to all sheets.
                                 item.sheets.forEach(function (sheet) {
                                     if(!sheet.isDeleted){
                                         sheet['collectionId'] = item._id;

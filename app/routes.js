@@ -88,7 +88,7 @@ var sheets = require('./models/sheets-model');
      app.post('/api/v1/sheets', sheets.add);
      app.get('/api/v1/sheets/centralpath/:uri*', sheets.findByCentralPath);
      app.post('/api/v1/sheets/:id/sheetchanges', sheets.addSheetTask);
-     app.post('/api/v1/sheets/:id/sheetchanges/addsheets', sheets.addSheets);
+     app.post('/api/v1/sheets/:id/addsheets', sheets.addSheets);
      app.post('/api/v1/sheets/:id/sheetchanges/approve', sheets.approveChanges);
      app.post('/api/v1/sheets/:id/sheetchanges/approvenewsheet', sheets.approveNewSheets);
      app.put('/api/v1/sheets/:id/deletechanges', sheets.deleteChanges);

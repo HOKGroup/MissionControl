@@ -17,7 +17,8 @@ function AddSheetController($uibModalInstance, UtilityService, models) {
     vm.template = {
         count: 1,
         assignedTo: '',
-        isPlaceholder: false
+        isPlaceholder: false,
+        message: ''
     };
     vm.popoverOptions = {
         placement: 'right',
@@ -186,6 +187,9 @@ function AddSheetController($uibModalInstance, UtilityService, models) {
         vm.currentOperator = operator;
     };
 
+    /**
+     * Creates an array with sheet item objects
+     */
     vm.create = function () {
         var newSheets = [];
         for(var i = 0; i < vm.template.count; i++){
@@ -193,16 +197,37 @@ function AddSheetController($uibModalInstance, UtilityService, models) {
             var sheetNumber = buildName(vm.currentNumberOperators, i);
             newSheets.push(
                 {
-                    name: sheetName,
-                    number: sheetNumber,
+                    name: '',
+                    number: '',
                     uniqueId: '',
                     revisionNumber: '',
                     isSelected: false,
                     identifier: '',
                     isPlaceholder: vm.template.isPlaceholder,
                     isDeleted: false,
-                    assignedTo: vm.template.assignedTo,
-                    message: ''
+                    collectionId: vm.selectedModel.collectionId,
+                    centralPath: vm.selectedModel.centralPath,
+                    fileName: vm.selectedModel.name,
+                    tasks: [{
+                        name: sheetName,
+                        number: sheetNumber,
+                        uniqueId: '',
+                        revisionNumber: '',
+                        isSelected: false,
+                        identifier: '',
+                        isPlaceholder: vm.template.isPlaceholder,
+                        isDeleted: false,
+                        collectionId: vm.selectedModel.collectionId,
+                        centralPath: vm.selectedModel.centralPath,
+                        fileName: vm.selectedModel.name,
+                        assignedTo: vm.template.assignedTo,
+                        message: vm.template.message,
+                        comments: '',
+                        submittedOn: Date.now(),
+                        submittedBy: 'webuser',
+                        completedOn: '',
+                        completedBy: ''
+                    }]
                 }
             )
         }

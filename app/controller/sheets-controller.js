@@ -174,21 +174,32 @@ module.exports.updateSheetTask = function (req, res) {
 };
 
 var updateSheetTask = function (req, res, doc) {
-    var sheet = doc.sheets.find(function(x){
-        return x.identifier === req.body.identifier;
-    });
+    var sheet;
+    if(!req.body.identifier){
+        // (Konrad) This is updating a new Sheet which would not have the identifier
+        sheet = doc.sheets.find(function (x) {
+            return x._id.toString() === req.body.sheetId.toString();
+        });
+    } else {
+        sheet = doc.sheets.find(function(x){
+            return x.identifier === req.body.identifier;
+        });
+    }
+
     var index = sheet.tasks.findIndex(function(x){
         return x._id.toString() === req.body._id.toString();
     });
-    if(index !== -1){
-        sheet.tasks[index] = req.body;
-    }
+    if(index !== -1) sheet.tasks[index] = req.body;
 
     doc.save(function (err, sheetsUpdated) {
         if(err){
             res.status(500).json(err);
         } else {
-            global.io.sockets.emit('sheetTask_updated', { 'body': sheetsUpdated, 'identifier': req.body.identifier, '_id': req.body._id.toString()});
+            global.io.sockets.emit('sheetTask_updated', {
+                'body': sheetsUpdated,
+                'identifier': req.body.identifier,
+                'sheetId': req.body.sheetId.toString(),
+                '_id': req.body._id.toString()});
             res.status(200).json(sheetsUpdated);
         }
     });
@@ -322,71 +333,67 @@ module.exports.deleteChanges = function (req, res) {
         });
 };
 
-var createSheets = function (req, res, sheets) {
-    req.body.forEach(function(item){
-        // multiple sheet edit
-        // TODO: Is it necessary to create new object here? Doesn't item already have all the required properties?
-        var newObject = {
-            name: item.name,
-            number: item.number,
-            revisionNumber: item.revisionNumber,
-            uniqueId: item.uniqueId,
-            identifier: item.identifier,
-            assignedTo: item.assignedTo,
-            message: item.message,
-            isDeleted: item.isDeleted
-        };
-
-        var index = sheets.sheetsChanges.findIndex(function(x){
-            if(item.identifier.length === 0) return false;
-            else return x.identifier === item.identifier;
-        });
-
-        if(index !== -1){
-            sheets.sheetsChanges[index].name = item.name;
-            sheets.sheetsChanges[index].number = item.number;
-            sheets.sheetsChanges[index].revisionNumber = item.revisionNumber;
-            sheets.sheetsChanges[index].identifier = item.identifier;
-            sheets.sheetsChanges[index].assignedTo = item.assignedTo;
-            sheets.sheetsChanges[index].message = item.message;
-            sheets.sheetsChanges[index].isDeleted = item.isDeleted;
-        } else {
-            sheets.sheetsChanges.push(newObject)
-        }
-    });
-
-    sheets.save(function (err, sheetsUpdated) {
-        if(err){
-            res.status(500).json(err);
-        } else {
-            global.io.sockets.emit('sheetTask_sheetAdded', { 'body': sheetsUpdated});
-            res.status(200).json(sheetsUpdated);
-        }
-    });
-};
+// var createSheets = function (req, res, sheets) {
+//     req.body.forEach(function(item){
+//         // multiple sheet edit
+//         // TODO: Is it necessary to create new object here? Doesn't item already have all the required properties?
+//         var newObject = {
+//             name: item.name,
+//             number: item.number,
+//             revisionNumber: item.revisionNumber,
+//             uniqueId: item.uniqueId,
+//             identifier: item.identifier,
+//             assignedTo: item.assignedTo,
+//             message: item.message,
+//             isDeleted: item.isDeleted
+//         };
+//
+//         var index = sheets.sheetsChanges.findIndex(function(x){
+//             if(item.identifier.length === 0) return false;
+//             else return x.identifier === item.identifier;
+//         });
+//
+//         if(index !== -1){
+//             sheets.sheetsChanges[index].name = item.name;
+//             sheets.sheetsChanges[index].number = item.number;
+//             sheets.sheetsChanges[index].revisionNumber = item.revisionNumber;
+//             sheets.sheetsChanges[index].identifier = item.identifier;
+//             sheets.sheetsChanges[index].assignedTo = item.assignedTo;
+//             sheets.sheetsChanges[index].message = item.message;
+//             sheets.sheetsChanges[index].isDeleted = item.isDeleted;
+//         } else {
+//             sheets.sheetsChanges.push(newObject)
+//         }
+//     });
+//
+//     sheets.save(function (err, sheetsUpdated) {
+//         if(err){
+//             res.status(500).json(err);
+//         } else {
+//             global.io.sockets.emit('sheetTask_sheetAdded', { 'body': sheetsUpdated});
+//             res.status(200).json(sheetsUpdated);
+//         }
+//     });
+// };
 
 module.exports.addSheets = function (req, res) {
+    var ids = [];
+    req.body.forEach(function (item) {
+        var id = mongoose.Types.ObjectId();
+        item['_id'] = id;
+        ids.push(id.toString());
+    });
     Sheets
-        .findById(req.params.id)
-        .select('sheetsChanges')
-        .exec(function (err, doc){
-            var response = {
-                status: 200,
-                message: []
-            };
-            if (err){
-                response.status = 500;
-                response.message = err;
-            } else if(!doc){
-                response.status = 404;
-                response.message = {"message": "SheetsChanges Id not found."}
-            }
-            if(doc){
-                createSheets(req, res, doc);
+        .findOneAndUpdate(
+            {_id: req.params.id},
+            {$push: {'sheets': {$each: req.body}}},
+            {'new': true}) // returns newly updated collection
+        .exec(function(err, data){
+            if(err){
+                res.status(500).json(err);
             } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
+                global.io.sockets.emit('sheetTask_sheetsAdded', { 'body': data, 'sheetIds': ids});
+                res.status(202).json(data)
             }
         });
 };

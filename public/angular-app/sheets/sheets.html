@@ -52,14 +52,15 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
-                        <button type="button" class="btn btn-primary" ng-click="vm.editMultipleSheets('large', vm.selectedItems)" ng-if="vm.selectedItems.length > 1">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                            Multi-Edit
-                        </button>
-                        <button type="button" class="btn btn-primary" ng-click="vm.editSheet('large', vm.selectedItems[0])" ng-if="vm.selectedItems.length === 1">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                            Single-Edit
-                        </button>
+                        <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #d9534f"></span> >50%</p>-->
+                        <!--<button type="button" class="btn btn-primary" ng-click="vm.editMultipleSheets('large', vm.selectedItems)" ng-if="vm.selectedItems.length > 1">-->
+                            <!--<span class="glyphicon glyphicon-pencil"></span>-->
+                            <!--Multi-Edit-->
+                        <!--</button>-->
+                        <!--<button type="button" class="btn btn-primary" ng-click="vm.editSheet('large', vm.selectedItems[0])" ng-if="vm.selectedItems.length === 1">-->
+                            <!--<span class="glyphicon glyphicon-pencil"></span>-->
+                            <!--Single-Edit-->
+                        <!--</button>-->
                         <button type="button" class="btn btn-primary" ng-click="vm.addSheet('lg')">
                             <span class="glyphicon glyphicon-plus"></span>
                             Add Sheet
@@ -73,6 +74,7 @@
                                 <a href="" ng-click="vm.SetCurrentModelFilter(file)">{{file.name}}</a>
                             </li>
                         </ul>
+
                     </div>
                     <h4 class="panel-title" style="padding-top: 5px;">Sheets</h4>
                 </div>
@@ -91,13 +93,16 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="sheet in vm.allSheets | orderBy: 'number' : false | filter: vm.filterFile" ng-class="vm.AssignClass(sheet)">
+                            <tr ng-repeat="sheet in vm.allSheets | orderBy: 'number' : false | filter: vm.filterFile" ng-class="vm.assignClass(sheet)">
                                 <td style="padding-left: 30px">
                                     <input type="checkbox" ng-model="sheet.isSelected" ng-click="vm.toggleOne(sheet)">
                                 </td>
-                                <td ng-click="vm.launchSheetEditor(sheet)">{{vm.AssignDisplayValue(sheet, 'number')}}</td>
-                                <td ng-click="vm.launchSheetEditor(sheet)">{{vm.AssignDisplayValue(sheet, 'name')}}</td>
-                                <td class="text-center" ng-click="vm.launchSheetEditor(sheet)">{{vm.AssignDisplayValue(sheet, 'revisionNumber')}}</td>
+                                <td ng-click="vm.launchSheetEditor(sheet)">
+                                    {{vm.assignDisplayValue(sheet, 'number')}}
+                                    <span class="glyphicon glyphicon-alert" ng-if="vm.propertiesMatch(sheet)" uib-tooltip="Possible that user has not synched approved changes." tooltip-placement="top" style="color: #d9534f"></span>
+                                </td>
+                                <td ng-click="vm.launchSheetEditor(sheet)">{{vm.assignDisplayValue(sheet, 'name')}}</td>
+                                <td class="text-center" ng-click="vm.launchSheetEditor(sheet)">{{vm.assignDisplayValue(sheet, 'revisionNumber')}}</td>
                             </tr>
                             </tbody>
                         </table>

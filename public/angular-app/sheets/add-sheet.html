@@ -117,6 +117,18 @@
                         </div>
                     </div>
 
+                    <!--MESSAGE-->
+                    <div class="col-md-12 no-padding-right">
+                        <div class="form-group">
+                            <label for="message_text" class="form-control-label">
+                                Message:
+                                <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.template.message"></span>
+                                <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.template.message"></span>
+                            </label>
+                            <textarea id="message_text" class="form-control" ng-model="vm.template.message" required></textarea>
+                        </div>
+                    </div>
+
                     <!--NUMBER-->
                     <div class="col-md-9">
                         <div class="form-group">
@@ -177,7 +189,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-disabled="!vm.template.assignedTo" ng-click="vm.create()"><span class="glyphicon glyphicon-plus"></span> Create</button>
+        <button type="button" class="btn btn-primary" ng-disabled="!vm.template.assignedTo || !vm.template.message" ng-click="vm.create()"><span class="glyphicon glyphicon-plus"></span> Create</button>
         <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
         <button type="button" class="btn btn-danger pull-left" ng-click="vm.clear()"><span class="glyphicon glyphicon-erase"></span> Clear</button>
     </div>

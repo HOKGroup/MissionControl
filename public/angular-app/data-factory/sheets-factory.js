@@ -22,7 +22,7 @@ function SheetsFactory($http){
         },
 
         addSheets: function addSheets(id, sheets) {
-            return $http.post('/api/v1/sheets/' + id + '/sheetchanges/addsheets', sheets).then(complete).catch(failed);
+            return $http.post('/api/v1/sheets/' + id + '/addsheets', sheets).then(complete).catch(failed);
         },
 
         deleteNewSheet: function deleteNewSheet(id, sheet) {
