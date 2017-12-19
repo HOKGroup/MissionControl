@@ -15,6 +15,7 @@ var sheetItemSchema = new mongoose.Schema({
     collectionId: String, // id of the MongoDB collection for quicker retrieval
     centralPath: String, // central path of the model that sheet belongs to
     fileName: String, // file name of the central model for filtering UI
+    isNewSheet: Boolean,
     tasks: [{
         name: String,
         number: String,
@@ -27,6 +28,7 @@ var sheetItemSchema = new mongoose.Schema({
         collectionId: String, // id of the MongoDB collection for quicker retrieval
         centralPath: String, // central path of the model that sheet belongs to
         fileName: String, // file name of the central model for filtering UI
+        isNewSheet: Boolean,
         assignedTo: String,
         message: String,
         comments: String,

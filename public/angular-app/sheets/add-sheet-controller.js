@@ -208,6 +208,7 @@ function AddSheetController($uibModalInstance, UtilityService, models) {
                     collectionId: vm.selectedModel.collectionId,
                     centralPath: vm.selectedModel.centralPath,
                     fileName: vm.selectedModel.name,
+                    isNewSheet: true,
                     tasks: [{
                         name: sheetName,
                         number: sheetNumber,
@@ -220,6 +221,7 @@ function AddSheetController($uibModalInstance, UtilityService, models) {
                         collectionId: vm.selectedModel.collectionId,
                         centralPath: vm.selectedModel.centralPath,
                         fileName: vm.selectedModel.name,
+                        isNewSheet: true,
                         assignedTo: vm.template.assignedTo,
                         message: vm.template.message,
                         comments: '',

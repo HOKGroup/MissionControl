@@ -13,30 +13,58 @@ function AllTasksController($uibModalInstance, $uibModal, SheetsFactory, sheet) 
      * Deletes all selected sheet tasks.
      */
     vm.delete = function(){
-        var selected = vm.tasks.filter(function (item) {
-            return item.isSelected;
+        var selectedIds = [];
+        vm.tasks.forEach(function (item) {
+            if (item.isSelected){
+                selectedIds.push(item._id);
+            }
         });
-        if(selected.length > 0){
-            SheetsFactory
-                .deleteTasks(vm.sheet.collectionId, selected)
-                .then(function(response){
-                    if(!response) return;
+        var data = {
+            'centralPath': vm.sheet.centralPath,
+            'sheetId': vm.sheet._id,
+            'deletedIds': selectedIds
+        };
+        if(selectedIds.length > 0){
+            // (Konrad) When user deletes all tasks for new sheet
+            // it should also delete the "new sheet" itself.
+            if(vm.sheet.isNewSheet && selectedIds.length === vm.tasks.length){
+                SheetsFactory
+                    .deleteNewSheet(vm.sheet.collectionId, data)
+                    .then(function(response){
+                        if(!response) return;
 
-                    $uibModalInstance.close({response: response});
-                }, function (err) {
-                    console.log('Unable to update Single Sheet: ' + err.message)
-                });
+                        // (Konrad) Response is going to be deleted SheetId.
+                        $uibModalInstance.close({'response': response, 'action': 'Delete New Sheet'});
+                    }, function (err) {
+                        console.log('Unable to delete New Sheet: ' + err.message)
+                    });
+            } else {
+                SheetsFactory
+                    .deleteSheetTasks(vm.sheet.collectionId, data)
+                    .then(function(response){
+                        if(!response) return;
+
+                        // (Konrad) Response is going to be all sheets from the DB.
+                        $uibModalInstance.close({'response': response, 'action': 'Delete Sheet Task', 'deletedIds': selectedIds});
+                    }, function (err) {
+                        console.log('Unable to update Single Sheet: ' + err.message)
+                    });
+            }
         }
     };
 
     /**
      * Edit single sheet.
      * @param size
-     * @param task
+     * @param sheet
      * @param action
      */
-    vm.editSheetTask = function(size, task, action){
-        task['sheetId'] = vm.sheet._id; // adds sheet _id so we can find what sheet task belongs to later
+    vm.editSheetTask = function(size, sheet, action){
+        // (Konrad) When we are updating existing task it will pass that along instead of the sheet.
+        // In that case we need to tell it what parent Sheet it was stored in.
+        if(action === 'Update Task'){
+            sheet['sheetId'] = vm.sheet._id;
+        }
 
         $uibModalInstance.dismiss('cancel');
         $uibModal.open({
@@ -49,12 +77,17 @@ function AllTasksController($uibModalInstance, $uibModal, SheetsFactory, sheet) 
                     return action;
                 },
                 sheet: function (){
-                    return task;
+                    return sheet;
                 }}
         }).result.then(function(request){
             if(!request) return;
 
-            $uibModalInstance.close({response: request});
+            // (Konrad) The response here will be all updated sheets from DB.
+            // We can just swap the tasks from sheet for response tasks to update UI.
+            var updatedSheet = request.response.data.sheets.find(function(item){
+                return item._id.toString() === sheet._id.toString();
+            });
+            if(updatedSheet) sheet.tasks = updatedSheet.tasks;
         }).catch(function(){
             //if modal dismissed
         });

@@ -8,8 +8,11 @@ function EditSheetController($uibModalInstance, SheetsFactory, sheet, action) {
     vm.sheet = sheet; // parent sheet.
     vm.title = action;
 
-    // (Konrad) Task that doesn't have _id is new so we can add these props.
+    // (Konrad) Resetting these values will clear the form for new task.
     if(action === 'Add Task'){
+        // (Konrad) When task is being created, the sheet passed is always parent sheet.
+        vm.sheet['sheetId'] = sheet._id;
+
         vm.sheet['assignedTo'] = '';
         vm.sheet['message'] = '';
         vm.sheet['comments'] = '';
@@ -18,6 +21,8 @@ function EditSheetController($uibModalInstance, SheetsFactory, sheet, action) {
         vm.sheet['submittedBy'] = 'webuser';
         vm.sheet['completedBy'] = '';
     }
+
+    console.log(vm.sheet.sheetId);
 
     /**
      * Method called when Edit Sheet is submitted.
@@ -33,7 +38,7 @@ function EditSheetController($uibModalInstance, SheetsFactory, sheet, action) {
 
                     $uibModalInstance.close({response: sheetResponse});
                 }, function (err) {
-                    console.log('Unable to add Single Sheet Task: ' + err.message)
+                    console.log('Unable to add Sheet Task: ' + err.message)
                 });
         } else {
             SheetsFactory
@@ -43,7 +48,7 @@ function EditSheetController($uibModalInstance, SheetsFactory, sheet, action) {
 
                     $uibModalInstance.close({response: sheetResponse});
                 }, function (err) {
-                    console.log('Unable to update Single Sheet Task: ' + err.message)
+                    console.log('Unable to update Sheet Task: ' + err.message)
                 });
         }
     };
@@ -65,7 +70,7 @@ function EditSheetController($uibModalInstance, SheetsFactory, sheet, action) {
 
                 $uibModalInstance.close({response: sheetResponse});
             }, function (err) {
-                console.log('Unable to re-open Single Sheet Task: ' + err.message)
+                console.log('Unable to re-open Sheet Task: ' + err.message)
             });
     };
 
@@ -84,7 +89,7 @@ function EditSheetController($uibModalInstance, SheetsFactory, sheet, action) {
 
                     $uibModalInstance.close({response: sheetResponse});
                 }, function (err) {
-                    console.log('Unable to add Single Sheet Task: ' + err.message)
+                    console.log('Unable to add Sheet Task: ' + err.message)
                 });
         } else {
             SheetsFactory
@@ -94,7 +99,7 @@ function EditSheetController($uibModalInstance, SheetsFactory, sheet, action) {
 
                     $uibModalInstance.close({response: sheetResponse});
                 }, function (err) {
-                    console.log('Unable to update Single Sheet Task: ' + err.message)
+                    console.log('Unable to update Sheet Task: ' + err.message)
                 });
         }
     };

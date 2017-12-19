@@ -95,7 +95,7 @@
                             <tbody>
                             <tr ng-repeat="sheet in vm.allSheets | orderBy: 'number' : false | filter: vm.filterFile" ng-class="vm.assignClass(sheet)">
                                 <td style="padding-left: 30px">
-                                    <input type="checkbox" ng-model="sheet.isSelected" ng-click="vm.toggleOne(sheet)">
+                                    <input type="checkbox" ng-model="sheet.isSelected">
                                 </td>
                                 <td ng-click="vm.launchSheetEditor(sheet)">
                                     {{vm.assignDisplayValue(sheet, 'number')}}

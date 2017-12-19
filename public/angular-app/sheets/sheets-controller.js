@@ -4,21 +4,20 @@
 angular.module('MissionControlApp')
     .controller('SheetsController', SheetsController);
 
-function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilder, DTInstances, $uibModal, Socket, UtilityService){
+function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, DTInstances, $uibModal, UtilityService){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
+    vm.selectAll = false; // select all checkbox
 
     var dtInstance;
     DTInstances.getLast().then(function(inst) {
         dtInstance = inst;
     });
 
-    Socket.on('sheet_changes_updated', function(data){
-        console.log('sheet_changes_updated');
-    });
-
-    getSelectedProject(vm.projectId);
+    // Socket.on('sheet_changes_updated', function(data){
+    //     console.log('sheet_changes_updated');
+    // });
 
     vm.dtSheetsOptions = {
         paginationType: 'simple_numbers',
@@ -44,6 +43,14 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
         }
     ];
 
+    // (Konrad) Retrieves selected project from MongoDB.
+    getSelectedProject(vm.projectId);
+
+    /**
+     * Sets current model filter based on file name.
+     * @param file
+     * @constructor
+     */
     vm.SetCurrentModelFilter = function (file) {
         vm.selectedModel = file;
 
@@ -51,32 +58,22 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
         dtInstance.rerender();
     };
 
+    /**
+     * Returns True if file name matches filter selected or filter selected is All.
+     * @param file
+     * @returns {boolean}
+     */
     vm.filterFile = function (file) {
         return file.fileName === vm.selectedModel.name || vm.selectedModel.name === "All";
     };
 
-    vm.selectedItems = [];
-    vm.selectAll = false;
+    /**
+     * Toggles all sheets isSelected to True.
+     */
     vm.toggleAll = function () {
         vm.allSheets.forEach(function (item) {
             item.isSelected = vm.selectAll;
-            if(vm.selectAll){
-                vm.selectedItems.push(item);
-            } else {
-                vm.selectedItems = [];
-            }
         })
-    };
-
-    vm.toggleOne = function (sheet) {
-        if(sheet.isSelected){
-            vm.selectedItems.push(sheet);
-        } else {
-            var index = vm.selectedItems.indexOf(sheet);
-            if(index > -1){
-                vm.selectedItems.splice(index, 1)
-            }
-        }
     };
 
     /**
@@ -90,12 +87,12 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
 
         if(selected.length === 1){
             if(selected[0] === sheet){
-                sheet.tasks.length > 0 ? vm.showAllTasks('lg', sheet) : vm.editSheet('lg', sheet, 'Add Task')
+                sheet.tasks.length > 0 ? vm.showAllTasks('lg', sheet) : vm.editSheetTask('lg', sheet, 'Add Task')
             } else {
                 vm.showAllTasks('lg', sheet);
             }
         } else if (selected.length === 0){
-            sheet.tasks.length > 0 ? vm.showAllTasks('lg', sheet) : vm.editSheet('lg', sheet, 'Add Task')
+            sheet.tasks.length > 0 ? vm.showAllTasks('lg', sheet) : vm.editSheetTask('lg', sheet, 'Add Task')
         } else {
             vm.showAllTasks('lg', sheet);
         }
@@ -118,16 +115,27 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
                 }}
         }).result.then(function(request){
             if(!request) return;
+            if(request.action === 'Delete New Sheet'){
+                // (Konrad) If action performed was deleting a new Sheet
+                // the response will be an _id of that sheet.
+                var updatedSheetId = request.response.data;
+                var index = vm.allSheets.findIndex(function (item) {
+                    return item._id.toString() === updatedSheetId.toString();
+                });
 
-            var updatedSheet = request.response.data.sheets.find(function(item){
-                return item.identifier === sheet.identifier;
-            });
-            sheet.tasks = updatedSheet.tasks;
-
-            console.log("Event called when all tasks get closed...")
-
+                if(index !== -1) vm.allSheets.splice(index, 1);
+            } else if(request.action === 'Delete Sheet Task'){
+                // (Konrad) If action performed was deleting a sheet task
+                // the response will be a list of all sheets and list of deleted ids.
+                request.deletedIds.forEach(function (id) {
+                    var index = sheet.tasks.findIndex(function (x) {
+                        return x._id.toString() === id.toString();
+                    });
+                    if(index !== -1) sheet.tasks.splice(index, 1);
+                });
+            }
         }).catch(function(){
-            //if modal dismissed
+            console.log("All Tasks Dialog dismissed...");
         });
     };
 
@@ -137,7 +145,7 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
      * @param sheet
      * @param action
      */
-    vm.editSheet = function(size, sheet, action){
+    vm.editSheetTask = function(size, sheet, action){
         $uibModal.open({
             animation: true,
             templateUrl: 'angular-app/sheets/edit-sheet.html',
@@ -153,10 +161,12 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
         }).result.then(function(request){
             if(!request) return;
 
+            // (Konrad) The response here will be all updated sheets from DB.
+            // We can just swap the tasks from sheet for response tasks to update UI.
             var updatedSheet = request.response.data.sheets.find(function(item){
-                return item.identifier === sheet.identifier;
+                return item._id.toString() === sheet._id.toString();
             });
-            sheet.tasks = updatedSheet.tasks;
+            if(updatedSheet) sheet.tasks = updatedSheet.tasks;
         }).catch(function(){
             //if modal dismissed
         });
@@ -178,29 +188,22 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
             }}
         }).result.then(function(request){
             if(!request) return;
-            console.log(request.sheets);
             SheetsFactory
                 .addSheets(request.collectionId, request.sheets)
                 .then(function (sheetResponse) {
                     if(!sheetResponse) return;
-                    console.log(sheetResponse);
 
-                    //TODO
-                    // var file = vm.availableModels.find(function(item){
-                    //     return item.collectionId === request.collectionId;
-                    // });
-                    //
-                    // // (Konrad) Push it into vm.changed and vm.allSheets
-                    // for(var i=0; i < request.sheets.length; i++){
-                    //     var newSheet = request.sheets[i];
-                    //     newSheet['collectionId'] = request.collectionId; // needed to identify what MongoDB collection item belongs to
-                    //     newSheet['fileName'] = file.name; // used by the model filter
-                    //
-                    //     // (Konrad) We are adding multiple items with '' id.
-                    //     vm.changed[newSheet.identifier] = newSheet;
-                    //     vm.allSheets.push(newSheet);
-                    // }
-
+                    // (Konrad) Let's update the table with new sheets.
+                    var data = sheetResponse.data.data;
+                    var newSheetIds = sheetResponse.data.newSheetIds;
+                    if(newSheetIds.length > 0){
+                        newSheetIds.forEach(function (id) {
+                            var newSheet = data.sheets.find(function (item) {
+                                return item._id.toString() === id.toString();
+                            });
+                            if(newSheet) vm.allSheets.push(newSheet);
+                        })
+                    }
                 }, function (err) {
                     console.log('Unable to create Multiple Sheets: ' + err.message);
                 });
@@ -209,61 +212,6 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
             //if modal dismissed
         });
     };
-
-    // vm.editMultipleSheets = function (size, sheets) {
-    //     $uibModal.open({
-    //         animation: true,
-    //         templateUrl: 'editMultipleSheets',
-    //         controller: modalEditMultipleSheetsCtrl,
-    //         size: size,
-    //         resolve: {
-    //             sheets: function () {
-    //                 return sheets;
-    //             }
-    //         }
-    //     }).result.then(function(){
-    //         //after modal succeeded
-    //     }).catch(function(){
-    //         //if modal dismissed
-    //     });
-    // };
-
-    // var modalEditMultipleSheetsCtrl = function ($scope, $uibModalInstance, $uibModal, sheets) {
-    //     $scope.sheets = sheets;
-    //     $scope.name;
-    //
-    //     $scope.cancel = function () {
-    //         $uibModalInstance.dismiss('cancel');
-    //     };
-    //
-    //     $scope.submit = function () {
-    //         //(Konrad) Since sheets can come from different models, they also can
-    //         // be stored in different collections we need to group them by collectionId
-    //         var groups = {};
-    //         vm.selectedItems.forEach(function(item){
-    //             item.name = $scope.name; // update sheet name
-    //             var list = groups[item.collectionId];
-    //             if(list){
-    //                 list.push(item);
-    //             } else {
-    //                 groups[item.collectionId] = [item]
-    //             }
-    //         });
-    //
-    //         for (var collection in groups){
-    //             var sheets = groups[collection];
-    //             SheetsFactory
-    //                 .updateChanges(collection, sheets)
-    //                 .then(function (sheetResponse) {
-    //                     if(!sheetResponse) return;
-    //                 }, function (err) {
-    //                     console.log('Unable to update Multiple Sheets: ' + err.message);
-    //                 });
-    //         }
-    //
-    //         $uibModalInstance.close();
-    //     }
-    // };
 
     /**
      * Assigns proper row class to table.
@@ -278,7 +226,7 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
         if(sheet.tasks.length > 0){
             var task = sheet.tasks[sheet.tasks.length - 1]; // latest task is the last one
             if(task.completedBy) return 'table-info'; // task was completed no formatting
-            if(task.identifier === '') return 'bg-success'; // new sheet (green)
+            if(task.isNewSheet) return 'bg-success'; // new sheet (green)
             if(task.isDeleted){
                 return 'bg-danger strike'; // sheet was deleted (red)
             } else {
@@ -315,6 +263,7 @@ function SheetsController($route, $routeParams, SheetsFactory, DTColumnDefBuilde
     vm.propertiesMatch = function (sheet) {
         if(sheet.tasks.length > 0){
             var task = sheet.tasks[sheet.tasks.length - 1];
+            if(task.completedBy && task.isNewSheet && sheet.isNewSheet) return true;
             if(task.completedBy){
                 var nameMatch = task.name === sheet.name;
                 var numberMatch = task.number === sheet.number;

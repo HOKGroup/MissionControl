@@ -8,6 +8,11 @@ var mongoose = require('mongoose');
 var global = require('./socket/global');
 var Sheets = mongoose.model('Sheets');
 
+/**
+ * Retrieves all sheets.
+ * @param req
+ * @param res
+ */
 module.exports.findAll = function(req, res){
     Sheets
         .find()
@@ -20,6 +25,11 @@ module.exports.findAll = function(req, res){
         });
 };
 
+/**
+ * Creates a sheets collection.
+ * @param req
+ * @param res
+ */
 module.exports.add = function(req, res){
     Sheets
         .create(req.body, function(err, sheetsData){
@@ -31,6 +41,11 @@ module.exports.add = function(req, res){
         });
 };
 
+/**
+ * Finds sheet collection by central path.
+ * @param req
+ * @param res
+ */
 module.exports.findByCentralPath = function(req, res){
     //(Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
     var uri = req.params.uri.replace(/\|/g, "\\\\");
@@ -45,7 +60,7 @@ module.exports.findByCentralPath = function(req, res){
                     response.status = 500;
                     response.message = err;
                 } else if(!result){
-                    console.log("File Path wasn't found in any Families Collections");
+                    console.log("File Path wasn't found in any Sheets Collections.");
                 }
                 res.status(response.status).json(response.message);
             }
@@ -53,7 +68,108 @@ module.exports.findByCentralPath = function(req, res){
 };
 
 /**
- * Method used to submit sheet task/changes.
+ * Approves new sheet. Called from Client when sheet is created.
+ * @param req
+ * @param res
+ */
+module.exports.approveNewSheets = function (req, res) {
+    Sheets
+        .findById(req.params.id)
+        .select('sheets')
+        .exec(function (err, doc){
+            var response = {
+                status: 200,
+                message: []
+            };
+            if (err){
+                response.status = 500;
+                response.message = err;
+            } else if(!doc){
+                response.status = 404;
+                response.message = {"message": "SheetsChanges Id not found."}
+            }
+            if(doc){
+                approveCreateNewSheet(req, res, doc);
+            } else {
+                res.status(response.status).json(response.message);
+            }
+        });
+};
+
+var approveCreateNewSheet = function (req, res, doc) {
+    var sheetIndex = doc.sheets.findIndex(function (x) {
+        return x._id.toString() === req.body.Element._id.toString();
+    });
+    var sheet;
+    if(sheetIndex !== -1) sheet = doc.sheets[sheetIndex];
+
+    var taskIndex = sheet.tasks.findIndex(function(x){
+        return x._id.toString() === req.body.Task._id.toString();
+    });
+    if(taskIndex !== -1) {
+        sheet.tasks[taskIndex] = req.body.Task; // update task
+        var tasks = sheet.tasks; // pull out tasks
+        req.body.Element.tasks = tasks; // pull all tasks into new object
+        doc.sheets[sheetIndex] = req.body.Element; // update the doc with new sheet/tasks
+    }
+
+    doc.save(function (err, sheetsUpdated) {
+        if(err){
+            res.status(500).json(err);
+        } else {
+            global.io.sockets.emit('sheetTask_updated', {
+                'body': sheetsUpdated,
+                'identifier': req.body.Element.identifier,
+                '_id': req.body.Task._id.toString()});
+            res.status(200).json(sheetsUpdated);
+        }
+    });
+};
+
+/**
+ * Updates the whole collection of sheets. Used at Synch to central.
+ * @param req
+ * @param res
+ */
+module.exports.update = function (req, res) {
+    Sheets
+        .findById(req.params.id)
+        .select('sheets')
+        .exec(function (err, doc){
+            var response = {
+                status: 200,
+                message: []
+            };
+            if (err){
+                response.status = 500;
+                response.message = err;
+            } else if(!doc){
+                response.status = 404;
+                response.message = {"message": "SheetsChanges Id not found."}
+            }
+            if(doc){
+                updateAllSheets(req, res, doc);
+            } else {
+                res.status(response.status).json(response.message);
+            }
+        });
+};
+
+var updateAllSheets = function (req, res, doc) {
+    doc.sheets = req.body.sheets;
+    doc.revisions = req.body.revisions;
+
+    doc.save(function (err, sheetsUpdated) {
+        if(err){
+            res.status(500).json(err);
+        } else {
+            res.status(200).json(sheetsUpdated);
+        }
+    });
+};
+
+/**
+ * Submits new Sheet tasks.
  * @param req
  * @param res
  */
@@ -83,72 +199,32 @@ module.exports.addSheetTask = function (req, res) {
 
 var addSheetTask = function(req, res, doc){
     var sheet = doc.sheets.find(function(x){
-        return x.identifier === req.body.identifier;
+        return x._id.toString() === req.body.sheetId.toString();
     });
-    delete req.body._id; // make sure that _id is re-generated
+    // (Konrad) We override the _id with a new one, so that we know exactly what
+    // that new task is stored under, and can pass it along to client.
+    var newId = mongoose.Types.ObjectId();
+    req.body['_id'] = newId;
     sheet.tasks.push(req.body);
 
     doc.save(function (err, sheetsUpdated) {
         if(err){
             res.status(500).json(err);
         } else {
-            global.io.sockets.emit('sheetTask_added', { 'body': sheetsUpdated, 'identifier': req.body.identifier });
+            global.io.sockets.emit('sheetTask_added', {
+                'body': sheetsUpdated,
+                'sheetId': req.body.sheetId.toString(),
+                'taskId': newId.toString() });
             res.status(200).json(sheetsUpdated);
         }
     });
 };
 
-module.exports.deleteTasks = function (req, res) {
-    Sheets
-        .findById(req.params.id)
-        .select('sheets')
-        .exec(function (err, doc){
-            var response = {
-                status: 200,
-                message: []
-            };
-            if (err){
-                response.status = 500;
-                response.message = err;
-            } else if(!doc){
-                response.status = 404;
-                response.message = {"message": "Sheets Id not found."}
-            }
-            if(doc){
-                deleteSheetTask(req, res, doc);
-            } else {
-                res.status(response.status).json(response.message);
-            }
-        });
-};
-
-var deleteSheetTask = function (req, res, doc) {
-    // req.body is always an array
-    var sheet = doc.sheets.find(function (x) {
-        return x.identifier === req.body[0].identifier;
-    });
-
-    var deleted = [];
-    req.body.forEach(function (item) {
-        var taskIndex = sheet.tasks.findIndex(function (x) {
-            return x._id.toString() === item._id.toString();
-        });
-        if(taskIndex !== -1){
-            sheet.tasks.splice(taskIndex, 1);
-            deleted.push(item._id.toString());
-        }
-    });
-
-    doc.save(function (err, sheetsUpdated) {
-        if(err){
-            res.status(500).json(err);
-        } else {
-            global.io.sockets.emit('sheetTask_deleted', {'identifier': req.body[0].identifier, "deleted": deleted });
-            res.status(200).json(sheetsUpdated);
-        }
-    });
-};
-
+/**
+ * Updates sheet tasks with any changes.
+ * @param req
+ * @param res
+ */
 module.exports.updateSheetTask = function (req, res) {
     Sheets
         .findById(req.params.id)
@@ -174,18 +250,9 @@ module.exports.updateSheetTask = function (req, res) {
 };
 
 var updateSheetTask = function (req, res, doc) {
-    var sheet;
-    if(!req.body.identifier){
-        // (Konrad) This is updating a new Sheet which would not have the identifier
-        sheet = doc.sheets.find(function (x) {
-            return x._id.toString() === req.body.sheetId.toString();
-        });
-    } else {
-        sheet = doc.sheets.find(function(x){
-            return x.identifier === req.body.identifier;
-        });
-    }
-
+    var sheet = doc.sheets.find(function (x) {
+        return x._id.toString() === req.body.sheetId.toString();
+    });
     var index = sheet.tasks.findIndex(function(x){
         return x._id.toString() === req.body._id.toString();
     });
@@ -197,55 +264,22 @@ var updateSheetTask = function (req, res, doc) {
         } else {
             global.io.sockets.emit('sheetTask_updated', {
                 'body': sheetsUpdated,
-                'identifier': req.body.identifier,
                 'sheetId': req.body.sheetId.toString(),
-                '_id': req.body._id.toString()});
+                'taskId': req.body._id.toString()});
             res.status(200).json(sheetsUpdated);
         }
     });
 };
-
 
 /**
- * Removes approved Sheet from staging, and updates collection.
+ * Deletes a sheet task.
  * @param req
  * @param res
- * @param objects
  */
-var approveSheetChanges = function (req, res, objects) {
-    var index = objects.sheets.findIndex(function (item) {
-        return item.identifier === req.body.identifier;
-    });
-
-    if(index !== -1){
-        // (Konrad) Update all SheetItem properties
-        objects.sheets[index].name = req.body.name;
-        objects.sheets[index].number = req.body.number;
-    }
-
-    var index2 = objects.sheetsChanges.findIndex(function (item) {
-        return item.identifier === req.body.identifier;
-    });
-
-    if(index2 !== -1){
-        objects.sheetsChanges.splice(index2, 1);
-    }
-
-    objects.save(function (err, sheetsUpdated) {
-        if(err){
-            res.status(500).json(err);
-        } else {
-            console.log("sheetTask_approved");
-            global.io.sockets.emit('sheetTask_approved', { 'body': sheetsUpdated, 'identifier': req.body.identifier });
-            res.status(200).json(sheetsUpdated);
-        }
-    });
-};
-
-module.exports.approveChanges = function (req, res) {
+module.exports.deleteTasks = function (req, res) {
     Sheets
         .findById(req.params.id)
-        .select('sheets sheetsChanges')
+        .select('sheets')
         .exec(function (err, doc){
             var response = {
                 status: 200,
@@ -256,126 +290,74 @@ module.exports.approveChanges = function (req, res) {
                 response.message = err;
             } else if(!doc){
                 response.status = 404;
-                response.message = {"message": "SheetsChanges Id not found."}
+                response.message = {"message": "Sheets Id not found."}
             }
             if(doc){
-                approveSheetChanges(req, res, doc);
+                deleteSheetTask(req, res, doc);
             } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
+                res.status(response.status).json(response.message);
             }
         });
 };
 
-var approveCreateNewSheet = function (req, res, objects) {
-    // (Konrad) This body won't have an identifier that will match sheetChanges. We can use number/name instead.
-    var index = objects.sheetsChanges.findIndex(function (item) {
-        return item.identifier === '' && item.name === req.body.name && item.number === req.body.number;
+var deleteSheetTask = function (req, res, doc) {
+    var sheet = doc.sheets.find(function (x) {
+        return x._id.toString() === req.body.sheetId.toString();
     });
-    if(index !== -1){
-        objects.sheetsChanges.splice(index, 1);
-    }
 
-    // (Konrad) Now we can add new sheet to sheets collection
-    objects.sheets.push(req.body);
+    var deleted = [];
+    req.body.deletedIds.forEach(function (id) {
+        var taskIndex = sheet.tasks.findIndex(function (x) {
+            return x._id.toString() === id.toString();
+        });
+        if(taskIndex !== -1){
+            sheet.tasks.splice(taskIndex, 1);
+            deleted.push(id.toString());
+        }
+    });
 
-    objects.save(function (err, sheetsUpdated) {
+    doc.save(function (err, sheetsUpdated) {
         if(err){
             res.status(500).json(err);
         } else {
-            console.log("sheetTask_approved");
-            global.io.sockets.emit('sheetTask_approved', { 'body': sheetsUpdated, 'identifier': req.body.identifier });
+            global.io.sockets.emit('sheetTask_deleted', {
+                'centralPath': req.body.centralPath,
+                'sheetId': req.body.sheetId.toString(),
+                "deletedIds": deleted });
             res.status(200).json(sheetsUpdated);
         }
     });
 };
 
-module.exports.approveNewSheets = function (req, res) {
+/**
+ * Removes new sheet.
+ * @param req
+ * @param res
+ */
+module.exports.deleteNewSheet = function (req, res) {
     Sheets
-        .findById(req.params.id)
-        .select('sheets sheetsChanges')
-        .exec(function (err, doc){
-            var response = {
-                status: 200,
-                message: []
-            };
-            if (err){
-                response.status = 500;
-                response.message = err;
-            } else if(!doc){
-                response.status = 404;
-                response.message = {"message": "SheetsChanges Id not found."}
-            }
-            if(doc){
-                approveCreateNewSheet(req, res, doc);
-            } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
-            }
-        });
+        .update(
+            { _id: req.params.id},
+            { $pull:{ 'sheets': { '_id': req.body.sheetId }}},
+            function(err){
+                if(err) {
+                    console.log(err);
+                    res.status(201).json(err);
+                } else {
+                    global.io.sockets.emit('sheetTask_sheetDeleted', {
+                        'centralPath': req.body.centralPath,
+                        'sheetId': req.body.sheetId.toString(),
+                        'deletedIds': req.body.deletedIds});
+                    res.status(201).json(req.body.sheetId.toString());
+                }
+            });
 };
 
-module.exports.deleteChanges = function (req, res) {
-    Sheets
-        .findOneAndUpdate(
-            { _id: req.params.id },
-            { $pull: { 'sheetsChanges': { 'identifier': req.body.identifier }}},
-            { new: true})
-        .exec(function(err, data){
-            if(err){
-                res.status(500).json(err);
-            } else {
-                global.io.sockets.emit('sheetTask_deleted', { 'identifier': req.body.identifier });
-                res.status(202).json(data)
-            }
-        });
-};
-
-// var createSheets = function (req, res, sheets) {
-//     req.body.forEach(function(item){
-//         // multiple sheet edit
-//         // TODO: Is it necessary to create new object here? Doesn't item already have all the required properties?
-//         var newObject = {
-//             name: item.name,
-//             number: item.number,
-//             revisionNumber: item.revisionNumber,
-//             uniqueId: item.uniqueId,
-//             identifier: item.identifier,
-//             assignedTo: item.assignedTo,
-//             message: item.message,
-//             isDeleted: item.isDeleted
-//         };
-//
-//         var index = sheets.sheetsChanges.findIndex(function(x){
-//             if(item.identifier.length === 0) return false;
-//             else return x.identifier === item.identifier;
-//         });
-//
-//         if(index !== -1){
-//             sheets.sheetsChanges[index].name = item.name;
-//             sheets.sheetsChanges[index].number = item.number;
-//             sheets.sheetsChanges[index].revisionNumber = item.revisionNumber;
-//             sheets.sheetsChanges[index].identifier = item.identifier;
-//             sheets.sheetsChanges[index].assignedTo = item.assignedTo;
-//             sheets.sheetsChanges[index].message = item.message;
-//             sheets.sheetsChanges[index].isDeleted = item.isDeleted;
-//         } else {
-//             sheets.sheetsChanges.push(newObject)
-//         }
-//     });
-//
-//     sheets.save(function (err, sheetsUpdated) {
-//         if(err){
-//             res.status(500).json(err);
-//         } else {
-//             global.io.sockets.emit('sheetTask_sheetAdded', { 'body': sheetsUpdated});
-//             res.status(200).json(sheetsUpdated);
-//         }
-//     });
-// };
-
+/**
+ * Adds new sheets to DB.
+ * @param req
+ * @param res
+ */
 module.exports.addSheets = function (req, res) {
     var ids = [];
     req.body.forEach(function (item) {
@@ -393,66 +375,7 @@ module.exports.addSheets = function (req, res) {
                 res.status(500).json(err);
             } else {
                 global.io.sockets.emit('sheetTask_sheetsAdded', { 'body': data, 'sheetIds': ids});
-                res.status(202).json(data)
-            }
-        });
-};
-
-var removeNewSheet = function (req, res, objects) {
-    // (Konrad) This body won't have an identifier that will match sheetChanges. We can use number/name instead.
-    var index = objects.sheetsChanges.findIndex(function (item) {
-        return item.identifier === '' && item.number === req.body.number && item.name === req.body.name;
-    });
-    if(index !== -1){
-        objects.sheetsChanges.splice(index, 1);
-    }
-
-    objects.save(function (err, sheetsUpdated) {
-        if(err){
-            res.status(500).json(err);
-        } else {
-            // TODO: We need to emit a message here.
-            // global.io.sockets.emit('sheetTask_sheetAdded', { 'body': sheetsUpdated});
-            res.status(200).json(sheetsUpdated);
-        }
-    });
-};
-
-module.exports.deleteNewSheet = function (req, res) {
-    Sheets
-        .findById(req.params.id)
-        .select('sheetsChanges')
-        .exec(function (err, doc){
-            var response = {
-                status: 200,
-                message: []
-            };
-            if (err){
-                response.status = 500;
-                response.message = err;
-            } else if(!doc){
-                response.status = 404;
-                response.message = {"message": "SheetsChanges Id not found."}
-            }
-            if(doc){
-                removeNewSheet(req, res, doc);
-            } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
-            }
-        });
-};
-
-module.exports.update = function(req, res) {
-    var id = req.params.id;
-
-    Sheets
-        .update({_id: id}, req.body, {upsert: true}, function (err, result){
-            if(err) {
-                res.status(400).json(err);
-            } else {
-                res.status(202).json(result);
+                res.status(202).json({'data': data, 'newSheetIds': ids})
             }
         });
 };
