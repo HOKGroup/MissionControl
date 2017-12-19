@@ -197,8 +197,8 @@ function AddSheetController($uibModalInstance, UtilityService, models) {
             var sheetNumber = buildName(vm.currentNumberOperators, i);
             newSheets.push(
                 {
-                    name: '',
-                    number: '',
+                    name: sheetName,
+                    number: sheetNumber,
                     uniqueId: '',
                     revisionNumber: '',
                     isSelected: false,

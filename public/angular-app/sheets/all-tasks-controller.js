@@ -101,8 +101,10 @@ function AllTasksController($uibModalInstance, $uibModal, SheetsFactory, sheet) 
     vm.assignClass = function (task) {
         if(task.isDeleted){
             return 'bg-danger strike';
+        } else if (task.isNewSheet){
+            return 'bg-success';
         } else {
-            return 'bg-warning';
+            return 'bg-warning'
         }
     };
 
@@ -112,6 +114,16 @@ function AllTasksController($uibModalInstance, $uibModal, SheetsFactory, sheet) 
     vm.selectAll = function () {
         vm.tasks.forEach(function (item) {
             item.isSelected = vm.check;
+        });
+    };
+
+    /**
+     * Returns True if any task is selected.
+     * @returns {boolean}
+     */
+    vm.isAnythingSelected = function () {
+        return vm.sheet.tasks.some(function(item){
+            return item.isSelected;
         });
     };
 
