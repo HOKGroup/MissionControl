@@ -32,6 +32,7 @@ var sheets = require('./models/sheets-model');
      app.post('/api/v1/configurations', config.add);
      app.put('/api/v1/configurations/:id', config.update);
      app.delete('/api/v1/configurations/:id', config.delete);
+     app.put('/api/v1/configurations/:id/updatefilepath', config.updateFilePath);
 
      var triggerrecords = require('./controller/triggerrecords');
      app.get('/api/v1/triggerrecords', triggerrecords.findAll);
@@ -45,6 +46,7 @@ var sheets = require('./models/sheets-model');
      app.delete('/api/v1/triggerrecords/:id', triggerrecords.delete);
      app.delete('/api/v1/triggerrecords/config/:configid', triggerrecords.deleteAllForConfig);
      app.delete('/api/v1/triggerrecords/centralpath/:centralpath', triggerrecords.deleteAllForFile);
+     app.put('/api/v1/triggerrecords/:id/updatefilepath', triggerrecords.updateFilePath);
 
      var healthReport = require('./controller/healthrecords-controller');
      app.get('/api/v1/healthrecords', healthReport.findAll);
@@ -67,6 +69,7 @@ var sheets = require('./models/sheets-model');
      app.put('/api/v1/healthrecords/:id/sessioninfo/:logid', healthReport.updateSynchedCollection);
      app.get('/api/v1/healthrecords/:id/modelstats', healthReport.getModelStats);
      app.put('/api/v1/healthrecords/:id/addfamilies', healthReport.addFamilies);
+     app.put('/api/v1/healthrecords/:id/updatefilepath', healthReport.updateFilePath);
 
      var addins = require('./controller/addins-controller');
      app.get('/api/v1/addins', addins.findAll);
@@ -82,6 +85,7 @@ var sheets = require('./models/sheets-model');
      app.post('/api/v1/families/:id/family/:name', families.addTask);
      app.post('/api/v1/families/:id/family/:name/updatetask/:taskid', families.updateTask);
      app.post('/api/v1/families/:id/family/:name/deletemany', families.deleteMultipleTasks);
+     app.put('/api/v1/families/:id/updatefilepath', families.updateFilePath);
 
      var sheets = require('./controller/sheets-controller');
      app.get('/api/v1/sheets', sheets.findAll);
@@ -94,4 +98,5 @@ var sheets = require('./models/sheets-model');
      app.post('/api/v1/sheets/:id/deletenewsheet', sheets.deleteNewSheet);
      app.post('/api/v1/sheets/:id/deletetasks', sheets.deleteTasks);
      app.post('/api/v1/sheets/:id/updatetasks', sheets.updateSheetTask);
+     app.put('/api/v1/sheets/:id/updatefilepath', sheets.updateFilePath);
   };

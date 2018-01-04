@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').controller('ConfigController', ConfigController);
 
-function ConfigController($routeParams, ConfigFactory, $window){
+function ConfigController($routeParams, ConfigFactory, $window, $uibModal){
     var vm = this;
     vm.status;
     vm.projectId = $routeParams.projectId;
@@ -69,14 +69,48 @@ function ConfigController($routeParams, ConfigFactory, $window){
 
     vm.getConfigurationById = getSelectedConfiguration;
 
+    vm.editPath = function(filePath, size){
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'angular-app/configuration/edit-file-path.html',
+            controller: 'EditFilePathController as vm',
+            size: size,
+            resolve: {
+                filePath: function () {
+                    return filePath;
+                },
+                id: function () {
+                    return vm.selectedConfig._id;
+                }}
+        }).result.then(function(request){
+            if(!request) return;
+
+            var data = request.response;
+            vm.selectedConfig.files.forEach(function(item){
+                if(item.centralPath.toLowerCase() === data.before.toLowerCase()){
+                    item.centralPath = data.after;
+                }
+            })
+        }).catch(function(){
+            //if modal dismissed
+        });
+    };
+
     vm.addFile = function(){
+        if(!vm.newFile){
+            vm.fileWarningMsg = 'Please enter valid file path.';
+            return;
+        }
+
         var filePath = vm.newFile;
         vm.fileWarningMsg='';
 
-        var centralPath = filePath.replace(/\\/g, '|');
+        var uri = filePath.replace(/\\/g, '|');
         ConfigFactory
-            .getByCentralPath(centralPath).then(function(response){
+            .getByCentralPath(uri).then(function(response){
                 if(!response || response.status !== 200) return;
+
+                console.log(response);
 
                 var configFound = response.data;
                 var configNames = '';

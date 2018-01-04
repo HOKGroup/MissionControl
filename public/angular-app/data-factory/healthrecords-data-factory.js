@@ -8,6 +8,10 @@ function HealthRecordsFactory($http){
 
         populateProject: function populateProject(projectId) {
             return $http.get('/api/v1/projects/populatehr/' + projectId).then(complete).catch(failed);
+        },
+
+        updateFilePath: function updateFilePath(id, data) {
+            return $http.put('/api/v1/healthrecords/' + id + '/updatefilepath', data).then(complete).catch(failed);
         }
     };
 

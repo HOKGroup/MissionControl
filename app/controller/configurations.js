@@ -56,6 +56,7 @@ module.exports.delete = function(req, res){
 module.exports.findByCentralPath  = function(req, res){
     //(Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
     var uri = req.params.uri.replace(/\|/g, "\\\\");
+    console.log(uri);
     Configuration.find(
         {"files.centralPath": {'$regex': uri, '$options': 'i'}}, function (err, result) {
             var response = {
@@ -71,4 +72,25 @@ module.exports.findByCentralPath  = function(req, res){
             res.status(response.status).json(response.message);
         }
     )
+};
+
+module.exports.updateFilePath = function (req, res) {
+    var id = req.params.id;
+    Configuration
+        .update(
+            {'_id': id, 'files.centralPath': req.body.before},
+            {'$set': {'files.$.centralPath' : req.body.after}}, function (err, result) {
+                var response = {
+                    status: 200,
+                    message: result
+                };
+                if(err){
+                    response.status = 500;
+                    response.message = err;
+                } else if(!result){
+                    console.log("File Path wasn't found in any Configurations Collections");
+                }
+                res.status(response.status).json(response.message);
+            }
+        )
 };

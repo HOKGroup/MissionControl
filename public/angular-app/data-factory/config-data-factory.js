@@ -52,6 +52,10 @@ function ConfigFactory($http){
 
         updateProject: function updateProject(project) {
             return $http.put('/api/v1/projects/' + project._id, project).then(complete).catch(failed);
+        },
+
+        updateFilePath: function updateFilePath(id, data) {
+            return $http.put('/api/v1/configurations/' + id + '/updatefilepath', data).then(complete).catch(failed);
         }
     };
 

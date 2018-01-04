@@ -35,6 +35,10 @@ function SheetsFactory($http){
 
         updateTasks: function updateTasks(id, tasks) {
             return $http.post('/api/v1/sheets/'+ id + '/updatetasks', tasks).then(complete).catch(failed);
+        },
+
+        updateFilePath: function updateFilePath(id, data) {
+            return $http.put('/api/v1/sheets/'+ id + '/updatefilepath', data).then(complete).catch(failed);
         }
     };
 

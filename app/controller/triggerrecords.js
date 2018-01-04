@@ -86,8 +86,29 @@ TriggerRecordService = {
     TriggerRecord.remove({'centralpath':path},function(err, results) {
       return res.send(results);
     });
-  }
-  
+  },
+
+    updateFilePath: function(req, res){
+        var before = req.body.before.replace(/\\/g, "\\");
+        var after = req.body.after.replace(/\\/g, "\\");
+        TriggerRecord
+            .update(
+                {'centralPath': before},
+                {'$set': {'centralPath' : after}}, function (err, result) {
+                    var response = {
+                        status: 200,
+                        message: result
+                    };
+                    if(err){
+                        response.status = 500;
+                        response.message = err;
+                    } else if(!result){
+                        console.log("File Path wasn't found in any Configurations Collections");
+                    }
+                    res.status(response.status).json(response.message);
+                }
+            );
+    }
   };
 
 module.exports = TriggerRecordService;

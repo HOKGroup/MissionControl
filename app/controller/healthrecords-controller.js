@@ -770,3 +770,25 @@ module.exports.addFamilies = function (req, res) {
                 }
             });
 };
+
+module.exports.updateFilePath = function (req, res) {
+    var before = req.body.before.replace(/\\/g, "\\");
+    var after = req.body.after.replace(/\\/g, "\\");
+    HealthRecords
+        .update(
+            {'centralPath': before},
+            {'$set': {'centralPath' : after}}, function (err, result) {
+                var response = {
+                    status: 200,
+                    message: result
+                };
+                if(err){
+                    response.status = 500;
+                    response.message = err;
+                } else if(!result){
+                    console.log("File Path wasn't found in any Configurations Collections");
+                }
+                res.status(response.status).json(response.message);
+            }
+        );
+};
