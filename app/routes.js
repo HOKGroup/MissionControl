@@ -51,7 +51,7 @@ var sheets = require('./models/sheets-model');
      var healthReport = require('./controller/healthrecords-controller');
      app.get('/api/v1/healthrecords', healthReport.findAll);
      app.get('/api/v1/healthrecords/:id', healthReport.findById);
-     app.get('/api/v1/healthrecords/uri/:uri*', healthReport.findByEncodedURI);
+     app.get('/api/v1/healthrecords/centralpath/:uri*', healthReport.findByCentralPath);
      app.post('/api/v1/healthrecords', healthReport.add);
      app.post('/api/v1/healthrecords/:id/onsynched', healthReport.onSynched);
      app.post('/api/v1/healthrecords/:id/onopened', healthReport.onOpened);

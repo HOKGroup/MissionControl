@@ -292,21 +292,18 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, DTIns
                 vm.selectedProject = response.data;
                 if(response.data.sheets.length > 0){
                     SheetsFactory
-                        .populateSheets(projectId)
-                        .then(function (sheetsResponse) {
+                        .populateSheets(projectId).then(function (sheetsResponse) {
                             if(!sheetsResponse) return;
 
                             vm.selectedProject = sheetsResponse.data;
                             vm.allSheets = [];
                             vm.selectedProject.sheets.forEach(function (item) {
-
                                 // (Konrad) Select all model names for filtering.
                                 vm.availableModels.push({
                                     name: UtilityService.fileNameFromPath(item.centralPath),
                                     collectionId: item._id,
                                     centralPath: item.centralPath
                                 });
-
                                 // (Konrad) Assign CollectionId to all sheets.
                                 item.sheets.forEach(function (sheet) {
                                     if(!sheet.isDeleted){

@@ -214,7 +214,9 @@ var addSheetTask = function(req, res, doc){
             global.io.sockets.emit('sheetTask_added', {
                 'body': sheetsUpdated,
                 'sheetId': req.body.sheetId.toString(),
-                'taskId': newId.toString() });
+                'taskId': newId.toString(),
+                'collectionId': req.params.id
+            });
             res.status(200).json(sheetsUpdated);
         }
     });
@@ -265,7 +267,9 @@ var updateSheetTask = function (req, res, doc) {
             global.io.sockets.emit('sheetTask_updated', {
                 'body': sheetsUpdated,
                 'sheetId': req.body.sheetId.toString(),
-                'taskId': req.body._id.toString()});
+                'taskId': req.body._id.toString(),
+                'collectionId': req.params.id
+            });
             res.status(200).json(sheetsUpdated);
         }
     });
@@ -321,7 +325,7 @@ var deleteSheetTask = function (req, res, doc) {
             res.status(500).json(err);
         } else {
             global.io.sockets.emit('sheetTask_deleted', {
-                'centralPath': req.body.centralPath,
+                'collectionId': req.params.id,
                 'sheetId': req.body.sheetId.toString(),
                 "deletedIds": deleted });
             res.status(200).json(sheetsUpdated);
@@ -345,7 +349,7 @@ module.exports.deleteNewSheet = function (req, res) {
                     res.status(201).json(err);
                 } else {
                     global.io.sockets.emit('sheetTask_sheetDeleted', {
-                        'centralPath': req.body.centralPath,
+                        'collectionId': req.params.id,
                         'sheetId': req.body.sheetId.toString(),
                         'deletedIds': req.body.deletedIds});
                     res.status(201).json(req.body.sheetId.toString());
@@ -374,7 +378,11 @@ module.exports.addSheets = function (req, res) {
             if(err){
                 res.status(500).json(err);
             } else {
-                global.io.sockets.emit('sheetTask_sheetsAdded', { 'body': data, 'sheetIds': ids});
+                global.io.sockets.emit('sheetTask_sheetsAdded', {
+                    'body': data,
+                    'sheetIds': ids,
+                    'collectionId': req.params.id
+                });
                 res.status(202).json({'data': data, 'newSheetIds': ids})
             }
         });

@@ -34,33 +34,30 @@ module.exports.findById = function(req, res){
     });
 };
 
-module.exports.findByEncodedURI = function(req, res){
-    var uri = req.params.uri;
-    var decodedUri = decodeURIComponent(uri);
-
+/**
+ * Returns Health Record collection that matches given central Path.
+ * @param req
+ * @param res
+ */
+module.exports.findByCentralPath = function (req, res) {
+    //(Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
+    var uri = req.params.uri.replace(/\|/g, "\\\\");
     HealthRecords
         .find(
-            { $text: { $search: decodedUri }},
-            { score: { $meta: "textScore" } })
-        .sort(
-            { score: { $meta: 'textScore' } })
-        .limit(5)
-        .lean()
-        .exec(function(err, result){
-            var response = {
-                status: 200,
-                message: result
-            };
-            if(err){
-                response.status = 500;
-                response.message = err;
-            } else if(!result){
-                console.log("File Path wasn't found in any Health Record");
+            {"centralPath": {'$regex': uri, '$options': 'i'}}, function (err, result) {
+                var response = {
+                    status: 200,
+                    message: result
+                };
+                if(err){
+                    response.status = 500;
+                    response.message = err;
+                } else if(!result){
+                    console.log("File Path wasn't found in any Health Records Collections.");
+                }
+                res.status(response.status).json(response.message);
             }
-            res
-                .status(response.status)
-                .json(response.message);
-        });
+        )
 };
 
 module.exports.add = function(req, res){

@@ -9,11 +9,9 @@ var sheetItemSchema = new mongoose.Schema({
     uniqueId: String,
     revisionNumber: String, // Unique Id matching one of the Revisions
     isSelected: Boolean, // used by UI since either sheetItem or sheetTask can be stored in UI they both need it
-    identifier: String, // Unique identifier for sheet across models. CentralPath + UniqueId
     isPlaceholder: Boolean,
     isDeleted: Boolean,
     collectionId: String, // id of the MongoDB collection for quicker retrieval
-    centralPath: String, // central path of the model that sheet belongs to
     fileName: String, // file name of the central model for filtering UI
     isNewSheet: Boolean,
     tasks: [{
@@ -22,11 +20,9 @@ var sheetItemSchema = new mongoose.Schema({
         uniqueId: String,
         revisionNumber: String,
         isSelected: Boolean,
-        identifier: String,
         isPlaceholder: Boolean,
         isDeleted: Boolean,
         collectionId: String, // id of the MongoDB collection for quicker retrieval
-        centralPath: String, // central path of the model that sheet belongs to
         fileName: String, // file name of the central model for filtering UI
         isNewSheet: Boolean,
         assignedTo: String,
@@ -59,6 +55,4 @@ var sheetsSchema = new mongoose.Schema(
 );
 
 sheetsSchema.index({"centralPath": "text"});
-sheetsSchema.index({'sheets.identifier': 'text'});
-
 var Sheets = mongoose.model( 'Sheets', sheetsSchema );

@@ -22,8 +22,6 @@ function EditSheetController($uibModalInstance, SheetsFactory, sheet, action) {
         vm.sheet['completedBy'] = '';
     }
 
-    console.log(vm.sheet.sheetId);
-
     /**
      * Method called when Edit Sheet is submitted.
      */

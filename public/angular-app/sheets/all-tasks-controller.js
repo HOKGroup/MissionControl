@@ -20,7 +20,6 @@ function AllTasksController($uibModalInstance, $uibModal, SheetsFactory, sheet) 
             }
         });
         var data = {
-            'centralPath': vm.sheet.centralPath,
             'sheetId': vm.sheet._id,
             'deletedIds': selectedIds
         };
