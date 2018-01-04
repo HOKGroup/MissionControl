@@ -15,8 +15,8 @@ TriggerRecordService = {
       return res.send(result);
     });
   },
-  
-   findByFilePath : function(req, res){
+
+    findByCentralPath : function(req, res){
     var path = req.params.centralpath;
     TriggerRecord.find({'centralPath':path},function(err, result) {
       return res.send(result);
