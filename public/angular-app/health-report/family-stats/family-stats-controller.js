@@ -10,8 +10,12 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket,
         console.log('task_updated');
     });
 
-    vm.AllFamilies = data.families.filter(function (item) {
-        return !item.isDeleted && item.isFailingChecks;
+    vm.AllFamilies = [];
+    data.families.forEach(function (item) {
+        if(!item.isDeleted && item.isFailingChecks){
+            item['collectionId'] = data._id;
+            vm.AllFamilies.push(item);
+        }
     });
 
     vm.pcoordinatesData = [];
@@ -63,7 +67,6 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket,
             }
             return found;
         });
-        // if(dtInstance) {dtInstance.reloadData();}
     };
 
     vm.formatValue = function(item){
@@ -118,243 +121,154 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket,
         return f.sizeValue < 1000000;
     };
 
-    vm.openAllTasksWindow = function (size, family) {
-        var modalInstance = $uibModal.open({
+    /**
+     * Launches appropriate modal window.
+     * @param family
+     */
+    vm.launchEditor = function (family) {
+        if(family.tasks.length > 0){
+            openAllTasks('lg', family);
+        } else {
+            openEditTask('lg', family, null, 'Add Task')
+        }
+    };
+
+    /**
+     * Launches all tasks dialog.
+     * @param size
+     * @param family
+     */
+    var openAllTasks = function (size, family) {
+        $uibModal.open({
             animation: true,
-            templateUrl: 'editAllTasks',
-            controller: modalAllTasksCtrl,
+            templateUrl: 'angular-app/health-report/family-stats/all-tasks.html',
+            controller: 'AllFamilyTasksController as vm',
             size: size,
             resolve: {
-                family: function () {
+                family: function (){
                     return family;
-                }
-            }
-        });
-
-        modalInstance.result.then(function () {}, function () {});
-    };
-
-    var modalAllTasksCtrl = function ($scope, $uibModalInstance, $uibModal, family) {
-        $scope.family = family;
-        $scope.check = false;
-
-        $scope.selectAll = function(check){
-            if (check) {
-                $scope.family.tasks.forEach(function (item) {
-                    item.isSelected = true;
-                })
-            } else {
-                $scope.family.tasks.forEach(function (item) {
-                    item.isSelected = false;
-                })
-            }
-        };
-
-        $scope.openEditModal = function (size, task) {
-
-            $uibModalInstance.close();
-            var modalInstance = $uibModal.open({
-                animation: true,
-                templateUrl: 'editSingleTask',
-                controller: modalSingleTaskCtrl,
-                size: size,
-                resolve: {
-                    task: function () {
-                        return task;
-                    },
-                    family: function(){
-                        return $scope.family
-                    }
-                }
-            });
-
-            modalInstance.result.then(function () {}, function () {});
-        };
-
-        $scope.addTask = function (size) {
-            $scope.family = family;
-            $uibModalInstance.close();
-
-            var modalInstance = $uibModal.open({
-                animation: true,
-                templateUrl: 'addTask',
-                controller: addTaskCtrl,
-                size: size,
-                resolve: {
-                    family: function(){
-                        return $scope.family
-                    }
-                }
-            });
-
-            modalInstance.result.then(function () {}, function () {});
-        };
-
-        $scope.delete = function () {
-            var counter = 0;
-            var selectedIds = {};
-            for (var i = 0; i < $scope.family.tasks.length; i++){
-                if($scope.family.tasks[i].isSelected){
-                    selectedIds[counter] = $scope.family.tasks[i]._id;
-                    counter++;
-                }
-            }
-
-            FamiliesFactory
-                .deleteMultipleTasks(data._id, $scope.family.name, selectedIds)
-                .then(function (response) {
-                    if(!response) return;
-
-                    // (Konrad) We clear the tasks array to update UI, without reloading the page
-                    $scope.family.tasks = $scope.family.tasks.filter(function (item){
-                        return !item.isSelected;
-                    });
-                }, function(err){
-                    console.log('Unable to delete task: ' + err)
-                });
-
-            $uibModalInstance.close();
-        };
-
-        $scope.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
-        };
-    };
-
-    var modalSingleTaskCtrl = function($scope, $uibModalInstance, $uibModal, task, family){
-        $scope.task = task;
-        $scope.family = family;
-
-        $scope.back = function (size, family) {
-            $uibModalInstance.close();
-            var modalInstance = $uibModal.open({
-                animation: true,
-                templateUrl: 'editAllTasks',
-                controller: modalAllTasksCtrl,
-                size: size,
-                resolve: {
-                    family: function(){
-                        return family
-                    }
-                }
-            });
-
-            modalInstance.result.then(function () {}, function () {});
-        };
-
-        $scope.updateTask = function () {
-            updateTask($scope.family, $scope.task);
-
-            $uibModalInstance.close();
-        };
-
-        $scope.reopenTask = function () {
-            var task = $scope.task;
-            task.completedBy = null;
-            task.completedOn = null;
-
-            updateTask($scope.family, task);
-
-            $uibModalInstance.close();
-        };
-
-        $scope.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
-        };
-    };
-
-    vm.openAddWindow = function (size, family) {
-        var modalInstance = $uibModal.open({
-            animation: true,
-            templateUrl: 'addTask',
-            controller: addTaskCtrl,
-            size: size,
-            resolve: {
-                family: function () {
-                    return family;
-                }
-            }
-        });
-
-        modalInstance.result.then(function () {}, function () {});
-    };
-
-    var addTaskCtrl = function($scope, $uibModalInstance, family) {
-        $scope.family = family;
-        $scope.task = {
-            assignedTo: "",
-            message: "",
-            submittedOn: Date.now(),
-            completedOn: null,
-            submittedBy: "web-user",
-            completedBy: null,
-            isSelected: false,
-            name: ""
-        };
-
-        $scope.addTask = function () {
-            FamiliesFactory
-                .addTask(data._id, family.name, $scope.task)
-                .then(function (response) {
-                    if (!response)return;
-
-                    //(Konrad) We need to update the AllFamilies collection
-                    // in order to update the DataTable display without reloading the whole page
-                    data = response.data;
-
-                    var newTask = data.families.find(function(item){
-                        return item.name === $scope.family.name;
-                    }).tasks.find(function(task){
-                        return task.name === $scope.task.name;
-                    });
-
-                    for(var i = 0; i < vm.AllFamilies.length; i++){
-                        if(vm.AllFamilies[i].name === $scope.family.name){
-                            vm.AllFamilies[i].tasks.push(newTask);
-                            break;
-                        }
-                    }
-                }, function (err) {
-                    console.log("Unable to add task: " + err);
-                });
-
-            $uibModalInstance.dismiss('cancel');
-        };
-
-        $scope.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
-        };
-    };
-
-    var updateTask = function(family, task){
-        FamiliesFactory
-            .updateTask(data._id, family.name, task._id, task)
-            .then(function(response){
-                if(!response) return;
-
+                }}
+        }).result.then(function(request){
+            if(!request) return;
+            if(request.action === 'Delete Family Task'){
                 // (Konrad) We clear the tasks array to update UI, without reloading the page
-                family.tasks = family.tasks.filter(function (item){
-                    return item._id !== task._id;
+                request.deletedIds.forEach(function (id) {
+                    var index = family.tasks.findIndex(function (x) {
+                        return x._id.toString() === id.toString();
+                    });
+                    if(index !== -1) family.tasks.splice(index, 1);
                 });
-
-                // (Konrad) We need to update the AllFamilies collection
-                // in order to update the DataTable display without reloading the whole page.
-                data = response.data;
-
-                var newTask = data.families.find(function(item){
-                    return item.name === family.name;
-                }).tasks.find(function(item){
-                    return item.name === task.name;
-                });
-
-                for(var i = 0; i < vm.AllFamilies.length; i++){
-                    if(vm.AllFamilies[i].name === family.name){
-                        vm.AllFamilies[i].tasks.push(newTask);
-                        break;
-                    }
-                }
-            }, function (err) {
-                console.log('Unable to update task: ' + err)
-            });
+            }
+        }).catch(function(){
+            console.log("All Tasks Dialog dismissed...");
+        });
     };
+
+    /**
+     * Launches add task dialog.
+     * @param size
+     * @param family
+     * @param action
+     */
+    var openEditTask = function (size, family, task, action) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'angular-app/health-report/family-stats/edit-task.html',
+            controller: 'EditFamilyTaskController as vm',
+            size: size,
+            resolve: {
+                family: function (){
+                    return family;
+                },
+                task: function(){
+                    return task;
+                },
+                action: function(){
+                    return action;
+                }}
+        }).result.then(function(request){
+            if(!request) return;
+
+            //(Konrad) We need to update the AllFamilies collection
+            // in order to update the DataTable display without reloading the whole page
+            var data = request.response.data;
+
+            //TODO: Identifying all families by name all the time
+            //TODO: is probably a bad idea. Families do have unique names
+            //TODO: but it would be better to use _id.
+            //TODO: Enforce task name to be unique.
+            var newTask = data.families.find(function(item){
+                return item.name === request.familyName;
+            }).tasks.find(function(task){
+                return task.name === request.taskName;
+            });
+
+            for(var i = 0; i < vm.AllFamilies.length; i++){
+                if(vm.AllFamilies[i].name === request.familyName){
+                    vm.AllFamilies[i].tasks.push(newTask);
+                    break;
+                }
+            }
+        }).catch(function(){
+            console.log("All Tasks Dialog dismissed...");
+        });
+    };
+
+    // var modalSingleTaskCtrl = function($scope, $uibModalInstance, $uibModal, task, family){
+    //     $scope.task = task;
+    //     $scope.family = family;
+    //
+    //     $scope.back = function (size, family) {
+    //         $uibModalInstance.close();
+    //         var modalInstance = $uibModal.open({
+    //             animation: true,
+    //             templateUrl: 'editAllTasks',
+    //             controller: modalAllTasksCtrl,
+    //             size: size,
+    //             resolve: {
+    //                 family: function(){
+    //                     return family
+    //                 }
+    //             }
+    //         });
+    //
+    //         modalInstance.result.then(function () {}, function () {});
+    //     };
+    //
+    //     $scope.updateTask = function () {
+    //         updateTask($scope.family, $scope.task);
+    //
+    //         $uibModalInstance.close();
+    //     };
+    //
+    //     $scope.reopenTask = function () {
+    //         var task = $scope.task;
+    //         task.completedBy = null;
+    //         task.completedOn = null;
+    //
+    //         updateTask($scope.family, task);
+    //
+    //         $uibModalInstance.close();
+    //     };
+    //
+    //     $scope.cancel = function () {
+    //         $uibModalInstance.dismiss('cancel');
+    //     };
+    // };
+
+    // vm.openAddWindow = function (size, family) {
+    //     var modalInstance = $uibModal.open({
+    //         animation: true,
+    //         templateUrl: 'addTask',
+    //         controller: addTaskCtrl,
+    //         size: size,
+    //         resolve: {
+    //             family: function () {
+    //                 return family;
+    //             }
+    //         }
+    //     });
+    //
+    //     modalInstance.result.then(function () {}, function () {});
+    // };
 }

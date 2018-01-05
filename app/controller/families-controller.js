@@ -82,8 +82,18 @@ module.exports.findById = function(req, res){
         });
 };
 
+/**
+ * Adds new task to Family.
+ * @param req
+ * @param res
+ */
 module.exports.addTask = function(req, res) {
     var id = req.params.id;
+
+    // (Konrad) We override the _id with a new one, so that we know exactly what
+    // that new task is stored under, and can pass it along to client.
+    var newId = mongoose.Types.ObjectId();
+    req.body['_id'] = newId;
 
     Families
         .findOneAndUpdate(
@@ -94,7 +104,21 @@ module.exports.addTask = function(req, res) {
             if(err){
                 res.status(500).json(err);
             } else {
-                global.io.sockets.emit('familyTask_added', { 'body': data, 'familyName': req.params.name });
+                // (Konrad) We can prefilter on server side and minimize payload.
+                var task = data.families.find(function (item) {
+                    return item.name === req.params.name;
+                }).tasks.find(function(item){
+                    return item._id.toString() === newId.toString();
+                });
+
+                if(task !== null){
+                    global.io.sockets.emit('familyTask_added', {
+                        'familyName': req.params.name,
+                        'task': task,
+                        'collectionId': req.params.id //used to match Revit models
+                    });
+                }
+
                 res.json(data)
             }
         });
@@ -107,6 +131,7 @@ module.exports.updateTask = function (req, res) {
     var id = req.params.id;
     var taskId = mongoose.Types.ObjectId(req.params.taskid);
 
+    //TODO: There is no reason to call the DB twice here. Use the same method as sheets.
     Families
         .update(
             { _id: id, 'families.name': req.params.name},
@@ -123,6 +148,7 @@ module.exports.updateTask = function (req, res) {
                             if(err){
                                 res.status(500).json(err);
                             } else {
+                                //TODO: This needs an update. There is no reason to send this big of a payload.
                                 global.io.sockets.emit('familyTask_updated', {
                                     'body': data,
                                     'familyName': req.params.name,
@@ -154,6 +180,11 @@ module.exports.updateTask = function (req, res) {
 //         )
 // };
 
+/**
+ * Deletes tasks from family.
+ * @param req
+ * @param res
+ */
 module.exports.deleteMultipleTasks = function (req, res) {
     var id = req.params.id;
     var famName = req.params.name;
@@ -163,7 +194,6 @@ module.exports.deleteMultipleTasks = function (req, res) {
             taskIds.push(mongoose.Types.ObjectId(req.body[key]));
         }
     }
-
     Families
         .update(
             { _id: id, 'families.name': famName},
@@ -171,7 +201,10 @@ module.exports.deleteMultipleTasks = function (req, res) {
                 if(err) {
                     res.status(400).json(err);
                 } else {
-                    global.io.sockets.emit('task_deleted', req.body);
+                    global.io.sockets.emit('task_deleted', {
+                        'deletedIds': req.body,
+                        'familyName': req.params.name,
+                        'collectionId': req.params.id});
                     res.status(202).json(result);
                 }
             }

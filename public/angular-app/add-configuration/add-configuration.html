@@ -11,17 +11,18 @@
 
 	<div class="row">
 		<form name="form" class="css-form">
+			<!--NAME-->
 			<div class="form-group row">
 				<label style="margin-top:7px;" class="form-control-label col-sm-2" for="configName">
 					Configuration Name:
 					<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.newConfig.name"></span>
 					<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.newConfig.name"></span>
 				</label>
-
 				<div class="col-sm-10">
 					<input type="text" name="cName" class="form-control" id="configName" placeholder="Name" ng-model="vm.newConfig.name" required>
 				</div>
 			</div>
+			<!--FILES-->
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="panel-title">Files</h3>
@@ -30,54 +31,75 @@
 					<table class="table table-hover">
 						<thead>
 						<tr>
-							<th class="col-md-11">
-								Revit Projects
+							<th class="col-md-10">
+								Revit Files Added:
 								<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.HasFiles"></span>
 								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.HasFiles"></span>
 							</th>
-							<th class="col-md-1"></th>
+							<th class="col-md-2"></th>
 						</tr>
 						</thead>
 						<tbody>
 						<tr ng-repeat="file in vm.newConfig.files">
 							<td>{{ file.centralPath }}</td>
-							<td><button type="button" class="btn btn-default" ng-click="vm.deleteFile(file.centralPath)"><span class="glyphicon glyphicon-trash"></span></button></td>
+							<td class="text-right">
+								<button type="button" class="btn btn-danger" ng-click="vm.deleteFile(file.centralPath)">
+									<span class="glyphicon glyphicon-trash" style="margin-right: 0px"></span>
+								</button>
+							</td>
 						</tr>
 						</tbody>
 					</table>
-					<form class ="form-horizontal">
-						<fieldset class="form-group">
-							<div class="col-sm-3 text-right">
-								<label style="margin-top:7px;" class="control-label" for="formNewFile">
-									Revit File:
-									<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.HasFiles"></span>
-									<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.HasFiles"></span>
-								</label>
-							</div>
-							<div class="col-sm-8" >
-								<input type="text" name="fPath" class="form-control" id="formNewFile" placeholder="Enter a central path for Revit project. (.rvt)" ng-model="vm.newFile" required>
-								<p class="text-danger">{{ vm.fileWarningMsg }}</p>
-							</div>
-							<div class="col-sm-1" style="padding: 0">
-								<!--<label class="btn btn-default btn-file">-->
-									<!--<span class="glyphicon glyphicon-plus"></span>-->
-									<!--Add <input type="file" style="display: none;" ng-file-model="vm.files" multiple>-->
+					<table class="table table-hover">
+						<thead></thead>
+						<tbody>
+						<tr>
+							<td class="col-md-2 text-right" style="padding-top: 15px">
+								<b>Add Revit File:</b>
+								<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.HasFiles"></span>
+								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.HasFiles"></span>
+							</td>
+							<td class="col-md-8">
+								<input type="text" class="form-control" id="formNewFile" placeholder="Enter a central file path for Revit project. (.rvt)" ng-model="vm.newFile">
+								<p class="text-warning">{{ vm.fileWarningMsg }}</p>
+							</td>
+							<td class="col-md-2 text-right">
+								<button type="button" class="btn btn-default" ng-click="vm.addFile()">
+									<span class="glyphicon glyphicon-plus" style="margin-right: 0px"></span>
+								</button>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+					<!--<form class ="form-horizontal">-->
+						<!--<fieldset class="form-group">-->
+							<!--<div class="col-sm-3 text-right">-->
+								<!--<label style="margin-top:7px;" class="control-label" for="formNewFile">-->
+									<!--Revit File:-->
+									<!--<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.HasFiles"></span>-->
+									<!--<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.HasFiles"></span>-->
 								<!--</label>-->
-								<button type="button" class="btn btn-default" ng-click="vm.addFile()"><span class="glyphicon glyphicon-plus"></span></button>
-							</div>
-						</fieldset>
-						<fieldset class="form-group">
-							<div class="col-sm-3 text-right">
-								<label style="margin-top:7px;" class="control-label" for="formNewSheetFile">Sheet Database: </label>
-							</div>
-							<div class="col-sm-7">
-								<input type="text" class="form-control" id="formNewSheetFile" placeholder="Enter a file path for the SQLite sheet database. (.sqlite)" ng-model="vm.newConfig.sheetDatabase">
-							</div>
-							<div class="col-sm-2">
+							<!--</div>-->
+							<!--<div class="col-sm-8" >-->
+								<!--<input type="text" name="fPath" class="form-control" id="formNewFile" placeholder="Enter a central path for Revit project. (.rvt)" ng-model="vm.newFile" required>-->
+								<!--<p class="text-danger">{{ vm.fileWarningMsg }}</p>-->
+							<!--</div>-->
+							<!--<div class="col-sm-1" style="padding: 0">-->
+								<!--<button type="button" class="btn btn-default" ng-click="vm.addFile()"><span class="glyphicon glyphicon-plus"></span></button>-->
+							<!--</div>-->
+						<!--</fieldset>-->
+						<!--<fieldset class="form-group">-->
+							<!--<div class="col-sm-3 text-right">-->
+								<!--<label style="margin-top:7px;" class="control-label" for="formNewSheetFile">Sheet Database: </label>-->
+							<!--</div>-->
+							<!--<div class="col-sm-7">-->
+								<!--<input type="text" class="form-control" id="formNewSheetFile" placeholder="Enter a file path for the SQLite sheet database. (.sqlite)" ng-model="vm.newConfig.sheetDatabase">-->
+							<!--</div>-->
+							<!--<div class="col-sm-2">-->
 
-							</div>
-						</fieldset>
-					</form>
+							<!--</div>-->
+						<!--</fieldset>-->
+					<!--</form>-->
 				</div>
 			</div>
 			<div class="panel panel-default" ng-repeat="updater in vm.newConfig.updaters" style="margin-top:10px;">

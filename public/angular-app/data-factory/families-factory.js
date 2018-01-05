@@ -17,8 +17,8 @@ function FamiliesFactory($http){
           return $http.post('/api/v1/families/' + familyCollectionId + '/family/' + familyName + '/deletemany', taskIds).then(complete).catch(failed);
         },
 
-        updateTask: function updateTask(familyCollectionId, famName, taskId, task) {
-            return $http.post('/api/v1/families/' + familyCollectionId + '/family/' + famName + '/updatetask/' + taskId, task).then(complete).catch(failed);
+        updateTask: function updateTask(family, task) {
+            return $http.post('/api/v1/families/' + family.collectionId + '/family/' + family.name + '/updatetask/' + task._id, task).then(complete).catch(failed);
         },
 
         updateFilePath: function updateFilePath(id, data){

@@ -30,8 +30,7 @@ function EditSheetController($uibModalInstance, SheetsFactory, sheet, action) {
         vm.sheet.isSelected = false; // never submit the sheet with selection on
         if(action === 'Add Task'){
             SheetsFactory
-                .addSheetTask(vm.sheet.collectionId, vm.sheet)
-                .then(function(sheetResponse){
+                .addSheetTask(vm.sheet.collectionId, vm.sheet).then(function(sheetResponse){
                     if(!sheetResponse) return;
 
                     $uibModalInstance.close({response: sheetResponse});
@@ -40,8 +39,7 @@ function EditSheetController($uibModalInstance, SheetsFactory, sheet, action) {
                 });
         } else {
             SheetsFactory
-                .updateTasks(vm.sheet.collectionId, vm.sheet)
-                .then(function(sheetResponse){
+                .updateTasks(vm.sheet.collectionId, vm.sheet).then(function(sheetResponse){
                     if(!sheetResponse) return;
 
                     $uibModalInstance.close({response: sheetResponse});
@@ -62,8 +60,7 @@ function EditSheetController($uibModalInstance, SheetsFactory, sheet, action) {
         vm.sheet.isSelected = false;
 
         SheetsFactory
-            .updateTasks(vm.sheet.collectionId, vm.sheet)
-            .then(function(sheetResponse){
+            .updateTasks(vm.sheet.collectionId, vm.sheet).then(function(sheetResponse){
                 if(!sheetResponse) return;
 
                 $uibModalInstance.close({response: sheetResponse});
@@ -81,8 +78,7 @@ function EditSheetController($uibModalInstance, SheetsFactory, sheet, action) {
         vm.sheet.isSelected = false; // never submit the sheet with selection on
         if(action === 'Add Task'){
             SheetsFactory
-                .addSheetTask(vm.sheet.collectionId, vm.sheet)
-                .then(function(sheetResponse){
+                .addSheetTask(vm.sheet.collectionId, vm.sheet).then(function(sheetResponse){
                     if(!sheetResponse) return;
 
                     $uibModalInstance.close({response: sheetResponse});
@@ -91,8 +87,7 @@ function EditSheetController($uibModalInstance, SheetsFactory, sheet, action) {
                 });
         } else {
             SheetsFactory
-                .updateTasks(vm.sheet.collectionId, vm.sheet)
-                .then(function(sheetResponse){
+                .updateTasks(vm.sheet.collectionId, vm.sheet).then(function(sheetResponse){
                     if(!sheetResponse) return;
 
                     $uibModalInstance.close({response: sheetResponse});

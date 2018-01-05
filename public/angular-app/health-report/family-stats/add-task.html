@@ -1,0 +1,48 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title pull-left">Add Task</h5>
+        <button type="button" class="close pull-right" ng-click="cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="form-group">
+                <label class="form-control-label">Family Info:</label>
+                <label class="form-control">{{family.name}}</label>
+            </div>
+            <div class="col-md-6 no-padding-left">
+                <div class="form-group">
+                    <label for="task-name" class="form-control-label">
+                        Task Name:
+                        <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="task.name"></span>
+                        <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!task.name"></span>
+                    </label>
+                    <input type="text" class="form-control" value="{{task.name}}" ng-model="task.name">
+                </div>
+            </div>
+            <div class="col-md-6 no-padding-right">
+                <div class="form-group">
+                    <label for="recipient-name" class="form-control-label">
+                        Recipient:
+                        <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="task.assignedTo"></span>
+                        <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!task.assignedTo"></span>
+                    </label>
+                    <input type="text" class="form-control" value="{{task.assignedTo}}" ng-model="task.assignedTo">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message-text" class="form-control-label">
+                    Message:
+                    <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="task.message"></span>
+                    <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!task.message"></span>
+                </label>
+                <textarea class="form-control" ng-model="task.message"></textarea>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" ng-click="cancel()">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="addTask()"><span class="glyphicon glyphicon-plus"></span> Add</button>
+    </div>
+</div>
