@@ -52,7 +52,7 @@
     <div class="modal-footer">
         <!--<button type="button" class="btn btn-primary pull-left" ng-click="back('', family)"><span class="glyphicon glyphicon-chevron-left">Back</span></button>-->
         <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="vm.reopenTask()" ng-if="vm.task.completedBy">Re-Open</button>
+        <button type="button" class="btn btn-primary" ng-click="vm.reopen()" ng-if="vm.task.completedBy">Re-Open</button>
         <button type="button" class="btn btn-primary" ng-click="vm.submit()" ng-if="!vm.task.completedBy" ng-disabled="!vm.task.message || !vm.task.assignedTo || !vm.task.name">Submit</button>
     </div>
 </div>

@@ -33,12 +33,6 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
 
                 svg.selectAll("*").remove();
 
-                // var cars = [{name: "someName", param1: 12, param2: 13, param3: 40},
-                //     {name: "someName2", param1: 40, param2: 23, param3: 30},
-                //     {name: "someName3", param1: 20, param2: 53, param3: 50},
-                //     {name: "someName4", param1: 10, param2: 10, param3: 10},
-                //     {name: "someName5", param1: 12, param2: 23, param3: 12}];
-
                 var margin = {top: 20, right: 10, bottom: 10, left: 30},
                     width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right,
                     height = 400 - margin.top - margin.bottom;
@@ -86,36 +80,37 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
                     .enter().append("path")
                     .attr("d", path);
 
+                //TODO: Dragging is cool, but this needs fixing where axis are out of position after drag.
                 // Add a group element for each dimension.
                 var g = svg.selectAll(".dimension")
                     .data(dimensions)
                     .enter().append("g")
                     .attr("class", "dimension")
-                    .attr("transform", function(d) {  return "translate(" + (x(d)+margin.left-margin.right) + ")"; })
-                    .call(d3.drag()
-                        .subject(function(d) { return {x: x(d)}; })
-                        .on("start", function(d) {
-                            dragging[d] = x(d);
-                            background.attr("visibility", "hidden");
-                        })
-                        .on("drag", function(d) {
-                            dragging[d] = Math.min(width, Math.max(0, d3.event.x));
-                            foreground.attr("d", path);
-                            dimensions.sort(function(a, b) { return position(a) - position(b); });
-                            x.domain(dimensions);
-                            g.attr("transform", function(d) { return "translate(" + position(d) + ")"; })
-                        })
-                        .on("end", function(d) {
-                            delete dragging[d];
-                            transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
-                            transition(foreground).attr("d", path);
-                            background
-                                .attr("d", path)
-                                .transition()
-                                .delay(500)
-                                .duration(0)
-                                .attr("visibility", null);
-                        }));
+                    .attr("transform", function(d) {  return "translate(" + (x(d)+margin.left-margin.right) + ")"; });
+                    // .call(d3.drag()
+                    //     .subject(function(d) { return {x: x(d)}; })
+                    //     .on("start", function(d) {
+                    //         dragging[d] = x(d);
+                    //         background.attr("visibility", "hidden");
+                    //     })
+                    //     .on("drag", function(d) {
+                    //         dragging[d] = Math.min(width, Math.max(0, d3.event.x));
+                    //         foreground.attr("d", path);
+                    //         dimensions.sort(function(a, b) { return position(a) - position(b); });
+                    //         x.domain(dimensions);
+                    //         g.attr("transform", function(d) { return "translate(" + position(d) + ")"; })
+                    //     })
+                    //     .on("end", function(d) {
+                    //         delete dragging[d];
+                    //         transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
+                    //         transition(foreground).attr("d", path);
+                    //         background
+                    //             .attr("d", path)
+                    //             .transition()
+                    //             .delay(500)
+                    //             .duration(0)
+                    //             .attr("visibility", null);
+                    //     }));
 
                 // Add an axis and title.
                 g.append("g")
@@ -153,7 +148,9 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
                             .call(y[d].brush = d3.brushY().extent([[-8, 0], [8,height]])
                                 .on("start", brushstart)
                                 .on("brush", gobrush)
-                                .on("brush", brush_parallel_chart));
+                                .on("brush", brush_parallel_chart)
+                                .on("end", endBrush)
+                            );
                     })
                     .selectAll("rect")
                     .attr("x", -8)
@@ -200,6 +197,19 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
                     return extent[1] <= d && d <= extent[0];
                 }
 
+                function endBrush() {
+                    selected = data.filter(function(item){
+                        return dimensions.every(function (dim, index) {
+                            if (extents[index][0] === 0 && extents[index][1] === 0) {
+                                return true;
+                            }
+                            return within(item[dim], extents[index]);
+                        });
+                    });
+
+                    scope.onBrush({item: selected});
+                }
+
                 // Handles a brush event, toggling the display of foreground lines.
                 function brush_parallel_chart() {
                     for(var i = 0; i < dimensions.length; ++i){
@@ -216,19 +226,6 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
                             return within(d[p], extents[i])
                         }) ? null : "none";
                     });
-
-                    selected = data.filter(function(item){
-                        if(dimensions.every(function(dim, index){
-                                if(extents[index][0]===0 && extents[index][1]===0) {
-                                    return true;
-                                }
-                                return within(item[dim], extents[index]);
-                            })){
-                            return true;
-                        }
-                    });
-
-                    scope.onBrush({item: selected});
                 }
             };
         }

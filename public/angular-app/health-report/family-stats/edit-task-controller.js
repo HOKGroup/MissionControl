@@ -28,50 +28,47 @@ function EditFamilyTaskController($uibModalInstance, FamiliesFactory, family, ta
         if(action === 'Add Task'){
             FamiliesFactory
                 .addTask(vm.family.collectionId, vm.family.name, vm.task).then(function (response) {
-                if (!response)return;
+                    if (!response)return;
 
-                $uibModalInstance.close({
-                    response: response,
-                    familyName: vm.family.name,
-                    taskName: vm.task.name
-                });
+                    $uibModalInstance.close({
+                        response: response,
+                        familyName: vm.family.name
+                    });
             }, function (err) {
                 console.log("Unable to add task: " + err);
             });
         } else if (action === 'Edit Task'){
-            console.log(vm.task);
-            console.log(vm.family.collectionId);
-            console.log(vm.task.name);
-            console.log(vm.task._id);
             FamiliesFactory
                 .updateTask(vm.family, vm.task).then(function(response){
                     if(!response) return;
 
-                    // // (Konrad) We clear the tasks array to update UI, without reloading the page
-                    // family.tasks = family.tasks.filter(function (item){
-                    //     return item._id !== task._id;
-                    // });
-                    //
-                    // // (Konrad) We need to update the AllFamilies collection
-                    // // in order to update the DataTable display without reloading the whole page.
-                    // data = response.data;
-                    //
-                    // var newTask = data.families.find(function(item){
-                    //     return item.name === family.name;
-                    // }).tasks.find(function(item){
-                    //     return item.name === task.name;
-                    // });
-                    //
-                    // for(var i = 0; i < vm.AllFamilies.length; i++){
-                    //     if(vm.AllFamilies[i].name === family.name){
-                    //         vm.AllFamilies[i].tasks.push(newTask);
-                    //         break;
-                    //     }
-                    // }
+                    $uibModalInstance.close({
+                        response: response,
+                        familyName: vm.family.name
+                    });
                 }, function (err) {
                     console.log('Unable to update task: ' + err)
                 });
         }
+    };
+
+    vm.reopen = function (){
+        vm.task.isSelected = false;
+        vm.task.submittedOn = Date.now();
+        vm.task.completedBy = null;
+        vm.task.completedOn = null;
+
+        FamiliesFactory
+            .updateTask(vm.family, vm.task).then(function(response){
+            if(!response) return;
+
+            $uibModalInstance.close({
+                response: response,
+                familyName: vm.family.name
+            });
+        }, function (err) {
+            console.log('Unable to reopen task: ' + err)
+        });
     };
 
     /**

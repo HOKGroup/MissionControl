@@ -1,14 +1,14 @@
 var app = angular.module('MissionControlApp').controller('FamilyStatsController', FamilyStatsController);
 
-function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket, DTColumnDefBuilder, DTInstances, UtilityService) {
+function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTInstances, UtilityService) {
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.FamilyData = this.processed;
     var data = this.full;
 
-    Socket.on('task_updated', function(data){
-        console.log('task_updated');
-    });
+    // Socket.on('task_updated', function(data){
+    //     console.log('task_updated');
+    // });
 
     vm.AllFamilies = [];
     data.families.forEach(function (item) {
@@ -57,10 +57,10 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket,
     };
 
     vm.OnBrush = function(item){
-        vm.AllFamilies = data.families.filter(function(x){
+        vm.AllFamilies = data.families.filter(function(family){
             var found = false;
             for (var i = 0; i < item.length; i++){
-                if(item[i].name === x.name){
+                if(item[i].name === family.name){
                     found = true;
                     break;
                 }
@@ -168,6 +168,7 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket,
      * Launches add task dialog.
      * @param size
      * @param family
+     * @param task
      * @param action
      */
     var openEditTask = function (size, family, task, action) {
@@ -189,86 +190,15 @@ function FamilyStatsController($routeParams, FamiliesFactory, $uibModal, Socket,
         }).result.then(function(request){
             if(!request) return;
 
-            //(Konrad) We need to update the AllFamilies collection
-            // in order to update the DataTable display without reloading the whole page
-            var data = request.response.data;
-
-            //TODO: Identifying all families by name all the time
-            //TODO: is probably a bad idea. Families do have unique names
-            //TODO: but it would be better to use _id.
-            //TODO: Enforce task name to be unique.
-            var newTask = data.families.find(function(item){
-                return item.name === request.familyName;
-            }).tasks.find(function(task){
-                return task.name === request.taskName;
-            });
-
-            for(var i = 0; i < vm.AllFamilies.length; i++){
-                if(vm.AllFamilies[i].name === request.familyName){
-                    vm.AllFamilies[i].tasks.push(newTask);
-                    break;
-                }
+            // (Konrad) This can only return "Add Task".
+            // Otherwise the all tasks menu would come up and
+            // return value will be handled by that controller.
+            if(action === 'Add Task'){
+                var newTask = request.response.data;
+                family.tasks.push(newTask);
             }
         }).catch(function(){
             console.log("All Tasks Dialog dismissed...");
         });
     };
-
-    // var modalSingleTaskCtrl = function($scope, $uibModalInstance, $uibModal, task, family){
-    //     $scope.task = task;
-    //     $scope.family = family;
-    //
-    //     $scope.back = function (size, family) {
-    //         $uibModalInstance.close();
-    //         var modalInstance = $uibModal.open({
-    //             animation: true,
-    //             templateUrl: 'editAllTasks',
-    //             controller: modalAllTasksCtrl,
-    //             size: size,
-    //             resolve: {
-    //                 family: function(){
-    //                     return family
-    //                 }
-    //             }
-    //         });
-    //
-    //         modalInstance.result.then(function () {}, function () {});
-    //     };
-    //
-    //     $scope.updateTask = function () {
-    //         updateTask($scope.family, $scope.task);
-    //
-    //         $uibModalInstance.close();
-    //     };
-    //
-    //     $scope.reopenTask = function () {
-    //         var task = $scope.task;
-    //         task.completedBy = null;
-    //         task.completedOn = null;
-    //
-    //         updateTask($scope.family, task);
-    //
-    //         $uibModalInstance.close();
-    //     };
-    //
-    //     $scope.cancel = function () {
-    //         $uibModalInstance.dismiss('cancel');
-    //     };
-    // };
-
-    // vm.openAddWindow = function (size, family) {
-    //     var modalInstance = $uibModal.open({
-    //         animation: true,
-    //         templateUrl: 'addTask',
-    //         controller: addTaskCtrl,
-    //         size: size,
-    //         resolve: {
-    //             family: function () {
-    //                 return family;
-    //             }
-    //         }
-    //     });
-    //
-    //     modalInstance.result.then(function () {}, function () {});
-    // };
 }

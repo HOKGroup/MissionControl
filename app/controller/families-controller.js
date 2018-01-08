@@ -119,66 +119,72 @@ module.exports.addTask = function(req, res) {
                     });
                 }
 
-                res.json(data)
+                res.status(200).json(task)
             }
         });
 };
 
-// (Konrad) For the time being as of 3.4.9 MongoDB release
-// we cannot update objects inside of nested arrays with a single call
-// That change is coming with MongoDB 3.5.12 https://jira.mongodb.org/browse/SERVER-831
+/**
+ * Updates family tasks.
+ * @param req
+ * @param res
+ */
 module.exports.updateTask = function (req, res) {
-    var id = req.params.id;
-    var taskId = mongoose.Types.ObjectId(req.params.taskid);
-
-    //TODO: There is no reason to call the DB twice here. Use the same method as sheets.
     Families
-        .update(
-            { _id: id, 'families.name': req.params.name},
-            { $pull: {'families.$.tasks': { _id: taskId}}}, function(err){
-                if(err) {
-                    res.status(500).json(err);
-                } else {
-                    Families
-                        .findOneAndUpdate(
-                            {_id: id, 'families.name': req.params.name}, // use fam name here since it's unique
-                            {$push: {'families.$.tasks': req.body}},
-                            {'new': true}) // returns newly updated collection
-                        .exec(function(err, data){
-                            if(err){
-                                res.status(500).json(err);
-                            } else {
-                                //TODO: This needs an update. There is no reason to send this big of a payload.
-                                global.io.sockets.emit('familyTask_updated', {
-                                    'body': data,
-                                    'familyName': req.params.name,
-                                    'oldTaskId': req.params.taskid});
-                                res.status(202).json(data)
-                            }
-                        });
-                }
+        .findById(req.params.id)
+        .select('families')
+        .exec(function (err, doc){
+            var response = {
+                status: 200,
+                message: []
+            };
+            if (err){
+                response.status = 500;
+                response.message = err;
+            } else if(!doc){
+                response.status = 404;
+                response.message = {"message": "Families Id not found."}
             }
-        );
+            if(doc){
+                updateFamiliesTask(req, res, doc);
+            } else {
+                res.status(response.status).json(response.message);
+            }
+        });
 };
 
-// (Konrad) Not used
-// module.exports.deleteTask = function (req, res) {
-//     var id = req.params.id;
-//     var famName = req.params.name;
-//     var taskId = mongoose.Types.ObjectId(req.params.taskid);
-//
-//     Families
-//         .update(
-//             { _id: id, 'families.name': famName},
-//             { $pull: {'families.$.tasks': { _id: taskId}}}, function(err, result){
-//                 if(err) {
-//                     res.status(400).json(err);
-//                 } else {
-//                     res.status(202).json(result);
-//                 }
-//             }
-//         )
-// };
+var updateFamiliesTask = function (req, res, doc) {
+    //TODO: Using family name to identify families is not a great idea
+    //TODO: Replace with _id.
+    var family = doc.families.find(function(item){
+        return item.name === req.params.name;
+    });
+
+    var index = family.tasks.findIndex(function(item){
+        return item._id.toString() === req.params.taskid.toString();
+    });
+    if(index !== -1) family.tasks[index] = req.body;
+
+    doc.save(function (err, familiesUpdated) {
+        if(err){
+            res.status(500).json(err);
+        } else {
+            var task = familiesUpdated.families.find(function(item){
+                return item.name === req.params.name;
+            }).tasks.find(function(task){
+                return task._id.toString() === req.params.taskid.toString();
+            });
+
+            global.io.sockets.emit('familyTask_updated', {
+                'familyName': req.params.name,
+                'task': task,
+                'collectionId': req.params.id // used to match the Revit model
+            });
+
+            res.status(200).json(task);
+        }
+    });
+};
 
 /**
  * Deletes tasks from family.
