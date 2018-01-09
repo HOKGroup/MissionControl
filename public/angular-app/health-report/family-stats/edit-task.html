@@ -42,15 +42,14 @@
             <div class="form-group" ng-if="vm.task.completedBy">
                 <label for="comments-text" class="form-control-label">
                     Comments:
-                    <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.task.message && !vm.task.completedBy"></span>
-                    <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.task.message && !vm.task.completedBy"></span>
+                    <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.task.comments && !vm.task.completedBy"></span>
+                    <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.task.comments && !vm.task.completedBy"></span>
                 </label>
                 <textarea class="form-control" id="comments-text" ng-model="vm.task.comments" ng-disabled="vm.task.completedBy"></textarea>
             </div>
         </form>
     </div>
     <div class="modal-footer">
-        <!--<button type="button" class="btn btn-primary pull-left" ng-click="back('', family)"><span class="glyphicon glyphicon-chevron-left">Back</span></button>-->
         <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
         <button type="button" class="btn btn-primary" ng-click="vm.reopen()" ng-if="vm.task.completedBy">Re-Open</button>
         <button type="button" class="btn btn-primary" ng-click="vm.submit()" ng-if="!vm.task.completedBy" ng-disabled="!vm.task.message || !vm.task.assignedTo || !vm.task.name">Submit</button>
