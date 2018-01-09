@@ -1,10 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<style>
+    html {
+        overflow-y:scroll;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1>
+                <a href="#/projects/edit/{{ vm.selectedProject._id }}" class="project-link">{{ vm.selectedProject.number }} {{ vm.selectedProject.name }}</a>
+                <a href="#/projects/configurations/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/parameter_32.png" height="32" width="32" style="margin-top:0" ></a>
+                <a href="#/projects/healthreport/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/health_32.png" height="32" width="32" style="margin-top:0"></a>
+                <a href="#/projects/sheets/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/sheets_32.png" height="32" width="32" style="margin-top:0"></a>
+                <a href="#/projects/vr/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/vr_32.png" height="32" width="32" style="margin-top:0"></a>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="panel-group" id="p1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" style="padding-top: 5px;">VR</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,8 +1,7 @@
 /**
  * Created by konrad.sobon on 2017-10-24.
  */
-angular.module('MissionControlApp')
-    .controller('SheetsController', SheetsController);
+angular.module('MissionControlApp').controller('SheetsController', SheetsController);
 
 function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, DTInstances, $uibModal, UtilityService){
     var vm = this;

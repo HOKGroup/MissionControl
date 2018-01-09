@@ -69,5 +69,10 @@ function config($routeProvider){
             templateUrl: 'angular-app/sheets/sheets.html',
             controller: 'SheetsController',
             controllerAs: 'vm'
+        })// VR page
+        .when('/projects/vr/:projectId', {
+            templateUrl: 'angular-app/vr/vr.html',
+            controller: 'VrController',
+            controllerAs: 'vm'
         })
 }

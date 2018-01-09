@@ -5,6 +5,7 @@ var healthReport = require('./models/healthrecords-model');
 var addins = require('./models/addins-model');
 var families = require('./models/families-model');
 var sheets = require('./models/sheets-model');
+var vr = require('./models/vr-model');
 
  module.exports = function(app) {
      var projects = require('./controller/projects');
@@ -14,6 +15,7 @@ var sheets = require('./models/sheets-model');
      app.get('/api/v1/projects/populate/:id', projects.populateById);
      app.get('/api/v1/projects/populatehr/:id', projects.populateHealthRecords);
      app.get('/api/v1/projects/populatesheets/:id', projects.populateSheets);
+     app.get('/api/v1/projects/populatevr/:id', projects.populateVr);
      app.get('/api/v1/projects/configid/:configid', projects.findByConfigurationId);
      app.get('/api/v1/projects/office/:office', projects.findByOffice);
      app.post('/api/v1/projects', projects.add);
@@ -99,4 +101,6 @@ var sheets = require('./models/sheets-model');
      app.post('/api/v1/sheets/:id/deletetasks', sheets.deleteTasks);
      app.post('/api/v1/sheets/:id/updatetasks', sheets.updateSheetTask);
      app.put('/api/v1/sheets/:id/updatefilepath', sheets.updateFilePath);
+
+     var vr = require('./controller/vr-controller');
   };
