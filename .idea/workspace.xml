@@ -679,7 +679,7 @@
       <workItem from="1512059899130" duration="7000" />
       <workItem from="1512072147399" duration="3356000" />
       <workItem from="1512145214803" duration="114730000" />
-      <workItem from="1515000863844" duration="68539000" />
+      <workItem from="1515000863844" duration="68608000" />
     </task>
     <task id="LOCAL-00001" summary="adding addin manager detail info...">
       <created>1511306257582</created>
@@ -790,7 +790,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="217087000" />
+    <option name="totallyTimeSpent" value="217156000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
