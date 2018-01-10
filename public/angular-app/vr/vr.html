@@ -20,7 +20,20 @@
         <div class="panel-group" id="p1">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title" style="padding-top: 5px;">VR</h4>
+                    <h4 class="panel-title" style="padding-top: 5px;">Images</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <div class='container' dragula='"fifth-bag"'>
+                            <div><button>When elements are copyable, they can't be sorted in their origin container</button></div>
+                            <div>Copying prevents original elements from being dragged. A copy gets created and <em>that</em> gets dragged instead</div>
+                            <div>Whenever that happens, a <code>cloned</code> event is raised</div>
+                        </div>
+                        <div class='container' dragula='"fifth-bag"'>
+                            <div>Note that the clones get destroyed if they're not dropped into another container</div>
+                            <div>You'll be dragging a copy, so when they're dropped into another container you'll see the duplication.</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

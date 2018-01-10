@@ -3,10 +3,14 @@
  */
 angular.module('MissionControlApp').controller('VrController', VrController);
 
-function VrController($routeParams, VrFactory){
+function VrController($routeParams, VrFactory, dragulaService){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
+
+    dragulaService.options(vm, 'fifth-bag', {
+        copy: true
+    });
 
     // (Konrad) Retrieves selected project from MongoDB.
     getSelectedProject(vm.projectId);
