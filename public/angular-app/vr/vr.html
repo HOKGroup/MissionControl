@@ -17,21 +17,54 @@
         </div>
     </div>
     <div class="row">
-        <div class="panel-group" id="p1">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title" style="padding-top: 5px;">Images</h4>
-                </div>
-                <div class="panel-collapse">
-                    <div class="panel-body">
-                        <div class='container' dragula='"fifth-bag"'>
-                            <div><button>When elements are copyable, they can't be sorted in their origin container</button></div>
-                            <div>Copying prevents original elements from being dragged. A copy gets created and <em>that</em> gets dragged instead</div>
-                            <div>Whenever that happens, a <code>cloned</code> event is raised</div>
+        <div class="row row-offcanvas row-offcanvas-left">
+            <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+                <div class="panel-group" id="p1">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title" style="padding-top: 5px;">Images</h4>
                         </div>
-                        <div class='container' dragula='"fifth-bag"'>
-                            <div>Note that the clones get destroyed if they're not dropped into another container</div>
-                            <div>You'll be dragging a copy, so when they're dropped into another container you'll see the duplication.</div>
+                        <div class="panel-collapse">
+                            <div class="panel-body">
+                                <div class='container' dragula='"fifth-bag"'>
+                                    <div><img src="images/parameter_32.png" width="32" height="32"></div>
+                                    <div><img src="images/health_32.png" width="32" height="32"></div>
+                                    <div><img src="images/sheets_32.png" width="32" height="32"></div>
+                                    <div><img src="images/vr_32.png" width="32" height="32"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-9">
+                <div class="panel-group" id="p2">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title" style="padding-top: 5px;">Bucket 1</h4>
+                        </div>
+                        <div class="panel-collapse">
+                            <div class="panel-body">
+                                <div class='container' dragula='"fifth-bag"'>
+                                    <div><img src="images/parameter_32.png" width="32" height="32"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-9">
+                <div class="panel-group" id="p2">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title" style="padding-top: 5px;">Bucket 2</h4>
+                        </div>
+                        <div class="panel-collapse">
+                            <div class="panel-body">
+                                <div class='container' dragula='"fifth-bag"'>
+                                    <div><img src="images/parameter_32.png" width="32" height="32"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

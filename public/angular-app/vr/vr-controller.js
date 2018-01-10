@@ -3,12 +3,12 @@
  */
 angular.module('MissionControlApp').controller('VrController', VrController);
 
-function VrController($routeParams, VrFactory, dragulaService){
+function VrController($routeParams, VrFactory, dragulaService, $scope){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
 
-    dragulaService.options(vm, 'fifth-bag', {
+    dragulaService.options($scope, 'fifth-bag', {
         copy: true
     });
 
