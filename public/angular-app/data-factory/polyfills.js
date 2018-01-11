@@ -46,6 +46,10 @@ if (!Array.prototype.find) {
     });
 }
 
+Array.prototype.diff = function(a) {
+    return this.filter(function(i) {return a.indexOf(i) < 0;});
+};
+
 if (!String.prototype.includes) {
     String.prototype.includes = function() {
         'use strict';
