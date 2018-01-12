@@ -22,55 +22,57 @@
     <div class="row">
         <div class="row row-offcanvas row-offcanvas-left">
             <!--Left side images-->
-            <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
-                <div class="col-md-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title" style="padding-top: 5px;">Upload Images:</h4>
-                        </div>
-                        <div class="panel-collapse">
-                            <!--Dropzone-->
-                            <div class="panel-body">
-                                <div drop-zone ng-model="vm.images" class="dropzone">
-                                    <p>Drop files here
-                                        <span>(or click to upload)</span>
-                                    </p>
-                                </div>
+            <div class="col-xs-6 col-sm-3 sidebar-offcanvas">
+                <div bs-affix data-offset-top="200" data-offset-bottom="100">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title" style="padding-top: 5px;">Upload Images:</h4>
                             </div>
-                            <!--Add Buckets-->
-                            <div class="panel-body" style="padding-top: 0px">
-                                <button class="btn btn-primary"
-                                        style="width: 100%"
-                                        ng-click="vm.addBucket()">
-                                    Add Bucket
-                                    <span class="glyphicon glyphicon-chevron-right"></span>
-                                </button>
+                            <div class="panel-collapse">
+                                <!--Dropzone-->
+                                <div class="panel-body">
+                                    <div drop-zone ng-model="vm.images" class="dropzone">
+                                        <p>Drop files here
+                                            <span>(or click to upload)</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <!--Add Buckets-->
+                                <div class="panel-body" style="padding-top: 0px">
+                                    <button class="btn btn-primary"
+                                            style="width: 100%"
+                                            ng-click="vm.addBucket()">
+                                        Add Bucket
+                                        <span class="glyphicon glyphicon-chevron-right"></span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!--Uploaded images-->
-                <div class="col-md-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title" style="padding-top: 5px;">Images:</h4>
-                        </div>
-                        <div class="panel-collapse"
-                             id="#images"
-                             dragula='"image_bag"'
-                             dragula-model="vm.images"
-                             style="max-height: 500px; overflow-y: scroll">
-                            <div class="panel-body"
-                                 ng-repeat="file in vm.images"
-                                 ng-if="file.type.indexOf('image') !== -1">
-                                <div>
-                                    <div class="dark-background text-center">
-                                        <span class='handle glyphicon glyphicon-move'></span>
-                                    </div>
-                                    <div class="hovereffect">
-                                        <img src="{{file.data}}" class="img-responsive center-block" alt="">
-                                        <div class="overlay">
-                                            <p><a ng-click="vm.editImage('lg', file)">EDIT</a></p>
+                    <!--Uploaded images-->
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title" style="padding-top: 5px;">Images:</h4>
+                            </div>
+                            <div class="panel-collapse"
+                                 id="#images"
+                                 dragula='"image_bag"'
+                                 dragula-model="vm.images"
+                                 style="max-height: 500px; overflow-y: scroll">
+                                <div class="panel-body"
+                                     ng-repeat="file in vm.images"
+                                     ng-if="file.type.indexOf('image') !== -1">
+                                    <div>
+                                        <div class="dark-background text-center">
+                                            <span class='handle glyphicon glyphicon-move'></span>
+                                        </div>
+                                        <div class="hovereffect">
+                                            <img src="{{file.data}}" class="img-responsive center-block" alt="">
+                                            <div class="overlay">
+                                                <p><a ng-click="vm.editImage('lg', file)">EDIT</a></p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -81,22 +83,39 @@
             </div>
             <!--Right side-->
             <div class="col-xs-6 col-sm-9">
-                <div class="panel-group" ng-repeat="bucket in vm.buckets">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
+                <div class="panel panel-default container-fluid" ng-repeat="bucket in vm.buckets">
+                    <div class="panel-heading row">
+                        <div class="col-xs-4">
+                            <div class="input-group" ng-if="vm.editingBucket">
+                                <input type="text" class="form-control input-sm" value="bucket.name" ng-model="bucket.name">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default btn-sm" type="button">
+                                        <span class="glyphicon glyphicon-ok" ng-click="vm.editingBucket = false"></span>
+                                    </button>
+                                </span>
+                            </div>
+                            <h4 class="panel-title" style="padding-top: 5px;" ng-click="vm.editingBucket = true" ng-if="!vm.editingBucket">{{bucket.name}}</h4>
+                        </div>
+                        <div class="col-xs-8">
                             <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
+                                <button type="button" class="btn btn-primary" ng-click="vm.moveUp(bucket)">
+                                    <span class="glyphicon glyphicon-chevron-up" style="margin-right: 0px"></span>
+                                </button>
+                                <button type="button" class="btn btn-primary" ng-click="vm.moveDown(bucket)">
+                                    <span class="glyphicon glyphicon-chevron-down" style="margin-right: 0px"></span>
+                                </button>
                                 <button type="button" class="btn btn-primary" ng-click="vm.deleteBucket(bucket)">
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                    Delete Bucket
+                                    <span class="glyphicon glyphicon-trash" style="margin-right: 0px"></span>
                                 </button>
                             </div>
-                            <h4 class="panel-title" style="padding-top: 5px;">{{bucket.name}}</h4>
                         </div>
+                    </div>
+                    <div class="panel-body">
                         <div class="panel-collapse"
                              id="#bucket"
                              dragula='"image_bag"'
                              dragula-model="bucket.images"
-                             style="max-height: 500px; overflow-y: scroll; min-height: 100px">
+                             style="max-height: 500px; overflow-y: scroll; min-height: 94px">
                             <div class="panel-body"
                                  ng-repeat="file in bucket.images"
                                  ng-if="file.type.indexOf('image') !== -1"
@@ -114,7 +133,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="panel-body">
+                        <div class="panel-collapse">
                             <div class="col-md-6 no-padding-left">
                                 <label for="sharableLink" class="form-control-label">Sharable Link:</label>
                                 <div class="input-group">

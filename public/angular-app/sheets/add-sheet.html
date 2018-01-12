@@ -134,8 +134,14 @@
                         <div class="form-group">
                             <label class="form-control-label">Sheet Number:</label>
                             <div>
-                                <button ng-repeat="operator in vm.currentNumberOperators" ng-click="vm.setCurrentOperator(operator)" class="btn btn-default">
-                                <span ng-click="" uib-popover-template="operator.templateUrl" popover-placement="{{vm.popoverOptions.placement}}" popover-trigger="vm.popoverOptions.triggers" popover-class="popover">
+                                <button ng-repeat="operator in vm.currentNumberOperators"
+                                        ng-click="vm.setCurrentOperator(operator)"
+                                        class="btn btn-default">
+                                <span ng-click=""
+                                      uib-popover-template="operator.templateUrl"
+                                      popover-placement="{{vm.popoverOptions.placement}}"
+                                      popover-trigger="vm.popoverOptions.triggers"
+                                      popover-class="popover">
                                     {{vm.getButtonLabel(operator)}}
                                 </span>
                                 </button>

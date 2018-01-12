@@ -257,8 +257,8 @@ input[type=text]{
   cursor: pointer;
 }
 
-
 /*VR Image Stack*/
+/*Hover overs*/
 .hovereffect {
   width: 100%;
   height: 100%;
@@ -352,7 +352,22 @@ input[type=text]{
   cursor: move;
 }
 
-/*Div background*/
+/*Draggable symbol background*/
 .dark-background {
   background-color: #f5f6f6;
+}
+
+/*Fixed side menu when scrolling*/
+.affix {
+  top: 75px;
+  z-index: 9999 !important;
+  width: 14.2%;
+}
+
+.affix-top {
+
+}
+
+.affix-bottom {
+  bottom: 20px;
 }

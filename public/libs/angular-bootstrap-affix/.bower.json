@@ -1,0 +1,26 @@
+{
+  "name": "angular-bootstrap-affix",
+  "version": "0.2.2",
+  "ignore": [],
+  "main": [
+    "dist/angular-bootstrap-affix.js"
+  ],
+  "dependencies": {
+    "angular-jquery": "~0.2.1"
+  },
+  "devDependencies": {
+    "angular": "latest",
+    "angular-mocks": "latest"
+  },
+  "homepage": "https://github.com/maxisam/angular-bootstrap-affix",
+  "_release": "0.2.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.2",
+    "commit": "c60cd78d7c48b0f3f79f81b18006d629d5bfef54"
+  },
+  "_source": "https://github.com/maxisam/angular-bootstrap-affix.git",
+  "_target": "^0.2.2",
+  "_originalSource": "angular-bootstrap-affix",
+  "_direct": true
+}

@@ -1,0 +1,11 @@
+{
+  "name": "angular-jquery",
+  "version": "0.2.1",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "angular": "latest",
+    "angular-mocks": "latest",
+    "jquery": "latest"
+  }
+}

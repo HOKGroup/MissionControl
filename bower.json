@@ -12,6 +12,7 @@
     "angular-ui-bootstrap": "2.0.0",
     "angular-bootstrap": "2.0.0",
     "dragula.js": "dragula#^3.7.2",
-    "angularjs-dragula": "^2.0.0"
+    "angularjs-dragula": "^2.0.0",
+    "angular-bootstrap-affix": "^0.2.2"
   }
 }

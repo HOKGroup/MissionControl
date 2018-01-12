@@ -3,10 +3,18 @@
  */
 angular.module('MissionControlApp').controller('VrController', VrController);
 
-function VrController($routeParams, VrFactory, dragulaService, $scope, $uibModal, UtilityService){
+function VrController($routeParams, VrFactory, dragulaService, $scope, $window, $uibModal, UtilityService){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
+    vm.popoverOptions = {
+        placement: 'top',
+        triggers: 'click, outsideClick',
+        templateUrl: 'editName.html'
+    };
+    vm.editingBucket = false;
+    vm.buckets = [];
+    vm.images = [];
 
     $scope.$on('image_bag.remove-model', function (el, container, source) {
         // var deletedId = container[0].id;
@@ -33,9 +41,6 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $uibModal
         }
     });
 
-    vm.buckets = [];
-    vm.images = [];
-
     vm.addBucket = function(){
         //TODO: Post to DB.
         //TODO: _id will be that of the posted element.
@@ -48,13 +53,23 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $uibModal
         })
     };
 
+    /**
+     *
+     * @param bucket
+     */
     vm.deleteBucket = function (bucket) {
         var idx = vm.buckets.indexOf(bucket);
         vm.buckets.splice(idx, 1);
         //TODO: remove from DB.
     };
 
+    vm.moveUp = function (bucket) {
 
+    };
+
+    vm.moveDown = function (bucket) {
+
+    };
 
     $scope.$watch('vm.images', function (newValue, oldValue, scope) {
         var lastAdded = newValue[newValue.length - 1];
