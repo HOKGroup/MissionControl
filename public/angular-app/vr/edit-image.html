@@ -8,14 +8,16 @@
     <div class="modal-body">
         <form>
             <div class="form-group">
-                <label class="form-control-label">Display Name:</label>
-                <input type="text" class="form-control" value="vm.image.description" ng-model="vm.image.description">
+                <label for="displayName" class="form-control-label">
+                    Display Name:
+                </label>
+                <input type="text" id="displayName" class="form-control" value="vm.image.displayName" ng-model="vm.image.displayName">
             </div>
             <div class="form-group">
-                <label for="description-text" class="form-control-label">
+                <label for="description" class="form-control-label">
                     Description:
                 </label>
-                <textarea class="form-control" id="description-text" ng-model="vm.image.description"></textarea>
+                <textarea class="form-control" id="description" ng-model="vm.image.description"></textarea>
             </div>
         </form>
     </div>

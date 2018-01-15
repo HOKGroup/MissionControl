@@ -45,7 +45,9 @@ angular.module('MissionControlApp').directive('dropZone',['UtilityService', func
                     var data={
                         data:e.target.result,
                         dataSize: e.target.result.length,
-                        _id: UtilityService.guid()
+                        _id: UtilityService.guid(),
+                        displayName: 'Image Name',
+                        description: 'Image Description'
                     };
                     for(var p in file){ data[p] = file[p] }
 

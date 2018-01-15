@@ -8,7 +8,7 @@ function EditImageController($uibModalInstance, image) {
     vm.image = image;
 
     vm.submit = function () {
-        // TODO: Handle submitting image changes to DB.
+        $uibModalInstance.close({response: vm.image});
     };
 
     /**

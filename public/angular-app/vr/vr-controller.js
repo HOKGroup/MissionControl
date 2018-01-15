@@ -98,10 +98,16 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $window, 
         return index < vm.buckets.length - 1;
     };
 
-    $scope.$watch('vm.images', function (newValue, oldValue, scope) {
-        var lastAdded = newValue[newValue.length - 1];
-        console.log("imageAdded: " + (lastAdded ? lastAdded.name : "undefined"));
-    }, true);
+    /**
+     * Watches Images collection for changes.
+     */
+    $scope.$watchCollection('vm.images', function (newValue, oldValue, scope) {
+        if(newValue.length > oldValue.length){
+            console.log("Image added: " + newValue.diff(oldValue)[0].name);
+        } else if(newValue.length < oldValue.length){
+            console.log("Image removed: " + oldValue.diff(newValue)[0].name);
+        }
+    });
 
     /**
      * Watches buckets collections for changes.
@@ -136,14 +142,47 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $window, 
                 }}
         }).result.then(function(request){
             if(!request) return;
+            if(vm.buckets.length === 0) return;
+
+            // (Konrad) Since dragula makes a copy of the image, when it's moved to
+            // a bucket, we need to track them down and update if name changed.
+            vm.buckets.forEach(function (bucket) {
+                bucket.images.forEach(function (image) {
+                    if(image._id.toString() === request.response._id.toString()){
+                        image.displayName = request.response.displayName;
+                        image.description = request.response.description;
+                    }
+                });
+            });
 
         }).catch(function(){
             console.log("All Tasks Dialog dismissed...");
         });
     };
 
-    vm.deleteImage = function (file) {
+    vm.onEnter = function(bucket){
+        bucket.editingBucket = false;
+    };
 
+    vm.deleteFromBucket = function (file, bucket) {
+        var index = bucket.images.findIndex(function (image) {
+            return image._id.toString() === file._id.toString();
+        });
+        if(index !== -1) bucket.images.splice(index, 1);
+    };
+
+    vm.deleteFromImages = function (file) {
+        var index = vm.images.findIndex(function (item) {
+            return item._id.toString() === file._id.toString();
+        });
+        if(index !== -1) vm.images.splice(index, 1);
+
+        vm.buckets.forEach(function (bucket) {
+            var index2 = bucket.images.findIndex(function (image) {
+                return image._id.toString() === file._id.toString();
+            });
+            if(index2 !== -1) bucket.images.splice(index2, 1);
+        });
     };
 
     // (Konrad) Retrieves selected project from MongoDB.
