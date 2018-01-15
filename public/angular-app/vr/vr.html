@@ -22,9 +22,9 @@
     <div class="row">
         <div class="row row-offcanvas row-offcanvas-left">
             <!--Left side images-->
-            <div class="col-xs-6 col-sm-3 sidebar-offcanvas">
+            <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
                 <div bs-affix data-offset-top="200" data-offset-bottom="100">
-                    <div class="col-md-12">
+                    <div class="body-collapse">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title" style="padding-top: 5px;">Upload Images:</h4>
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <!--Uploaded images-->
-                    <div class="col-md-12">
+                    <div class="body-collapse">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title" style="padding-top: 5px;">Images:</h4>
@@ -71,7 +71,18 @@
                                         <div class="hovereffect">
                                             <img src="{{file.data}}" class="img-responsive center-block" alt="">
                                             <div class="overlay">
-                                                <p><a ng-click="vm.editImage('lg', file)">EDIT</a></p>
+                                                <p>
+                                                    <span class="glyphicon glyphicon-pencil"
+                                                          ng-click="vm.editImage('lg', file)"
+                                                          style="font-size:1.5em; color: #FFFFFF;">
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="glyphicon glyphicon-trash"
+                                                          ng-click="vm.deleteImage(file)"
+                                                          style="font-size:1.5em; color: #FFFFFF;">
+                                                    </span>
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -86,22 +97,22 @@
                 <div class="panel panel-default container-fluid" ng-repeat="bucket in vm.buckets">
                     <div class="panel-heading row">
                         <div class="col-xs-4">
-                            <div class="input-group" ng-if="vm.editingBucket">
+                            <div class="input-group" ng-if="bucket.editingBucket">
                                 <input type="text" class="form-control input-sm" value="bucket.name" ng-model="bucket.name">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default btn-sm" type="button">
-                                        <span class="glyphicon glyphicon-ok" ng-click="vm.editingBucket = false"></span>
+                                        <span class="glyphicon glyphicon-ok" ng-click="bucket.editingBucket = false"></span>
                                     </button>
                                 </span>
                             </div>
-                            <h4 class="panel-title" style="padding-top: 5px;" ng-click="vm.editingBucket = true" ng-if="!vm.editingBucket">{{bucket.name}}</h4>
+                            <h4 class="panel-title" style="padding-top: 5px;" ng-click="bucket.editingBucket = true" ng-if="!bucket.editingBucket">{{bucket.name}}</h4>
                         </div>
                         <div class="col-xs-8">
                             <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
-                                <button type="button" class="btn btn-primary" ng-click="vm.moveUp(bucket)">
+                                <button type="button" class="btn btn-primary" ng-click="vm.moveUp($index)" ng-if="vm.showUpArrow($index)">
                                     <span class="glyphicon glyphicon-chevron-up" style="margin-right: 0px"></span>
                                 </button>
-                                <button type="button" class="btn btn-primary" ng-click="vm.moveDown(bucket)">
+                                <button type="button" class="btn btn-primary" ng-click="vm.moveDown($index)" ng-if="vm.showDownArrow($index)">
                                     <span class="glyphicon glyphicon-chevron-down" style="margin-right: 0px"></span>
                                 </button>
                                 <button type="button" class="btn btn-primary" ng-click="vm.deleteBucket(bucket)">
@@ -115,7 +126,7 @@
                              id="#bucket"
                              dragula='"image_bag"'
                              dragula-model="bucket.images"
-                             style="max-height: 500px; overflow-y: scroll; min-height: 94px">
+                             style="max-height: 500px; overflow-y: scroll; min-height: 98px">
                             <div class="panel-body"
                                  ng-repeat="file in bucket.images"
                                  ng-if="file.type.indexOf('image') !== -1"
@@ -128,6 +139,7 @@
                                         <img src="{{file.data}}" class="img-responsive center-block" alt="">
                                         <div class="overlay">
                                             <p><a ng-click="vm.editImage('lg', file)">EDIT</a></p>
+                                            <!--<span class="glyphicon glyphicon-pencil"></span>-->
                                         </div>
                                     </div>
                                 </div>
@@ -135,22 +147,22 @@
                         </div>
                         <div class="panel-collapse">
                             <div class="col-md-6 no-padding-left">
-                                <label for="sharableLink" class="form-control-label">Sharable Link:</label>
+                                <label for="sharableLink" class="form-control-label">Sharable Id:</label>
                                 <div class="input-group">
-                                    <input type="text" id="sharableLink" class="form-control">
+                                    <input type="text" class="form-control input-sm" id="sharableLink" value="bucket._id" ng-model="bucket._id" disabled>
                                     <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button">
+                                        <button class="btn btn-default btn-sm" type="button">
                                             <span class="glyphicon glyphicon-paperclip"></span>
                                         </button>
                                     </span>
                                 </div>
                             </div>
                             <div class="col-md-6 no-padding-right">
-                                <label for="recipients" class="form-control-label">Recipients:</label>
+                                <label for="sharedWith" class="form-control-label">Recipients:</label>
                                 <div class="input-group">
-                                    <input type="text" id="recipients" class="form-control">
+                                    <input type="text" class="form-control input-sm" id="sharedWith" value="bucket.sharedWith" ng-model="bucket.sharedWith">
                                     <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button">
+                                        <button class="btn btn-default btn-sm" type="button">
                                             <span class="glyphicon glyphicon-send"></span>
                                         </button>
                                     </span>

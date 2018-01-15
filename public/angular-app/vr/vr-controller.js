@@ -49,7 +49,8 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $window, 
             images: [],
             sharableLink: null,
             sharedWith: [],
-            _id: UtilityService.guid()
+            _id: UtilityService.guid(),
+            editingBucket: false
         })
     };
 
@@ -63,12 +64,38 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $window, 
         //TODO: remove from DB.
     };
 
-    vm.moveUp = function (bucket) {
-
+    /**
+     * Moves bucket panel up.
+     * @param index
+     */
+    vm.moveUp = function (index) {
+        UtilityService.move(vm.buckets, index, index-1);
     };
 
-    vm.moveDown = function (bucket) {
+    /**
+     * Moves bucket panel down.
+     * @param index
+     */
+    vm.moveDown = function (index) {
+        UtilityService.move(vm.buckets, index, index+1);
+    };
 
+    /**
+     * Checks if bucket can be moved up.
+     * @param index
+     * @returns {boolean}
+     */
+    vm.showUpArrow = function (index) {
+        return index > 0;
+    };
+
+    /**
+     * Checks if bucket can be moved down.
+     * @param index
+     * @returns {boolean}
+     */
+    vm.showDownArrow = function (index) {
+        return index < vm.buckets.length - 1;
     };
 
     $scope.$watch('vm.images', function (newValue, oldValue, scope) {
@@ -76,6 +103,9 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $window, 
         console.log("imageAdded: " + (lastAdded ? lastAdded.name : "undefined"));
     }, true);
 
+    /**
+     * Watches buckets collections for changes.
+     */
     $scope.$watchCollection('vm.buckets', function (newValue, oldValue, scope) {
         if(newValue.length > oldValue.length){
             console.log("Bucket added: " + newValue.diff(oldValue)[0].name);
@@ -89,9 +119,11 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $window, 
         // }
     });
 
-    // (Konrad) Retrieves selected project from MongoDB.
-    getSelectedProject(vm.projectId);
-
+    /**
+     * Shows modal window for input of image properties.
+     * @param size
+     * @param image
+     */
     vm.editImage = function (size, image) {
         $uibModal.open({
             animation: true,
@@ -109,6 +141,13 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $window, 
             console.log("All Tasks Dialog dismissed...");
         });
     };
+
+    vm.deleteImage = function (file) {
+
+    };
+
+    // (Konrad) Retrieves selected project from MongoDB.
+    getSelectedProject(vm.projectId);
 
     /**
      * Used to retrieve the Project info.
