@@ -54,11 +54,16 @@ module.exports.delete = function(req, res){
 };
 
 module.exports.findByCentralPath  = function(req, res){
-    //(Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
-    var uri = req.params.uri.replace(/\|/g, "\\\\");
-    console.log(uri);
+    // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
+    // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.
+    var rgx;
+    if(req.params.uri.includes('RSN:') || req.params.uri.includes('A360:')){
+        rgx = req.params.uri.replace(/\|/g, "/");
+    } else {
+        rgx = req.params.uri.replace(/\|/g, "\\");
+    }
     Configuration.find(
-        {"files.centralPath": {'$regex': uri, '$options': 'i'}}, function (err, result) {
+        {"files.centralPath": {'$regex': rgx, '$options': 'i'}}, function (err, result) {
             var response = {
                 status: 200,
                 message: result
