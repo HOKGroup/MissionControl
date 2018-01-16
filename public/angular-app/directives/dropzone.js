@@ -3,10 +3,10 @@
  */
 angular.module('MissionControlApp').directive('dropZone',['UtilityService', function(UtilityService){
     var config = {
-        template:'<label class="drop-zone">'+
-        '<input type="file" multiple accept="jpg"/>'+
+        template:'<div class="dropzone">'+
+        '<input type="file" multiple accept="jpg" style="width: 100%;"/>'+
         '<div ng-transclude></div>'+       // <= transcluded stuff
-        '</label>',
+        '</div>',
         transclude:true,
         replace: true,
         require: '?ngModel',

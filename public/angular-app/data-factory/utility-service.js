@@ -74,6 +74,16 @@ function UtilityService(){
             }
 
             return [gen(2), gen(1), gen(1), gen(1), gen(3)].join("-");
+        },
+
+        removeDuplicates: function (arr, key) {
+            var values = {};
+            return arr.filter(function(item){
+                var val = item[key];
+                var exists = values[val];
+                values[val] = true;
+                return !exists;
+            });
         }
     }
 }

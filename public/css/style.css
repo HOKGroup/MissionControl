@@ -223,6 +223,7 @@ input[type=text]{
   text-overflow: ellipsis;
 }
 
+/*Upload files, clickable*/
 .dropzone {
   cursor: pointer;
   overflow: hidden;
@@ -246,15 +247,46 @@ input[type=text]{
   display: block;
   font-size: 10px;
 }
-.dropzone input {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  font-size: 9999px;
+.dropzone input[type='file']{
   opacity: 0;
   cursor: pointer;
+  width: 100%;
+  height: 100%;
+  font-size: 0;
+  position: absolute;
+}
+
+/*Area to drag images into*/
+.dragzone {
+  cursor: hand;
+  overflow: hidden;
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100px;
+  background: whitesmoke;
+  border-radius: 4px;
+  font: caption;
+  text-align: center;
+  border: 1px dotted silver;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.dragzone p {
+  padding-top: 16px;
+  font-size: 16px;
+}
+.dragzone span {
+  display: block;
+  font-size: 10px;
+}
+.dragzone input[type='file']{
+  opacity: 0;
+  cursor: hand;
+  width: 100%;
+  height: 100%;
+  font-size: 0;
+  position: absolute;
 }
 
 /*VR Image Stack*/
@@ -269,7 +301,6 @@ input[type=text]{
   cursor: default;
   background: #417bb9;
 }
-
 .hovereffect .overlay {
   width: 100%;
   height: 100%;
@@ -277,9 +308,8 @@ input[type=text]{
   overflow: hidden;
   top: 0;
   left: 0;
-  padding: 50px 20px;
+  padding: 40px 20px;
 }
-
 .hovereffect img {
   display: block;
   position: relative;
@@ -292,14 +322,12 @@ input[type=text]{
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
-
 .hovereffect:hover img {
   opacity: 0.4;
   filter: alpha(opacity=40);
   -webkit-transform: translate3d(0,0,0);
   transform: translate3d(0,0,0);
 }
-
 .hovereffect h2 {
   text-transform: uppercase;
   color: #fff;
@@ -310,7 +338,6 @@ input[type=text]{
   padding: 0.5em 0;
   background-color: transparent;
 }
-
 .hovereffect h2:after {
   position: absolute;
   bottom: 0;
@@ -324,12 +351,10 @@ input[type=text]{
   -webkit-transform: translate3d(-100%,0,0);
   transform: translate3d(-100%,0,0);
 }
-
 .hovereffect:hover h2:after {
   -webkit-transform: translate3d(0,0,0);
   transform: translate3d(0,0,0);
 }
-
 .hovereffect a, .hovereffect p {
   color: #FFF;
   opacity: 0;
@@ -339,7 +364,6 @@ input[type=text]{
   -webkit-transform: translate3d(100%,0,0);
   transform: translate3d(100%,0,0);
 }
-
 .hovereffect:hover a, .hovereffect:hover p {
   opacity: 1;
   filter: alpha(opacity=100);
@@ -363,11 +387,9 @@ input[type=text]{
   z-index: 9999 !important;
   width: 14.2%;
 }
-
 .affix-top {
 
 }
-
 .affix-bottom {
   bottom: 20px;
 }

@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('VrController', VrController);
 
-function VrController($routeParams, VrFactory, dragulaService, $scope, $window, $uibModal, UtilityService){
+function VrController($routeParams, VrFactory, dragulaService, $rootScope, $scope, $window, $uibModal, UtilityService){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
@@ -16,24 +16,23 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $window, 
     vm.buckets = [];
     vm.images = [];
 
-    $scope.$on('image_bag.remove-model', function (el, container, source) {
-        // var deletedId = container[0].id;
-        // console.log("deletedId:" + deletedId);
-    });
-
-    $scope.$on('image_bag.drop-model', function (el, target, source, sibling) {
-        // var addedId = cource.context.children()[0].id;
-        // console.log("addedId:" + addedId);
-    });
+    // $scope.$on('image_bag.remove-model', function (el, container, source) {
+    //     // var deletedId = container[0].id;
+    //     // console.log("deletedId:" + deletedId);
+    // });
+    //
+    // $scope.$on('image_bag.drop-model', function (el, target, source, sibling) {
+    //     // var addedId = source.context.children()[0].id;
+    //     // console.log("addedId:" + addedId);
+    // });
 
     //(Konrad) Options for the dragula bags
     dragulaService.options($scope, 'image_bag', {
+        removeOnSpill: true, // removes the object when dragged outside of box
         copy: function (el, source) {
             return source.id.match('#images') //we only allow copy from "images" into "buckets"
         },
-        removeOnSpill: true, // removes the object when dragged outside of box
         moves: function (el, source, handle, sibling) {
-            // console.log('move:' + el);
             return handle.className === 'handle glyphicon glyphicon-move'; //only drag elements with this class
         },
         accepts: function (el, target, source, sibling) {
@@ -41,6 +40,9 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $window, 
         }
     });
 
+    /**
+     * Adds new bucket.
+     */
     vm.addBucket = function(){
         //TODO: Post to DB.
         //TODO: _id will be that of the posted element.
@@ -67,17 +69,19 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $window, 
     /**
      * Moves bucket panel up.
      * @param index
+     * @param arr
      */
-    vm.moveUp = function (index) {
-        UtilityService.move(vm.buckets, index, index-1);
+    vm.moveUp = function (index, arr) {
+        UtilityService.move(arr, index, index-1);
     };
 
     /**
      * Moves bucket panel down.
      * @param index
+     * @param arr
      */
-    vm.moveDown = function (index) {
-        UtilityService.move(vm.buckets, index, index+1);
+    vm.moveDown = function (index, arr) {
+        UtilityService.move(arr, index, index+1);
     };
 
     /**
@@ -103,27 +107,34 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $window, 
      */
     $scope.$watchCollection('vm.images', function (newValue, oldValue, scope) {
         if(newValue.length > oldValue.length){
-            console.log("Image added: " + newValue.diff(oldValue)[0].name);
+            //TODO: Post new image to DB
+            // console.log("Image added: " + newValue.diff(oldValue)[0].name);
         } else if(newValue.length < oldValue.length){
-            console.log("Image removed: " + oldValue.diff(newValue)[0].name);
+            //TODO: Remove image from DB
+            // console.log("Image removed: " + oldValue.diff(newValue)[0].name);
         }
     });
 
     /**
      * Watches buckets collections for changes.
      */
-    $scope.$watchCollection('vm.buckets', function (newValue, oldValue, scope) {
-        if(newValue.length > oldValue.length){
-            console.log("Bucket added: " + newValue.diff(oldValue)[0].name);
-        } else if(newValue.length < oldValue.length){
-            console.log("Bucket removed: " + oldValue.diff(newValue)[0].name);
+    $scope.$watch('vm.buckets', function (newValue, oldValue, scope) {
+        // (Konrad) Since we are deep watchingg this collection
+        // any changes to the sub-arrays will trigger this
+        // We can use that to prevent duplicates from being added to bucket.
+        if(newValue.length === oldValue.length){
+            vm.buckets.forEach(function(bucket){
+                bucket.images = UtilityService.removeDuplicates(bucket.images, '_id');
+            });
         }
-        // if(newValue.length > oldValue.length){
-        //     console.log(newValue.diff(oldValue)[0].name);
-        // } else if(newValue.length < oldValue.length){
-        //     console.log(oldValue.diff(newValue)[0].name);
-        // }
-    });
+        if(newValue.length > oldValue.length){
+            //TODO: Post new bucket to DB
+            // console.log("Bucket added: " + newValue.diff(oldValue)[0].name);
+        } else if(newValue.length < oldValue.length){
+            //TODO: Remove bucket from DB
+            // console.log("Bucket removed: " + oldValue.diff(newValue)[0].name);
+        }
+    }, true);
 
     /**
      * Shows modal window for input of image properties.
@@ -145,7 +156,7 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $window, 
             if(vm.buckets.length === 0) return;
 
             // (Konrad) Since dragula makes a copy of the image, when it's moved to
-            // a bucket, we need to track them down and update if name changed.
+            // a bucket, we need to track them down and update if name/desc changed.
             vm.buckets.forEach(function (bucket) {
                 bucket.images.forEach(function (image) {
                     if(image._id.toString() === request.response._id.toString()){
@@ -160,10 +171,11 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $window, 
         });
     };
 
-    vm.onEnter = function(bucket){
-        bucket.editingBucket = false;
-    };
-
+    /**
+     * Removes selected image from bucket only.
+     * @param file
+     * @param bucket
+     */
     vm.deleteFromBucket = function (file, bucket) {
         var index = bucket.images.findIndex(function (image) {
             return image._id.toString() === file._id.toString();
@@ -171,6 +183,10 @@ function VrController($routeParams, VrFactory, dragulaService, $scope, $window, 
         if(index !== -1) bucket.images.splice(index, 1);
     };
 
+    /**
+     * Removes selected image from Images and ALL buckets.
+     * @param file
+     */
     vm.deleteFromImages = function (file) {
         var index = vm.images.findIndex(function (item) {
             return item._id.toString() === file._id.toString();
