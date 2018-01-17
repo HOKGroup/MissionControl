@@ -32,6 +32,7 @@ var sheets = require('./models/sheets-model');
      app.post('/api/v1/configurations', config.add);
      app.put('/api/v1/configurations/:id', config.update);
      app.delete('/api/v1/configurations/:id', config.delete);
+     app.post('/api/v1/configurations/deletemany', config.deleteMany);
      app.put('/api/v1/configurations/:id/updatefilepath', config.updateFilePath);
 
      var triggerrecords = require('./controller/triggerrecords');

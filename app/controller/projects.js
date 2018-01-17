@@ -210,7 +210,7 @@ ProjectService = {
                         console.log(err);
                         res.status(201).json(err);
                     } else {
-                        res.status(201).json();
+                        res.status(501).json();
                     }
                 });
     },
@@ -226,15 +226,24 @@ ProjectService = {
 			return res.sendStatus(202);
 	  });
   },
-  
-  delete : function(req, res){
-    var id = req.params.id;
-    Project
-        .remove({'_id':id}, function(result) {
-      return res.send(result);
-    });
-  }
 
+    /**
+     * Removes project.
+     * @param req
+     * @param res
+     */
+    delete : function(req, res){
+        var id = req.params.id;
+        Project
+            .remove(
+                {'_id':id}, function(err, result){
+                    if(err) {
+                        res.status(201).json(err);
+                    } else {
+                        res.status(201).json(result);
+                    }
+                });
+    }
   };
 
 module.exports = ProjectService;
