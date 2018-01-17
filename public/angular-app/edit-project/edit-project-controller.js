@@ -1,84 +1,76 @@
 angular.module('MissionControlApp').controller('EditProjectController', EditProjectController);
 
-function EditProjectController($routeParams, ProjectFactory, $window){
+function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $window){
     var vm = this;
-    vm.status;
+    vm.status = '';
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = {
         'address':{},
         'geoLocation':{},
         'geoPolygon':{}
     };
-    vm.initialized = false;
 
-    (function init(){
-        //initialize FME
-        FMEServer.init({
-            server: "http://fme.hok.com",
-            token: "4919b579f13ce37d6ac3917f655b8b6143f203d3"
-        });
+    getProjectById(vm.projectId);
 
-        ProjectFactory.getProjectById(vm.projectId)
-            .then(function(response) {
-                vm.selectedProject = response.data;
-                vm.initialized = true;
-            }, function(error){
-                vm.status = 'Unable to get project by Id: ' + vm.projectId + '  ' + error.message;
-            });
-    })();
-
+    /**
+     * Retrieves project by it's Id.
+     * @param id
+     */
     function getProjectById(id){
-        ProjectFactory.getProjectById(id)
-            .then(function(response) {
+        ProjectFactory.getProjectById(id).then(function(response) {
+                if(!response) return;
+
                 vm.selectedProject = response.data;
             }, function(error){
-                vm.status = 'Unable to get project by Id: '+id+'  '+error.message;
+                vm.status = 'Unable to get project by Id: ' + error.message;
             });
     }
 
+    /**
+     * Deletes a project and all associated Configurations.
+     * TODO: Do we need to delete all Sheets?
+     * TODO: Do we need to delete all HealthRecords?
+     * TODO: Do we need to delete all Families?
+     */
     vm.deleteProject = function(){
         ProjectFactory
             .deleteProject(vm.selectedProject._id).then(function(response) {
+                if(!response || response.status !== 201) return;
+
                 vm.status = 'Deleted Project.';
-                //delete configurations
-                for(var j = 0; j < vm.selectedProject.configurations.length; j++){
-                    var configId = vm.selectedProject.configurations[j];
-                    ProjectFactory
-                        .deleteConfiguration(configId).then(function(response){
-                            vm.status = 'Configuration Deleted';
-                        },function(error){
-                            vm.status = 'Unable to delete configuration' +error.message;
-                        });
-                }
-                // (Konrad) Makes sure that resources are reloaded.
-                $window.location.href = '#/projects/';
+                var configIds = vm.selectedProject.configurations;
+                ConfigFactory
+                    .deleteMany(configIds).then(function (projectResponse) {
+                        if(!projectResponse || projectResponse.status !== 201) return;
+
+                        //(Konrad) Reloads the resources so it should remove project from table.
+                        $window.location.href = '#/projects/';
+                }, function (error) {
+                    vm.status = 'Unable to delete configurations: ' + error.message;
+                });
             }, function(error){
-                vm.status = 'Unable to delete project:' +error.message;
+                vm.status = 'Unable to delete project: ' +error.message;
             });
     };
 
+    /**
+     * Updates project information.
+     */
     vm.updateProject = function(){
-        ProjectFactory.updateProject(vm.selectedProject)
-            .then(function(response){
-                vm.status = 'Project updated';
-                $window.location.assign('#/projects/');
+        ProjectFactory.updateProject(vm.selectedProject).then(function(response){
+            if(!response) return;
+
+            vm.status = 'Project updated';
+            $window.location.assign('#/projects/');
             }, function(error){
-                vm.status = 'Unabl to update project: ' + error.message;
+                vm.status = 'Unable to update project: ' + error.message;
             });
     };
 
-    vm.downloadPDF = function(){
-        var repositoryName = 'MissionControl';
-        var workspaceName = 'MissionControl_PDFCreator.fmw';
-        var parameters= 'ProjectId=' + vm.projectId;
-
-        FMEServer.runDataDownload(repositoryName, workspaceName, parameters, showResults);
+    /**
+     * Returns to projects page.
+     */
+    vm.cancel = function () {
+        $window.location.href = '#/projects/';
     };
-
-    function showResults(json){
-        var downloadURL = json.serviceResponse.url;
-        var downloadLink = angular.element('<a> HOK Mission Control - Download Project PDF </a>');
-        downloadLink.attr('href',downloadURL);
-        downloadLink[0].click();
-    }
 }

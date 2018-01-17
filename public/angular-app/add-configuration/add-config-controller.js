@@ -223,13 +223,14 @@ function AddConfigController($routeParams, ConfigFactory, $window){
         if(vm.newConfig.files.length > 0)
         {
             ConfigFactory
-                .addConfiguration(vm.newConfig)
-                .then(function(response){
-                    var configId = response.data._id;
-                    ConfigFactory
-                        .addConfigToProject(vm.projectId, configId)
-                        .then(function(){
-                            $window.location.href = '#/projects/configurations/' + vm.projectId;
+                .addConfiguration(vm.newConfig).then(function(configResponse){
+                    if(!configResponse) return;
+
+                    var configId = configResponse.data._id;
+                    ConfigFactory.addConfigToProject(vm.projectId, configId).then(function(projectResponse){
+                        if(!projectResponse) return;
+
+                        $window.location.href = '#/projects/configurations/' + vm.projectId;
                         }, function(error){
                             vm.status = 'Unable to add Configuration to project: ' + error.message;
                         });

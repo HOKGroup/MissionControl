@@ -50,6 +50,10 @@ function ConfigFactory($http){
             return $http.delete('/api/v1/configurations/' + id).then(complete).catch(failed);
         },
 
+        deleteMany: function deleteMany(configIds){
+            return $http.post('/api/v1/configurations/deletemany', configIds).then(complete).catch(failed);
+        },
+
         updateProject: function updateProject(project) {
             return $http.put('/api/v1/projects/' + project._id, project).then(complete).catch(failed);
         },
