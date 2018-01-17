@@ -9,8 +9,6 @@
 			</h1>
 		</div>
 	</div>
-
-
 	<div class="row">
 		<form name="form" class="css-form" novalidate>
 			<div class="panel panel-default" style="margin-top:10px">
@@ -62,30 +60,30 @@
 						</select>
 					</fieldset>
 					<fieldset class="form-group">
-						<div google-drawing-map address="vm.selectedProject.address" geo-location="vm.selectedProject.geoLocation" geo-polygon="vm.selectedProject.geoPolygon" initialized="vm.initialized" style="margin:10px;"/>
+						<div google-drawing-map address="vm.selectedProject.address" geo-location="vm.selectedProject.geoLocation" geo-polygon="vm.selectedProject.geoPolygon" initialized="vm.initialized"/>
 					</fieldset>
 					<form class ="form-horizontal">
 						<fieldset class="form-group">
 							<label class="control-label col-sm-3 text-right" for="formStreet">Street Address</label>
-							<div class="col-sm-9">
+							<div class="col-sm-9 no-padding-right">
 								<input type="text" class="form-control" id="formStreet" placeholder="Street address, P.O. box, company name" ng-model="vm.selectedProject.address.street1">
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
 							<label class="control-label col-sm-3 text-right" for="formStreet2">Street Address2</label>
-							<div class="col-sm-9">
+							<div class="col-sm-9 no-padding-right">
 								<input type="text" class="form-control" id="formStreet2" placeholder="Apartment, suite, unit, building, floor, etc." ng-model="vm.selectedProject.address.street2">
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
 							<label class="control-label col-sm-3 text-right" for="formCity">City</label>
-							<div class="col-sm-9">
+							<div class="col-sm-9 no-padding-right">
 								<input type="text" class="form-control" id="formCity" ng-model="vm.selectedProject.address.city">
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
 							<label class="control-label col-sm-3 text-right" for="formState">State</label>
-							<div class="col-sm-9">
+							<div class="col-sm-9 no-padding-right">
 								<select class="form-control" id="formState" ng-model="vm.selectedProject.address.state">
 									<option value="AL">Alabama</option>
 									<option value="AK">Alaska</option>
@@ -143,23 +141,23 @@
 						</fieldset>
 						<fieldset class="form-group">
 							<label class="control-label col-sm-3 text-right" for="formZip">Zip Code</label>
-							<div class="col-sm-9">
+							<div class="col-sm-9 no-padding-right">
 								<input type="text" class="form-control" id="formZip" ng-model="vm.selectedProject.address.zipCode">
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
 							<label class="control-label col-sm-3 text-right" for="formContury">Contury</label>
-							<div class="col-sm-9">
+							<div class="col-sm-9 no-padding-right">
 								<input type="text" class="form-control" id="formContury" ng-model="vm.selectedProject.address.country">
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
 							<label class="control-label col-sm-3 text-right" for="formLatitude">Latitude</label>
-							<div class="col-sm-3">
+							<div class="col-sm-3 no-padding-right">
 								<input type="text" class="form-control" id="formLatitude" ng-model="vm.selectedProject.geoLocation.coordinates[1]" disabled>
 							</div>
 							<label class="control-label col-sm-3 text-right" for="formLongitude">Longitude</label>
-							<div class="col-sm-3">
+							<div class="col-sm-3 no-padding-right">
 								<input type="text" class="form-control" id="formLongitude" ng-model="vm.selectedProject.geoLocation.coordinates[0]" disabled>
 							</div>
 						</fieldset>
@@ -175,15 +173,21 @@
 						<div class="form-group row">
 							<label class="col-sm-8">This button will delete this PROJECT and all related CONFIGURATIONS.</label>
 							<div class="col-sm-4">
-								<button type="submit" class="btn btn-danger pull-right" ng-click="vm.deleteProject()">Delete</button>
+								<button type="submit" class="btn btn-danger pull-right" ng-click="vm.deleteProject()">
+									<span class="glyphicon glyphicon-trash"></span>
+									Delete
+								</button>
 							</div>
 						</div>
 					</form>
 				</div>
 			</div>
-			<button type="submit" class="btn btn-primary pull-right" ng-click="vm.updateProject()" style="margin:5px;"><span class="glyphicon glyphicon-ok" ></span> Update Project</button>
-			<button class="btn btn-primary pull-right" ng-click="vm.downloadPDF()" style="margin:5px;"><span class="glyphicon glyphicon-download" ></span> Download PDF</button>
-			<a href="#/projects" class="btn btn-primary pull-right" role="button" style="margin:5px;">Cancel</a>
+			<label style="padding-left: 0; margin-top:7px;" class="text-danger">{{vm.status}}</label>
+			<button type="submit" class="btn btn-primary pull-right" ng-click="vm.updateProject()" style="margin:5px;">
+				<span class="glyphicon glyphicon-ok"></span>
+				Update Project
+			</button>
+			<button class="btn btn-secondary pull-right" ng-click="vm.cancel()" style="margin:5px;">Cancel</button>
 		</form>
 	</div>
 </div>

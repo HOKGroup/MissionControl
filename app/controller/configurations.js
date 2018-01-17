@@ -53,6 +53,26 @@ module.exports.delete = function(req, res){
     });
 };
 
+/**
+ * Removes many configurations by their ids.
+ * @param req
+ * @param res
+ */
+module.exports.deleteMany = function (req, res) {
+    var ids = req.body.map(function (id){
+        return mongoose.Types.ObjectId(id);
+    });
+    Configuration
+        .remove(
+            {'_id': { $in: ids }}, function (err, result) {
+        if(err) {
+            res.status(501).json(err);
+        } else {
+            res.status(201).json(result);
+        }
+    });
+};
+
 module.exports.findByCentralPath  = function(req, res){
     // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
     // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.

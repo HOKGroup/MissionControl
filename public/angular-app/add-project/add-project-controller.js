@@ -1,24 +1,24 @@
 angular.module('MissionControlApp').controller('AddProjectController', AddProjectController);
 
-function AddProjectController(ProjectFactory, $window, SheetsFactory){
+function AddProjectController(ProjectFactory, $window){
     var vm = this;
     vm.status = "Success!";
     vm.newProject = {
-        'address': {},
-        'geoLocation': {},
-        'geoPolygon': {}
+        address: {},
+        geoLocation: {},
+        geoPolygon: {},
+        name: '',
+        number: ''
     };
-    vm.initialized = false;
 
     //warning messages
     vm.warning_number = '';
     vm.warning_name = '';
 
     vm.addProject = function(){
-        if(!vm.newProject.hasOwnProperty('number')
-            || !vm.newProject.hasOwnProperty('name')
-            || !vm.newProject.hasOwnProperty('office')){
-            console.log("Missing number, name, office");
+        if( !vm.newProject.hasOwnProperty('number') ||
+            !vm.newProject.hasOwnProperty('name') ||
+            !vm.newProject.hasOwnProperty('office')){
             return;
         }
 
@@ -49,5 +49,12 @@ function AddProjectController(ProjectFactory, $window, SheetsFactory){
                 vm.status = 'Unable to add project: ' + error.message;
                 console.log(error)
             });
+    };
+
+    /**
+     * Returns to projects page.
+     */
+    vm.cancel = function () {
+        $window.location.href = '#/projects/';
     };
 }
