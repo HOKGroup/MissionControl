@@ -57,7 +57,7 @@ module.exports.findByCentralPath = function(req, res){
     }
     Sheets
         .find(
-            {"centralPath": {'$regex': rgx, '$options': 'i'}}, function (err, result) {
+            {"centralPath": rgx}, function (err, result) {
                 var response = {
                     status: 200,
                     message: result
