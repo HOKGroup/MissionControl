@@ -83,7 +83,7 @@ module.exports.findByCentralPath  = function(req, res){
         rgx = req.params.uri.replace(/\|/g, "\\");
     }
     Configuration.find(
-        {"files.centralPath": {'$regex': rgx, '$options': 'i'}}, function (err, result) {
+        {"files.centralPath": rgx}, function (err, result) {
             var response = {
                 status: 200,
                 message: result
@@ -94,6 +94,7 @@ module.exports.findByCentralPath  = function(req, res){
             } else if(!result){
                 console.log("File Path wasn't found in any Configurations Collections");
             }
+            console.log(response.message);
             res.status(response.status).json(response.message);
         }
     )

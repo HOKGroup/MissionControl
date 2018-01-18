@@ -35,7 +35,7 @@ module.exports.findByCentralPath = function(req, res){
     }
     Families
         .find(
-            {"centralPath": {'$regex': rgx, '$options': 'i'}}, function (err, result) {
+            {"centralPath": rgx}, function (err, result) {
                 var response = {
                     status: 200,
                     message: result
