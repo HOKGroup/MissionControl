@@ -98,18 +98,12 @@ angular.module('MissionControlApp').directive('d3WorksetItemCount', ['d3', funct
                     .data(data).enter()
                     .append("text")
                     .attr("x", 150)
-                    .attr("y", function(d){
-                        var width = getPixelWidth(d.name);
-                        var lineCount = Math.ceil(width / margin.left);
-                        var center = (y(d.name) + (y.bandwidth() / 2)) - (lineCount * 4);
-                        var offset = (y(d.name) + (y.bandwidth() / 2));
-                        return lineCount > 1 ? center : offset;
-                    })
+                    .attr("y", function (d) {return (y(d.name) + (y.bandwidth() / 2));})
                     .attr("text-anchor", "end")
                     .attr("dy", ".35em")
                     .attr("dx", -5)
                     .text(function(d){return d.name;})
-                    .call(wrap);
+                    .each(trim);
 
                 svg.append("g")
                     .selectAll("valueLabels")
@@ -125,87 +119,42 @@ angular.module('MissionControlApp').directive('d3WorksetItemCount', ['d3', funct
                     .duration(1500)
                     .attr("fill-opacity", 1);
 
+                /**
+                 * Adjusts long strings to fit within margin.left.
+                 */
+                function trim() {
+                    var self = d3.select(this);
+                    var textWidth = getPixelWidth(self.text());
+                    var initialText = self.text(),
+                        textLength = initialText.length,
+                        text = initialText,
+                        maxIterations = 100;
+
+                    // (Konrad) Only trim strings that are longer than 25 characters.
+                    // Leave some space between left margin and trimmed string. 5px.
+                    while (maxIterations > 0 && text.length > 25) {
+                        if(textWidth >= (margin.left - 5)){
+                            text = text.slice(0, -textLength * 0.15);
+                            self.text(text + '...');
+                            textWidth = self.node().getComputedTextLength();
+                            textLength = text.length;
+                            maxIterations--;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+
+                /**
+                 * Returns width of text string in pixels.
+                 * @param text
+                 * @returns {Number}
+                 */
                 function getPixelWidth(text){
                     var canvas = document.createElement('canvas');
                     var ctx = canvas.getContext("2d");
-                    return width = ctx.measureText(text).width;
+                    return ctx.measureText(text).width;
                 }
-
-                function wrap() {
-                    var self = d3.select(this);
-                    var textWidth = this.getComputedTextLength();    // Width of text in pixel.
-                    console.log(textWidth);
-                    // var initialText = self.text(), 							// Initial text.
-                    //     textLength = initialText.length, 					// Length of text in characters.
-                    //     text = initialText,
-                    //     precision = 10, //textWidth / width, 				// Adjustable precision.
-                    //     maxIterations = 100; // width;						// Set iterations limit.
-                    //
-                    // while (maxIterations > 0 && text.length > 0 && Math.abs(width - textWidth) > precision) {
-                    //
-                    //     text = /*text.slice(0,-1); =*/(textWidth >= width) ? text.slice(0, -textLength * 0.15) : initialText.slice(0, textLength * 1.15);
-                    //     self.text(text + '...');
-                    //     textWidth = self.node().getComputedTextLength();
-                    //     textLength = text.length;
-                    //     maxIterations--;
-                    // }
-                    // console.log(width - textWidth);
-                }
-
-                // function wrap(text, width) {
-                //     text.each(function() {
-                //         var text = d3.select(this),
-                //             words = text.text().split(/\s+/).reverse(),
-                //             word,
-                //             line = [],
-                //             lineNumber = 0,
-                //             lineHeight = 1.1, // ems
-                //             y = text.attr("y"),
-                //             dy = parseFloat(text.attr("dy")),
-                //             tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dx", -5).attr("dy", dy + "em");
-                //         console.log(words);
-                //         while (word = words.pop()) {
-                //             line.push(word);
-                //             tspan.text(line.join(" "));
-                //             if (tspan.node().getComputedTextLength() > width) {
-                //                 line.pop();
-                //                 tspan.text(line.join(" "));
-                //                 line = [word];
-                //                 tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dx", -5).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-                //                 console.log(lineNumber);
-                //             }
-                //         }
-                //     });
-
-                // function getPixelWidth(text){
-                //     var canvas = document.createElement('canvas');
-                //     var ctx = canvas.getContext("2d");
-                //     return width = ctx.measureText(text).width;}
-                //
-                // function wrap(text, width) {
-                //     console.log(text);
-                //     text.each(function() {
-                //         var text = d3.select(this),
-                //             words = text.text().split(/\s+/).reverse(),
-                //             word,
-                //             line = [],
-                //             lineNumber = 0,
-                //             lineHeight = 1.1, // ems
-                //             y = text.attr("y"),
-                //             dy = parseFloat(text.attr("dy")),
-                //             tspan = text.text(null).append("tspan").attr("x", margin.left).attr("y", y).attr("dx", -5).attr("dy", dy + "em");
-                //         while (word = words.pop()) {
-                //             line.push(word);
-                //             tspan.text(line.join(" "));
-                //             if (tspan.node().getComputedTextLength() > width) {
-                //                 line.pop();
-                //                 tspan.text(line.join(" "));
-                //                 line = [word];
-                //                 tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dx", -5).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-                //             }
-                //         }
-                //     });
-                // }
             };
         }
     };
