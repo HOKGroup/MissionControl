@@ -26,7 +26,7 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-centered dropdown-menu-right dropdown-menu-wide">
-                            <li ng-repeat="link in vm.selectedProject.healthrecords">
+                            <li ng-repeat="link in vm.selectedProject.healthrecords | orderBy: vm.sortFiles">
                                 <a href="" ng-click="vm.SetProject(link)">{{vm.fileNameFromPath(link.centralPath)}}</a>
                             </li>
                         </ul>
