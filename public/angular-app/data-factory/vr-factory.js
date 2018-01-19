@@ -5,16 +5,16 @@ angular.module('MissionControlApp').factory('VrFactory', VrFactory);
 
 function VrFactory($http){
     return {
-        getProjectById: function getProjectById(projectId) {
-            return $http.get('/api/v1/projects/' + projectId).then(complete).catch(failed);
-        },
-
         populateVr: function populateVr(projectId) {
             return $http.get('/api/v1/projects/populatevr/' + projectId).then(complete).catch(failed);
         },
 
-        requestToken: function requestToken() {
-            return $http.post('/api/v1/vr/requesttoken').then(complete).catch(failed);
+        getProject: function getProject(projectName) {
+            return $http.get('/api/v1/vr/project/' + projectName).then(complete).catch(failed);
+        },
+
+        createProject: function createProject(projectName) {
+            return $http.post('/api/v1/vr/project/' + projectName).then(complete).catch(failed);
         }
     };
 

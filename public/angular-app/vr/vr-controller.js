@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('VrController', VrController);
 
-function VrController($routeParams, VrFactory, dragulaService, $rootScope, $scope, $window, $uibModal, UtilityService){
+function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $rootScope, $scope, $window, $uibModal, UtilityService){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
@@ -18,18 +18,6 @@ function VrController($routeParams, VrFactory, dragulaService, $rootScope, $scop
 
     // (Konrad) Retrieves selected project from MongoDB.
     getSelectedProject(vm.projectId);
-    authenticateTrimble();
-
-    function authenticateTrimble() {
-        VrFactory
-            .requestToken().then(function(response){
-                if(!response) return;
-
-                console.log(response);
-            },function(error){
-                console.log('Unable to load project data: ' + error.message);
-            });
-    }
 
     // $scope.$on('image_bag.remove-model', function (el, container, source) {
     //     // var deletedId = container[0].id;
@@ -222,27 +210,28 @@ function VrController($routeParams, VrFactory, dragulaService, $rootScope, $scop
      * @param projectId
      */
     function getSelectedProject(projectId) {
-        VrFactory
-            .getProjectById(projectId)
+        ProjectFactory.getProjectById(projectId)
             .then(function(response){
-                if(!response) return;
+                if(!response || response.status !== 200) return;
 
                 vm.selectedProject = response.data;
-                if(response.data.vr){
-                    VrFactory
-                        .populateVr(projectId).then(function (vrResponse) {
-                        if(!vrResponse) return;
-
-                        vm.selectedProject = vrResponse.data;
-                    }, function (error) {
-                        console.log('Unable to load Vr data ' + error.message);
-                    });
+                return VrFactory.getProject(vm.selectedProject.number + ' ' + vm.selectedProject.name)
+            })
+            .then(function (response) {
+                if(!response || response.status === 204){
+                    // (Konrad) Request was successful but no projects were found in Trimble.
+                    // Let's make another request to create a new project in Trimble.
+                    return VrFactory.createProject(vm.selectedProject.number + " " + vm.selectedProject.name)
                 } else {
-                    //TODO: VR page doesn't exist yet. We don't have an _id for the VR collection.
-                    //TODO: Let's create it, and store back in the project.
+                    // (Konrad) Project was found
+                    console.log("Project found. Name: " + response.data[0].name);
                 }
-            },function(error){
-                console.log('Unable to load project data: ' + error.message);
+            })
+            .then(function (response) {
+                if(!response) return;
+            })
+            .catch(function (err) {
+                console.log(err);
             });
     }
 }

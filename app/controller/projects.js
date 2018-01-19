@@ -56,9 +56,7 @@ ProjectService = {
                   response.status = 404;
                   response.message = { "message": "Project Id not found " + id};
               }
-              res
-                  .status(response.status)
-                  .json(response.message);
+              res.status(response.status).json(response.message);
           });
   },
 

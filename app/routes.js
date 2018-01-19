@@ -104,5 +104,6 @@ var vr = require('./models/vr-model');
      app.put('/api/v1/sheets/:id/updatefilepath', sheets.updateFilePath);
 
      var vrs = require('./controller/vr-controller');
-     app.post('/api/v1/vr/requesttoken', vrs.requestToken);
+     app.get('/api/v1/vr/project/:name', vrs.getProjectByName);
+     app.post('/api/v1/vr/project/:name', vrs.createProject);
   };
