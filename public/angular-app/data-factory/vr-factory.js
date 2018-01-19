@@ -11,6 +11,10 @@ function VrFactory($http){
 
         populateVr: function populateVr(projectId) {
             return $http.get('/api/v1/projects/populatevr/' + projectId).then(complete).catch(failed);
+        },
+
+        requestToken: function requestToken() {
+            return $http.post('/api/v1/vr/requesttoken').then(complete).catch(failed);
         }
     };
 

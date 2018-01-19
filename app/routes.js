@@ -103,5 +103,6 @@ var vr = require('./models/vr-model');
      app.post('/api/v1/sheets/:id/updatetasks', sheets.updateSheetTask);
      app.put('/api/v1/sheets/:id/updatefilepath', sheets.updateFilePath);
 
-     var vr = require('./controller/vr-controller');
+     var vrs = require('./controller/vr-controller');
+     app.post('/api/v1/vr/requesttoken', vrs.requestToken);
   };

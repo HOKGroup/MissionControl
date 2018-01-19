@@ -16,6 +16,21 @@ function VrController($routeParams, VrFactory, dragulaService, $rootScope, $scop
     vm.buckets = [];
     vm.images = [];
 
+    // (Konrad) Retrieves selected project from MongoDB.
+    getSelectedProject(vm.projectId);
+    authenticateTrimble();
+
+    function authenticateTrimble() {
+        VrFactory
+            .requestToken().then(function(response){
+                if(!response) return;
+
+                console.log(response);
+            },function(error){
+                console.log('Unable to load project data: ' + error.message);
+            });
+    }
+
     // $scope.$on('image_bag.remove-model', function (el, container, source) {
     //     // var deletedId = container[0].id;
     //     // console.log("deletedId:" + deletedId);
@@ -200,9 +215,6 @@ function VrController($routeParams, VrFactory, dragulaService, $rootScope, $scop
             if(index2 !== -1) bucket.images.splice(index2, 1);
         });
     };
-
-    // (Konrad) Retrieves selected project from MongoDB.
-    getSelectedProject(vm.projectId);
 
     /**
      * Used to retrieve the Project info.
