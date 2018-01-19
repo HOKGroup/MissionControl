@@ -27,6 +27,14 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
         return path.replace(/^.*[\\\/]/, '').slice(0, -4);
     };
 
+    /**
+     * Custom sort function to show files sorted by file name.
+     * @param file
+     */
+    vm.sortFiles = function (file) {
+        return vm.fileNameFromPath(file.centralPath);
+    };
+
     vm.SetProject = function (link){
         vm.selectedHealthRecord = link;
         vm.selectedFileName = vm.fileNameFromPath(link.centralPath);
@@ -95,6 +103,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
             .getProjectById(projectId)
             .then(function(resProject){
                 if(!resProject) return;
+
                 vm.selectedProject = resProject.data;
                 if(resProject.data.healthrecords.length > 0)
                 {
@@ -102,9 +111,16 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
                         .populateProject(projectId)
                         .then(function(resProject1){
                             if(!resProject1) return;
+
                             vm.selectedProject = resProject1.data;
-                            vm.selectedHealthRecord = vm.selectedProject.healthrecords[0];
-                            vm.selectedFileName = vm.fileNameFromPath(vm.selectedHealthRecord.centralPath);
+
+                            //(Konrad) It makes sense to sort the dropdown by file name.
+                            vm.selectedProject.healthrecords.forEach(function (item) {
+                                item['fileName'] = vm.fileNameFromPath(item.centralPath);
+                                return item;
+                            });
+                            vm.selectedHealthRecord = vm.selectedProject.healthrecords.sort(dynamicSort('fileName'))[0];
+                            vm.selectedFileName = vm.selectedHealthRecord['fileName'];
 
                             if(vm.selectedHealthRecord.familyStats !== null){
                                 FamiliesFactory
@@ -128,7 +144,21 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
             });
     }
 
-    function setFamilyStats(){
-
+    /**
+     * Returns a sort order for objects by a given property on that object.
+     * Credit: https://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value-in-javascript
+     * @param property
+     * @returns {Function}
+     */
+    function dynamicSort(property) {
+        var sortOrder = 1;
+        if(property[0] === "-") {
+            sortOrder = -1;
+            property = property.substr(1);
+        }
+        return function (a,b) {
+            var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+            return result * sortOrder;
+        }
     }
 }
