@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('VrController', VrController);
 
-function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $rootScope, $scope, $window, $uibModal, UtilityService){
+function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $scope, $uibModal, UtilityService){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
@@ -15,9 +15,97 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
     vm.editingBucket = false;
     vm.buckets = [];
     vm.images = [];
+    vm.status = {
+        code: null,
+        message: ''
+    };
+    vm.trimbleProject = null;
+    vm.trimbleImagesId = '';
 
     // (Konrad) Retrieves selected project from MongoDB.
     getSelectedProject(vm.projectId);
+
+    /**
+     * Used to retrieve the Project info.
+     * Also, parses through sheets/sheetsChanges to populate DataTable.
+     * @param projectId
+     */
+    function getSelectedProject(projectId) {
+        ProjectFactory.getProjectById(projectId)
+            .then(function(response){
+                if(!response || response.status !== 200){
+                    vm.status = {
+                        code: 'danger',
+                        message: 'Failed to retrieve project from Mission Control server. Try refreshing the page.'
+                    };
+                    return;
+                }
+
+                vm.selectedProject = response.data;
+                return VrFactory.getProject(vm.selectedProject.number + ' ' + vm.selectedProject.name)
+            })
+            .then(function (response) {
+                if (response.status === 200) {
+                    vm.trimbleProject = response.data;
+
+                    return VrFactory.getFolderItems(vm.trimbleProject.rootId);
+                } else if (response.status === 204) {
+                    // (Konrad) Request was successful but no projects were found in Trimble.
+                    // Let's make another request to create a new project in Trimble Connect.
+                    VrFactory.createProject(vm.selectedProject.number + " " + vm.selectedProject.name)
+                        .then(function (response) {
+                            if(response && response.status === 200){
+                                vm.trimbleProject = response.data;
+                                vm.status = {
+                                    code: 'success',
+                                    message: 'Successfully created new Trimble Connect project. Go ahead and upload images now!'
+                                };
+                                return VrFactory.addUser(vm.trimbleProject.id);
+                            } else {
+                                vm.status = {
+                                    code: 'danger',
+                                    message: 'Failed while creating new Trimble Connect project. Try reloading the page.'
+                                };
+                            }
+                        })
+                        .then(function (response) {
+                            // (Konrad) Project was created and user was added.
+                            // Since this is a new project we need to also add the images folder.
+                            return VrFactory.addFolder({name: "Images", rootId: vm.trimbleProject.rootId});
+                        })
+                        .then(function(response){
+                            // (Konrad) Images folder was added
+                        })
+                        .catch(function (err) {
+                            console.log(err.message);
+                        });
+                } else {
+                    // (Konrad) Retrieving/creating project failed.
+                    console.log("Response 500.");
+                }
+            })
+            .then(function (response) {
+                // (Konrad) no matter what happens above the response here should be
+                // either newly created folder or retrieved folder
+                vm.trimbleImagesId = response.data.filter(function (item) {
+                    return item.name === "Images";
+                })[0];
+                if(vm.trimbleImagesId){
+                    vm.status = {
+                        code: 'info',
+                        message: 'Trimble Connect project found. Go ahead and upload images now!'
+                    };
+                } else {
+                    vm.status = {
+                        code: 'danger',
+                        message: 'Failed to retrieve Images folder from Trimble Connect. Try reloading the page.'
+                    };
+                }
+            })
+            .catch(function (err) {
+                console.log(err.message);
+            });
+    }
 
     // $scope.$on('image_bag.remove-model', function (el, container, source) {
     //     // var deletedId = container[0].id;
@@ -110,11 +198,27 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
      */
     $scope.$watchCollection('vm.images', function (newValue, oldValue, scope) {
         if(newValue.length > oldValue.length){
-            //TODO: Post new image to DB
-            // console.log("Image added: " + newValue.diff(oldValue)[0].name);
+            console.log("Image added: " + newValue.diff(oldValue)[0].name);
+
+
+
+            // var fileStream = newValue.diff(oldValue)[0].data;
+            // var content = {
+            //     file: fileStream,
+            //     parentId:
+            // }
+            // VrFactory.uploadFile(fileStream)
+            //     .then(function (response) {
+            //         console.log(response)
+            //     })
+            //     .catch(function (err) {
+            //         console.log(err);
+            //     })
+
+
         } else if(newValue.length < oldValue.length){
             //TODO: Remove image from DB
-            // console.log("Image removed: " + oldValue.diff(newValue)[0].name);
+            console.log("Image removed: " + oldValue.diff(newValue)[0].name);
         }
     });
 
@@ -203,35 +307,4 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
             if(index2 !== -1) bucket.images.splice(index2, 1);
         });
     };
-
-    /**
-     * Used to retrieve the Project info.
-     * Also, parses through sheets/sheetsChanges to populate DataTable.
-     * @param projectId
-     */
-    function getSelectedProject(projectId) {
-        ProjectFactory.getProjectById(projectId)
-            .then(function(response){
-                if(!response || response.status !== 200) return;
-
-                vm.selectedProject = response.data;
-                return VrFactory.getProject(vm.selectedProject.number + ' ' + vm.selectedProject.name)
-            })
-            .then(function (response) {
-                if(!response || response.status === 204){
-                    // (Konrad) Request was successful but no projects were found in Trimble.
-                    // Let's make another request to create a new project in Trimble.
-                    return VrFactory.createProject(vm.selectedProject.number + " " + vm.selectedProject.name)
-                } else {
-                    // (Konrad) Project was found
-                    console.log("Project found. Name: " + response.data[0].name);
-                }
-            })
-            .then(function (response) {
-                if(!response) return;
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
-    }
 }

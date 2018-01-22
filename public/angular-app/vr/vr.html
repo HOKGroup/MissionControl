@@ -4,6 +4,27 @@
     }
 </style>
 
+<div class="container" ng-if="vm.status.message">
+    <div class="row">
+        <div class="alert alert-success alert-dismissable fade in" style="margin: 0;" ng-if="vm.status.code === 'success'">
+            <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Success!</strong> {{vm.status.message}}
+        </div>
+        <div class="alert alert-info alert-dismissable fade in" style="margin: 0;" ng-if="vm.status.code === 'info'">
+            <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Info!</strong> {{vm.status.message}}
+        </div>
+        <div class="alert alert-warning alert-dismissable fade in" style="margin: 0;" ng-if="vm.status.code === 'warning'">
+            <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Warning!</strong> {{vm.status.message}}
+        </div>
+        <div class="alert alert-danger alert-dismissable fade in" style="margin: 0;" ng-if="vm.status.code === 'danger'">
+            <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Danger!</strong> {{vm.status.message}}
+        </div>
+    </div>
+</div>
+
 <div class="container">
     <!--Navigation Buttons-->
     <div class="row">
@@ -19,7 +40,7 @@
             </h1>
         </div>
     </div>
-    <div class="row">
+    <div class="row" ng-show="vm.trimbleProject">
         <div class="row row-offcanvas row-offcanvas-left">
             <!--Left side images-->
             <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">

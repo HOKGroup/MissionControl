@@ -15,7 +15,23 @@ function VrFactory($http){
 
         createProject: function createProject(projectName) {
             return $http.post('/api/v1/vr/project/' + projectName).then(complete).catch(failed);
+        },
+
+        addUser: function addUser(projectId) {
+            return $http.post('/api/v1/vr/project/' + projectId + '/users').then(complete).catch(failed);
+        },
+
+        addFolder: function addFolder(data) {
+            return $http.post('/api/v1/vr/folders', data).then(complete).catch(failed);
+        },
+
+        getFolderItems: function getFolderItems(folderId) {
+            return $http.get('/api/v1/vr/folders/' + folderId + '/items').then(complete).catch(failed);
         }
+
+        // uploadFile: function uploadFile(fd) {
+        //     return $http.post('/api/v1/vr/files', fd).then(complete).catch(failed);
+        // }
     };
 
     function complete(response) {
