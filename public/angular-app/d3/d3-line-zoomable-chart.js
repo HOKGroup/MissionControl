@@ -163,7 +163,13 @@ angular.module('MissionControlApp').directive('d3ZoomableLine', ['d3', function(
                     .attr("stroke-width", "1px");
 
                 tooltip.append("text")
+                    .attr("class", "y1")
                     .attr("transform", "translate(0, -7)")
+                    .attr("text-anchor", "middle");
+
+                tooltip.append("text")
+                    .attr("class", "y2")
+                    .attr("transform", "translate(0, -20)")
                     .attr("text-anchor", "middle");
 
                 svg.append("rect")
@@ -186,7 +192,8 @@ angular.module('MissionControlApp').directive('d3ZoomableLine', ['d3', function(
                     if(!d1) return;
                     var d = x0 - d0.date > d1.date - x0 ? d1 : d0;
                     tooltip.attr("transform", "translate(" + (x(d.date) + margin.left) + "," + (y(d.value) + margin.top) + ")");
-                    tooltip.select("text").text(scope.callbackMethod({item: d.value}));
+                    tooltip.select("text.y1").text(scope.callbackMethod({item: d.value}));
+                    tooltip.select("text.y2").text(d.user);
                     tooltip.select(".mouse-line").attr("y2", height - y(d.value));
                 }
 
