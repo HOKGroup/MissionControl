@@ -89,7 +89,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                 // either newly created folder or retrieved folder
                 vm.trimbleImagesId = response.data.filter(function (item) {
                     return item.name === "Images";
-                })[0];
+                })[0].id;
                 if(vm.trimbleImagesId){
                     vm.status = {
                         code: 'info',
@@ -202,18 +202,18 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
 
 
 
-            // var fileStream = newValue.diff(oldValue)[0].data;
-            // var content = {
-            //     file: fileStream,
-            //     parentId:
-            // }
-            // VrFactory.uploadFile(fileStream)
-            //     .then(function (response) {
-            //         console.log(response)
-            //     })
-            //     .catch(function (err) {
-            //         console.log(err);
-            //     })
+            var fileData = newValue.diff(oldValue)[0].data;
+            var data = {
+                file: fileData,
+                parentId: vm.trimbleImagesId
+            };
+            VrFactory.uploadFile(data)
+                .then(function (response) {
+                    console.log(response)
+                })
+                .catch(function (err) {
+                    console.log(err);
+                })
 
 
         } else if(newValue.length < oldValue.length){

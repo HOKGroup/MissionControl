@@ -90,7 +90,7 @@
                                             <span class='handle glyphicon glyphicon-move'></span>
                                         </div>
                                         <div class="hovereffect">
-                                            <img src="{{file.data}}" class="img-responsive center-block" alt="">
+                                            <img ng-src="{{file.data}}" class="img-responsive center-block" alt="">
                                             <div class="overlay">
                                                 <p>
                                                     <span class="glyphicon glyphicon-pencil"
@@ -157,7 +157,9 @@
                                 <div class="col-md-4 no-padding-left">
                                     <div class="panel-collapse">
                                         <div>
-                                            <img src="{{file.data}}" class="img-responsive center-block" alt="">
+                                            <!-- (Konrad) We are using ng-src here because DOM would attempt to load that image
+                                            src before it even exists due to its dependency on ng-if directive -->
+                                            <img ng-src="{{file.data}}" class="img-responsive center-block" alt="">
                                         </div>
                                     </div>
                                 </div>

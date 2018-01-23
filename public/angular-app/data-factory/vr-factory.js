@@ -27,11 +27,11 @@ function VrFactory($http){
 
         getFolderItems: function getFolderItems(folderId) {
             return $http.get('/api/v1/vr/folders/' + folderId + '/items').then(complete).catch(failed);
-        }
+        },
 
-        // uploadFile: function uploadFile(fd) {
-        //     return $http.post('/api/v1/vr/files', fd).then(complete).catch(failed);
-        // }
+        uploadFile: function uploadFile(data) {
+            return $http.post('/api/v1/vr/files', data).then(complete).catch(failed);
+        }
     };
 
     function complete(response) {

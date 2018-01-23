@@ -13,35 +13,35 @@ var client_id = 'qK34zw1Ktnvy2R6tMfGf73wXtJca';
 var client_secret = 'eAoSUqTSLX_fiZ9r8dxyZ5uUGxMa';
 var access_token;
 
-// module.exports.uploadFile = function (req, res) {
-//     authorize
-//         .then(function (response) { //(Konrad) Add sobon.konrad@gmail.com to users on that project.
-//             var auth = 'Bearer ' + access_token;
-//             var options = {
-//                 method: 'POST',
-//                 uri: 'https://app.stage.connect.trimble.com/tc/api/2.0/files',
-//                 headers: {
-//                     'Authorization': auth,
-//                     'Content-Type': 'multipart/form-data'
-//                 },
-//                 formData: {
-//                     'file': req.body.file
-//                 },
-//                 json: {
-//                     parentId: req.body.parentId,
-//                     parentType: 'FOLDER'
-//                 }
-//             };
-//
-//             return request(options);
-//         })
-//         .then(function (response) {
-//             res.status(200).json(response)
-//         })
-//         .catch(function (err) {
-//             res.status(500).json({ message: err.message })
-//         })
-// };
+module.exports.uploadFile = function (req, res) {
+    authorize
+        .then(function (response) { //(Konrad) Add sobon.konrad@gmail.com to users on that project.
+            var auth = 'Bearer ' + response.token;
+            var options = {
+                method: 'POST',
+                uri: 'https://app.stage.connect.trimble.com/tc/api/2.0/files',
+                headers: {
+                    'Authorization': auth,
+                    'Content-Type': 'multipart/form-data'
+                },
+                formData: {
+                    'file': req.body.file
+                },
+                json: {
+                    parentId: req.body.parentId,
+                    parentType: 'FOLDER'
+                }
+            };
+
+            return request(options);
+        })
+        .then(function (response) {
+            res.status(201).json(response)
+        })
+        .catch(function (err) {
+            res.status(500).json({ message: err.message })
+        })
+};
 
 module.exports.getFolderItems = function (req, res) {
     authorize
