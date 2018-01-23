@@ -94,7 +94,6 @@ module.exports.findByCentralPath  = function(req, res){
             } else if(!result){
                 console.log("File Path wasn't found in any Configurations Collections");
             }
-            console.log(response.message);
             res.status(response.status).json(response.message);
         }
     )
