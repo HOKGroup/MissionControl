@@ -202,14 +202,15 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
 
 
 
-            var fileData = newValue.diff(oldValue)[0].data;
+
+            var newFile = newValue.diff(oldValue)[0];
             var data = {
-                file: fileData,
+                file: newFile.file,
                 parentId: vm.trimbleImagesId
             };
             VrFactory.uploadFile(data)
                 .then(function (response) {
-                    console.log(response)
+                    // console.log(response)
                 })
                 .catch(function (err) {
                     console.log(err);

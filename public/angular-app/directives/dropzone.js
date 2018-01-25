@@ -29,7 +29,6 @@ angular.module('MissionControlApp').directive('dropZone',['UtilityService', func
     }
 
     function uploadFileSelect(e) {
-        // console.log(this);
         e.stopPropagation();
         e.preventDefault();
         var files = e.dataTransfer ? e.dataTransfer.files: e.target.files;
@@ -42,16 +41,18 @@ angular.module('MissionControlApp').directive('dropZone',['UtilityService', func
                     // [object File] produces an empty object on the model
                     // why we copy the properties to an object containing
                     // the Filereader base64 data from e.target.result
-                    var data={
-                        data:e.target.result,
+                    var data = {
+                        file: file,
+                        data: e.target.result,
                         dataSize: e.target.result.length,
                         _id: UtilityService.guid(),
                         displayName: 'Image Name',
                         description: 'Image Description'
                     };
-                    for(var p in file){ data[p] = file[p] }
+                    for (var p in file) {
+                        data[p] = file[p]
+                    }
 
-                    // console.log(data);
                     config.scope.$apply(function(){ config.model.$viewValue.push(data) })
                 }
             })(file);

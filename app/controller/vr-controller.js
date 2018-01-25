@@ -19,18 +19,18 @@ module.exports.uploadFile = function (req, res) {
             var auth = 'Bearer ' + response.token;
             var options = {
                 method: 'POST',
-                uri: 'https://app.stage.connect.trimble.com/tc/api/2.0/files',
+                uri: 'https://app.stage.connect.trimble.com/tc/api/2.0/files?parentId=' + req.body.parentId,
                 headers: {
                     'Authorization': auth,
+                    'Cache-Control': 'no-cache',
                     'Content-Type': 'multipart/form-data'
+                    // 'Content-Type': undefined
                 },
+                // transformRequest: angular.identity,
                 formData: {
-                    'file': req.body.file
+                    'data': req.body.file
                 },
-                json: {
-                    parentId: req.body.parentId,
-                    parentType: 'FOLDER'
-                }
+                json: true
             };
 
             return request(options);
