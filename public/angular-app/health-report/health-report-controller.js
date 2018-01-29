@@ -42,7 +42,9 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
         vm.selectedFileName = vm.fileNameFromPath(link.centralPath);
         vm.AllData = [];
 
-        if(vm.selectedHealthRecord.familyStats !== null && vm.selectedHealthRecord.familyStats !== ''){
+        if(vm.selectedHealthRecord.familyStats
+            && vm.selectedHealthRecord.familyStats !== null
+            && vm.selectedHealthRecord.familyStats !== ''){
             FamiliesFactory
                 .getById(vm.selectedHealthRecord.familyStats)
                 .then(function(resFamilies1){
@@ -82,6 +84,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
             vm.ShowFamiliesStats.value = false;
 
             vm.WorksetData = HealthReportFactory.processWorksetStats(link);
+            console.log(vm.WorksetData);
             if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
 
             var linkData = link.linkStats[link.linkStats.length - 1];
@@ -124,7 +127,9 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
                             vm.selectedHealthRecord = vm.selectedProject.healthrecords.sort(dynamicSort('fileName'))[0];
                             vm.selectedFileName = vm.selectedHealthRecord['fileName'];
 
-                            if(vm.selectedHealthRecord.familyStats !== null && vm.selectedHealthRecord.familyStats !== ''){
+                            if(vm.selectedHealthRecord.familyStats
+                                && vm.selectedHealthRecord.familyStats !== null
+                                && vm.selectedHealthRecord.familyStats !== ''){
                                 FamiliesFactory.getById(vm.selectedHealthRecord.familyStats)
                                     .then(function(resFamilies){
                                         if(!resFamilies) return;
