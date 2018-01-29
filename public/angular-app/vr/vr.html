@@ -4,22 +4,22 @@
     }
 </style>
 
-<div class="container" ng-if="vm.status.message">
+<div class="container fade-element-in" ng-if="vm.status.message">
     <div class="row">
-        <div class="alert alert-success alert-dismissable fade in" style="margin: 0;" ng-if="vm.status.code === 'success'">
-            <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <div class="alert alert-success" style="margin: 0;" ng-if="vm.status.code === 'success'">
+            <a href="" class="close" aria-label="close" ng-click="vm.status = null">&times;</a>
             <strong>Success!</strong> {{vm.status.message}}
         </div>
-        <div class="alert alert-info alert-dismissable fade in" style="margin: 0;" ng-if="vm.status.code === 'info'">
-            <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <div class="alert alert-info" style="margin: 0;" ng-if="vm.status.code === 'info'">
+            <a href="" class="close" aria-label="close" ng-click="vm.status = null">&times;</a>
             <strong>Info!</strong> {{vm.status.message}}
         </div>
-        <div class="alert alert-warning alert-dismissable fade in" style="margin: 0;" ng-if="vm.status.code === 'warning'">
-            <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <div class="alert alert-warning" style="margin: 0;" ng-if="vm.status.code === 'warning'">
+            <a href="" class="close" aria-label="close" ng-click="vm.status = null">&times;</a>
             <strong>Warning!</strong> {{vm.status.message}}
         </div>
-        <div class="alert alert-danger alert-dismissable fade in" style="margin: 0;" ng-if="vm.status.code === 'danger'">
-            <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <div class="alert alert-danger" style="margin: 0;" ng-if="vm.status.code === 'danger'">
+            <a href="" class="close" aria-label="close" ng-click="vm.status = null">&times;</a>
             <strong>Danger!</strong> {{vm.status.message}}
         </div>
     </div>
@@ -89,8 +89,10 @@
                                         <div class="dark-background text-center">
                                             <span class='handle glyphicon glyphicon-move'></span>
                                         </div>
-                                        <div class="hovereffect">
-                                            <img ng-src="{{file.data}}" class="img-responsive center-block" alt="">
+                                        <div class="hovereffect" ng-if="file.id && file.data">
+                                            <!--<img ng-src="{{file.data}}" class="img-responsive center-block" alt="">-->
+                                            <img data-ng-src="data:image/jpg;base64,{{file.data}}" ng-if="!file.data.startsWith('data')" class="img-responsive center-block" alt="">
+                                            <img data-ng-src="{{file.data}}" ng-if="file.data.startsWith('data')" class="img-responsive center-block" alt="">
                                             <div class="overlay">
                                                 <p>
                                                     <span class="glyphicon glyphicon-pencil"
@@ -105,6 +107,9 @@
                                                     </span>
                                                 </p>
                                             </div>
+                                        </div>
+                                        <div ng-if="!file.id || !file.data">
+                                            <img ng-src="images/rolling_1s_200px.gif" class="img-responsive center-block" alt="">
                                         </div>
                                     </div>
                                 </div>
@@ -219,6 +224,8 @@
                         </div>
                     </div>
                 </div>
+                <!-- This empty div helps keep the affixed images div from glitching -->
+                <div class="container-fluid" ng-if="vm.buckets.length < 4" ng-style="{'min-height': (800 - (vm.buckets.length * 200)) + 'px'}"></div>
             </div>
         </div>
     </div>

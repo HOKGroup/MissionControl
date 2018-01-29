@@ -35,6 +35,21 @@ function VrFactory($http, $base64){
             return $http.get('/api/v1/vr/folders/' + folderId + '/items').then(complete).catch(failed);
         },
 
+        downloadFile: function downloadFile(fileId) {
+            return authorize().then(function (response) {
+                var auth = 'Bearer ' + response;
+                return $http({
+                    method: 'GET',
+                    url: 'https://app.stage.connect.trimble.com/tc/api/2.0/files/' + fileId + '/content',
+                    headers: {
+                        'Authorization': auth
+                    },
+                    responseType: "arraybuffer",
+                    transformRequest: angular.identity
+                })
+            }).then(complete).catch(failed)
+        },
+
         uploadFile: function uploadFile(data) {
             return authorize().then(function (response) {
                 var auth = 'Bearer ' + response;
@@ -52,9 +67,58 @@ function VrFactory($http, $base64){
                         return formData;
                     }
                 })
-            }).then(function (response){
-                console.log(response);
-            }).catch(failed)
+            }).then(complete).catch(failed)
+        },
+
+        deleteFile: function deleteFile(fileId) {
+            return authorize().then(function (response) {
+                var auth = 'Bearer ' + response;
+                return $http({
+                    method: 'DELETE',
+                    url: 'https://app.stage.connect.trimble.com/tc/api/2.0/files/' + fileId,
+                    headers: {
+                        'Authorization': auth
+                    },
+                    transformRequest: angular.identity
+                })
+            }).then(complete).catch(failed);
+        },
+
+        createFolder: function createFolder(data) {
+            return authorize().then(function (response) {
+                var auth = 'Bearer ' + response;
+                return $http({
+                    method: 'POST',
+                    url: 'https://app.stage.connect.trimble.com/tc/api/2.0/folders',
+                    headers: {
+                        'Authorization': auth,
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify({
+                        'name': data.name,
+                        'parentId': data.rootId
+                    }),
+                    transformRequest: angular.identity
+                })
+            }).then(complete).catch(failed);
+        },
+
+        renameFolder: function renameFolder(data) {
+            return authorize().then(function (response) {
+                var auth = 'Bearer ' + response;
+                return $http({
+                    method: 'PATCH',
+                    url: 'https://app.stage.connect.trimble.com/tc/api/2.0/folders/' + data.folderId,
+                    headers: {
+                        'Authorization': auth,
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify({
+                        'name': data.name,
+                    }),
+                    transformRequest: angular.identity
+                })
+            }).then(complete).catch(failed);
         }
     };
 

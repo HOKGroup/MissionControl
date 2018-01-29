@@ -1,7 +1,7 @@
 /**
  * Created by konrad.sobon on 2018-01-10.
  */
-angular.module('MissionControlApp').directive('dropZone',['UtilityService', function(UtilityService){
+angular.module('MissionControlApp').directive('dropZone',[function(){
     var config = {
         template:'<div class="dropzone">'+
         '<input type="file" multiple accept="jpg" style="width: 100%;"/>'+
@@ -36,7 +36,6 @@ angular.module('MissionControlApp').directive('dropZone',['UtilityService', func
             var reader = new FileReader();
             reader.onload = (function(file) {
                 return function(e) {
-
                     // Data handling (just a basic example):
                     // [object File] produces an empty object on the model
                     // why we copy the properties to an object containing
@@ -45,9 +44,13 @@ angular.module('MissionControlApp').directive('dropZone',['UtilityService', func
                         file: file,
                         data: e.target.result,
                         dataSize: e.target.result.length,
-                        _id: UtilityService.guid(),
                         displayName: 'Image Name',
-                        description: 'Image Description'
+                        description: 'Image Description',
+                        versionId: '',
+                        projectId: '',
+                        parentId: '',
+                        id: '',
+                        name: ''
                     };
                     for (var p in file) {
                         data[p] = file[p]

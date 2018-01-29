@@ -84,6 +84,21 @@ function UtilityService(){
                 values[val] = true;
                 return !exists;
             });
+        },
+
+        /**
+         * Converts binary array buffer to base64 encoded string.
+         * @param buffer
+         * @returns {string}
+         */
+        arrayBufferToBase64: function arrayBufferToBase64(buffer) {
+            var binary = '';
+            var bytes = new Uint8Array(buffer);
+            var len = bytes.byteLength;
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return window.btoa(binary);
         }
     }
 }
