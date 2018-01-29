@@ -75,9 +75,13 @@ module.exports.update = function(req, res) {
         });
 };
 
+/**
+ * Returns family collection by id.
+ * @param req
+ * @param res
+ */
 module.exports.findById = function(req, res){
     var id = req.params.id;
-
     Families
         .findOne({ '_id': id },function(err, result) {
             if(err) {
