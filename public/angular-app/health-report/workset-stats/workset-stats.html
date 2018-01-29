@@ -85,7 +85,7 @@
                 <div class="panel-heading">
                     <h4 class="panel-title" style="padding-top: 5px;">Worksets Opened % : {{vm.SelectedUser}} : {{vm.WorksetsOpenedType}}</h4>
                 </div>
-                <div>
+                <div class="panel-collapse">
                     <div class="panel-body">
                         <d3-zoomable-line data="vm.UserData" format-value="vm.formatDuration(item)" domain-y="100"></d3-zoomable-line>
                     </div>
