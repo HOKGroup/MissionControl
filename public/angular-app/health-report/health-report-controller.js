@@ -13,6 +13,8 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
     vm.FamilyCollection = null;
     var currentSelection = vm.ShowMainPage.name;
 
+    getSelectedProject(vm.projectId);
+
     var allControllers = [vm.ShowLinkStats, vm.ShowFamiliesStats, vm.ShowWorksetStats, vm.ShowViewStats, vm.ShowModelStats, vm.ShowMainPage];
     vm.SelectionChanged = function (name) {
         allControllers.forEach(function (item) {
@@ -20,7 +22,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
         })
     };
 
-    getSelectedProject(vm.projectId);
+
 
     vm.fileNameFromPath = function (path){
         if(!path) return;
@@ -40,7 +42,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
         vm.selectedFileName = vm.fileNameFromPath(link.centralPath);
         vm.AllData = [];
 
-        if(vm.selectedHealthRecord.familyStats !== null){
+        if(vm.selectedHealthRecord.familyStats !== null && vm.selectedHealthRecord.familyStats !== ''){
             FamiliesFactory
                 .getById(vm.selectedHealthRecord.familyStats)
                 .then(function(resFamilies1){
@@ -122,17 +124,17 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
                             vm.selectedHealthRecord = vm.selectedProject.healthrecords.sort(dynamicSort('fileName'))[0];
                             vm.selectedFileName = vm.selectedHealthRecord['fileName'];
 
-                            if(vm.selectedHealthRecord.familyStats !== null){
-                                FamiliesFactory
-                                    .getById(vm.selectedHealthRecord.familyStats)
+                            if(vm.selectedHealthRecord.familyStats !== null && vm.selectedHealthRecord.familyStats !== ''){
+                                FamiliesFactory.getById(vm.selectedHealthRecord.familyStats)
                                     .then(function(resFamilies){
                                         if(!resFamilies) return;
+
                                         vm.FamilyCollection = resFamilies.data;
                                         vm.SetProject(vm.selectedHealthRecord);
                                     }, function(err){
                                         console.log('Unable to load Families Data: ' + err.message);
                                     })
-                            }else{
+                            } else {
                                 vm.SetProject(vm.selectedHealthRecord);
                             }
                         }, function(err){
