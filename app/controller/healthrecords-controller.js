@@ -378,25 +378,11 @@ module.exports.postFamilyStats = function (req, res) {
         });
 };
 
-var _addModelSizeTime = function (req, res, healthReportData){
-    healthReportData.modelSizes.push({
-        value: parseInt(req.body.value, 10),
-        createdOn: Date.now()
-    });
-
-    healthReportData.save(function (err, dataUpdated) {
-        if(err){
-            res
-                .status(500)
-                .json(err);
-        } else {
-            res
-                .status(200)
-                .json(dataUpdated.modelSizes[dataUpdated.modelSizes.length - 1]);
-        }
-    });
-};
-
+/**
+ * Posts model open times to Health Recors.
+ * @param req
+ * @param res
+ */
 module.exports.postModelSize = function (req, res) {
     var id = req.params.id;
     HealthRecords
@@ -417,32 +403,32 @@ module.exports.postModelSize = function (req, res) {
             if(doc){
                 _addModelSizeTime(req, res, doc);
             } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
+                res.status(response.status).json(response.message);
             }
         });
 };
 
-var _addModelOpenTime = function (req, res, healthReportData){
-    healthReportData.openTimes.push({
+var _addModelSizeTime = function (req, res, healthReportData){
+    healthReportData.modelSizes.push({
         value: parseInt(req.body.value, 10),
+        user: req.body.user,
         createdOn: Date.now()
     });
 
     healthReportData.save(function (err, dataUpdated) {
         if(err){
-            res
-                .status(500)
-                .json(err);
+            res.status(500).json(err);
         } else {
-            res
-                .status(200)
-                .json(dataUpdated.openTimes[dataUpdated.openTimes.length - 1]);
+            res.status(200).json(dataUpdated.modelSizes[dataUpdated.modelSizes.length - 1]);
         }
     });
 };
 
+/**
+ * Posts model open times to Health Record.
+ * @param req
+ * @param res
+ */
 module.exports.postModelOpenTime = function (req, res) {
     var id = req.params.id;
     HealthRecords
@@ -463,32 +449,32 @@ module.exports.postModelOpenTime = function (req, res) {
             if(doc){
                 _addModelOpenTime(req, res, doc);
             } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
+                res.status(response.status).json(response.message);
             }
         });
 };
 
-var _addModelSynchTime = function (req, res, healthReportData){
-    healthReportData.synchTimes.push({
+var _addModelOpenTime = function (req, res, healthReportData){
+    healthReportData.openTimes.push({
         value: parseInt(req.body.value, 10),
+        user: req.body.user,
         createdOn: Date.now()
     });
 
     healthReportData.save(function (err, dataUpdated) {
         if(err){
-            res
-                .status(500)
-                .json(err);
+            res.status(500).json(err);
         } else {
-            res
-                .status(200)
-                .json(dataUpdated.synchTimes[dataUpdated.synchTimes.length - 1]);
+            res.status(200).json(dataUpdated.openTimes[dataUpdated.openTimes.length - 1]);
         }
     });
 };
 
+/**
+ * Posts model synch time to Health Report.
+ * @param req
+ * @param res
+ */
 module.exports.postModelSynchTime = function (req, res) {
     var id = req.params.id;
     HealthRecords
@@ -509,35 +495,33 @@ module.exports.postModelSynchTime = function (req, res) {
             if(doc){
                 _addModelSynchTime(req, res, doc);
             } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
+                res.status(response.status).json(response.message);
             }
         });
 };
 
-var _addSessionLog = function (req, res, healthReportData){
-    healthReportData.sessionLogs.push({
+var _addModelSynchTime = function (req, res, healthReportData){
+    healthReportData.synchTimes.push({
+        value: parseInt(req.body.value, 10),
         user: req.body.user,
-        from: req.body.from,
-        to: req.body.to,
-        synched: req.body.synched,
         createdOn: Date.now()
     });
 
     healthReportData.save(function (err, dataUpdated) {
         if(err){
-            res
-                .status(500)
-                .json(err);
+            res.status(500).json(err);
         } else {
-            res
-                .status(200)
-                .json(dataUpdated.sessionLogs[dataUpdated.sessionLogs.length - 1]);
+            res.status(200).json(dataUpdated.synchTimes[dataUpdated.synchTimes.length - 1]);
         }
     });
 };
 
+/**
+ * Posts Session Info data to Health Records.
+ * TODO: This data is currently not used. Delete?
+ * @param req
+ * @param res
+ */
 module.exports.postModelSessionInfo = function (req, res) {
     var id = req.params.id;
     HealthRecords
@@ -558,12 +542,29 @@ module.exports.postModelSessionInfo = function (req, res) {
             if(doc){
                 _addSessionLog(req, res, doc);
             } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
+                res.status(response.status).json(response.message);
             }
         });
 };
+
+var _addSessionLog = function (req, res, healthReportData){
+    healthReportData.sessionLogs.push({
+        user: req.body.user,
+        from: req.body.from,
+        to: req.body.to,
+        synched: req.body.synched,
+        createdOn: Date.now()
+    });
+
+    healthReportData.save(function (err, dataUpdated) {
+        if(err){
+            res.status(500).json(err);
+        } else {
+            res.status(200).json(dataUpdated.sessionLogs[dataUpdated.sessionLogs.length - 1]);
+        }
+    });
+};
+
 
 module.exports.getViewStats = function (req, res) {
     var id = req.params.id;

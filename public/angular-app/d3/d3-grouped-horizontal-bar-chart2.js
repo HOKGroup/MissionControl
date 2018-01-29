@@ -60,7 +60,7 @@ angular.module('MissionControlApp').directive('d3GroupedHorizontalBarChart2', ['
                 if(scope.data.length === 1){
                     height = 130 - margin.top - margin.bottom;
                 } else {
-                    height = (scope.data.length * 70) - margin.top - margin.bottom;
+                    height = ((scope.data.length-1) * 65) - margin.top - margin.bottom;
                 }
 
                 // set the height based on the calculations above
@@ -68,10 +68,10 @@ angular.module('MissionControlApp').directive('d3GroupedHorizontalBarChart2', ['
 
                 var y0 = d3.scaleBand()
                     .rangeRound([0, height])
-                    .paddingInner(0.005);
+                    .paddingInner(0.05);
 
                 var y1 = d3.scaleBand()
-                    .padding(0.005);
+                    .padding(0.05);
 
                 var x = d3.scaleLinear()
                     .rangeRound([0, width]);
@@ -103,7 +103,7 @@ angular.module('MissionControlApp').directive('d3GroupedHorizontalBarChart2', ['
 
                 barEnter.append("rect")
                     .attr("height", y1.bandwidth())
-                    .attr("y", function(d) { return y1(d.name); })
+                    .attr("y", function(d) {return y1(d.name); })
                     .attr("x", 0)
                     .attr("value", function(d){return d.name;})
                     .attr("width", 0)

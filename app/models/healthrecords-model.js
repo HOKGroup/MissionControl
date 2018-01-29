@@ -42,6 +42,7 @@ var linksStatsSchema = new mongoose.Schema({
 
 var eventTimeSchema = new mongoose.Schema({
     value: Number,
+    user: String,
     createdOn: Date
 });
 
