@@ -90,7 +90,6 @@
                                             <span class='handle glyphicon glyphicon-move'></span>
                                         </div>
                                         <div class="hovereffect" ng-if="file.id && file.data">
-                                            <!--<img ng-src="{{file.data}}" class="img-responsive center-block" alt="">-->
                                             <img data-ng-src="data:image/jpg;base64,{{file.data}}" ng-if="!file.data.startsWith('data')" class="img-responsive center-block" alt="">
                                             <img data-ng-src="{{file.data}}" ng-if="file.data.startsWith('data')" class="img-responsive center-block" alt="">
                                             <div class="overlay">
@@ -120,14 +119,14 @@
             </div>
             <!--Right side-->
             <div class="col-xs-6 col-sm-9">
-                <div class="panel panel-default container-fluid" ng-repeat="bucket in vm.buckets">
+                <div class="panel panel-default container-fluid" ng-repeat="bucket in vm.buckets | orderBy : 'position'">
                     <div class="panel-heading row">
                         <div class="col-xs-8 no-padding-left">
                             <div class="input-group" ng-if="bucket.editingBucket">
-                                <input type="text" class="form-control input-sm" value="bucket.name" ng-model="bucket.name" ng-keypress="($event.which === 13) ? bucket.editingBucket = false : 0">
+                                <input type="text" class="form-control input-sm" value="bucket.name" ng-model="bucket.name" ng-keypress="vm.onEnter(bucket, $event)">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default btn-sm" type="button">
-                                        <span class="glyphicon glyphicon-ok" ng-click="bucket.editingBucket = false"></span>
+                                        <span class="glyphicon glyphicon-ok" ng-click="vm.changeBucketName(bucket)"></span>
                                     </button>
                                 </span>
                             </div>

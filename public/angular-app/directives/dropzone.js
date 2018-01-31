@@ -50,7 +50,8 @@ angular.module('MissionControlApp').directive('dropZone',[function(){
                         projectId: '',
                         parentId: '',
                         id: '',
-                        name: ''
+                        name: '',
+                        commentId: ''
                     };
                     for (var p in file) {
                         data[p] = file[p]

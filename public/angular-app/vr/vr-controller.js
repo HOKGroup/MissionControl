@@ -21,13 +21,13 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
     };
     vm.trimbleProject = null;
     vm.trimbleImagesId = '';
+    vm.trimbleBucketsId = '';
 
     // (Konrad) Retrieves selected project from MongoDB.
     getSelectedProject(vm.projectId);
 
     /**
-     * Used to retrieve the Project info.
-     * Also, parses through sheets/sheetsChanges to populate DataTable.
+     * Used to retrieve the Mission Control Project info.
      * @param projectId
      */
     function getSelectedProject(projectId) {
@@ -45,28 +45,34 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                 return VrFactory.getProject(vm.selectedProject.number + ' ' + vm.selectedProject.name)
             })
             .then(function (response) {
+                if(!response || (response.status !== 200 && response.status !== 204)){
+                    changeStatus({
+                        code: 'danger',
+                        message: 'Failed to retrieve Trimble Connect project. Please reload the page and try again.'
+                    });
+                    return;
+                }
+
                 if (response.status === 200) {
                     vm.trimbleProject = response.data;
-
                     return VrFactory.getFolderItems(vm.trimbleProject.rootId);
-                } else if (response.status === 204) {
+                }
+
+                if (response.status === 204) {
                     // (Konrad) Request was successful but no projects were found in Trimble.
                     // Let's make another request to create a new project in Trimble Connect.
                     return VrFactory.createProject(vm.selectedProject.number + " " + vm.selectedProject.name)
                         .then(function (response) {
-                            if(response && response.status === 200){
-                                vm.trimbleProject = response.data;
-                                vm.status = {
-                                    code: 'success',
-                                    message: 'Successfully created new Trimble Connect project. Go ahead and upload images now!'
-                                };
-                                return VrFactory.addUser(vm.trimbleProject.id);
-                            } else {
+                            if(!response || response.status !== 200){
                                 vm.status = {
                                     code: 'danger',
                                     message: 'Failed while creating new Trimble Connect project. Try reloading the page.'
                                 };
+                                return;
                             }
+
+                            vm.trimbleProject = response.data;
+                            return VrFactory.addUser(vm.trimbleProject.id);
                         })
                         .then(function (response) {
                             // (Konrad) Project was created and user was added.
@@ -81,14 +87,22 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                             return VrFactory.getFolderItems(vm.trimbleProject.rootId);
                         })
                         .catch(function (err) {
-                            console.log(err.message);
+                            changeStatus({
+                                code: 'danger',
+                                message: 'Failed to create Trimble Connect project. Please reload the page and try again.'
+                            });
+                            console.log(err);
                         });
-                } else {
-                    // (Konrad) Retrieving/creating project failed.
-                    console.log("Response 500.");
                 }
             })
             .then(function (response) {
+                if(!response || response.status !== 200){
+                    changeStatus({
+                        code: 'danger',
+                        message: 'Failed to create Trimble Connect project. Please reload the page and try again.'
+                    });
+                    return;
+                }
                 // (Konrad) no matter what happens above the response here should be
                 // either newly created folders or retrieved folders (Images,Buckets)
                 vm.trimbleBucketsId = response.data.filter(function (item){
@@ -99,18 +113,6 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                 })[0].id;
 
                 return VrFactory.getFolderItems(vm.trimbleImagesId);
-
-                // if(vm.trimbleImagesId){
-                //     vm.status = {
-                //         code: 'info',
-                //         message: 'Trimble Connect project found. Go ahead and upload images now!'
-                //     };
-                // } else {
-                //     vm.status = {
-                //         code: 'danger',
-                //         message: 'Failed to retrieve Images folder from Trimble Connect. Try reloading the page.'
-                //     };
-                // }
             })
             .then(function (response) {
                 if(!response || response.status !== 200){
@@ -121,23 +123,129 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                     return;
                 }
 
-                if(response.data.lengh <= 0) return;
+                if(response.data.length > 0){
+                    response.data.forEach(function (item) {
+                        var image = {
+                            file: null,
+                            data: null,
+                            dataSize: null,
+                            displayName: 'Image Name',
+                            description: 'Image Description',
+                            versionId: item.versionId,
+                            projectId: item.projectId,
+                            parentId: item.parentId,
+                            id: item.id,
+                            name: item.name,
+                            commentId: ''
+                        };
 
-                response.data.forEach(function (item) {
-                    var image = {
-                        file: null,
-                        data: null,
-                        dataSize: null,
-                        displayName: 'Image Name',
-                        description: 'Image Description',
-                        versionId: item.versionId,
-                        projectId: item.projectId,
-                        parentId: item.parentId,
-                        id: item.id,
-                        name: item.name
-                    };
-                    vm.images.push(image);
-                });
+                        // (Konrad) We push the skeleton version of the image to vm.images
+                        // here so that we can use the "loading.gif" while the images are downloaded.
+                        vm.images.push(image);
+
+                        var data = {
+                            objectId: item.id,
+                            objectType: 'FILE'
+                        };
+
+                        VrFactory.getComments(data)
+                            .then(function (response) {
+                                if(!response || response.status !== 200){
+                                    changeStatus({
+                                        code: 'danger',
+                                        message: 'Failed to retrieve image Display Name and Description. Reload the page and try again.'
+                                    });
+                                    return;
+                                }
+
+                                if(response.data.length > 0){
+                                    response.data.forEach(function (comment) {
+                                        if(!comment.description.startsWith('{"description":')) return;
+
+                                        var content = JSON.parse(comment.description);
+                                        image.displayName = content.displayName;
+                                        image.description = content.description;
+                                        image.commentId = comment.id
+                                    })
+                                }
+                            })
+                            .catch(function (err) {
+                                changeStatus({
+                                    code: 'danger',
+                                    message: 'Failed to retrieve image Display Name and Description. Reload the page and try again.'
+                                });
+                                console.log(err);
+                            })
+                    });
+                }
+
+                return VrFactory.getFolderItems(vm.trimbleBucketsId);
+            })
+            .then(function (response) {
+                if(!response || response.status !== 200){
+                    changeStatus({
+                        code: 'danger',
+                        message: 'Failed to retrieve buckets from Trimble Connect. Try reloading the page.'
+                    });
+                    return;
+                }
+
+                if(response.data.length > 0){
+                    response.data.forEach(function (item) {
+                        if(item.type !== 'FOLDER') return;
+
+                        var bucket = {
+                            name: item.name,
+                            images: [],
+                            sharableLink: null,
+                            sharedWith: [],
+                            id: item.id,
+                            parentId: item.parentId,
+                            projectId: item.projectId,
+                            editingBucket: false,
+                            position: null,
+                            commentId: ''
+                        };
+
+                        vm.buckets.push(bucket);
+
+                        var data = {
+                            objectId: item.id,
+                            objectType: 'FOLDER'
+                        };
+
+                        VrFactory.getComments(data)
+                            .then(function (response) {
+                                if(!response || response.status !== 200){
+                                    changeStatus({
+                                        code: 'danger',
+                                        message: 'Failed to retrieve Bucket Position. Please reload the page and try again.'
+                                    });
+                                    return;
+                                }
+
+                                if(response.data.length > 0){
+                                    response.data.forEach(function (comment) {
+                                        if(!comment.description.startsWith('{"position":')) return;
+
+                                        var content = JSON.parse(comment.description);
+                                        bucket.position = content.position;
+                                        bucket.commentId = comment.id;
+
+                                        // (Konrad) We need to re-sort the vm.buckets to match our specified order.
+                                        vm.buckets.sort(UtilityService.compareValues('position', 'asc'));
+                                    })
+                                }
+                            })
+                            .catch(function (err) {
+                                changeStatus({
+                                    code: 'danger',
+                                    message: 'Failed to retrieve Bucket Position. Please reload the page and try again.'
+                                });
+                                console.log(err);
+                            });
+                    });
+                }
             })
             .catch(function (err) {
                 vm.status = {
@@ -158,7 +266,9 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
     //     // console.log("addedId:" + addedId);
     // });
 
-    //(Konrad) Options for the dragula bags
+    /**
+     * Options for the dragula bags
+     */
     dragulaService.options($scope, 'image_bag', {
         removeOnSpill: true, // removes the object when dragged outside of box
         copy: function (el, source) {
@@ -173,7 +283,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
     });
 
     /**
-     * Adds new bucket.
+     * Adds new bucket. Posts it to Trimble Connect.
      */
     vm.addBucket = function(){
         var bucket = {
@@ -184,16 +294,26 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
             id: '',
             parentId: '',
             projectId: '',
-            editingBucket: false
+            editingBucket: false,
+            position: vm.buckets.length,
+            commentId: ''
         };
+
+        vm.buckets.push(bucket);
 
         var data = {
             name: bucket.name,
-            rootId: vm.trimbleProject.rootId
+            rootId: vm.trimbleBucketsId
         };
         VrFactory.createFolder(data)
             .then(function(response){
                 if(!response || response.status !== 201){
+                    // (Konrad) Since we insert the bucket into the collection
+                    // immediately for the purpose of having a responsive UI
+                    // we need to remove it when request fails.
+                    var idx = vm.buckets.indexOf(bucket);
+                    vm.buckets.splice(idx, 1);
+
                     changeStatus({
                         code: 'danger',
                         message: 'Failed to create a new Bucket in Trimble Connect. Please reload the page and try again.'
@@ -205,13 +325,28 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                 bucket.parentId = response.data.parentId;
                 bucket.projectId = response.data.projectId;
 
-                vm.buckets.push(bucket);
+                // (Konrad) Since Trimble Connect doesn't support adding custom metadata
+                // to images, we can use Comments to add description and display name.
+                var data = {
+                    'objectId': bucket.id,
+                    'objectType': 'FOLDER',
+                    'description': '{"position": ' + bucket.position + '}'
+                };
 
-                changeStatus({
-                    code: 'success',
-                    message: 'Successfully created Bucket: ' + bucket.name + ' in Trimble Connect.'
-                });
-            }).catch(function (err) {
+                return VrFactory.addComment(data)
+            })
+            .then(function (response) {
+                if(!response || response.status !== 201){
+                    changeStatus({
+                        code: 'danger',
+                        message: 'Failed to set bucket position. Please reload the page and try again.'
+                    });
+                    return;
+                }
+
+                bucket.commentId = response.data.id;
+            })
+            .catch(function (err) {
                 changeStatus({
                     code: 'danger',
                     message: 'Failed to create new Bucket. Please reload the page and try again.'
@@ -221,13 +356,29 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
     };
 
     /**
-     *
+     * Deletes selected bucket from Trimble Connect.
      * @param bucket
      */
     vm.deleteBucket = function (bucket) {
         var idx = vm.buckets.indexOf(bucket);
         vm.buckets.splice(idx, 1);
-        //TODO: remove from DB.
+
+        VrFactory.deleteFolder(bucket.id)
+            .then(function (response) {
+                if(!response || response.status !== 204){
+                    changeStatus({
+                        code: 'danger',
+                        message: 'Failed to delete Bucket. Reload the page and try again.'
+                    });
+                }
+            })
+            .catch(function (err) {
+                changeStatus({
+                    code: 'danger',
+                    message: 'Failed to delete Bucket. Reload the page and try again.'
+                });
+                console.log(err);
+            })
     };
 
     /**
@@ -237,6 +388,33 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
      */
     vm.moveUp = function (index, arr) {
         UtilityService.move(arr, index, index-1);
+
+        // (Konrad) Moving one bucket up, moves majority of the other ones down.
+        // We have to update all of the other bucket's positions.
+        vm.buckets.forEach(function (bucket, index) {
+            bucket.position = index;
+            var data = {
+                commentId: bucket.commentId,
+                description: '{"position": ' + bucket.position + '}'
+            };
+
+            VrFactory.updateComment(data)
+                .then(function (response) {
+                    if(!response || response.status !== 200){
+                        changeStatus({
+                            code: 'danger',
+                            message: 'Failed to update Bucket Position. Please reload the page and try again.'
+                        });
+                    }
+                })
+                .catch(function (err) {
+                    changeStatus({
+                        code: 'danger',
+                        message: 'Failed to update Bucket Position. Please reload the page and try again.'
+                    });
+                    console.log(err);
+                });
+        });
     };
 
     /**
@@ -246,6 +424,33 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
      */
     vm.moveDown = function (index, arr) {
         UtilityService.move(arr, index, index+1);
+
+        // (Konrad) Moving one bucket up, moves majority of the other ones down.
+        // We have to update all of the other bucket's positions.
+        vm.buckets.forEach(function (bucket, index) {
+            bucket.position = index;
+            var data = {
+                commentId: bucket.commentId,
+                description: '{"position": ' + bucket.position + '}'
+            };
+
+            VrFactory.updateComment(data)
+                .then(function (response) {
+                    if(!response || response.status !== 200){
+                        changeStatus({
+                            code: 'danger',
+                            message: 'Failed to update Bucket Position. Please reload the page and try again.'
+                        });
+                    }
+                })
+                .catch(function (err) {
+                    changeStatus({
+                        code: 'danger',
+                        message: 'Failed to update Bucket Position. Please reload the page and try again.'
+                    });
+                    console.log(err);
+                });
+        });
     };
 
     /**
@@ -289,15 +494,11 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                             }
 
                             item.data = UtilityService.arrayBufferToBase64(response.data);
-                            changeStatus({
-                                code: 'success',
-                                message: 'Successfully downloaded ' + item.name + " from Trimble Connect."
-                            });
                         })
                         .catch(function (err) {
                             changeStatus({
                                 code: 'danger',
-                                message: 'Failed to download images from Trimble Connect. Reload the page and try again.'
+                                message: 'Failed to download image ' + item.name + ' from Trimble Connect. Reload the page and try again.'
                             });
                             console.log(err);
                         });
@@ -317,10 +518,12 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                                 return item === newFile;
                             });
                             if(index !== -1) vm.images.splice(index, 1);
+
                             changeStatus({
-                                code: 'warning',
+                                code: 'danger',
                                 message: 'Could not upload the file to Trimble. Reload the page and try again.'
                             });
+                            return;
                         }
 
                         var createdFile = response.data[0];
@@ -330,45 +533,37 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                         newFile.id = createdFile.id;
                         newFile.name = createdFile.name;
 
-                        changeStatus({
-                            code: 'success',
-                            message: 'Successfully uploaded ' + newFile.name + ' to Trimble Connect.'
-                        });
+                        // (Konrad) Since Trimble Connect doesn't support adding custom metadata
+                        // to images, we can use Comments to add description and display name.
+                        var data = {
+                            'objectId': newFile.id,
+                            'objectType': 'FILE',
+                            'description': '{"description": "' + newFile.description + '", "displayName": "' + newFile.displayName + '"}'
+                        };
+
+                        return VrFactory.addComment(data)
+                    })
+                    .then(function (response){
+                        if(!response || response.status !== 201){
+                            changeStatus({
+                                code: 'danger',
+                                message: 'Failed to set image Description and Display Name. Reload the page and try again.'
+                            });
+                            return;
+                        }
+
+                        newFile.commentId = response.data.id;
                     })
                     .catch(function (err) {
                         changeStatus({
                             code: 'danger',
-                            message: 'Failed to upload the image. There was an error connecting to Trimble. Try reloading the page.'
+                            message: 'Could not upload the file to Trimble. Reload the page and try again.'
                         });
                         console.log(err);
                     })
             }
         } else if(newValue.length < oldValue.length){
-            // (Konrad) User deleted the file from Images
-            // We should remove it from the Trimble server.
-            var deletedFile = oldValue.diff(newValue)[0];
-            VrFactory.deleteFile(deletedFile.id)
-                .then(function (response) {
-                    if(!response || response.status !== 204){
-                        vm.images.push(deletedFile);
-                        changeStatus({
-                            code: 'warning',
-                            message: 'Failed to delete the image ' + deletedFile.name + ' . Please reload the page and try again.'
-                        });
-                        return;
-                    }
-
-                    changeStatus({
-                        code: 'success',
-                        message: 'Successfully deleted ' + deletedFile.name + ' from Trimble Connect.'
-                    });
-                }).catch(function (err) {
-                    changeStatus({
-                        code: 'danger',
-                        message: 'Failed to delete the image. There was an error connecting to Trimble. Try reloading the page.'
-                    });
-                    console.log(err);
-            });
+            // var deletedFile = oldValue.diff(newValue)[0];
         }
     });
 
@@ -427,13 +622,41 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                 }}
         }).result.then(function(request){
             if(!request) return;
+
+            // (Konrad) Since Trimble Connect doesn't support adding custom metadata
+            // to images, we can use Comments to add description and display name.
+            var data = {
+                commentId: image.commentId,
+                description: '{"description": "' + image.description + '", "displayName": "' + image.displayName + '"}'
+            };
+
+            VrFactory.updateComment(data)
+                .then(function (response) {
+                    if(!response || response.status !== 200){
+                        changeStatus({
+                            code: 'danger',
+                            message: 'Failed to update image Description and Display Name. Reload the page and try again.'
+                        });
+                        return;
+                    }
+
+                    console.log(response);
+                })
+                .catch(function (err) {
+                    changeStatus({
+                        code: 'danger',
+                        message: 'Failed to update image Description and Display Name. Reload the page and try again.'
+                    });
+                    console.log(err);
+                });
+
             if(vm.buckets.length === 0) return;
 
             // (Konrad) Since dragula makes a copy of the image, when it's moved to
             // a bucket, we need to track them down and update if name/desc changed.
             vm.buckets.forEach(function (bucket) {
                 bucket.images.forEach(function (image) {
-                    if(image.id.toString() === request.response.id.toString()){
+                    if(image.id === request.response.id){
                         image.displayName = request.response.displayName;
                         image.description = request.response.description;
                     }
@@ -444,6 +667,60 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
             console.log("All Tasks Dialog dismissed...");
         });
     };
+
+    /**
+     * Fires when bucket name change is approved by using the "OK" button.
+     * @param bucket
+     */
+    vm.changeBucketName = function (bucket) {
+        bucket.editingBucket = false;
+        var data = {
+            name: bucket.name,
+            folderId: bucket.id
+        };
+
+        renameFolder(data);
+    };
+
+    /**
+     * Catches keyboard Enter key when user finishes editing bucket name.
+     * @param bucket
+     * @param event
+     */
+    vm.onEnter = function (bucket, event) {
+        if(event.which !== 13) return;
+
+        bucket.editingBucket = false;
+        var data = {
+            name: bucket.name,
+            folderId: bucket.id
+        };
+
+        renameFolder(data);
+    };
+
+    /**
+     * Utility method that renames bucket/folder in Trimble.
+     * @param data
+     */
+    function renameFolder(data){
+        VrFactory.renameFolder(data)
+            .then(function (response) {
+                if(!response || response.status !== 200){
+                    changeStatus({
+                        code: 'danger',
+                        message: 'Failed to rename bucket. Reload the page and try again.'
+                    });
+                }
+            })
+            .catch(function (err) {
+                changeStatus({
+                    code: 'danger',
+                    message: 'Failed to rename bucket. Reload the page and try again.'
+                });
+                console.log(err);
+            })
+    }
 
     /**
      * Removes selected image from bucket only.
@@ -463,13 +740,34 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
      */
     vm.deleteFromImages = function (file) {
         var index = vm.images.findIndex(function (item) {
-            return item.id.toString() === file.id.toString();
+            return item.id === file.id;
         });
         if(index !== -1) vm.images.splice(index, 1);
 
+        // (Konrad) User deleted the file from Images
+        // We should remove it from the Trimble server.
+        VrFactory.deleteFile(file.id)
+            .then(function (response) {
+                if(!response || response.status !== 204){
+                    vm.images.push(file);
+                    changeStatus({
+                        code: 'danger',
+                        message: 'Failed to delete the image ' + file.name + ' . Please reload the page and try again.'
+                    });
+                }
+            })
+            .catch(function (err) {
+                changeStatus({
+                    code: 'danger',
+                    message: 'Failed to delete the image. There was an error connecting to Trimble. Try reloading the page.'
+                });
+                console.log(err);
+        });
+
+        //TODO: We need to delete it from other folders as well.
         vm.buckets.forEach(function (bucket) {
             var index2 = bucket.images.findIndex(function (image) {
-                return image.id.toString() === file.id.toString();
+                return image.id === file.id;
             });
             if(index2 !== -1) bucket.images.splice(index2, 1);
         });

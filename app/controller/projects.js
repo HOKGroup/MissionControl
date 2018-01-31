@@ -34,9 +34,7 @@ ProjectService = {
                   response.status = 404;
                   response.message = {"message": "No Projects were found"};
               }
-              res
-                  .status(response.status)
-                  .json(response.message);
+              res.status(response.status).json(response.message);
           });
   },
 

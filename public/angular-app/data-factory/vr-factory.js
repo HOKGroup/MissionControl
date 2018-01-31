@@ -103,6 +103,73 @@ function VrFactory($http, $base64){
             }).then(complete).catch(failed);
         },
 
+        deleteFolder: function deleteFolder(folderId) {
+            return authorize().then(function (response) {
+                var auth = 'Bearer ' + response;
+                return $http({
+                    method: 'DELETE',
+                    url: 'https://app.stage.connect.trimble.com/tc/api/2.0/folders/' + folderId,
+                    headers: {
+                        'Authorization': auth
+                    },
+                    transformRequest: angular.identity
+                })
+            }).then(complete).catch(failed);
+        },
+
+        getComments: function getComments(data) {
+            return authorize().then(function (response) {
+                var auth = 'Bearer ' + response;
+                return $http({
+                    method: 'GET',
+                    url: 'https://app.stage.connect.trimble.com/tc/api/2.0/comments?objectId=' + data.objectId + '&objectType=' + data.objectType,
+                    headers: {
+                        'Authorization': auth,
+                        'Content-Type': 'application/json'
+                    },
+                    transformRequest: angular.identity
+                })
+            }).then(complete).catch(failed);
+        },
+
+        updateComment: function updateComment(data) {
+            return authorize().then(function (response) {
+                var auth = 'Bearer ' + response;
+                return $http({
+                    method: 'PATCH',
+                    url: 'https://app.stage.connect.trimble.com/tc/api/2.0/comments/' + data.commentId,
+                    headers: {
+                        'Authorization': auth,
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify({
+                        'description': data.description
+                    }),
+                    transformRequest: angular.identity
+                })
+            }).then(complete).catch(failed);
+        },
+
+        addComment: function addComment(data) {
+            return authorize().then(function (response) {
+                var auth = 'Bearer ' + response;
+                return $http({
+                    method: 'POST',
+                    url: 'https://app.stage.connect.trimble.com/tc/api/2.0/comments',
+                    headers: {
+                        'Authorization': auth,
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify({
+                        'objectId': data.objectId,
+                        'objectType': data.objectType,
+                        'description': data.description
+                    }),
+                    transformRequest: angular.identity
+                })
+            }).then(complete).catch(failed);
+        },
+
         renameFolder: function renameFolder(data) {
             return authorize().then(function (response) {
                 var auth = 'Bearer ' + response;
@@ -114,7 +181,7 @@ function VrFactory($http, $base64){
                         'Content-Type': 'application/json'
                     },
                     data: JSON.stringify({
-                        'name': data.name,
+                        'name': data.name
                     }),
                     transformRequest: angular.identity
                 })
