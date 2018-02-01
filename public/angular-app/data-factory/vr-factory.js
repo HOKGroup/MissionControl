@@ -170,6 +170,28 @@ function VrFactory($http, $base64){
             }).then(complete).catch(failed);
         },
 
+        copyFile: function copyFile(data) {
+            return authorize().then(function (response) {
+                var auth = 'Bearer ' + response;
+                return $http({
+                    method: 'POST',
+                    url: 'https://app.stage.connect.trimble.com/tc/api/2.0/files',
+                    headers: {
+                        'Authorization': auth,
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify({
+                        'fromFileVersionId': data.fromFileVersionId,
+                        'parentId': data.parentId,
+                        'parentType': data.parentType,
+                        'copyMetaData': data.copyMetaData,
+                        'mergeExisting': data.mergeExisting
+                    }),
+                    transformRequest: angular.identity
+                })
+            }).then(complete).catch(failed);
+        },
+
         renameFolder: function renameFolder(data) {
             return authorize().then(function (response) {
                 var auth = 'Bearer ' + response;

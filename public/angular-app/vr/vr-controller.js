@@ -5,15 +5,12 @@ angular.module('MissionControlApp').controller('VrController', VrController);
 
 function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $timeout, $scope, $uibModal, UtilityService){
     var vm = this;
+
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
-    vm.popoverOptions = {
-        placement: 'top',
-        triggers: 'click, outsideClick',
-        templateUrl: 'editName.html'
-    };
     vm.editingBucket = false;
     vm.buckets = [];
+    $scope.buckets = vm.buckets;
     vm.images = [];
     vm.status = {
         code: null,
@@ -22,6 +19,29 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
     vm.trimbleProject = null;
     vm.trimbleImagesId = '';
     vm.trimbleBucketsId = '';
+    // (Konrad) We are using $watchCollection to watch additions
+    // and deletions from bucket.images. When user attempts to add
+    // a duplicate image to the same bucket it will be removed. That
+    // in turn triggers another $watchCollection event. This variable
+    // gets toggled to prevent $watchCollection from processing "removed"
+    // event when duplicate image is removed.
+    vm.deletedDuplicate = false;
+
+    /**
+     * Options for the dragula bags behavior.
+     */
+    dragulaService.options($scope, 'image_bag', {
+        removeOnSpill: true, // removes the object when dragged outside of box
+        copy: function (el, source) {
+            return source.id.match('#images') //we only allow copy from "images" into "buckets"
+        },
+        moves: function (el, source, handle, sibling) {
+            return handle.className === 'handle glyphicon glyphicon-move'; //only drag elements with this class
+        },
+        accepts: function (el, target, source, sibling) {
+            return source.id === '#images' && target.id === '#bucket'; // only allow images from "images to be dragged into buckets"
+        }
+    });
 
     // (Konrad) Retrieves selected project from MongoDB.
     getSelectedProject(vm.projectId);
@@ -208,6 +228,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                         };
 
                         vm.buckets.push(bucket);
+                        AddWatch(bucket);
 
                         var data = {
                             objectId: item.id,
@@ -256,38 +277,14 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
             });
     }
 
-    // $scope.$on('image_bag.remove-model', function (el, container, source) {
-    //     // var deletedId = container[0].id;
-    //     // console.log("deletedId:" + deletedId);
-    // });
-    //
-    // $scope.$on('image_bag.drop-model', function (el, target, source, sibling) {
-    //     // var addedId = source.context.children()[0].id;
-    //     // console.log("addedId:" + addedId);
-    // });
-
-    /**
-     * Options for the dragula bags
-     */
-    dragulaService.options($scope, 'image_bag', {
-        removeOnSpill: true, // removes the object when dragged outside of box
-        copy: function (el, source) {
-            return source.id.match('#images') //we only allow copy from "images" into "buckets"
-        },
-        moves: function (el, source, handle, sibling) {
-            return handle.className === 'handle glyphicon glyphicon-move'; //only drag elements with this class
-        },
-        accepts: function (el, target, source, sibling) {
-            return source.id === '#images' && target.id === '#bucket'; // only allow images from "images to be dragged into buckets"
-        }
-    });
-
     /**
      * Adds new bucket. Posts it to Trimble Connect.
      */
     vm.addBucket = function(){
+        var name = validateBucketName();
+        console.log(name);
         var bucket = {
-            name: "Bucket " + (vm.buckets.length + 1),
+            name: name,
             images: [],
             sharableLink: null,
             sharedWith: [],
@@ -300,6 +297,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
         };
 
         vm.buckets.push(bucket);
+        AddWatch(bucket);
 
         var data = {
             name: bucket.name,
@@ -562,48 +560,8 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                         console.log(err);
                     })
             }
-        } else if(newValue.length < oldValue.length){
-            // var deletedFile = oldValue.diff(newValue)[0];
         }
     });
-
-    /**
-     * Changes the status message on top of the page with a delay.
-     * @param status
-     */
-    var changeStatus = function (status) {
-        vm.status = null;
-        $timeout(function(){
-            vm.status = status}, 1000);
-    };
-
-    /**
-     * Watches buckets collections for changes.
-     */
-    $scope.$watch('vm.buckets', function (newValue, oldValue, scope) {
-        // (Konrad) Since we are deep watchingg this collection
-        // any changes to the sub-arrays will trigger this
-        // We can use that to prevent duplicates from being added to bucket.
-        if(newValue.length === oldValue.length){
-            if(newValue.length === 0 && oldValue.length === 0) return;
-            vm.buckets.forEach(function(bucket){
-                var count = bucket.images.length;
-                bucket.images = UtilityService.removeDuplicates(bucket.images, 'id');
-                if(count > bucket.images.length){
-                    changeStatus({
-                        code: 'warning',
-                        message: 'Image already exists in this bucket. It cannot be added twice.'
-                    });
-                }
-            });
-        }
-        if(newValue.length > oldValue.length){
-            //TODO: Do we need this? Buckets get added by button and we have a method for that above.
-        } else if(newValue.length < oldValue.length){
-            //TODO: Remove bucket from DB
-            // console.log("Bucket removed: " + oldValue.diff(newValue)[0].name);
-        }
-    }, true);
 
     /**
      * Shows modal window for input of image properties.
@@ -650,18 +608,18 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                     console.log(err);
                 });
 
-            if(vm.buckets.length === 0) return;
-
-            // (Konrad) Since dragula makes a copy of the image, when it's moved to
-            // a bucket, we need to track them down and update if name/desc changed.
-            vm.buckets.forEach(function (bucket) {
-                bucket.images.forEach(function (image) {
-                    if(image.id === request.response.id){
-                        image.displayName = request.response.displayName;
-                        image.description = request.response.description;
-                    }
-                });
-            });
+            // if(vm.buckets.length === 0) return;
+            //
+            // // (Konrad) Since dragula makes a copy of the image, when it's moved to
+            // // a bucket, we need to track them down and update if name/desc changed.
+            // vm.buckets.forEach(function (bucket) {
+            //     bucket.images.forEach(function (image) {
+            //         if(image.id === request.response.id){
+            //             image.displayName = request.response.displayName;
+            //             image.description = request.response.description;
+            //         }
+            //     });
+            // });
 
         }).catch(function(){
             console.log("All Tasks Dialog dismissed...");
@@ -700,6 +658,197 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
     };
 
     /**
+     * Removes selected image from bucket only.
+     * @param file
+     * @param bucket
+     */
+    vm.deleteFromBucket = function (file, bucket) {
+        var index = bucket.images.findIndex(function (image) {
+            return image.id === file.id;
+        });
+        if(index !== -1) bucket.images.splice(index, 1);
+
+        // (Konrad) The $watchCollection will pick up the event
+        // and delete the file from Trimble Connect.
+    };
+
+    /**
+     * Removes selected image from Images and ALL buckets.
+     * @param file
+     */
+    vm.deleteFromImages = function (file) {
+        var index = vm.images.findIndex(function (item) {
+            return item.id === file.id;
+        });
+        if(index !== -1) vm.images.splice(index, 1);
+        deleteFile(vm.images, file);
+
+        // (Konrad) Delete image from all Buckets that it was placed in.
+        // $watchCollection will pick up the event and update Trimble.
+        vm.buckets.forEach(function (bucket) {
+            var index2 = bucket.images.findIndex(function (image) {
+                return file.id === image.parentImageId;
+            });
+            if(index2 !== -1) bucket.images.splice(index2, 1);
+        });
+    };
+
+    /**
+     * Adds a $watchCollection to newly created bucket array.
+     * @param x
+     * @constructor
+     */
+    function AddWatch(x) {
+        var index = vm.buckets.indexOf(x);
+        var id = 'buckets[' + index + '].images';
+        $scope.$watchCollection(id, function(newValue, oldValue, scope) {
+            if(!newValue || !oldValue || newValue.length === oldValue.length) return;
+            if(vm.deletedDuplicate){
+                vm.deletedDuplicate = false;
+                return;
+            }
+
+            if(newValue.length > oldValue.length){
+                // (Konrad) Check if added image is duplicate and remove.
+                var bucket = vm.buckets[index];
+                vm.deletedDuplicate = false;
+                var count = bucket.images.length;
+                bucket.images = UtilityService.removeDuplicates(bucket.images, 'id');
+                if(count > bucket.images.length){
+                    vm.deletedDuplicate = true;
+                    changeStatus({
+                        code: 'warning',
+                        message: 'Image already exists in this bucket. It cannot be added twice.'
+                    });
+                }
+                if (vm.deletedDuplicate) return;
+
+                // (Konrad) New Image was added. Let's upload to Trimble.
+                var newFile = newValue.diff(oldValue)[0];
+                var parentImageId = newFile.id;
+
+                newFile['parentImageId'] = parentImageId;
+
+                var data = {
+                    fromFileVersionId: parentImageId, //id of the file to copy
+                    parentId: bucket.id, //bucket id
+                    parentType: 'FOLDER',
+                    copyMetaData: true,
+                    mergeExisting: false
+                };
+
+                VrFactory.copyFile(data)
+                    .then(function (response) {
+                        if(!response || response.status !== 201){
+                            changeStatus({
+                                code: 'danger',
+                                message: 'Failed making a copy of the selected image. Please reload the page and try again.'
+                            });
+                            return
+                        }
+
+                        newFile.id = response.data.id; //new image id
+                        newFile.parentId = response.data.parentId; //folder changed
+
+                        // (Konrad) Since every image in a bucket is just a copy of another image we can store
+                        // the reference to parent image id. It will come handy when we download images when
+                        // page loads for the first time. We can then just use the downloaded images data instead
+                        // of downloading the same image multiple times for all buckets that it might be in.
+                        var data = {
+                            'objectId': response.data.id,
+                            'objectType': 'FILE',
+                            'description': '{"parentImageId": "' + parentImageId + '"}'
+                        };
+
+                        return VrFactory.addComment(data)
+                    })
+                    .then(function (response) {
+                        if(!response || response.status !== 201){
+                            changeStatus({
+                             code: 'danger',
+                             message: 'Failed adding information about Parent Image. Please reload the page and try again.'
+                            });
+                            return
+                        }
+
+                        newFile.commentId = response.data.id;
+                    })
+                    .catch(function(err){
+                        changeStatus({
+                            code: 'danger',
+                            message: 'Failed making a copy of the selected image. Please reload the page and try again.'
+                        });
+                        console.log(err);
+                    });
+            } else if (newValue.length < oldValue.length){
+                deleteFile(oldValue, oldValue.diff(newValue)[0]);
+            }
+        });
+    }
+
+    /**
+     * Retrieves a parent property from image. Used to obtain displayName and description
+     * for images in buckets since they are replicas of main images.
+     * @param file
+     * @param propName
+     */
+    vm.getParentProperty = function (file, propName) {
+        var parentImage = vm.images.find(function(item){
+            return item.id === file.parentImageId;
+        });
+        if(parentImage) return parentImage[propName];
+    };
+
+    /**
+     * Returns a non-duplicate Bucket name.
+     * @returns {string}
+     */
+    function validateBucketName(){
+        var counter = 1;
+        var validated = false;
+        var suggestedName = "Bucket " + (vm.buckets.length + counter);
+        if(vm.buckets.length === 0) return suggestedName;
+
+        var compare = function (bucket) {
+            return bucket.name === suggestedName;
+        };
+        while(!validated){
+            if(vm.buckets.findIndex(compare) === -1){
+                validated = true;
+            } else {
+                counter++;
+                suggestedName = "Bucket " + (vm.buckets.length + counter);
+            }
+        }
+        return suggestedName;
+    }
+
+    /**
+     * Deltes a file from Trimble Connect.
+     * @param arr
+     * @param file
+     */
+    function deleteFile(arr, file) {
+        VrFactory.deleteFile(file.id)
+            .then(function (response) {
+                if(!response || response.status !== 204){
+                    arr.push(file);
+                    changeStatus({
+                        code: 'danger',
+                        message: 'Failed to delete the image ' + file.name + ' . Please reload the page and try again.'
+                    });
+                }
+            })
+            .catch(function (err) {
+                changeStatus({
+                    code: 'danger',
+                    message: 'Failed to delete the image ' + file.name + ' . Please reload the page and try again.'
+                });
+                console.log(err);
+            });
+    }
+
+    /**
      * Utility method that renames bucket/folder in Trimble.
      * @param data
      */
@@ -723,53 +872,12 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
     }
 
     /**
-     * Removes selected image from bucket only.
-     * @param file
-     * @param bucket
+     * Changes the status message on top of the page with a delay.
+     * @param status
      */
-    vm.deleteFromBucket = function (file, bucket) {
-        var index = bucket.images.findIndex(function (image) {
-            return image.id.toString() === file.id.toString();
-        });
-        if(index !== -1) bucket.images.splice(index, 1);
-    };
-
-    /**
-     * Removes selected image from Images and ALL buckets.
-     * @param file
-     */
-    vm.deleteFromImages = function (file) {
-        var index = vm.images.findIndex(function (item) {
-            return item.id === file.id;
-        });
-        if(index !== -1) vm.images.splice(index, 1);
-
-        // (Konrad) User deleted the file from Images
-        // We should remove it from the Trimble server.
-        VrFactory.deleteFile(file.id)
-            .then(function (response) {
-                if(!response || response.status !== 204){
-                    vm.images.push(file);
-                    changeStatus({
-                        code: 'danger',
-                        message: 'Failed to delete the image ' + file.name + ' . Please reload the page and try again.'
-                    });
-                }
-            })
-            .catch(function (err) {
-                changeStatus({
-                    code: 'danger',
-                    message: 'Failed to delete the image. There was an error connecting to Trimble. Try reloading the page.'
-                });
-                console.log(err);
-        });
-
-        //TODO: We need to delete it from other folders as well.
-        vm.buckets.forEach(function (bucket) {
-            var index2 = bucket.images.findIndex(function (image) {
-                return image.id === file.id;
-            });
-            if(index2 !== -1) bucket.images.splice(index2, 1);
-        });
+    var changeStatus = function (status) {
+        vm.status = null;
+        $timeout(function(){
+            vm.status = status}, 1000);
     };
 }

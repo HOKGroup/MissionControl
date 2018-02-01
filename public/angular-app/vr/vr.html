@@ -135,7 +135,7 @@
                         <div class="col-xs-4 no-padding-right">
                             <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
                                 <button type="button" class="btn btn-primary" ng-click="vm.moveUp($index, vm.buckets)" ng-if="vm.showUpArrow($index)">
-                                    <span class="glyphicon glyphicon-chevron-up" style="margin-right: 0px"></span>
+                                    <span class="glyphicon glyphicon-chevron-up" style="margin-right: 0"></span>
                                 </button>
                                 <button type="button" class="btn btn-primary" ng-click="vm.moveDown($index, vm.buckets)" ng-if="vm.showDownArrow($index)">
                                     <span class="glyphicon glyphicon-chevron-down" style="margin-right: 0px"></span>
@@ -146,16 +146,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="panel-body row" style="max-height: 350px; overflow-y: scroll; min-height: 98px">
+                    <div class="panel-body row" style="max-height: 350px; overflow-y: scroll; min-height: 98px; padding-bottom: 0;">
                         <div ng-class="bucket.images.length === 0 ? 'dragzone' : ''"
                              id="#bucket"
                              dragula='"image_bag"'
                              dragula-model="bucket.images"
-                             style="min-height: 98px; padding-bottom: 15px;">
+                             style="min-height: 98px; padding-bottom: 0;">
                             <p ng-show="bucket.images.length === 0">Drag files here
                                 <span>(from Images on the left)</span>
                             </p>
                             <div class="panel-body row"
+                                 style="padding-top: 0"
                                  ng-repeat="file in bucket.images"
                                  id="{{file._id}}">
                                 <div class="col-md-4 no-padding-left">
@@ -163,14 +164,19 @@
                                         <div>
                                             <!-- (Konrad) We are using ng-src here because DOM would attempt to load that image
                                             src before it even exists due to its dependency on ng-if directive -->
-                                            <img ng-src="{{file.data}}" class="img-responsive center-block" alt="">
+                                            <img data-ng-src="data:image/jpg;base64,{{vm.getParentProperty(file, 'data')}}"
+                                                 ng-if="!vm.getParentProperty(file, 'data').startsWith('data')"
+                                                 class="img-responsive center-block" alt="">
+                                            <img data-ng-src="{{vm.getParentProperty(file, 'data')}}"
+                                                 ng-if="vm.getParentProperty(file, 'data').startsWith('data')"
+                                                 class="img-responsive center-block" alt="">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xs-8">
                                     <div class="row">
                                         <div class="col-xs-8 no-padding-left">
-                                            <h2 style="margin: 0">{{file.displayName}}</h2>
+                                            <h2 style="margin: 0">{{vm.getParentProperty(file, 'displayName')}}</h2>
                                         </div>
                                         <div class="col-xs-4 no-padding-right">
                                             <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
@@ -188,7 +194,7 @@
                                     </div>
                                     <div class="row">
                                         <hr style="margin: 5px">
-                                        <h4>{{file.description}}</h4>
+                                        <h4>{{vm.getParentProperty(file, 'description')}}</h4>
                                     </div>
                                 </div>
                             </div>
