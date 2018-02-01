@@ -161,7 +161,7 @@
                                  id="{{file._id}}">
                                 <div class="col-md-4 no-padding-left">
                                     <div class="panel-collapse">
-                                        <div>
+                                        <div ng-if="vm.getParentProperty(file, 'id') || vm.getParentProperty(file, 'data')">
                                             <!-- (Konrad) We are using ng-src here because DOM would attempt to load that image
                                             src before it even exists due to its dependency on ng-if directive -->
                                             <img data-ng-src="data:image/jpg;base64,{{vm.getParentProperty(file, 'data')}}"
@@ -171,12 +171,18 @@
                                                  ng-if="vm.getParentProperty(file, 'data').startsWith('data')"
                                                  class="img-responsive center-block" alt="">
                                         </div>
+                                        <div ng-if="!vm.getParentProperty(file, 'id') || !vm.getParentProperty(file, 'data')">
+                                            <img ng-src="images/rolling_1s_200px.gif" class="img-responsive center-block" alt="">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-xs-8">
                                     <div class="row">
-                                        <div class="col-xs-8 no-padding-left">
+                                        <div class="col-xs-8 no-padding-left" ng-if="vm.getParentProperty(file, 'id') || vm.getParentProperty(file, 'data')">
                                             <h2 style="margin: 0">{{vm.getParentProperty(file, 'displayName')}}</h2>
+                                        </div>
+                                        <div class="col-xs-8 no-padding-left" ng-if="!vm.getParentProperty(file, 'id') || !vm.getParentProperty(file, 'data')">
+                                            <h2 style="margin: 0">Loading...</h2>
                                         </div>
                                         <div class="col-xs-4 no-padding-right">
                                             <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
@@ -192,9 +198,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" ng-if="vm.getParentProperty(file, 'id') || vm.getParentProperty(file, 'data')">
                                         <hr style="margin: 5px">
                                         <h4>{{vm.getParentProperty(file, 'description')}}</h4>
+                                    </div>
+                                    <div class="row" ng-if="!vm.getParentProperty(file, 'id') || !vm.getParentProperty(file, 'data')">
+                                        <hr style="margin: 5px">
+                                        <h4>Loading...</h4>
                                     </div>
                                 </div>
                             </div>

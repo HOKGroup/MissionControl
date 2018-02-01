@@ -74,7 +74,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                 }
 
                 if (response.status === 200) {
-                    vm.trimbleProject = response.data;
+                    vm.trimbleProject = response.project;
                     return VrFactory.getFolderItems(vm.trimbleProject.rootId);
                 }
 
@@ -97,11 +97,11 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                         .then(function (response) {
                             // (Konrad) Project was created and user was added.
                             // Since this is a new project we need to also add the images folder.
-                            return VrFactory.addFolder({name: "Images", rootId: vm.trimbleProject.rootId});
+                            return VrFactory.createFolder({name: "Images", rootId: vm.trimbleProject.rootId});
                         })
                         .then(function(response){
                             // Since this is a new project we need to also add the buckets folder.
-                            return VrFactory.addFolder({name: "Buckets", rootId: vm.trimbleProject.rootId});
+                            return VrFactory.createFolder({name: "Buckets", rootId: vm.trimbleProject.rootId});
                         })
                         .then(function (response) {
                             return VrFactory.getFolderItems(vm.trimbleProject.rootId);
@@ -211,17 +211,17 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                 }
 
                 if(response.data.length > 0){
-                    response.data.forEach(function (item) {
-                        if(item.type !== 'FOLDER') return;
+                    response.data.forEach(function (folder) {
+                        if(folder.type !== 'FOLDER') return;
 
                         var bucket = {
-                            name: item.name,
+                            name: folder.name,
                             images: [],
                             sharableLink: null,
                             sharedWith: [],
-                            id: item.id,
-                            parentId: item.parentId,
-                            projectId: item.projectId,
+                            id: folder.id,
+                            parentId: folder.parentId,
+                            projectId: folder.projectId,
                             editingBucket: false,
                             position: null,
                             commentId: ''
@@ -231,7 +231,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                         AddWatch(bucket);
 
                         var data = {
-                            objectId: item.id,
+                            objectId: folder.id,
                             objectType: 'FOLDER'
                         };
 
@@ -255,6 +255,70 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
 
                                         // (Konrad) We need to re-sort the vm.buckets to match our specified order.
                                         vm.buckets.sort(UtilityService.compareValues('position', 'asc'));
+                                    })
+                                }
+
+                                return VrFactory.getFolderItems(folder.id)
+                            })
+                            .then(function (response) {
+                                if(!response || response.status !== 200){
+                                    changeStatus({
+                                        code: 'danger',
+                                        message: 'Failed to retrieve images from Bucket. Please reload the page and try again.'
+                                    });
+                                    return;
+                                }
+
+                                if(response.data.length > 0){
+                                    response.data.forEach(function (file) {
+                                        var image = {
+                                            file: null,
+                                            data: null,
+                                            dataSize: null,
+                                            versionId: file.versionId,
+                                            projectId: file.projectId,
+                                            parentId: file.parentId,
+                                            id: file.id,
+                                            name: file.name,
+                                            commentId: ''
+                                        };
+
+                                        // (Konrad) We push the skeleton version of the image to vm.images
+                                        // here so that we can use the "loading.gif" while the images are downloaded.
+                                        bucket.images.push(image);
+
+                                        var data = {
+                                            objectId: file.id,
+                                            objectType: 'FILE'
+                                        };
+
+                                        VrFactory.getComments(data)
+                                            .then(function (response) {
+                                                if(!response || response.status !== 200){
+                                                    changeStatus({
+                                                        code: 'danger',
+                                                        message: 'Failed to retrieve image Display Name and Description. Reload the page and try again.'
+                                                    });
+                                                    return;
+                                                }
+
+                                                if(response.data.length > 0){
+                                                    response.data.forEach(function (comment) {
+                                                        if(!comment.description.startsWith('{"parentImageId":')) return;
+
+                                                        var content = JSON.parse(comment.description);
+                                                        image.parentImageId = content.parentImageId;
+                                                        image.commentId = comment.id
+                                                    })
+                                                }
+                                            })
+                                            .catch(function (err) {
+                                                changeStatus({
+                                                    code: 'danger',
+                                                    message: 'Failed to retrieve image Display Name and Description. Reload the page and try again.'
+                                                });
+                                                console.log(err);
+                                            })
                                     })
                                 }
                             })
@@ -699,6 +763,8 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
      * @constructor
      */
     function AddWatch(x) {
+        if (!(this instanceof AddWatch)) return new AddWatch(x);
+
         var index = vm.buckets.indexOf(x);
         var id = 'buckets[' + index + '].images';
         $scope.$watchCollection(id, function(newValue, oldValue, scope) {
@@ -709,77 +775,85 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
             }
 
             if(newValue.length > oldValue.length){
-                // (Konrad) Check if added image is duplicate and remove.
-                var bucket = vm.buckets[index];
-                vm.deletedDuplicate = false;
-                var count = bucket.images.length;
-                bucket.images = UtilityService.removeDuplicates(bucket.images, 'id');
-                if(count > bucket.images.length){
-                    vm.deletedDuplicate = true;
-                    changeStatus({
-                        code: 'warning',
-                        message: 'Image already exists in this bucket. It cannot be added twice.'
-                    });
-                }
-                if (vm.deletedDuplicate) return;
+                // File was added.
+                var newFiles = newValue.diff(oldValue);
+                if(!newFiles[0].data){
+                    // (Konrad) New file has an id assigned. This means that the file is coming from Trimble Connect.
+                    // If that's the case the $watchCollection would not pick up each file separately but rather all at once.
+                    console.log(newFiles);
+                } else {
+                    // (Konrad) Check if added image is duplicate and remove.
+                    var bucket = vm.buckets[index];
+                    vm.deletedDuplicate = false;
+                    var count = bucket.images.length;
+                    bucket.images = UtilityService.removeDuplicates(bucket.images, 'id');
+                    if(count > bucket.images.length){
+                        vm.deletedDuplicate = true;
+                        changeStatus({
+                            code: 'warning',
+                            message: 'Image already exists in this bucket. It cannot be added twice.'
+                        });
+                    }
+                    if (vm.deletedDuplicate) return;
 
-                // (Konrad) New Image was added. Let's upload to Trimble.
-                var newFile = newValue.diff(oldValue)[0];
-                var parentImageId = newFile.id;
+                    // (Konrad) New Image was added. Let's upload to Trimble.
+                    var newFile = newFiles[0];
+                    var parentImageId = newFile.id;
 
-                newFile['parentImageId'] = parentImageId;
+                    newFile['parentImageId'] = parentImageId;
 
-                var data = {
-                    fromFileVersionId: parentImageId, //id of the file to copy
-                    parentId: bucket.id, //bucket id
-                    parentType: 'FOLDER',
-                    copyMetaData: true,
-                    mergeExisting: false
-                };
+                    var data = {
+                        fromFileVersionId: parentImageId, //id of the file to copy
+                        parentId: bucket.id, //bucket id
+                        parentType: 'FOLDER',
+                        copyMetaData: true,
+                        mergeExisting: false
+                    };
 
-                VrFactory.copyFile(data)
-                    .then(function (response) {
-                        if(!response || response.status !== 201){
+                    VrFactory.copyFile(data)
+                        .then(function (response) {
+                            if(!response || response.status !== 201){
+                                changeStatus({
+                                    code: 'danger',
+                                    message: 'Failed making a copy of the selected image. Please reload the page and try again.'
+                                });
+                                return
+                            }
+
+                            newFile.id = response.data.id; //new image id
+                            newFile.parentId = response.data.parentId; //folder changed
+
+                            // (Konrad) Since every image in a bucket is just a copy of another image we can store
+                            // the reference to parent image id. It will come handy when we download images when
+                            // page loads for the first time. We can then just use the downloaded images data instead
+                            // of downloading the same image multiple times for all buckets that it might be in.
+                            var data = {
+                                'objectId': response.data.id,
+                                'objectType': 'FILE',
+                                'description': '{"parentImageId": "' + parentImageId + '"}'
+                            };
+
+                            return VrFactory.addComment(data)
+                        })
+                        .then(function (response) {
+                            if(!response || response.status !== 201){
+                                changeStatus({
+                                    code: 'danger',
+                                    message: 'Failed adding information about Parent Image. Please reload the page and try again.'
+                                });
+                                return
+                            }
+
+                            newFile.commentId = response.data.id;
+                        })
+                        .catch(function(err){
                             changeStatus({
                                 code: 'danger',
                                 message: 'Failed making a copy of the selected image. Please reload the page and try again.'
                             });
-                            return
-                        }
-
-                        newFile.id = response.data.id; //new image id
-                        newFile.parentId = response.data.parentId; //folder changed
-
-                        // (Konrad) Since every image in a bucket is just a copy of another image we can store
-                        // the reference to parent image id. It will come handy when we download images when
-                        // page loads for the first time. We can then just use the downloaded images data instead
-                        // of downloading the same image multiple times for all buckets that it might be in.
-                        var data = {
-                            'objectId': response.data.id,
-                            'objectType': 'FILE',
-                            'description': '{"parentImageId": "' + parentImageId + '"}'
-                        };
-
-                        return VrFactory.addComment(data)
-                    })
-                    .then(function (response) {
-                        if(!response || response.status !== 201){
-                            changeStatus({
-                             code: 'danger',
-                             message: 'Failed adding information about Parent Image. Please reload the page and try again.'
-                            });
-                            return
-                        }
-
-                        newFile.commentId = response.data.id;
-                    })
-                    .catch(function(err){
-                        changeStatus({
-                            code: 'danger',
-                            message: 'Failed making a copy of the selected image. Please reload the page and try again.'
+                            console.log(err);
                         });
-                        console.log(err);
-                    });
+                }
             } else if (newValue.length < oldValue.length){
                 deleteFile(oldValue, oldValue.diff(newValue)[0]);
             }

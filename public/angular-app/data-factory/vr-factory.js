@@ -15,8 +15,28 @@ function VrFactory($http, $base64){
             return $http.get('/api/v1/projects/populatevr/' + projectId).then(complete).catch(failed);
         },
 
-        getProject: function getProject(projectName) {
-            return $http.get('/api/v1/vr/project/' + projectName).then(complete).catch(failed);
+        getProject: function getProject(name) {
+            return authorize().then(function (response) {
+                var auth = 'Bearer ' + response;
+                return $http({
+                    method: 'GET',
+                    url: 'https://app.stage.connect.trimble.com/tc/api/2.0/projects',
+                    headers: {
+                        'Authorization': auth,
+                        'Content-Type': 'application/json'
+                    },
+                    transformRequest: angular.identity
+                })
+            }).then(function (response) {
+                var project = response.data.filter(function (item) {
+                    return item.name === name;
+                });
+                if(!project || project.length === 0) {
+                    return {status: 204, project: project};
+                } else {
+                    return {status: 200, project: project[0]}
+                }
+            }).catch(failed)
         },
 
         createProject: function createProject(projectName) {
@@ -25,10 +45,6 @@ function VrFactory($http, $base64){
 
         addUser: function addUser(projectId) {
             return $http.post('/api/v1/vr/project/' + projectId + '/users').then(complete).catch(failed);
-        },
-
-        addFolder: function addFolder(data) {
-            return $http.post('/api/v1/vr/folders', data).then(complete).catch(failed);
         },
 
         getFolderItems: function getFolderItems(folderId) {
