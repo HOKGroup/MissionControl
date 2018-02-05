@@ -31,20 +31,29 @@ TriggerRecordService = {
   },
 
     /**
-     * Get all editing records by Configuration Id.
+     * Get all editing records by Configuration Id and date range.
      * @param req
      * @param res
      */
     findByConfigId : function(req, res){
     var configid = req.params.configid;
-    TriggerRecord
-        .find({'configId':configid})
-        .sort('-edited')
-        .exec(function(err, result) {
-            if(err) return console.log(err);
-            return res.send(result);
-        });
-    },
+    var from = new Date(req.query.from);
+    var to = new Date(req.query.to);
+    if(from && to){
+        TriggerRecord
+            .find({'configId': configid, 'edited': {'$gte': from, '$lte': to}}, function (err, result) {
+                if(err) return console.log(err);
+                return res.send(result);
+        })
+    } else {
+        TriggerRecord
+            .find({'configId':configid})
+            .sort('-edited')
+            .exec(function(err, result) {
+                if(err) return console.log(err);
+                return res.send(result);
+            });
+    }},
 
   findByUniqueId : function(req, res){
     var id = req.params.uniqueid;

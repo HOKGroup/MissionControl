@@ -130,7 +130,7 @@
                                 </label>
                             </fieldset>
                             <fieldset class="form-group" ng-show="vm.selectedConfig.sharedParamMonitor.isMonitorOn">
-                                <label style="margin-top:7px;" class="control-label" for="formNewSheetFile">
+                                <label style="margin-top:7px;" class="control-label" for="formNewSharedParamPath">
                                     File Path:
                                     <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.selectedConfig.sharedParamMonitor.filePath"></span>
                                     <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.selectedConfig.sharedParamMonitor.filePath"></span>
@@ -148,6 +148,56 @@
                         </div>
                         <div id="collapseP1" class="panel-collapse collapse in">
                             <div class ="panel-body" >
+                                <div class="row panel-body" style="padding-top: 0">
+                                    <div class="col-md-5 no-padding-left">
+                                        <div class="col-sm-2" style="padding: 0">
+                                            <label for="fromInput" class="form-control-label" style="margin-top: 7px">From: </label>
+                                        </div>
+                                        <div class="col-sm-10 no-padding-left no-padding-right">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control input-sm" id="fromInput"
+                                                       uib-datepicker-popup="{{vm.format}}"
+                                                       ng-model="vm.dtFrom"
+                                                       is-open="vm.popup1.opened"
+                                                       datepicker-options="vm.dateOptions"
+                                                       ng-required="true"
+                                                       close-text="Close"
+                                                       show-button-bar="false"/>
+                                                <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default btn-sm" ng-click="vm.openDatePicket('from')">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </button>
+                                            </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 no-padding-left">
+                                        <div class="col-sm-2" style="padding: 0">
+                                            <label for="fromInput" class="form-control-label" style="margin-top: 7px">To: </label>
+                                        </div>
+                                        <div class="col-sm-10 no-padding-right no-padding-left">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control input-sm"
+                                                       uib-datepicker-popup="{{vm.format}}"
+                                                       ng-model="vm.dtTo"
+                                                       is-open="vm.popup2.opened"
+                                                       datepicker-options="vm.dateOptions"
+                                                       ng-required="true"
+                                                       show-button-bar="false"
+                                                       close-text="Close" />
+                                                <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default btn-sm" ng-click="vm.openDatePicket('to')">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </button>
+                                            </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 no-padding-right">
+                                        <button class="btn btn-primary btn-sm pull-right" id="run" ng-click="vm.filterDate()">Filter</button>
+                                    </div>
+                                </div>
+                                <br>
                                 <table id="table1" datatable="ng" dt-options="vm.dtRecordsOptions" dt-column-defs="vm.dtRecordsColumnDefs" class="table table-hover table-condensed datatable">
                                     <thead>
                                     <th class="col-md-5">File Name</th>
