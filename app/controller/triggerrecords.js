@@ -17,7 +17,7 @@ TriggerRecordService = {
   },
 
     findByCentralPath : function(req, res){
-    var path = req.params.centralpath;
+    var path = req.params.centralpath.toLowerCase();
     TriggerRecord.find({'centralPath':path},function(err, result) {
       return res.send(result);
     });
@@ -88,9 +88,14 @@ TriggerRecordService = {
     });
   },
 
+    /**
+     * Updates file path value when Configuration is changed.
+     * @param req
+     * @param res
+     */
     updateFilePath: function(req, res){
-        var before = req.body.before.replace(/\\/g, "\\");
-        var after = req.body.after.replace(/\\/g, "\\");
+        var before = req.body.before.replace(/\\/g, "\\").toLowerCase();
+        var after = req.body.after.replace(/\\/g, "\\").toLowerCase();
         TriggerRecord
             .update(
                 {'centralPath': before},

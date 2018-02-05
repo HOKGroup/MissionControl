@@ -78,12 +78,13 @@ module.exports.findByCentralPath  = function(req, res){
     // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.
     var rgx;
     if(req.params.uri.includes('RSN:') || req.params.uri.includes('A360:')){
-        rgx = req.params.uri.replace(/\|/g, "/");
+        rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
     } else {
-        rgx = req.params.uri.replace(/\|/g, "\\");
+        rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
     }
+
     Configuration.find(
-        {"files.centralPath": rgx}, function (err, result) {
+        {'files.centralPath': rgx}, function (err, result) {
             var response = {
                 status: 200,
                 message: result
@@ -99,12 +100,17 @@ module.exports.findByCentralPath  = function(req, res){
     )
 };
 
+/**
+ * Updates file path value for given configuration.
+ * @param req
+ * @param res
+ */
 module.exports.updateFilePath = function (req, res) {
     var id = req.params.id;
     Configuration
         .update(
-            {'_id': id, 'files.centralPath': req.body.before},
-            {'$set': {'files.$.centralPath' : req.body.after}}, function (err, result) {
+            {'_id': id, 'files.centralPath': req.body.before.toLowerCase()},
+            {'$set': {'files.$.centralPath' : req.body.after.toLowerCase()}}, function (err, result) {
                 var response = {
                     status: 200,
                     message: result

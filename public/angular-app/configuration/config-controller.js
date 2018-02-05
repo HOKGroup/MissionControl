@@ -96,20 +96,24 @@ function ConfigController($routeParams, ConfigFactory, $window, $uibModal){
         });
     };
 
+    /**
+     * Adds a new file to configuration.
+     */
     vm.addFile = function(){
         if(!vm.newFile){
             vm.fileWarningMsg = 'Please enter valid file path.';
             return;
         }
 
-        var filePath = vm.newFile;
+        // (Konrad) All file paths are stored in MongoDB with lower case.
+        // This allows for case insensitive searches and use of indexes.
+        var filePath = vm.newFile.toLowerCase();
         vm.fileWarningMsg='';
 
         var uri = filePath.replace(/\\/g, '|');
         ConfigFactory
             .getByCentralPath(uri).then(function(response){
                 if(!response || response.status !== 200) return;
-
                 console.log(response);
 
                 var configFound = response.data;
@@ -121,7 +125,7 @@ function ConfigController($routeParams, ConfigFactory, $window, $uibModal){
                         var config = configFound[i];
                         for(var j=0; j<config.files.length; j++){
                             var file = config.files[j];
-                            if(file.centralPath.toLowerCase() === filePath.toLowerCase()){
+                            if(file.centralPath === filePath){
                                 configMatched = true;
                                 configNames += ' [' + config.name + '] ';
                                 break;
@@ -142,9 +146,9 @@ function ConfigController($routeParams, ConfigFactory, $window, $uibModal){
             }, function(error){
                 vm.status = 'Unable to get configuration data: ' + error.message;
             });
-
     };
 
+    //TODO: This should update the DB automatically. No need for Update button at the bottom.
     vm.deleteFile = function(filePath){
         for (var i = 0; i < vm.selectedConfig.files.length; i++) {
             var file =  vm.selectedConfig.files[i];

@@ -154,7 +154,9 @@ function AddConfigController($routeParams, ConfigFactory, $window){
     }
 
     vm.addFile = function(){
-        var filePath = vm.newFile;
+        // (Konrad) All file paths are stored as lower case in DB.
+        // This makes the search and comparison case insensitive.
+        var filePath = vm.newFile.toLowerCase();
         vm.fileWarningMsg = '';
 
         // (Konrad) Let's make sure we are not adding the same file twice.
@@ -187,7 +189,7 @@ function AddConfigController($routeParams, ConfigFactory, $window){
                         var config = configFound[i];
                         for(var j = 0; j < config.files.length; j++){
                             var file = config.files[j];
-                            if(file.centralPath.toLowerCase() === filePath.toLowerCase()){
+                            if(file.centralPath === filePath){
                                 configMatched = true;
                                 configNames += ' [' + config.name + '] ';
                                 break;
