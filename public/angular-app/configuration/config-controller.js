@@ -39,7 +39,7 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
             configId: vm.selectedConfig._id
         };
 
-        TriggerRecordsFactory.getByDate(data)
+        TriggerRecordsFactory.getByConfigIdDates(data)
             .then(function (response) {
                 if(!response || response.status !== 200) return;
 
