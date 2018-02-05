@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').controller('ConfigController', ConfigController);
 
-function ConfigController($routeParams, ConfigFactory, $window, $uibModal){
+function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DTColumnDefBuilder, $window, $uibModal){
     var vm = this;
     vm.status;
     vm.projectId = $routeParams.projectId;
@@ -12,6 +12,21 @@ function ConfigController($routeParams, ConfigFactory, $window, $uibModal){
     vm.newFile;
     vm.fileWarningMsg = '';
     vm.PlaceholderSharedParameterLocation = "";
+
+    vm.dtRecordsOptions = {
+        paginationType: 'simple_numbers',
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+        stateSave: false,
+        deferRender: true,
+        order: [[ 2, 'asc' ]] //by edited on
+    };
+
+    vm.dtRecordsColumnDefs = [
+        DTColumnDefBuilder.newColumnDef(0), //file name
+        DTColumnDefBuilder.newColumnDef(1), //category
+        DTColumnDefBuilder.newColumnDef(2), //edited on
+        DTColumnDefBuilder.newColumnDef(3) //edited by
+    ];
 
     //get populated configurations
     getSelectedProjectConfiguration(vm.projectId);
@@ -52,23 +67,29 @@ function ConfigController($routeParams, ConfigFactory, $window, $uibModal){
 
     function getSelectedConfiguration(configId){
         ConfigFactory
-            .getConfigurationById(configId).then(function(response){
+            .getConfigurationById(configId)
+            .then(function(response){
                 vm.selectedConfig = response.data;
                 vm.PlaceholderSharedParameterLocation = GetSharedParamLocation(vm.selectedConfig);
-                ConfigFactory
-                    .getRecordsByConfigId(configId).then(function(response){
-                        if(!response) return;
-                        vm.selectedRecords = response.data;
-                    },function(error){
-                        vm.status = 'Unable to get records by config Id: '+ configId;
-                    });
-            },function(error){
-                vm.status = 'Unable to get by config Id: ' + configId;
-            });
+                return TriggerRecordsFactory.getRecordsByConfigId(configId);
+            })
+            .then(function(response){
+                if(!response) return;
+                vm.selectedRecords = response.data;
+            })
+            .catch(function(err){
+                vm.status = 'Unable to get Editing Records by Configuration Id: ' + configId;
+                console.log(err);
+            })
     }
 
     vm.getConfigurationById = getSelectedConfiguration;
 
+    /**
+     * Opens modal dialog allowing for change of file path.
+     * @param filePath
+     * @param size
+     */
     vm.editPath = function(filePath, size){
         $uibModal.open({
             animation: true,

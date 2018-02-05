@@ -26,10 +26,6 @@ function ConfigFactory($http){
             return $http.get('/api/v1/configurations/updaterid/' + updaterId).then(complete).catch(failed);
         },
 
-        getRecordsByConfigId: function getRecordsByConfigId(configId) {
-            return $http.get('/api/v1/triggerrecords/configid/' + configId).then(complete).catch(failed);
-        },
-
         addConfiguration: function addConfiguration(config) {
             return $http.post('/api/v1/configurations', config).then(complete).catch(failed);
         },
