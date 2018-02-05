@@ -11,8 +11,8 @@ var sharedParamSchema = new mongoose.Schema({
 
 var configSchema = new mongoose.Schema(
   {
-      name: String,
-      files: [{centralPath: String }], //revit projects
+	  name: String,
+      files: [{centralPath: String}], //revit projects
 	  sheetDatabase: String, //sheet database
       sharedParamMonitor: sharedParamSchema, // shared param file path monitor
 	  updaters: [{
@@ -32,9 +32,7 @@ var configSchema = new mongoose.Schema(
 		}]
       }]
   },
-  {
-	  timestamps: true
-  });
+    { timestamps: true });
 
 configSchema.index({'files.centralPath': 'text'});
 

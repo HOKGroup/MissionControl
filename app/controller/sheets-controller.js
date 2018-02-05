@@ -51,9 +51,9 @@ module.exports.findByCentralPath = function(req, res){
     // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.
     var rgx;
     if(req.params.uri.includes('RSN:') || req.params.uri.includes('A360:')){
-        rgx = req.params.uri.replace(/\|/g, "/");
+        rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
     } else {
-        rgx = req.params.uri.replace(/\|/g, "\\");
+        rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
     }
     Sheets
         .find(
@@ -400,8 +400,8 @@ module.exports.addSheets = function (req, res) {
  * @param res
  */
 module.exports.updateFilePath = function (req, res) {
-    var before = req.body.before.replace(/\\/g, "\\");
-    var after = req.body.after.replace(/\\/g, "\\");
+    var before = req.body.before.replace(/\\/g, "\\").toLowerCase();
+    var after = req.body.after.replace(/\\/g, "\\").toLowerCase();
     Sheets
         .update(
             {'centralPath': before},

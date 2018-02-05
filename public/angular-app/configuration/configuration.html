@@ -52,7 +52,7 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="file in vm.selectedConfig.files">
-                                <td>{{ file.centralPath }}</td>
+                                <td>{{ file.centralPath | uppercase }}</td>
                                 <td class="text-right">
                                     <button type="button" class="btn btn-default" ng-click="vm.editPath(file.centralPath, 'lg')">
                                         <span class="glyphicon glyphicon-pencil" style="margin-right: 0px"></span>
@@ -157,7 +157,7 @@
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="record in vm.selectedRecords">
-                                        <td>{{ record.centralPath | split: '\\' }}</td>
+                                        <td>{{ record.centralPath | split: '\\' | uppercase }}</td>
                                         <td class="text-center">{{ record.categoryName }}</td>
                                         <td class="text-center">{{ record.edited | date:"MM/dd/yy h:mm" }}</td>
                                         <td class="text-center">{{ record.editedBy }}</td>
