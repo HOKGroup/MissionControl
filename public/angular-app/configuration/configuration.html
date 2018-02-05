@@ -148,16 +148,16 @@
                         </div>
                         <div id="collapseP1" class="panel-collapse collapse in">
                             <div class ="panel-body" >
-                                <table class="table table-hover table-sm">
+                                <table id="table1" datatable="ng" dt-options="vm.dtRecordsOptions" dt-column-defs="vm.dtRecordsColumnDefs" class="table table-hover table-condensed datatable">
                                     <thead>
-                                    <th class="col-md-6">Central Path</th>
+                                    <th class="col-md-5">File Name</th>
                                     <th class="col-md-2 text-center">Category</th>
-                                    <th class="col-md-2 text-center">Edited</th>
-                                    <th class="col-md-2 text-center">Edited By</th>
+                                    <th class="col-md-2 text-center">Edited On</th>
+                                    <th class="col-md-3 text-center">Edited By</th>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="record in vm.selectedRecords">
-                                        <td>{{ record.centralPath | split: '\\' | uppercase }}</td>
+                                        <td>{{ record.centralPath | split | uppercase }}</td>
                                         <td class="text-center">{{ record.categoryName }}</td>
                                         <td class="text-center">{{ record.edited | date:"MM/dd/yy h:mm" }}</td>
                                         <td class="text-center">{{ record.editedBy }}</td>

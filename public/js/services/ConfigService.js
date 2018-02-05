@@ -41,9 +41,9 @@ app.factory('ConfigFactory', ['$http', function($http){
 		return $http.get(urlBase+'/updaterid/'+updaterId); 
 	};
 	
-	dataFactory.getRecordsByConfigId = function(configId){
-		return $http.get('/api/v1/triggerrecords/configid/'+configId);  
-	};
+	// dataFactory.getRecordsByConfigId = function(configId){
+	// 	return $http.get('/api/v1/triggerrecords/configid/' + configId);
+	// };
 	
 	dataFactory.addConfiguration = function(config){
 		return $http.post(urlBase, config);

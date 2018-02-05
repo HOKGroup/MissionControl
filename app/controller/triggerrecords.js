@@ -29,18 +29,23 @@ TriggerRecordService = {
       return res.send(result);
     });
   },
-  
+
+    /**
+     * Get all editing records by Configuration Id.
+     * @param req
+     * @param res
+     */
     findByConfigId : function(req, res){
     var configid = req.params.configid;
-    TriggerRecord.find({'configId':configid})
-	.limit(30).sort('-edited')
-	.exec(function(err, result) {
-		if(err) return console.log(err);
-      return res.send(result);
-    });
-  },
-  
- 
+    TriggerRecord
+        .find({'configId':configid})
+        .sort('-edited')
+        .exec(function(err, result) {
+            if(err) return console.log(err);
+            return res.send(result);
+        });
+    },
+
   findByUniqueId : function(req, res){
     var id = req.params.uniqueid;
     TriggerRecord.find({'elementUniqueId':id},function(err, result) {
