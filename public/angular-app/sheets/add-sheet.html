@@ -57,12 +57,12 @@
             <div class="panel-heading">
                 <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
                     <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                        {{vm.selectedModel.name}}
+                        {{vm.selectedModel.name | uppercase}}
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 100px">
                         <li ng-repeat="file in vm.models">
-                            <a href="" ng-click="vm.selectedModel = file">{{file.name}}</a>
+                            <a href="" ng-click="vm.selectedModel = file">{{file.name | uppercase}}</a>
                         </li>
                     </ul>
                 </div>

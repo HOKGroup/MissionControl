@@ -1,7 +1,6 @@
 angular.module('MissionControlApp')
-    .filter('split', function() { // Splits string at character and returns
-        return function(input, splitChar) {
-            var splits = input.split(splitChar);
-            return splits[splits.length - 1];
+    .filter('split', function() {
+        return function(input) {
+            return input.replace(/^.*[\\\/]/, '').slice(0, -4); //removed file extension
         }
     });

@@ -7,6 +7,10 @@ function TriggerRecordsFactory($http){
     return {
         updateFilePath: function updateFilePath(id, data) {
             return $http.put('/api/v1/triggerrecords/' + id + '/updatefilepath', data).then(complete).catch(failed);
+        },
+
+        getByConfigIdDates: function getByConfigIdDates(data){
+        	return $http.get('/api/v1/triggerrecords/configid/' + data.configId, {params: {from: data.from, to: data.to}});
         }
     };
 

@@ -22,12 +22,12 @@
                 <div class="list-group">
                     <div class="btn-group" style="width: 100%" ng-if="vm.FamilyData || vm.WorksetData || vm.LinkData || vm.ViewData || vm.ModelData">
                         <button class="btn btn-default dropdown-toggle btn-block" data-toggle="dropdown">
-                            {{vm.selectedFileName}}
+                            {{vm.selectedFileName | uppercase}}
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-centered dropdown-menu-right dropdown-menu-wide">
                             <li ng-repeat="link in vm.selectedProject.healthrecords | orderBy: vm.sortFiles">
-                                <a href="" ng-click="vm.SetProject(link)">{{vm.fileNameFromPath(link.centralPath)}}</a>
+                                <a href="" ng-click="vm.SetProject(link)">{{vm.fileNameFromPath(link.centralPath) | uppercase}}</a>
                             </li>
                         </ul>
                     </div>

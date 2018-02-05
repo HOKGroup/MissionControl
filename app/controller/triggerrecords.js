@@ -17,7 +17,7 @@ TriggerRecordService = {
   },
 
     findByCentralPath : function(req, res){
-    var path = req.params.centralpath;
+    var path = req.params.centralpath.toLowerCase();
     TriggerRecord.find({'centralPath':path},function(err, result) {
       return res.send(result);
     });
@@ -29,18 +29,32 @@ TriggerRecordService = {
       return res.send(result);
     });
   },
-  
+
+    /**
+     * Get all editing records by Configuration Id and date range.
+     * @param req
+     * @param res
+     */
     findByConfigId : function(req, res){
     var configid = req.params.configid;
-    TriggerRecord.find({'configId':configid})
-	.limit(30).sort('-edited')
-	.exec(function(err, result) {
-		if(err) return console.log(err);
-      return res.send(result);
-    });
-  },
-  
- 
+    var from = new Date(req.query.from);
+    var to = new Date(req.query.to);
+    if(from && to){
+        TriggerRecord
+            .find({'configId': configid, 'edited': {'$gte': from, '$lte': to}}, function (err, result) {
+                if(err) return console.log(err);
+                return res.send(result);
+        })
+    } else {
+        TriggerRecord
+            .find({'configId':configid})
+            .sort('-edited')
+            .exec(function(err, result) {
+                if(err) return console.log(err);
+                return res.send(result);
+            });
+    }},
+
   findByUniqueId : function(req, res){
     var id = req.params.uniqueid;
     TriggerRecord.find({'elementUniqueId':id},function(err, result) {
@@ -88,9 +102,14 @@ TriggerRecordService = {
     });
   },
 
+    /**
+     * Updates file path value when Configuration is changed.
+     * @param req
+     * @param res
+     */
     updateFilePath: function(req, res){
-        var before = req.body.before.replace(/\\/g, "\\");
-        var after = req.body.after.replace(/\\/g, "\\");
+        var before = req.body.before.replace(/\\/g, "\\").toLowerCase();
+        var after = req.body.after.replace(/\\/g, "\\").toLowerCase();
         TriggerRecord
             .update(
                 {'centralPath': before},

@@ -5,7 +5,7 @@ angular.module('MissionControlApp').controller('EditFilePathController', EditFil
 
 function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactory, HealthRecordsFactory, TriggerRecordsFactory, SheetsFactory, filePath, id) {
     var vm = this;
-    vm.filePath = filePath;
+    vm.filePath = filePath.toLowerCase();
     vm.warning = '';
 
     /**
@@ -73,37 +73,30 @@ function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactor
         // Each collection (Familes, Sheets, Health Records etc.) uses Central Path to
         // distinguish from one model to another. We need to update all of those paths to
         // prevent data from getting disassociated.
-        var data = { before: filePath, after: vm.filePath };
-        ConfigFactory //updates files array
-            .updateFilePath(id, data).then(function (response) {
-            if(!response) return;
-            FamiliesFactory
-                .updateFilePath(id, data).then(function (response) {
+        var data = { before: filePath.toLowerCase(), after: vm.filePath.toLowerCase() };
+        ConfigFactory.updateFilePath(id, data)
+            .then(function (response) {
                 if(!response) return;
-                HealthRecordsFactory
-                    .updateFilePath(id, data).then(function (response) {
-                    if(!response) return;
-                    TriggerRecordsFactory
-                        .updateFilePath(id, data).then(function (response) {
-                        if(!response) return;
-                        SheetsFactory
-                            .updateFilePath(id, data).then(function (response) {
-                            if(!response) return;
-                            $uibModalInstance.close({response: data});
-                        }, function (error) {
-                            console.log(error);
-                        });
-                    }, function (error) {
-                        console.log(error);
-                    });
-                }, function (error) {
-                    console.log(error);
-                });
-            }, function (error) {
-                console.log(error);
+                return FamiliesFactory.updateFilePath(id, data);
+            })
+            .then(function (response) {
+                if(!response) return;
+                return HealthRecordsFactory.updateFilePath(id, data);
+            })
+            .then(function (response) {
+                if(!response) return;
+                return TriggerRecordsFactory.updateFilePath(id, data);
+            })
+            .then(function (response) {
+                if(!response) return;
+                return SheetsFactory.updateFilePath(id, data);
+            })
+            .then(function (response) {
+                if(!response) return;
+                $uibModalInstance.close({response: data});
+            })
+            .catch(function (err) {
+                console.log(err);
             });
-        }, function (error) {
-            console.log(error);
-        });
     }
 }

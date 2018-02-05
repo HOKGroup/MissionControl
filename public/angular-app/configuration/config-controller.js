@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').controller('ConfigController', ConfigController);
 
-function ConfigController($routeParams, ConfigFactory, $window, $uibModal){
+function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DTColumnDefBuilder, $window, $uibModal){
     var vm = this;
     vm.status;
     vm.projectId = $routeParams.projectId;
@@ -12,6 +12,66 @@ function ConfigController($routeParams, ConfigFactory, $window, $uibModal){
     vm.newFile;
     vm.fileWarningMsg = '';
     vm.PlaceholderSharedParameterLocation = "";
+
+    vm.dtRecordsOptions = {
+        paginationType: 'simple_numbers',
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+        stateSave: false,
+        deferRender: true
+    };
+
+    vm.format = 'dd-MMMM-yyyy';
+    vm.dateOptions = {
+        formatYear: 'yy',
+        maxDate: new Date(2020, 5, 22),
+        minDate: new Date(2015, 5, 22),
+        startingDay: 1
+    };
+
+    /**
+     * Filters Editing Records based on selected date range.
+     */
+    vm.filterDate = function () {
+        if(!vm.selectedConfig) return;
+        var data = {
+            from: vm.dtFrom,
+            to: vm.dtTo,
+            configId: vm.selectedConfig._id
+        };
+
+        TriggerRecordsFactory.getByConfigIdDates(data)
+            .then(function (response) {
+                if(!response || response.status !== 200) return;
+
+                vm.selectedRecords = response.data;
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    };
+
+    vm.popup1 = {
+        opened: false
+    };
+
+    vm.popup2 = {
+        opened: false
+    };
+
+    /**
+     * Opens pop-up date pickers.
+     * @param popup
+     */
+    vm.openDatePicket = function(popup) {
+        popup === 'from' ? vm.popup1.opened = true : vm.popup2.opened = true;
+    };
+
+    vm.dtRecordsColumnDefs = [
+        DTColumnDefBuilder.newColumnDef(0), //file name
+        DTColumnDefBuilder.newColumnDef(1), //category
+        DTColumnDefBuilder.newColumnDef(2), //edited on
+        DTColumnDefBuilder.newColumnDef(3) //edited by
+    ];
 
     //get populated configurations
     getSelectedProjectConfiguration(vm.projectId);
@@ -52,23 +112,26 @@ function ConfigController($routeParams, ConfigFactory, $window, $uibModal){
 
     function getSelectedConfiguration(configId){
         ConfigFactory
-            .getConfigurationById(configId).then(function(response){
+            .getConfigurationById(configId)
+            .then(function(response){
                 vm.selectedConfig = response.data;
                 vm.PlaceholderSharedParameterLocation = GetSharedParamLocation(vm.selectedConfig);
-                ConfigFactory
-                    .getRecordsByConfigId(configId).then(function(response){
-                        if(!response) return;
-                        vm.selectedRecords = response.data;
-                    },function(error){
-                        vm.status = 'Unable to get records by config Id: '+ configId;
-                    });
-            },function(error){
-                vm.status = 'Unable to get by config Id: ' + configId;
-            });
+                SetFilter();
+                vm.filterDate();
+            })
+            .catch(function(err){
+                vm.status = 'Unable to get Editing Records by Configuration Id: ' + configId;
+                console.log(err);
+            })
     }
 
     vm.getConfigurationById = getSelectedConfiguration;
 
+    /**
+     * Opens modal dialog allowing for change of file path.
+     * @param filePath
+     * @param size
+     */
     vm.editPath = function(filePath, size){
         $uibModal.open({
             animation: true,
@@ -96,20 +159,24 @@ function ConfigController($routeParams, ConfigFactory, $window, $uibModal){
         });
     };
 
+    /**
+     * Adds a new file to configuration.
+     */
     vm.addFile = function(){
         if(!vm.newFile){
             vm.fileWarningMsg = 'Please enter valid file path.';
             return;
         }
 
-        var filePath = vm.newFile;
+        // (Konrad) All file paths are stored in MongoDB with lower case.
+        // This allows for case insensitive searches and use of indexes.
+        var filePath = vm.newFile.toLowerCase();
         vm.fileWarningMsg='';
 
         var uri = filePath.replace(/\\/g, '|');
         ConfigFactory
             .getByCentralPath(uri).then(function(response){
                 if(!response || response.status !== 200) return;
-
                 console.log(response);
 
                 var configFound = response.data;
@@ -121,7 +188,7 @@ function ConfigController($routeParams, ConfigFactory, $window, $uibModal){
                         var config = configFound[i];
                         for(var j=0; j<config.files.length; j++){
                             var file = config.files[j];
-                            if(file.centralPath.toLowerCase() === filePath.toLowerCase()){
+                            if(file.centralPath === filePath){
                                 configMatched = true;
                                 configNames += ' [' + config.name + '] ';
                                 break;
@@ -142,9 +209,9 @@ function ConfigController($routeParams, ConfigFactory, $window, $uibModal){
             }, function(error){
                 vm.status = 'Unable to get configuration data: ' + error.message;
             });
-
     };
 
+    //TODO: This should update the DB automatically. No need for Update button at the bottom.
     vm.deleteFile = function(filePath){
         for (var i = 0; i < vm.selectedConfig.files.length; i++) {
             var file =  vm.selectedConfig.files[i];
@@ -192,6 +259,15 @@ function ConfigController($routeParams, ConfigFactory, $window, $uibModal){
                 vm.status = 'Unable to delete configuration:' +error.message;
             });
     };
+
+    /**
+     * Set filter dates.
+     */
+    function SetFilter() {
+        vm.dtFrom = new Date();
+        vm.dtFrom.setMonth(vm.dtFrom.getMonth() - 1);
+        vm.dtTo = new Date();
+    }
 
     /**
      * @return {string}
