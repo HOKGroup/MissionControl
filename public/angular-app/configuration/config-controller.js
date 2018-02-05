@@ -17,8 +17,53 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
         paginationType: 'simple_numbers',
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
         stateSave: false,
-        deferRender: true,
-        order: [[ 2, 'asc' ]] //by edited on
+        deferRender: true
+    };
+
+    vm.format = 'dd-MMMM-yyyy';
+    vm.dateOptions = {
+        formatYear: 'yy',
+        maxDate: new Date(2020, 5, 22),
+        minDate: new Date(2015, 5, 22),
+        startingDay: 1
+    };
+
+    /**
+     * Filters Editing Records based on selected date range.
+     */
+    vm.filterDate = function () {
+        if(!vm.selectedConfig) return;
+        var data = {
+            from: vm.dtFrom,
+            to: vm.dtTo,
+            configId: vm.selectedConfig._id
+        };
+
+        TriggerRecordsFactory.getByConfigIdDates(data)
+            .then(function (response) {
+                if(!response || response.status !== 200) return;
+
+                vm.selectedRecords = response.data;
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    };
+
+    vm.popup1 = {
+        opened: false
+    };
+
+    vm.popup2 = {
+        opened: false
+    };
+
+    /**
+     * Opens pop-up date pickers.
+     * @param popup
+     */
+    vm.openDatePicket = function(popup) {
+        popup === 'from' ? vm.popup1.opened = true : vm.popup2.opened = true;
     };
 
     vm.dtRecordsColumnDefs = [
@@ -71,11 +116,8 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
             .then(function(response){
                 vm.selectedConfig = response.data;
                 vm.PlaceholderSharedParameterLocation = GetSharedParamLocation(vm.selectedConfig);
-                return TriggerRecordsFactory.getRecordsByConfigId(configId);
-            })
-            .then(function(response){
-                if(!response) return;
-                vm.selectedRecords = response.data;
+                SetFilter();
+                vm.filterDate();
             })
             .catch(function(err){
                 vm.status = 'Unable to get Editing Records by Configuration Id: ' + configId;
@@ -217,6 +259,15 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
                 vm.status = 'Unable to delete configuration:' +error.message;
             });
     };
+
+    /**
+     * Set filter dates.
+     */
+    function SetFilter() {
+        vm.dtFrom = new Date();
+        vm.dtFrom.setMonth(vm.dtFrom.getMonth() - 1);
+        vm.dtTo = new Date();
+    }
 
     /**
      * @return {string}

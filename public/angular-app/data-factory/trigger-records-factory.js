@@ -9,8 +9,8 @@ function TriggerRecordsFactory($http){
             return $http.put('/api/v1/triggerrecords/' + id + '/updatefilepath', data).then(complete).catch(failed);
         },
 
-        getRecordsByConfigId: function getRecordsByConfigId(configId){
-        	return $http.get('/api/v1/triggerrecords/configid/' + configId);
+        getByConfigIdDates: function getByConfigIdDates(data){
+        	return $http.get('/api/v1/triggerrecords/configid/' + data.configId, {params: {from: data.from, to: data.to}});
         }
     };
 
