@@ -27,6 +27,10 @@
   },
   "_source": "https://github.com/components/font-awesome.git",
   "_target": "^4.7.0",
+<<<<<<< HEAD
   "_originalSource": "components-font-awesome",
   "_direct": true
+=======
+  "_originalSource": "components-font-awesome"
+>>>>>>> master
 }

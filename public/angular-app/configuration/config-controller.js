@@ -12,6 +12,7 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
     vm.newFile;
     vm.fileWarningMsg = '';
     vm.PlaceholderSharedParameterLocation = "";
+    vm.loading = false;
 
     vm.dtRecordsOptions = {
         paginationType: 'simple_numbers',
@@ -28,22 +29,26 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
         startingDay: 1
     };
 
+
+
     /**
      * Filters Editing Records based on selected date range.
      */
     vm.filterDate = function () {
         if(!vm.selectedConfig) return;
+
+        vm.loading = true;
         var data = {
             from: vm.dtFrom,
             to: vm.dtTo,
             configId: vm.selectedConfig._id
         };
-
         TriggerRecordsFactory.getByConfigIdDates(data)
             .then(function (response) {
                 if(!response || response.status !== 200) return;
 
                 vm.selectedRecords = response.data;
+                vm.loading = false;
             })
             .catch(function (err) {
                 console.log(err);
