@@ -1,4 +1,4 @@
-angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', function(d3) {
+angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', '$compile', function(d3, $compile) {
     return {
         restrict: 'EA',
         scope: {
@@ -61,8 +61,8 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', fun
                     .paddingInner(0.15);
 
                 var color = d3.scaleLinear()
-                    .domain([0, 1])
-                    .range(["#5cb85c","#d9534f"]);
+                    .domain([0, 1, 2])
+                    .range(["#5cb85c", "#f0ad4e", "#d9534f"]); //green/orange/red
 
                 var ticksNum = 10;
                 var xAxisTicks = [];
@@ -76,6 +76,10 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', fun
                     .tickSizeInner(-(height-5))
                     .tickPadding(8);
 
+                var tooltip = d3.select("body")
+                    .append("div")
+                    .attr("class", "toolTip");
+
                 svg.append("g")
                     .selectAll("bar")
                     .data(data).enter()
@@ -84,13 +88,21 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', fun
                     .attr("width", 0)
                     .attr("y", function (d) { return y(d.name) + margin.top; })
                     .attr("fill", function (d) {
-                        var bulkOfContent = (d.count * 100) / $scope.countTotal;
-                        if(bulkOfContent >= 50){
-                            return color(1);
-                        } else {
-                            return color(0);
-                        }
+                        return qualityChecks(d).color;
                     })
+                    .on("mouseover", function(d){
+                        var result = qualityChecks(d);
+                        if(!result.message) return;
+
+                        tooltip.style("opacity", "1");
+                        var matrix = this.getScreenCTM().translate(+ this.getAttribute("x"), + this.getAttribute("y"));
+                        tooltip
+                            .style("left", (window.pageXOffset + matrix.e + x(d.count) + 45) + "px")
+                            .style("top", (window.pageYOffset + matrix.f - (y.bandwidth() / 2) - 3) + "px")
+                            .style("display", "inline-block")
+                            .html(result.message);
+                    })
+                    .on("mouseout", function(){ tooltip.style("opacity", "0");})
                     .attr("height", y.bandwidth())
                     .transition()
                     .duration(1000)
@@ -126,6 +138,36 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', fun
                     .transition()
                     .duration(1500)
                     .attr("fill-opacity", 1);
+
+                /**
+                 * Performs quality checks on workset items.
+                 * @param d
+                 * @returns {*}
+                 */
+                function qualityChecks(d) {
+                    var bulkOfContent = (d.count * 100) / $scope.countTotal;
+                    if(bulkOfContent >= 50){
+                        return {
+                            color: color(2),
+                            message: 'Bulk of content (>50%) is on this workset! <br> Please consider adding a new workset.'
+                        };
+                    } else if (d.name.toLowerCase().indexOf('link') !== -1) {
+                        return {
+                            color: color(1),
+                            message: '"Link" workset has more than one item. <br> Please consider removing them.'
+                        };
+                    } else if (d.name.toLowerCase().indexOf('cad') !== -1 && d.count > 20){
+                        return {
+                            color: color(1),
+                            message: '"CAD" workset has more than 20 items. <br> Please consider removing them.'
+                        };
+                    } else {
+                        return {
+                            color: color(0),
+                            message: ''
+                        };
+                    }
+                }
 
                 /**
                  * Adjusts long strings to fit within margin.left.
