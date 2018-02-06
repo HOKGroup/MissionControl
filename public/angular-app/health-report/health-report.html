@@ -20,13 +20,13 @@
             <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
                 <div class="list-group">
                     <div class="btn-group" style="width: 100%" ng-if="vm.FamilyData || vm.WorksetData || vm.LinkData || vm.ViewData || vm.ModelData">
-                        <button class="btn btn-default dropdown-toggle btn-block" data-toggle="dropdown">
-                            {{vm.selectedFileName | uppercase}}
+                        <button class="btn btn-default dropdown-toggle dropdown-menu-centered" data-toggle="dropdown">
                             <span class="caret"></span>
+                            {{vm.selectedFileName | uppercase}}
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-centered dropdown-menu-right dropdown-menu-wide">
+                        <ul class="dropdown-menu dropdown-menu-centered">
                             <li ng-repeat="link in vm.selectedProject.healthrecords | orderBy: vm.sortFiles">
-                                <a href="" ng-click="vm.SetProject(link)">{{vm.fileNameFromPath(link.centralPath) | uppercase}}</a>
+                                <a href="" ng-click="vm.SetProject(link)" class="no-padding-left">{{vm.fileNameFromPath(link.centralPath) | uppercase}}</a>
                             </li>
                         </ul>
                     </div>

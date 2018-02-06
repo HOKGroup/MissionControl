@@ -37,8 +37,8 @@ angular.module('MissionControlApp').directive('d3MultiSeriesLineBrushed', ['d3',
                 // Setup basic chart variables.                   //
                 ////////////////////////////////////////////////////
 
-                var margin = {top: 10, right: 30, bottom: 100, left: 40},
-                    margin2 = {top: 330, right: 30, bottom: 20, left: 40},
+                var margin = {top: 30, right: 40, bottom: 110, left: 60},
+                    margin2 = {top: 330, right: 40, bottom: 30, left: 60},
                     width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right,
                     height = 400 - margin.top - margin.bottom,
                     height2 = 400 - margin2.top - margin2.bottom;
@@ -48,16 +48,45 @@ angular.module('MissionControlApp').directive('d3MultiSeriesLineBrushed', ['d3',
 
                 var parseDate = d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ');
                 var dateFormat = d3.timeFormat("%d %b,%H:%M");
-                var color = d3.scaleOrdinal(d3.schemeCategory10);
+                var color = d3.scaleOrdinal(d3.schemeCategory10).domain(scope.keys);
 
                 var x = d3.scaleTime().range([0, width]),
                     x2 = d3.scaleTime().range([0, width]),
                     y = d3.scaleLinear().range([height, 0]),
                     y2 = d3.scaleLinear().range([height2, 0]);
 
+                data.forEach(function (d) {
+                    d.date = parseDate(d.createdOn)
+                });
+
+                var lineData = color.domain().map(function(name){
+                    return { name: name, values: data.map(function (d) {
+                            return {date: parseDate(d.createdOn), value: +d[name]};
+                        })
+                    }
+                });
+
+                x.domain(d3.extent(data, function(d) { return d.date; }));
+                var maxValue = d3.max(lineData, function(c) {
+                    return d3.max(c.values, function(v) {
+                        return v.value;
+                    });
+                });
+
+                y.domain([0, maxValue]);
+                x2.domain(x.domain());
+                y2.domain(y.domain());
+
+                var ticksNum = 10;
+                var yAxisTicks = [];
+                var yDomain = [0, maxValue];
+                for (var i = 0; i < ticksNum; i++ ){
+                    yAxisTicks.push((yDomain[1] - yDomain[0]) / (ticksNum - 1)* i + yDomain[0]);
+                }
+
                 var xAxis = d3.axisBottom(x).ticks(5).tickFormat(dateFormat),
                     xAxis2 = d3.axisBottom(x2).ticks(5).tickFormat(dateFormat),
-                    yAxis = d3.axisLeft(y);
+                    yAxis = d3.axisLeft(y).tickValues(yAxisTicks);
 
                 var brush = d3.brushX()
                     .extent([[0, 0], [width, height2]])
@@ -80,30 +109,6 @@ angular.module('MissionControlApp').directive('d3MultiSeriesLineBrushed', ['d3',
                     .curve(d3.curveLinear)
                     .x(function(d) {return x2(d.date); })
                     .y(function(d) {return y2(d.value); });
-
-                color.domain(scope.keys);
-
-                data.forEach(function (d) {
-                    d.date = parseDate(d.createdOn)
-                });
-
-                var lineData = color.domain().map(function(name){
-                    return { name: name, values: data.map(function (d) {
-                            return {date: parseDate(d.createdOn), value: +d[name]};
-                        })
-                    }
-                });
-
-                x.domain(d3.extent(data, function(d) { return d.date; }));
-                var maxValue = d3.max(lineData, function(c) {
-                    return d3.max(c.values, function(v) {
-                        return v.value;
-                    });
-                });
-
-                y.domain([0, maxValue + 20]);
-                x2.domain(x.domain());
-                y2.domain(y.domain());
 
                 svg.append("defs").append("clipPath")
                     .attr("id", "clip")

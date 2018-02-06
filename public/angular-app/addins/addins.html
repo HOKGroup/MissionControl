@@ -22,7 +22,7 @@
                     <h4 class="panel-title" style="padding-top: 5px;">Plugin Use Frequency:</h4>
                 </div>
                 <div class="panel-collapse">
-                    <div class="panel-body">
+                    <div class="panel-body no-padding">
                         <d3-horizontal-bar-chart-timeout data="vm.d3HorizontalData" margin-left="180" domain-padding="5" d3-on-click="vm.OnClick(item)" clickable="true" fill-color="vm.MainChartColor"></d3-horizontal-bar-chart-timeout>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                     <h4 class="panel-title" style="padding-top: 5px;">Users: {{vm.SelectedPlugin}} / {{vm.SelectedYear}}</h4>
                 </div>
                 <div class="panel-collapse" ng-if="vm.UserDetails.length > 0">
-                    <div class="panel-body" style="max-height: 500px; overflow-y: scroll">
+                    <div class="panel-body no-padding" style="max-height: 500px; overflow-y: scroll">
                         <d3-horizontal-bar-chart-timeout data="vm.UserDetails" margin-left="180" domain-padding="5" clickable="false" fill-color="vm.UserChartColor" axis-top="true"></d3-horizontal-bar-chart-timeout>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                     <h4 class="panel-title" style="padding-top: 5px;">Addin Manager: Usage Details - {{vm.SelectedYear}}</h4>
                 </div>
                 <div class="panel-collapse">
-                    <div class="panel-body" style="max-height: 500px; overflow-y: scroll">
+                    <div class="panel-body no-padding" style="max-height: 500px; overflow-y: scroll">
                         <d3-normalized-horizontal-bar-chart data="vm.AddinManagerStats" margin-left="180"></d3-normalized-horizontal-bar-chart>
                     </div>
                 </div>
