@@ -139,17 +139,6 @@ p.normal {
   width:100%;
   left: 50%;
   right: auto;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transform: translate(-50%, 0);
-}
-
-.dropdown-toggle{
-  width: 100%;
-  left: 50%;
-  right: auto;
   padding-right: 20px;
   text-align: center;
   white-space: nowrap;

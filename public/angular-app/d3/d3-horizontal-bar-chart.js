@@ -38,7 +38,7 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', fun
                 svg.selectAll("*").remove();
 
                 // setup variables
-                var margin = {top: 15, right: 30, bottom: 25, left: $scope.marginLeft},
+                var margin = {top: 15, right: 35, bottom: 25, left: $scope.marginLeft},
                     width = d3.select($ele[0])._groups[0][0].offsetWidth - margin.left - margin.right,
                     height;
 
