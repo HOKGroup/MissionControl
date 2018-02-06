@@ -53,25 +53,18 @@ angular.module('MissionControlApp').directive('d3GroupedHorizontalBarChart2', ['
                 svg.selectAll("*").remove();
 
                 // setup variables
-                var width, height;
                 var margin = {top: 25, right: 40, bottom: 70, left: 150};
+                var width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right;
+                var height = (scope.data.length * 60);
 
-                width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right;
-                if(scope.data.length === 1){
-                    height = 150 - margin.top - margin.bottom;
-                } else {
-                    height = ((scope.data.length-1) * 65) - margin.top - margin.bottom;
-                }
-
-                // set the height based on the calculations above
                 svg.attr('height', height + margin.top + margin.bottom);
 
                 var y0 = d3.scaleBand()
                     .rangeRound([0, height])
-                    .paddingInner(0.05);
+                    .paddingInner(0.01);
 
                 var y1 = d3.scaleBand()
-                    .padding(0.05);
+                    .padding(0.01);
 
                 var x = d3.scaleLinear()
                     .rangeRound([0, width]);
@@ -86,7 +79,6 @@ angular.module('MissionControlApp').directive('d3GroupedHorizontalBarChart2', ['
                     .tickPadding(8);
 
                 var keys = d3.keys(data[0]).filter(function(key) { return key !== "user"; });
-
                 y0.domain(data.map(function(d) { return d.user; }));
                 y1.domain(keys).rangeRound([0, y0.bandwidth()]);
                 x.domain([0, 100]);
