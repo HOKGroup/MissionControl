@@ -141,7 +141,7 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', fun
                     // (Konrad) Only trim strings that are longer than 25 characters.
                     // Leave some space between left margin and trimmed string. 5px.
                     while (maxIterations > 0 && text.length > 25) {
-                        if(textWidth >= (margin.left - 10)){
+                        if(textWidth >= (margin.left - 15)){
                             text = text.slice(0, -textLength * 0.15);
                             self.text(text + '...');
                             textWidth = self.node().getComputedTextLength();
