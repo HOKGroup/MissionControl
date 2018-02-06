@@ -1,4 +1,4 @@
-angular.module('MissionControlApp').directive('d3WorksetItemCount', ['d3', function(d3) {
+angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', function(d3) {
     return {
         restrict: 'EA',
         scope: {
@@ -38,7 +38,7 @@ angular.module('MissionControlApp').directive('d3WorksetItemCount', ['d3', funct
                 svg.selectAll("*").remove();
 
                 // setup variables
-                var margin = {top: 5, right: 30, bottom: 10, left: $scope.marginLeft},
+                var margin = {top: 15, right: 30, bottom: 25, left: $scope.marginLeft},
                     width = d3.select($ele[0])._groups[0][0].offsetWidth - margin.left - margin.right,
                     height;
 
@@ -64,7 +64,15 @@ angular.module('MissionControlApp').directive('d3WorksetItemCount', ['d3', funct
                     .domain([0, 1])
                     .range(["#5cb85c","#d9534f"]);
 
+                var ticksNum = 10;
+                var xAxisTicks = [];
+                var xDomain = [0, d3.max(data, function(d){return d.count;}) + $scope.domainPadding];
+                for (var i = 0; i < ticksNum; i++ ){
+                    xAxisTicks.push((xDomain[1] - xDomain[0]) / (ticksNum - 1)* i + xDomain[0]);
+                }
+
                 var xAxis = d3.axisBottom(x)
+                    .tickValues(xAxisTicks)
                     .tickSizeInner(-(height-5))
                     .tickPadding(8);
 
@@ -74,7 +82,7 @@ angular.module('MissionControlApp').directive('d3WorksetItemCount', ['d3', funct
                     .append("rect")
                     .attr("x", margin.left)
                     .attr("width", 0)
-                    .attr("y", function (d) { return y(d.name); })
+                    .attr("y", function (d) { return y(d.name) + margin.top; })
                     .attr("fill", function (d) {
                         var bulkOfContent = (d.count * 100) / $scope.countTotal;
                         if(bulkOfContent >= 50){
@@ -90,15 +98,15 @@ angular.module('MissionControlApp').directive('d3WorksetItemCount', ['d3', funct
 
                 svg.append("g")
                     .attr("class", "x axisHorizontal")
-                    .attr("transform", "translate(" +  margin.left + "," + (height) + ")")
+                    .attr("transform", "translate(" +  margin.left + "," + (height + margin.top)  + ")")
                     .call(xAxis);
 
                 svg.append("g")
                     .selectAll("labels")
                     .data(data).enter()
                     .append("text")
-                    .attr("x", 150)
-                    .attr("y", function (d) {return (y(d.name) + (y.bandwidth() / 2));})
+                    .attr("x", margin.left)
+                    .attr("y", function (d) {return (y(d.name) + (y.bandwidth() / 2)) + margin.top;})
                     .attr("text-anchor", "end")
                     .attr("dy", ".35em")
                     .attr("dx", -5)
@@ -110,7 +118,7 @@ angular.module('MissionControlApp').directive('d3WorksetItemCount', ['d3', funct
                     .data(data).enter()
                     .append("text")
                     .attr("x", function(d){return x(d.count) + margin.left;})
-                    .attr("y", function(d){return y(d.name) + (y.bandwidth() / 2);})
+                    .attr("y", function(d){return (y(d.name) + (y.bandwidth() / 2)) + margin.top;})
                     .attr("dx", 5)
                     .attr("dy", ".35em")
                     .text(function(d){return d.count;})
@@ -133,7 +141,7 @@ angular.module('MissionControlApp').directive('d3WorksetItemCount', ['d3', funct
                     // (Konrad) Only trim strings that are longer than 25 characters.
                     // Leave some space between left margin and trimmed string. 5px.
                     while (maxIterations > 0 && text.length > 25) {
-                        if(textWidth >= (margin.left - 5)){
+                        if(textWidth >= (margin.left - 10)){
                             text = text.slice(0, -textLength * 0.15);
                             self.text(text + '...');
                             textWidth = self.node().getComputedTextLength();

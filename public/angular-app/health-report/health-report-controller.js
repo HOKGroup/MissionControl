@@ -84,7 +84,6 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
             vm.ShowFamiliesStats.value = false;
 
             vm.WorksetData = HealthReportFactory.processWorksetStats(link);
-            console.log(vm.WorksetData);
             if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
 
             var linkData = link.linkStats[link.linkStats.length - 1];

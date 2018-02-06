@@ -54,11 +54,11 @@ angular.module('MissionControlApp').directive('d3GroupedHorizontalBarChart2', ['
 
                 // setup variables
                 var width, height;
-                var margin = {top: 5, right: 35, bottom: 70, left: 150};
+                var margin = {top: 25, right: 40, bottom: 70, left: 150};
 
                 width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right;
                 if(scope.data.length === 1){
-                    height = 130 - margin.top - margin.bottom;
+                    height = 150 - margin.top - margin.bottom;
                 } else {
                     height = ((scope.data.length-1) * 65) - margin.top - margin.bottom;
                 }

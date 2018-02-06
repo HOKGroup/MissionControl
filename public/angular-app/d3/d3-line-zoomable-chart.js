@@ -35,8 +35,8 @@ angular.module('MissionControlApp').directive('d3ZoomableLine', ['d3', function(
                 svg.selectAll("*").remove();
 
                 // setup variables
-                var margin = {top: 20, right: 25, bottom: 110, left: 55},
-                    margin2 = {top: 330, right: 25, bottom: 30, left: 55},
+                var margin = {top: 30, right: 40, bottom: 110, left: 60},
+                    margin2 = {top: 330, right: 40, bottom: 30, left: 60},
                     width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right,
                     height = 400 - margin.top - margin.bottom,
                     height2 = 400 - margin2.top - margin2.bottom;

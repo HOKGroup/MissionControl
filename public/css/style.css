@@ -124,6 +124,10 @@ p.normal {
   padding-bottom: 0
 }
 
+.no-padding {
+  padding: 0;
+}
+
 .textAlignMiddle{
   vertical-align: middle;
   padding-right: 5px;
@@ -136,6 +140,21 @@ p.normal {
   left: 50%;
   right: auto;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform: translate(-50%, 0);
+}
+
+.dropdown-toggle{
+  width: 100%;
+  left: 50%;
+  right: auto;
+  padding-right: 20px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transform: translate(-50%, 0);
 }
 
@@ -220,5 +239,11 @@ textarea {
 
 /*Handles overflow in input fields.*/
 input[type=text]{
+  text-overflow: ellipsis;
+}
+
+a {
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
