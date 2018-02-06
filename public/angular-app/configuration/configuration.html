@@ -194,7 +194,10 @@
                                         </div>
                                     </div>
                                     <div class="col-md-2 no-padding-right">
-                                        <button class="btn btn-primary btn-sm pull-right" id="run" ng-click="vm.filterDate()">Filter</button>
+                                        <button class="btn btn-primary btn-sm pull-right" id="run" ng-click="vm.filterDate()">
+                                            <i class="fa fa-circle-o-notch fa-spin" ng-show="vm.loading"></i>
+                                            Filter
+                                        </button>
                                     </div>
                                 </div>
                                 <br>

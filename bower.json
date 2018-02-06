@@ -10,6 +10,7 @@
     "datatables.net-bs": "1.10.12",
     "angular-ui-utils": "0.1.1",
     "angular-ui-bootstrap": "2.0.0",
-    "angular-bootstrap": "2.0.0"
+    "angular-bootstrap": "2.0.0",
+    "components-font-awesome": "^4.7.0"
   }
 }
