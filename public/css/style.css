@@ -124,6 +124,10 @@ p.normal {
   padding-bottom: 0
 }
 
+.no-padding {
+  padding: 0;
+}
+
 .textAlignMiddle{
   vertical-align: middle;
   padding-right: 5px;
@@ -135,7 +139,11 @@ p.normal {
   width:100%;
   left: 50%;
   right: auto;
+  padding-right: 20px;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transform: translate(-50%, 0);
 }
 
@@ -413,4 +421,10 @@ input[type=text]{
 }
 .fade-element-in.ng-leave.ng-leave-active {
   opacity: 0;
+}
+
+a {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

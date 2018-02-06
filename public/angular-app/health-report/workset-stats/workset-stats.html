@@ -72,7 +72,7 @@
                     <h4 class="panel-title" style="padding-top: 5px;">Worksets opened %</h4>
                 </div>
                 <div class="panel-collapse">
-                    <div class="panel-body" style="max-height: 400px; overflow-y: scroll; width: 100%">
+                    <div class="panel-body no-padding" style="max-height: 400px; overflow-y: scroll; width: 100%">
                         <d3-grouped-horizontal-bar-chart2 data="vm.WorksetData.worksetOpenedData" d3-on-click="vm.d3OnClick(item)"></d3-grouped-horizontal-bar-chart2>
                     </div>
                 </div>
@@ -86,7 +86,7 @@
                     <h4 class="panel-title" style="padding-top: 5px;">Worksets Opened % : {{vm.SelectedUser}} : {{vm.WorksetsOpenedType}}</h4>
                 </div>
                 <div class="panel-collapse">
-                    <div class="panel-body">
+                    <div class="panel-body no-padding">
                         <d3-zoomable-line data="vm.UserData" format-value="vm.formatDuration(item)" domain-y="100"></d3-zoomable-line>
                     </div>
                 </div>
@@ -102,8 +102,8 @@
                     <h4 class="panel-title" style="padding-top: 5px;">Workset Item Counts</h4>
                 </div>
                 <div id="collapseThree" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <d3-workset-item-count data="vm.WorksetData.dataWorksetItemCount" count-total="vm.WorksetData.worksetCountTotal" margin-left="150" domain-padding="100"></d3-workset-item-count>
+                    <div class="panel-body no-padding">
+                        <d3-horizontal-bar-chart data="vm.WorksetData.dataWorksetItemCount" count-total="vm.WorksetData.worksetCountTotal" margin-left="150" domain-padding="100"></d3-horizontal-bar-chart>
                     </div>
                 </div>
             </div>
