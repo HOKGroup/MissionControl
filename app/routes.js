@@ -73,6 +73,7 @@ var vr = require('./models/vr-model');
      app.get('/api/v1/healthrecords/:id/modelstats', healthReport.getModelStats);
      app.put('/api/v1/healthrecords/:id/addfamilies', healthReport.addFamilies);
      app.put('/api/v1/healthrecords/:id/updatefilepath', healthReport.updateFilePath);
+     app.post('/api/v1/healthrecords/names', healthReport.getNames);
 
      var addins = require('./controller/addins-controller');
      app.get('/api/v1/addins', addins.findAll);

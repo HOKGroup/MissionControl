@@ -2,12 +2,16 @@ angular.module('MissionControlApp').factory('HealthRecordsFactory', HealthRecord
 
 function HealthRecordsFactory($http){
     return {
-        getProjectById: function getProjectById(projectId) {
-            return $http.get('/api/v1/projects/' + projectId).then(complete).catch(failed);
-        },
-
         populateProject: function populateProject(projectId) {
             return $http.get('/api/v1/projects/populatehr/' + projectId).then(complete).catch(failed);
+        },
+
+        getById: function getById(id) {
+            return $http.get('/api/v1/healthrecords/' + id).then(complete).catch(failed);
+        },
+
+        getNames: function getNames(ids) {
+            return $http.post('/api/v1/healthrecords/names', ids).then(complete).catch(failed);
         },
 
         updateFilePath: function updateFilePath(id, data) {

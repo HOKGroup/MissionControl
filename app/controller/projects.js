@@ -37,16 +37,18 @@ ProjectService = {
               res.status(response.status).json(response.message);
           });
   },
-
-  findById: function(req, res){
+    /**
+     * Retrieves project by its id.
+     * @param req
+     * @param res
+     */
+    findById: function(req, res){
       var id = req.params.id;
-      Project
-          .findById(id)
+      Project.findById(id)
           .exec(function(err, doc){
               var response = {
                   status: 200,
-                  message: doc
-              };
+                  message: doc};
               if(err){
                   response.status = 500;
                   response.message = err;
@@ -56,7 +58,7 @@ ProjectService = {
               }
               res.status(response.status).json(response.message);
           });
-  },
+      },
 
     populateById : function (req, res) {
       var id = req.params.id;
