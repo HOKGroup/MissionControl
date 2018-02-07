@@ -5,8 +5,8 @@ angular.module('MissionControlApp').factory('FamiliesFactory', FamiliesFactory);
 
 function FamiliesFactory($http){
     return {
-        getById: function getById(familiesDataId) {
-            return $http.get('/api/v1/families/' + familiesDataId).then(complete).catch(failed);
+        getById: function getById(id) {
+            return $http.get('/api/v1/families/' + id).then(complete).catch(failed);
         },
 
         addTask: function addTask(familyCollectionId, famName, task) {
