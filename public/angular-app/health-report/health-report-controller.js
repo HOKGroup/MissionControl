@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').controller('HealthReportController', HealthReportController);
 
-function HealthReportController($routeParams, HealthRecordsFactory, HealthReportFactory, FamiliesFactory){
+function HealthReportController($routeParams, HealthRecordsFactory, ProjectFactory, HealthReportFactory, FamiliesFactory){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.ShowLinkStats = {name: "links", value: false};
@@ -9,21 +9,54 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
     vm.ShowViewStats = {name: "views", value: false};
     vm.ShowModelStats = {name: "models", value: false};
     vm.ShowMainPage = {name: "main", value: true};
-    vm.HealthRecordNames = [];
     vm.FamilyCollection = null;
-    var currentSelection = vm.ShowMainPage.name;
+    vm.HealthRecords = [];
+    var allControllers = [vm.ShowLinkStats, vm.ShowFamiliesStats, vm.ShowWorksetStats, vm.ShowViewStats, vm.ShowModelStats, vm.ShowMainPage];
 
     getSelectedProject(vm.projectId);
 
-    var allControllers = [vm.ShowLinkStats, vm.ShowFamiliesStats, vm.ShowWorksetStats, vm.ShowViewStats, vm.ShowModelStats, vm.ShowMainPage];
+    // Retrieves project by project id
+    function getSelectedProject(projectId) {
+        ProjectFactory.getProjectById(projectId)
+            .then(function(response){
+                if(!response || response.status !== 200) return;
+
+                vm.selectedProject = response.data;
+                if(response.data.healthrecords.length > 0) {
+                    return HealthRecordsFactory.getNames(response.data.healthrecords);
+                } else {
+                    return {status: 500};
+                }
+            })
+            .then(function (response) {
+                if(!response || response.status !== 200) return;
+
+                vm.HealthRecords = response.data;
+                var selected = response.data.sort(dynamicSort('centralPath'))[0];
+                vm.selectedFileName = vm.fileNameFromPath(selected.centralPath);
+
+                vm.SetProject(selected);
+            })
+            .catch(function(err){
+                console.log('Unable to load Health Records data: ' + err.message);
+            });
+    }
+
+    /**
+     * Handles changing of stat type.
+     * @param name
+     * @constructor
+     */
     vm.SelectionChanged = function (name) {
         allControllers.forEach(function (item) {
             item.value = item.name === name;
         })
     };
 
-
-
+    /**
+     * Returns file name from full file path.
+     * @param path
+     */
     vm.fileNameFromPath = function (path){
         if(!path) return;
         return path.replace(/^.*[\\\/]/, '').slice(0, -4);
@@ -37,118 +70,62 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
         return vm.fileNameFromPath(file.centralPath);
     };
 
+    /**
+     * Sets currently selected project by retrieving all stats.
+     * @param link
+     * @constructor
+     */
     vm.SetProject = function (link){
-        vm.selectedHealthRecord = link;
-        vm.selectedFileName = vm.fileNameFromPath(link.centralPath);
-        vm.AllData = [];
+        HealthRecordsFactory.getById(link._id)
+            .then(function (response) {
+                if(!response || response.status !== 200) return;
 
-        if(vm.selectedHealthRecord.familyStats
-            && vm.selectedHealthRecord.familyStats !== null
-            && vm.selectedHealthRecord.familyStats !== ''){
-            FamiliesFactory
-                .getById(vm.selectedHealthRecord.familyStats)
-                .then(function(resFamilies1){
-                    if(!resFamilies1){
-                        return;
-                    }else{
-                        vm.FamilyCollection = resFamilies1.data;
-                    }
+                vm.selectedHealthRecord = response.data;
+                vm.selectedFileName = vm.fileNameFromPath(response.data.centralPath);
+                vm.AllData = [];
 
-                    if(vm.FamilyCollection !== null){
-                        vm.FamilyData = HealthReportFactory.processFamilyStats(vm.FamilyCollection);
-                        if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
-                    }
+                vm.WorksetData = HealthReportFactory.processWorksetStats(response.data);
+                if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
 
-                    vm.WorksetData = HealthReportFactory.processWorksetStats(link);
-                    if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
+                var linkData = response.data.linkStats[response.data.linkStats.length - 1];
+                vm.LinkData = HealthReportFactory.processLinkStats(linkData);
+                if(vm.LinkData) vm.AllData.push(vm.LinkData);
 
-                    var linkData = link.linkStats[link.linkStats.length - 1];
-                    vm.LinkData = HealthReportFactory.processLinkStats(linkData);
-                    if(vm.LinkData) vm.AllData.push(vm.LinkData);
+                var viewData = response.data.viewStats[response.data.viewStats.length - 1];
+                vm.ViewData = HealthReportFactory.processViewStats(viewData);
+                if(vm.ViewData) vm.AllData.push(vm.ViewData);
 
-                    var viewData = link.viewStats[link.viewStats.length - 1];
-                    vm.ViewData = HealthReportFactory.processViewStats(viewData);
-                    if(vm.ViewData) vm.AllData.push(vm.ViewData);
+                vm.ModelData = HealthReportFactory.processModelStats(response.data);
+                if(vm.ModelData) vm.AllData.push(vm.ModelData);
 
-                    vm.ModelData = HealthReportFactory.processModelStats(link);
-                    if(vm.ModelData) vm.AllData.push(vm.ModelData);
+                if(vm.selectedHealthRecord.familyStats
+                    && vm.selectedHealthRecord.familyStats !== null
+                    && vm.selectedHealthRecord.familyStats !== ''){
+                    FamiliesFactory.getById(vm.selectedHealthRecord.familyStats)
+                        .then(function(response){
+                            if(!response || response.status !== 200) return;
+
+                            vm.FamilyCollection = response.data;
+                            vm.FamilyData = HealthReportFactory.processFamilyStats(vm.FamilyCollection);
+                            if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
+
+                            vm.SelectionChanged(vm.ShowMainPage.name);
+                        })
+                        .catch(function(err){
+                            console.log('Unable to load Families Data: ' + err.message);
+                        })
+                } else {
+                    vm.FamilyCollection = null;
+                    vm.FamilyData = null;
+                    vm.ShowFamiliesStats.value = false;
 
                     vm.SelectionChanged(vm.ShowMainPage.name);
-
-                }, function(err){
-                    console.log('Unable to load Families Data: ' + err.message);
-                })
-        }else{
-            vm.FamilyCollection = null;
-            vm.FamilyData = null;
-            vm.ShowFamiliesStats.value = false;
-
-            vm.WorksetData = HealthReportFactory.processWorksetStats(link);
-            if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
-
-            var linkData = link.linkStats[link.linkStats.length - 1];
-            vm.LinkData = HealthReportFactory.processLinkStats(linkData);
-            if(vm.LinkData) vm.AllData.push(vm.LinkData);
-
-            var viewData = link.viewStats[link.viewStats.length - 1];
-            vm.ViewData = HealthReportFactory.processViewStats(viewData);
-            if(vm.ViewData) vm.AllData.push(vm.ViewData);
-
-            vm.ModelData = HealthReportFactory.processModelStats(link);
-            if(vm.ModelData) vm.AllData.push(vm.ModelData);
-
-            vm.SelectionChanged(vm.ShowMainPage.name);
-        }
-    };
-
-    // Retrieves project by project id
-    function getSelectedProject(projectId) {
-        HealthRecordsFactory
-            .getProjectById(projectId)
-            .then(function(resProject){
-                if(!resProject) return;
-
-                vm.selectedProject = resProject.data;
-                if(resProject.data.healthrecords.length > 0)
-                {
-                    HealthRecordsFactory
-                        .populateProject(projectId)
-                        .then(function(resProject1){
-                            if(!resProject1) return;
-
-                            vm.selectedProject = resProject1.data;
-
-                            //(Konrad) It makes sense to sort the dropdown by file name.
-                            vm.selectedProject.healthrecords.forEach(function (item) {
-                                item['fileName'] = vm.fileNameFromPath(item.centralPath);
-                                return item;
-                            });
-                            vm.selectedHealthRecord = vm.selectedProject.healthrecords.sort(dynamicSort('fileName'))[0];
-                            vm.selectedFileName = vm.selectedHealthRecord['fileName'];
-
-                            if(vm.selectedHealthRecord.familyStats
-                                && vm.selectedHealthRecord.familyStats !== null
-                                && vm.selectedHealthRecord.familyStats !== ''){
-                                FamiliesFactory.getById(vm.selectedHealthRecord.familyStats)
-                                    .then(function(resFamilies){
-                                        if(!resFamilies) return;
-
-                                        vm.FamilyCollection = resFamilies.data;
-                                        vm.SetProject(vm.selectedHealthRecord);
-                                    }, function(err){
-                                        console.log('Unable to load Families Data: ' + err.message);
-                                    })
-                            } else {
-                                vm.SetProject(vm.selectedHealthRecord);
-                            }
-                        }, function(err){
-                            console.log('Unable to load Health Records data: ' + err.message);
-                        });
                 }
-            },function(error){
-                console.log('Unable to load Health Records data: ' + error.message);
+            })
+            .catch(function (err) {
+                console.log(err);
             });
-    }
+    };
 
     /**
      * Returns a sort order for objects by a given property on that object.
@@ -163,7 +140,9 @@ function HealthReportController($routeParams, HealthRecordsFactory, HealthReport
             property = property.substr(1);
         }
         return function (a,b) {
-            var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+            var prop1 = vm.fileNameFromPath(a[property]);
+            var prop2 = vm.fileNameFromPath(b[property]);
+            var result = (prop1 < prop2) ? -1 : (prop1 > prop2) ? 1 : 0;
             return result * sortOrder;
         }
     }

@@ -26,11 +26,26 @@ module.exports.findAll = function(req, res){
         });
 };
 
+/**
+ * Retrieves health record by id.
+ * @param req
+ * @param res
+ */
 module.exports.findById = function(req, res){
     var id = req.params.id;
     HealthRecords
         .findOne({ '_id': id },function(err, result) {
-        return res.send(result);
+            var response = {
+                status: 200,
+                message: result
+            };
+            if(err){
+                response.status = 500;
+                response.message = err;
+            } else if(!result){
+                console.log("Id was not found.");
+            }
+            res.status(response.status).json(response.message);
     });
 };
 
@@ -800,4 +815,32 @@ module.exports.updateFilePath = function (req, res) {
                 res.status(response.status).json(response.message);
             }
         );
+};
+
+/**
+ * Retrieves central path names of all matching records.
+ * @param req
+ * @param res
+ */
+module.exports.getNames = function (req, res) {
+    var ids = [];
+    req.body.forEach(function (item) {
+        ids.push(mongoose.Types.ObjectId(item))
+    });
+    HealthRecords
+        .find({'_id': {'$in': ids}})
+        .select('centralPath')
+        .exec(function (err, result) {
+            var response = {
+                status: 200,
+                message: result
+            };
+            if(err){
+                response.status = 500;
+                response.message = err;
+            } else if(!result){
+                console.log("");
+            }
+            res.status(response.status).json(response.message);
+        });
 };

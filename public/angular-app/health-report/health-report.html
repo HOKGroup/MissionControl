@@ -25,7 +25,7 @@
                             {{vm.selectedFileName | uppercase}}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-centered">
-                            <li ng-repeat="link in vm.selectedProject.healthrecords | orderBy: vm.sortFiles">
+                            <li ng-repeat="link in vm.HealthRecords | orderBy: vm.sortFiles">
                                 <a href="" ng-click="vm.SetProject(link)" class="no-padding-left">{{vm.fileNameFromPath(link.centralPath) | uppercase}}</a>
                             </li>
                         </ul>
