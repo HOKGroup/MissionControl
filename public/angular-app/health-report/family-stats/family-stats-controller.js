@@ -75,6 +75,11 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
         return UtilityService.formatNumber(item);
     };
 
+    /**
+     * Checks if family has tasks and returns appropriate color for the task icon.
+     * @param f
+     * @returns {*}
+     */
     vm.evaluateTasks = function (f) {
         if(f.tasks.length === 0) return;
 
