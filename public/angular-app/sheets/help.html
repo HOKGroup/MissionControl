@@ -1,0 +1,63 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title pull-left">Help</h5>
+        <button type="button" class="close pull-right" ng-click="vm.cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div id="menu">
+            <div class="panel list-group">
+                <!--Color Coding-->
+                <a href="" class="list-group-item" data-toggle="collapse" data-target="#colorCoding" data-parent="#menu">
+                    Color Coding
+                </a>
+                <div id="colorCoding" class="sublinks collapse in">
+                    <div class="list-group-item small">
+                        <h4>There are three basic colors used in a Sheets table. They are there to identify if Sheets have any editing tasks and what they are.</h4>
+                        <img src="images/sheets/formatting_colors.jpg" class="img-responsive center-block" alt="">
+                        <ul class="list-group list-group-flush" style="margin-top: 15px">
+                            <li class="list-group-item list-group-item-success" style="color: black">
+                                <b>Green</b> identifies sheets that user is proposing to create in the model. They don't exist in Revit yet.
+                            </li>
+                            <li class="list-group-item list-group-item-warning" style="color: black">
+                                <b>Orange</b> identifies sheets that user is proposing edits to. Edit might be for example a name change.
+                            </li>
+                            <li class="list-group-item list-group-item-danger strike" style="color: black">
+                                <b>Red</b> identifies sheets that user is proposing to be deleted. They haven't been deleted in Revit yet.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!--Filtering-->
+                <a href="" class="list-group-item" data-toggle="collapse" data-target="#filtering" data-parent="#menu">
+                    Filtering
+                </a>
+                <div id="filtering" class="sublinks collapse">
+                    <div class="list-group-item small">
+                        <h4>Sheets table can be filtered and sorted in the following manner:</h4>
+                        <img src="images/sheets/filtering_controls.jpg" class="img-responsive center-block" alt="">
+                        <ul class="list-group list-group-flush" style="margin-top: 15px">
+                            <li class="list-group-item" style="color: black">
+                                <b>"Show 10 entries"</b> is a filter that increases number of rows displayed in a table at one time.
+                            </li>
+                            <li class="list-group-item" style="color: black">
+                                <b>"ALL"</b> is a Revit model filter. Select model by name, and only Sheets from that model will be shown.
+                            </li>
+                            <li class="list-group-item" style="color: black">
+                                <b>"Previous" & "Next"</b> is a page filter. Navigate to next page of Sheets if there are more available.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <!--<button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>-->
+        <!--<button type="button" class="btn btn-primary" ng-disabled="!vm.sheet.message || !vm.sheet.assignedTo" ng-click="vm.submit()" ng-if="!vm.sheet.completedBy"><span class="glyphicon glyphicon-ok"></span> Submit</button>-->
+        <!--<button type="button" class="btn btn-primary" ng-click="vm.reopen()" ng-if="vm.sheet.completedBy">Re-Open</button>-->
+        <!--<button type="button" class="btn btn-danger pull-left" ng-disabled="!vm.sheet.message || !vm.sheet.assignedTo" ng-click="vm.delete()"><span class="glyphicon glyphicon-trash"></span> Delete Sheet</button>-->
+    </div>
+</div>
