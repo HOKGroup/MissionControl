@@ -32,47 +32,64 @@
                     </div>
                     <a class="list-group-item" href="" ng-if="vm.FamilyData" ng-class="{'active': vm.ShowFamiliesStats.value}" ng-click="vm.SelectionChanged(vm.ShowFamiliesStats.name)">
                         Families
-                        <span ng-class="vm.FamilyData.familyScore <= 2
+                        <span ng-show="!vm.loading" ng-class="vm.FamilyData.familyScore <= 2
                                     ? 'badge progress-bar-danger'
                                     : vm.FamilyData.familyScore > 2 && vm.FamilyData.familyScore <= 4
                                     ? 'badge progress-bar-warning'
                                     : 'badge progress-bar-success' ">
-                        {{vm.FamilyData.scoreData.passingChecks}}/{{vm.FamilyData.scoreData.newMax}}
-                    </span>
+                            {{vm.FamilyData.scoreData.passingChecks}}/{{vm.FamilyData.scoreData.newMax}}
+                        </span>
+                        <span class="badge" ng-show="vm.loading">
+                            <i class="fa fa-circle-o-notch fa-spin"></i>
+                        </span>
                     </a>
                     <a class="list-group-item" href="" ng-if="vm.WorksetData" ng-class="{'active': vm.ShowWorksetStats.value}" ng-click="vm.SelectionChanged(vm.ShowWorksetStats.name)">
                         Worksets
-                        <span ng-class="vm.WorksetData.worksetScore <= 2
+                        <span ng-show="!vm.loading" ng-class="vm.WorksetData.worksetScore <= 2
                                     ? 'badge progress-bar-danger'
                                     : vm.WorksetData.worksetScore > 2 && vm.WorksetData.worksetScore <= 4
                                     ? 'badge progress-bar-warning'
                                     : 'badge progress-bar-success' ">
-                        {{vm.WorksetData.scoreData.passingChecks}}/{{vm.WorksetData.scoreData.newMax}}
-                    </span>
+                            {{vm.WorksetData.scoreData.passingChecks}}/{{vm.WorksetData.scoreData.newMax}}
+                        </span>
+                        <span class="badge" ng-show="vm.loading">
+                            <i class="fa fa-circle-o-notch fa-spin"></i>
+                        </span>
                     </a>
                     <a class="list-group-item" href="" ng-if="vm.LinkData" ng-class="{'active': vm.ShowLinkStats.value}" ng-click="vm.SelectionChanged(vm.ShowLinkStats.name)">
                         Links
-                        <span ng-class="vm.LinkData.linkScore <= 2
+                        <span ng-show="!vm.loading" ng-class="vm.LinkData.linkScore <= 2
                                     ? 'badge progress-bar-danger'
                                     : vm.LinkData.linkScore > 2 && vm.LinkData.linkScore <= 4
                                     ? 'badge progress-bar-warning'
                                     : 'badge progress-bar-success' ">
-                        {{vm.LinkData.scoreData.passingChecks}}/{{vm.LinkData.scoreData.newMax}}
-                    </span>
+                            {{vm.LinkData.scoreData.passingChecks}}/{{vm.LinkData.scoreData.newMax}}
+                        </span>
+                        <span class="badge" ng-show="vm.loading">
+                            <i class="fa fa-circle-o-notch fa-spin"></i>
+                        </span>
                     </a>
                     <a class="list-group-item" href="" ng-if="vm.ViewData" ng-class="{'active': vm.ShowViewStats.value}" ng-click="vm.SelectionChanged(vm.ShowViewStats.name)">
                         Views
-                        <span ng-class="vm.ViewData.viewScore <= 2
+                        <span ng-show="!vm.loading" ng-class="vm.ViewData.viewScore <= 2
                                     ? 'badge progress-bar-danger'
                                     : vm.ViewData.viewScore > 2 && vm.ViewData.viewScore <= 4
                                     ? 'badge progress-bar-warning'
                                     : 'badge progress-bar-success' ">
-                        {{vm.ViewData.scoreData.passingChecks}}/{{vm.ViewData.scoreData.newMax}}
-                    </span>
+                            {{vm.ViewData.scoreData.passingChecks}}/{{vm.ViewData.scoreData.newMax}}
+                        </span>
+                        <span class="badge" ng-show="vm.loading">
+                            <i class="fa fa-circle-o-notch fa-spin"></i>
+                        </span>
                     </a>
                     <a class="list-group-item" href="" ng-if="vm.ModelData" ng-class="{'active': vm.ShowModelStats.value}" ng-click="vm.SelectionChanged(vm.ShowModelStats.name)">
                         Model
-                        <span class="badge">{{"0/0"}}</span>
+                        <span ng-show="!vm.loading" class="badge">
+                            {{"0/0"}}
+                        </span>
+                        <span class="badge" ng-show="vm.loading">
+                            <i class="fa fa-circle-o-notch fa-spin"></i>
+                        </span>
                     </a>
                 </div>
             </div>
@@ -104,8 +121,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-12 col-sm-9">
-                <h1 style="margin: 0" ng-show="vm.loading">Loading...</h1>
+            <div class="col-xs-12 col-sm-9" ng-show="vm.loading">
+                <h1 style="margin: 0">Loading...</h1>
             </div>
         </div>
     </div>
