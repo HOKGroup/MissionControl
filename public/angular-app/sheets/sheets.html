@@ -74,9 +74,13 @@
                                 <a href="" ng-click="vm.SetCurrentModelFilter(file)">{{file.name | uppercase}}</a>
                             </li>
                         </ul>
-
                     </div>
-                    <h4 class="panel-title" style="padding-top: 5px;">Sheets</h4>
+                    <h4 class="panel-title" style="padding-top: 5px;">
+                        Sheets
+                        <a href="">
+                            <i class="fa fa-info-circle" ng-click="vm.launchHelpWindow('lg')"></i>
+                        </a>
+                    </h4>
                 </div>
                 <!--SHEETS TABLE-->
                 <div class="panel-collapse">
