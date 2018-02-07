@@ -151,26 +151,43 @@
                             <thead>
                             <tr>
                                 <th class="col-md-1 text-center">#</th>
-                                <th class="col-md-9">Name</th>
+                                <th class="col-md-8">Name</th>
+                                <th class="col-md-1 text-center">Task</th>
+                                <th>Task Count</th>
                                 <th class="col-md-1 text-center">Qty.</th>
                                 <th class="col-md-1 text-center">Size</th>
                                 <th>Size Value</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="i in vm.AllFamilies | orderBy: 'name' : false" ng-class="vm.evaluateFamily(i) == 3 ? 'bg-danger' : vm.evaluateFamily(i) == 2 ? 'bg-warning' : 'table-info'">
+                            <tr ng-repeat="i in vm.AllFamilies | orderBy: 'name' : false"
+                                ng-class="vm.evaluateFamily(i) == 3 ? 'bg-danger' : vm.evaluateFamily(i) == 2 ? 'bg-warning' : 'table-info'">
                                 <td class="text-center">{{$index}}</td>
-                                <td ng-mouseenter="onHover = true" ng-mouseleave="onHover = false">
-                                    <p ng-class="vm.evaluateName(i) ? 'normal' : 'thick'">
+                                <td>
+                                    <p ng-class="vm.evaluateName(i) ? 'normal' : 'thick'"
+                                       ng-mouseenter="onHover = true"
+                                       ng-mouseleave="onHover = false">
                                         {{i.name}}
-                                        <a href="">
-                                            <span ng-show="i.tasks.length > 0 || onHover" class="glyphicon glyphicon-tasks" ng-click="vm.launchEditor(i)"></span>
-                                        </a>
                                     </p>
                                 </td>
-                                <td class="text-center"><p ng-class="vm.evaluateInstances(i) ? 'normal' : 'thick'">{{i.instances}}</p></td>
-                                <td class="text-center"><p ng-class="vm.evaluateSize(i) ? 'normal' : 'thick'">{{i.size}}</p></td>
-                                <td class="text-center">{{i.sizeValue}}</td>
+                                <td class="text-center"
+                                    ng-mouseenter="onHover = true"
+                                    ng-mouseleave="onHover = false">
+                                    <a href=""><span class="glyphicon glyphicon-plus" ng-if="i.tasks.length === 0 && onHover" ng-style="vm.evaluateTasks(i)" ng-click="vm.launchEditor(i)"></span></a>
+                                    <a href=""><span class="glyphicon glyphicon-tasks" ng-show="i.tasks.length > 0" ng-style="vm.evaluateTasks(i)" ng-click="vm.launchEditor(i)"></span></a>
+                                </td>
+                                <td>{{i.tasks.length}}</td>
+                                <td class="text-center">
+                                    <p ng-class="vm.evaluateInstances(i) ? 'normal' : 'thick'">
+                                        {{i.instances}}
+                                    </p>
+                                </td>
+                                <td class="text-center">
+                                    <p ng-class="vm.evaluateSize(i) ? 'normal' : 'thick'">
+                                        {{i.size}}
+                                    </p>
+                                </td>
+                                <td>{{i.sizeValue}}</td>
                             </tr>
                             </tbody>
                         </table>
