@@ -11,6 +11,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
     vm.ShowMainPage = {name: "main", value: true};
     vm.FamilyCollection = null;
     vm.HealthRecords = [];
+    vm.loading = false;
     var allControllers = [vm.ShowLinkStats, vm.ShowFamiliesStats, vm.ShowWorksetStats, vm.ShowViewStats, vm.ShowModelStats, vm.ShowMainPage];
 
     getSelectedProject(vm.projectId);
@@ -76,6 +77,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
      * @constructor
      */
     vm.SetProject = function (link){
+        vm.loading = true;
         HealthRecordsFactory.getById(link._id)
             .then(function (response) {
                 if(!response || response.status !== 200) return;
@@ -110,6 +112,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
                             if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
 
                             vm.SelectionChanged(vm.ShowMainPage.name);
+                            vm.loading = false;
                         })
                         .catch(function(err){
                             console.log('Unable to load Families Data: ' + err.message);
@@ -120,6 +123,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
                     vm.ShowFamiliesStats.value = false;
 
                     vm.SelectionChanged(vm.ShowMainPage.name);
+                    vm.loading = false;
                 }
             })
             .catch(function (err) {
