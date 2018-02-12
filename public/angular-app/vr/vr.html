@@ -65,7 +65,7 @@
                                             style="width: 100%"
                                             ng-click="vm.addBucket()">
                                         Add Bucket
-                                        <span class="glyphicon glyphicon-chevron-right"></span>
+                                        <span class="glyphicon glyphicon-plus"></span>
                                     </button>
                                 </div>
                             </div>
@@ -134,10 +134,10 @@
                         </div>
                         <div class="col-xs-4 no-padding-right">
                             <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
-                                <button type="button" class="btn btn-primary" ng-click="vm.moveUp($index, vm.buckets)" ng-if="vm.showUpArrow($index)">
+                                <button type="button" class="btn btn-primary" ng-click="vm.moveUp(bucket)" ng-if="vm.showUpArrow($index)">
                                     <span class="glyphicon glyphicon-chevron-up" style="margin-right: 0"></span>
                                 </button>
-                                <button type="button" class="btn btn-primary" ng-click="vm.moveDown($index, vm.buckets)" ng-if="vm.showDownArrow($index)">
+                                <button type="button" class="btn btn-primary" ng-click="vm.moveDown(bucket)" ng-if="vm.showDownArrow($index)">
                                     <span class="glyphicon glyphicon-chevron-down" style="margin-right: 0px"></span>
                                 </button>
                                 <button type="button" class="btn btn-primary" ng-click="vm.deleteBucket(bucket)">

@@ -445,74 +445,54 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
 
     /**
      * Moves bucket panel up.
-     * @param index
-     * @param arr
+     * @param bucket
      */
-    vm.moveUp = function (index, arr) {
-        UtilityService.move(arr, index, index-1);
-
-        // (Konrad) Moving one bucket up, moves majority of the other ones down.
-        // We have to update all of the other bucket's positions.
-        vm.buckets.forEach(function (bucket, index) {
-            bucket.position = index;
-            var data = {
-                commentId: bucket.commentId,
-                description: '{"position": ' + bucket.position + '}'
-            };
-
-            VrFactory.updateComment(data)
-                .then(function (response) {
-                    if(!response || response.status !== 200){
-                        changeStatus({
-                            code: 'danger',
-                            message: 'Failed to update Bucket Position. Please reload the page and try again.'
-                        });
-                    }
-                })
-                .catch(function (err) {
-                    changeStatus({
-                        code: 'danger',
-                        message: 'Failed to update Bucket Position. Please reload the page and try again.'
-                    });
-                    console.log(err);
-                });
+    vm.moveUp = function (bucket) {
+        var index = bucket.position;
+        var bucket2 = vm.buckets.find(function (item) {
+            return item.position === (index - 1);
         });
+
+        var data1 = {
+            commentId: bucket.commentId,
+            description: '{"position": ' + (index - 1) + '}'
+        };
+        var data2 = {
+            commentId: bucket2.commentId,
+            description: '{"position": ' + index + '}'
+        };
+
+        bucket.position = index - 1;
+        bucket2.position = index;
+
+        updateComment(data1);
+        updateComment(data2);
     };
 
     /**
      * Moves bucket panel down.
-     * @param index
-     * @param arr
+     * @param bucket
      */
-    vm.moveDown = function (index, arr) {
-        UtilityService.move(arr, index, index+1);
-
-        // (Konrad) Moving one bucket up, moves majority of the other ones down.
-        // We have to update all of the other bucket's positions.
-        vm.buckets.forEach(function (bucket, index) {
-            bucket.position = index;
-            var data = {
-                commentId: bucket.commentId,
-                description: '{"position": ' + bucket.position + '}'
-            };
-
-            VrFactory.updateComment(data)
-                .then(function (response) {
-                    if(!response || response.status !== 200){
-                        changeStatus({
-                            code: 'danger',
-                            message: 'Failed to update Bucket Position. Please reload the page and try again.'
-                        });
-                    }
-                })
-                .catch(function (err) {
-                    changeStatus({
-                        code: 'danger',
-                        message: 'Failed to update Bucket Position. Please reload the page and try again.'
-                    });
-                    console.log(err);
-                });
+    vm.moveDown = function (bucket) {
+        var index = bucket.position;
+        var bucket2 = vm.buckets.find(function (item) {
+            return item.position === (index + 1);
         });
+
+        var data1 = {
+            commentId: bucket.commentId,
+            description: '{"position": ' + (index + 1) + '}'
+        };
+        var data2 = {
+            commentId: bucket2.commentId,
+            description: '{"position": ' + index + '}'
+        };
+
+        bucket.position = index + 1;
+        bucket2.position = index;
+
+        updateComment(data1);
+        updateComment(data2);
     };
 
     /**
@@ -768,6 +748,8 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
         var index = vm.buckets.indexOf(x);
         var id = 'buckets[' + index + '].images';
         $scope.$watchCollection(id, function(newValue, oldValue, scope) {
+            console.log("bucket collection kicked in");
+
             if(!newValue || !oldValue || newValue.length === oldValue.length) return;
             if(vm.deletedDuplicate){
                 vm.deletedDuplicate = false;
@@ -895,6 +877,28 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
             }
         }
         return suggestedName;
+    }
+
+    /**
+     * Updates comments for given files/folder.
+     * @param data
+     */
+    function updateComment(data){
+        VrFactory.updateComment(data)
+            .then(function (response) {
+                if(!response || response.status !== 200){
+                    changeStatus({
+                        code: 'danger',
+                        message: 'Failed to update Bucket Position. Please reload the page and try again.'
+                    });
+                }
+            })
+            .catch(function (err) {
+                changeStatus({
+                    code: 'danger',
+                    message: 'Failed to update Bucket Position. Please reload the page and try again.'
+                });
+                console.log(err);});
     }
 
     /**
