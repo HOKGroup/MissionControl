@@ -11,30 +11,27 @@ var client_secret = 'eAoSUqTSLX_fiZ9r8dxyZ5uUGxMa';
 function VrFactory($http, $base64){
     return {
         getProject: function getProject(name) {
-            return authorize()
-                .then(function (response) {
-                    var auth = 'Bearer ' + response;
-                    return $http({
-                        method: 'GET',
-                        url: 'https://app.stage.connect.trimble.com/tc/api/2.0/projects',
-                        headers: {
-                            'Authorization': auth,
-                            'Content-Type': 'application/json'
-                        },
-                        transformRequest: angular.identity
-                    })
+            return authorize().then(function (response) {
+                var auth = 'Bearer ' + response;
+                return $http({
+                    method: 'GET',
+                    url: 'https://app.stage.connect.trimble.com/tc/api/2.0/projects',
+                    headers: {
+                        'Authorization': auth,
+                        'Content-Type': 'application/json'
+                    },
+                    transformRequest: angular.identity
                 })
-                .then(function (response) {
-                    var project = response.data.filter(function (item) {
-                        return item.name === name;
-                    });
-                    if(!project || project.length === 0) {
-                        return {status: 204, project: project};
-                    } else {
-                        return {status: 200, project: project[0]}
-                    }
-                })
-                .catch(failed)
+            }).then(function (response) {
+                var project = response.data.filter(function (item) {
+                    return item.name === name;
+                });
+                if(!project || project.length === 0) {
+                    return {status: 204, project: project};
+                } else {
+                    return {status: 200, project: project[0]}
+                }
+            }).catch(failed)
         },
 
         createProject: function createProject(projectName) {
@@ -235,6 +232,28 @@ function VrFactory($http, $base64){
                 },
                 data: JSON.stringify({
                     'name': data.name
+                }),
+                transformRequest: angular.identity
+            }).then(complete).catch(failed);
+        },
+
+        //TODO: Create shares
+        createShare: function createShare(data) {
+            var auth = 'Bearer ' + window.localStorage.getItem('tc_token');
+            return $http({
+                method: 'POST',
+                url: 'https://app.stage.connect.trimble.com/tc/api/2.0/shares',
+                headers: {
+                    'Authorization': auth,
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify({
+                    'mode': data.mode,
+                    'projectId': data.projectId,
+                    'objects': data.objects,
+                    'permission': 'DOWNLOAD',
+                    'notify': data.notify,
+                    'message': data.message
                 }),
                 transformRequest: angular.identity
             }).then(complete).catch(failed);
