@@ -139,6 +139,24 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, DTIns
     };
 
     /**
+     * Launches help window for the Sheets.
+     * @param size
+     */
+    vm.launchHelpWindow = function (size) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'angular-app/sheets/help.html',
+            controller: 'SheetHelpController as vm',
+            size: size
+        }).result.then(function(request){
+            if(!request) return;
+
+        }).catch(function(){
+            //if modal dismissed
+        });
+    };
+
+    /**
      * Method called when single sheet is being edited.
      * @param size
      * @param sheet

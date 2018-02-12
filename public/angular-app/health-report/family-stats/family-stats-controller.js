@@ -42,9 +42,11 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
     vm.dtColumnDefs = [
         DTColumnDefBuilder.newColumnDef(0), //index
         DTColumnDefBuilder.newColumnDef(1), //name
-        DTColumnDefBuilder.newColumnDef(2), //instances
-        DTColumnDefBuilder.newColumnDef(3).withOption('orderData', '4'), //size
-        DTColumnDefBuilder.newColumnDef(4).notVisible() //sizeValue
+        DTColumnDefBuilder.newColumnDef(2).withOption('orderData', '3'), //tasks
+        DTColumnDefBuilder.newColumnDef(3).notVisible(), //task count
+        DTColumnDefBuilder.newColumnDef(4), //instances
+        DTColumnDefBuilder.newColumnDef(5).withOption('orderData', '4'), //size
+        DTColumnDefBuilder.newColumnDef(6).notVisible() //sizeValue
     ];
 
     var dtInstance;
@@ -71,6 +73,20 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
 
     vm.formatValue = function(item){
         return UtilityService.formatNumber(item);
+    };
+
+    /**
+     * Checks if family has tasks and returns appropriate color for the task icon.
+     * @param f
+     * @returns {*}
+     */
+    vm.evaluateTasks = function (f) {
+        if(f.tasks.length === 0) return;
+
+        var open = f.tasks.find(function (item) {
+            return !!item.completedBy;
+        });
+        return !!open ? {"color": "#5cb85c"} : {"color": "#D9534F"};
     };
 
     vm.evaluateFamily = function (f) {
