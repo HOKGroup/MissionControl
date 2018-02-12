@@ -19,6 +19,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
     vm.trimbleProject = null;
     vm.trimbleImagesId = '';
     vm.trimbleBucketsId = '';
+
     // (Konrad) We are using $watchCollection to watch additions
     // and deletions from bucket.images. When user attempts to add
     // a duplicate image to the same bucket it will be removed. That
@@ -270,7 +271,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                                 }
 
                                 if(response.data.length > 0){
-                                    response.data.forEach(function (file) {
+                                    response.data.forEach(function (file, index) {
                                         var image = {
                                             file: null,
                                             data: null,
@@ -280,7 +281,8 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                                             parentId: file.parentId,
                                             id: file.id,
                                             name: file.name,
-                                            commentId: ''
+                                            commentId: '',
+                                            position: index
                                         };
 
                                         // (Konrad) We push the skeleton version of the image to vm.images
@@ -308,6 +310,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
 
                                                         var content = JSON.parse(comment.description);
                                                         image.parentImageId = content.parentImageId;
+                                                        image.position = content.position;
                                                         image.commentId = comment.id
                                                     })
                                                 }
@@ -346,7 +349,6 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
      */
     vm.addBucket = function(){
         var name = validateBucketName();
-        console.log(name);
         var bucket = {
             name: name,
             images: [],
@@ -445,25 +447,40 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
 
     /**
      * Moves bucket panel up.
-     * @param bucket
+     * @param file
+     * @param arr
+     * @param action
      */
-    vm.moveUp = function (bucket) {
-        var index = bucket.position;
-        var bucket2 = vm.buckets.find(function (item) {
+    vm.moveUp = function (file, arr, action) {
+        var index = file.position;
+        var file2 = arr.find(function (item) {
             return item.position === (index - 1);
         });
 
+        var desc1 = '';
+        if(action !== 'bucket'){
+            desc1 = '{"parentImageId": "' + file.parentImageId + '", "position": ' + (index - 1) + '}';
+        } else {
+            desc1 = '{"position": ' + (index - 1) + '}';
+        }
         var data1 = {
-            commentId: bucket.commentId,
-            description: '{"position": ' + (index - 1) + '}'
-        };
-        var data2 = {
-            commentId: bucket2.commentId,
-            description: '{"position": ' + index + '}'
+            commentId: file.commentId,
+            description: desc1
         };
 
-        bucket.position = index - 1;
-        bucket2.position = index;
+        var desc2 = '';
+        if(action !== 'bucket'){
+            desc2 = '{"parentImageId": "' + file2.parentImageId + '", "position": ' + index + '}';
+        } else {
+            desc2 = '{"position": ' + index + '}';
+        }
+        var data2 = {
+            commentId: file2.commentId,
+            description: desc2
+        };
+
+        file.position = index - 1;
+        file2.position = index;
 
         updateComment(data1);
         updateComment(data2);
@@ -471,25 +488,40 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
 
     /**
      * Moves bucket panel down.
-     * @param bucket
+     * @param file
+     * @param arr
+     * @param action
      */
-    vm.moveDown = function (bucket) {
-        var index = bucket.position;
-        var bucket2 = vm.buckets.find(function (item) {
+    vm.moveDown = function (file, arr, action) {
+        var index = file.position;
+        var file2 = arr.find(function (item) {
             return item.position === (index + 1);
         });
 
+        var desc1 = '';
+        if(action !== 'bucket'){
+            desc1 = '{"parentImageId": "' + file.parentImageId + '", "position": ' + (index + 1) + '}';
+        } else {
+            desc1 = '{"position": ' + (index + 1) + '}';
+        }
         var data1 = {
-            commentId: bucket.commentId,
-            description: '{"position": ' + (index + 1) + '}'
-        };
-        var data2 = {
-            commentId: bucket2.commentId,
-            description: '{"position": ' + index + '}'
+            commentId: file.commentId,
+            description: desc1
         };
 
-        bucket.position = index + 1;
-        bucket2.position = index;
+        var desc2 = '';
+        if(action !== 'bucket'){
+            desc2 = '{"parentImageId": "' + file2.parentImageId + '", "position": ' + index + '}';
+        } else {
+            desc2 = '{"position": ' + index + '}';
+        }
+        var data2 = {
+            commentId: file2.commentId,
+            description: desc2
+        };
+
+        file.position = index + 1;
+        file2.position = index;
 
         updateComment(data1);
         updateComment(data2);
@@ -641,8 +673,6 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                         });
                         return;
                     }
-
-                    console.log(response);
                 })
                 .catch(function (err) {
                     changeStatus({
@@ -748,8 +778,6 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
         var index = vm.buckets.indexOf(x);
         var id = 'buckets[' + index + '].images';
         $scope.$watchCollection(id, function(newValue, oldValue, scope) {
-            console.log("bucket collection kicked in");
-
             if(!newValue || !oldValue || newValue.length === oldValue.length) return;
             if(vm.deletedDuplicate){
                 vm.deletedDuplicate = false;
@@ -762,7 +790,6 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                 if(!newFiles[0].data){
                     // (Konrad) New file has an id assigned. This means that the file is coming from Trimble Connect.
                     // If that's the case the $watchCollection would not pick up each file separately but rather all at once.
-                    console.log(newFiles);
                 } else {
                     // (Konrad) Check if added image is duplicate and remove.
                     var bucket = vm.buckets[index];
@@ -781,8 +808,10 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                     // (Konrad) New Image was added. Let's upload to Trimble.
                     var newFile = newFiles[0];
                     var parentImageId = newFile.id;
+                    var position = newValue.length - 1;
 
                     newFile['parentImageId'] = parentImageId;
+                    newFile['position'] = position;
 
                     var data = {
                         fromFileVersionId: parentImageId, //id of the file to copy
@@ -812,7 +841,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                             var data = {
                                 'objectId': response.data.id,
                                 'objectType': 'FILE',
-                                'description': '{"parentImageId": "' + parentImageId + '"}'
+                                'description': '{"parentImageId": "' + parentImageId + '", "position": ' + position + '}'
                             };
 
                             return VrFactory.addComment(data)

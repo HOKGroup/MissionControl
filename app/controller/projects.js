@@ -154,27 +154,6 @@ ProjectService = {
           });
   },
 
-    populateVr : function (req, res) {
-      var id = req.params.id;
-      Project
-          .findById(id)
-          .populate({ path: 'vr'})
-          .exec(function (err, doc) {
-              var response = {
-                  status: 200,
-                  message: doc
-              };
-              if(err){
-                  response.status = 500;
-                  response.message = err;
-              } else if(!doc){
-                  response.status = 404;
-                  response.message = { "message": "Project Id not found " + id};
-              }
-              res.status(response.status).json(response.message);
-          });
-  },
-
   update : function(req, res) {
     var id = req.params.id;
     Project.update({"_id":id}, req.body, {upsert:true},

@@ -134,10 +134,10 @@
                         </div>
                         <div class="col-xs-4 no-padding-right">
                             <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
-                                <button type="button" class="btn btn-primary" ng-click="vm.moveUp(bucket)" ng-if="vm.showUpArrow($index)">
+                                <button type="button" class="btn btn-primary" ng-click="vm.moveUp(bucket, vm.buckets, 'bucket')" ng-if="vm.showUpArrow($index)">
                                     <span class="glyphicon glyphicon-chevron-up" style="margin-right: 0"></span>
                                 </button>
-                                <button type="button" class="btn btn-primary" ng-click="vm.moveDown(bucket)" ng-if="vm.showDownArrow($index)">
+                                <button type="button" class="btn btn-primary" ng-click="vm.moveDown(bucket, vm.buckets, 'bucket')" ng-if="vm.showDownArrow($index)">
                                     <span class="glyphicon glyphicon-chevron-down" style="margin-right: 0px"></span>
                                 </button>
                                 <button type="button" class="btn btn-primary" ng-click="vm.deleteBucket(bucket)">
@@ -157,7 +157,7 @@
                             </p>
                             <div class="panel-body row"
                                  style="padding-top: 0"
-                                 ng-repeat="file in bucket.images"
+                                 ng-repeat="file in bucket.images | orderBy: 'position'"
                                  id="{{file._id}}">
                                 <div class="col-md-4 no-padding-left">
                                     <div class="panel-collapse">
@@ -186,10 +186,10 @@
                                         </div>
                                         <div class="col-xs-4 no-padding-right">
                                             <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
-                                                <button type="button" class="btn btn-primary" ng-click="vm.moveUp($index, bucket.images)" ng-if="vm.showUpArrow($index)">
+                                                <button type="button" class="btn btn-primary" ng-click="vm.moveUp(file, bucket.images, 'image')" ng-if="vm.showUpArrow($index)">
                                                     <span class="glyphicon glyphicon-chevron-up" style="margin-right: 0"></span>
                                                 </button>
-                                                <button type="button" class="btn btn-primary" ng-click="vm.moveDown($index, bucket.images)" ng-if="vm.showDownArrow($index)">
+                                                <button type="button" class="btn btn-primary" ng-click="vm.moveDown(file, bucket.images, 'image')" ng-if="vm.showDownArrow($index)">
                                                     <span class="glyphicon glyphicon-chevron-down" style="margin-right: 0"></span>
                                                 </button>
                                                 <button type="button" class="btn btn-primary" ng-click="vm.deleteFromBucket(file, bucket)">
