@@ -29,6 +29,16 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
     vm.deletedDuplicate = false;
 
     /**
+     * Changes the status message on top of the page with a delay.
+     * @param status
+     */
+    var changeStatus = function (status) {
+        vm.status = null;
+        $timeout(function(){
+            vm.status = status}, 1000);
+    };
+
+    /**
      * Options for the dragula bags behavior.
      */
     dragulaService.options($scope, 'image_bag', {
@@ -76,15 +86,26 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
 
                 if (response.status === 200) {
                     vm.trimbleProject = response.project;
+
+                    changeStatus({
+                        code: 'info',
+                        message: 'Trimble Connect project found.'
+                    });
+
                     return VrFactory.getFolderItems(vm.trimbleProject.rootId);
                 }
 
                 if (response.status === 204) {
+                    changeStatus({
+                        code: 'info',
+                        message: 'Trimble Connect project not found. Creating new one.'
+                    });
+
                     // (Konrad) Request was successful but no projects were found in Trimble.
                     // Let's make another request to create a new project in Trimble Connect.
                     return VrFactory.createProject(vm.selectedProject.number + " " + vm.selectedProject.name)
                         .then(function (response) {
-                            if(!response || response.status !== 200){
+                            if(!response || response.status !== 201){
                                 vm.status = {
                                     code: 'danger',
                                     message: 'Failed while creating new Trimble Connect project. Try reloading the page.'
@@ -96,15 +117,43 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                             return VrFactory.addUser(vm.trimbleProject.id);
                         })
                         .then(function (response) {
+                            if(!response || response.status !== 200){
+                                vm.status = {
+                                    code: 'danger',
+                                    message: 'Failed to add user to Project. Try reloading the page.'
+                                };
+                                return;
+                            }
                             // (Konrad) Project was created and user was added.
                             // Since this is a new project we need to also add the images folder.
                             return VrFactory.createFolder({name: "Images", rootId: vm.trimbleProject.rootId});
                         })
                         .then(function(response){
+                            if(!response || response.status !== 201){
+                                vm.status = {
+                                    code: 'danger',
+                                    message: 'Failed to create Images folder. Try reloading the page.'
+                                };
+                                return;
+                            }
+
                             // Since this is a new project we need to also add the buckets folder.
                             return VrFactory.createFolder({name: "Buckets", rootId: vm.trimbleProject.rootId});
                         })
                         .then(function (response) {
+                            if(!response || response.status !== 201){
+                                vm.status = {
+                                    code: 'danger',
+                                    message: 'Failed to create Buckets folder. Try reloading the page.'
+                                };
+                                return;
+                            }
+
+                            changeStatus({
+                                code: 'success',
+                                message: 'Trimble Connect project created.'
+                            });
+
                             return VrFactory.getFolderItems(vm.trimbleProject.rootId);
                         })
                         .catch(function (err) {
@@ -148,7 +197,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                     response.data.forEach(function (item) {
                         var image = {
                             file: null,
-                            data: null,
+                            data: item.thumbnailUrl[item.thumbnailUrl.length - 1],
                             dataSize: null,
                             displayName: 'Image Name',
                             description: 'Image Description',
@@ -343,6 +392,18 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                 console.log(err.message);
             });
     }
+
+    vm.removeExt = function (name) {
+        return name.replace(/\.[^/.]+$/, "");
+    };
+
+    /**
+     * Creates a sharable
+     * @param bucket
+     */
+    vm.createShare = function (bucket) {
+        console.log("Creating share: " + bucket.name)
+    };
 
     /**
      * Adds new bucket. Posts it to Trimble Connect.
@@ -556,27 +617,27 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
             if(newFiles[0].id){
                 // (Konrad) New file has an id assigned. This means that the file is coming from Trimble Connect.
                 // If that's the case the $watchCollection would not pick up each file separately but rather all at once.
-                newFiles.forEach(function (item) {
-                    VrFactory.downloadFile(item.id)
-                        .then(function (response) {
-                            if(!response || response.status !== 200){
-                                changeStatus({
-                                    code: 'danger',
-                                    message: 'Failed to download image ' + item.name + ' from Trimble Connect. Reload the page and try again.'
-                                });
-                                return;
-                            }
-
-                            item.data = UtilityService.arrayBufferToBase64(response.data);
-                        })
-                        .catch(function (err) {
-                            changeStatus({
-                                code: 'danger',
-                                message: 'Failed to download image ' + item.name + ' from Trimble Connect. Reload the page and try again.'
-                            });
-                            console.log(err);
-                        });
-                })
+                // newFiles.forEach(function (item) {
+                //     VrFactory.downloadFile(item.id)
+                //         .then(function (response) {
+                //             if(!response || response.status !== 200){
+                //                 changeStatus({
+                //                     code: 'danger',
+                //                     message: 'Failed to download image ' + item.name + ' from Trimble Connect. Reload the page and try again.'
+                //                 });
+                //                 return;
+                //             }
+                //
+                //             item.data = UtilityService.arrayBufferToBase64(response.data);
+                //         })
+                //         .catch(function (err) {
+                //             changeStatus({
+                //                 code: 'danger',
+                //                 message: 'Failed to download image ' + item.name + ' from Trimble Connect. Reload the page and try again.'
+                //             });
+                //             console.log(err);
+                //         });
+                // })
             } else {
                 // (Konrad) If we are uploading files then $watchCollection will trigger for every image.
                 // We can just grab the first item from the diff to get the new image.
@@ -648,6 +709,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
         $uibModal.open({
             animation: true,
             templateUrl: 'angular-app/vr/edit-image.html',
+            windowClass: 'zindex',
             controller: 'EditImageController as vm',
             size: size,
             resolve: {
@@ -977,14 +1039,4 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                 console.log(err);
             })
     }
-
-    /**
-     * Changes the status message on top of the page with a delay.
-     * @param status
-     */
-    var changeStatus = function (status) {
-        vm.status = null;
-        $timeout(function(){
-            vm.status = status}, 1000);
-    };
 }

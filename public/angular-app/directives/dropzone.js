@@ -50,7 +50,7 @@ angular.module('MissionControlApp').directive('dropZone',[function(){
                         projectId: '',
                         parentId: '',
                         id: '',
-                        name: '',
+                        name: 'name' + i,
                         commentId: ''
                     };
                     for (var p in file) {

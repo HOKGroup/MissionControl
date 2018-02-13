@@ -42,7 +42,7 @@ function VrFactory($http, $base64){
                 headers: {
                     'Authorization': auth,
                     'Cache-Control': 'no-cache',
-                    'Content-Type': undefined
+                    'Content-Type': 'application/json'
                 },
                 data: JSON.stringify({
                     "name": projectName
@@ -59,7 +59,7 @@ function VrFactory($http, $base64){
                 headers: {
                     'Authorization': auth,
                     'Cache-Control': 'no-cache',
-                    'Content-Type': undefined
+                    'Content-Type': 'application/json'
                 },
                 data: JSON.stringify({
                     "email": username,
@@ -82,6 +82,7 @@ function VrFactory($http, $base64){
             }).then(complete).catch(failed)
         },
 
+        //TODO: Not used.
         downloadFile: function downloadFile(fileId) {
             var auth = 'Bearer ' + window.localStorage.getItem('tc_token');
             return $http({

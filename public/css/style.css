@@ -428,3 +428,19 @@ a {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/*Hides contents.*/
+.none{
+  display: none;
+}
+
+/* When modal is displayed it's possible that some relative
+positioned frames might be in front of it. This will pull it
+to front while pushing background just behind it.*/
+.zindex {
+  z-index: 99000 !important;
+}
+
+.modal-backdrop {
+  z-index: 98999 !important;
+}

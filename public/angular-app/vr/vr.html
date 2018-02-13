@@ -89,10 +89,9 @@
                                         <div class="dark-background text-center">
                                             <span class='handle glyphicon glyphicon-move'></span>
                                         </div>
-                                        <div class="hovereffect" ng-if="file.id && file.data">
-                                            <img data-ng-src="data:image/jpg;base64,{{file.data}}" ng-if="!file.data.startsWith('data')" class="img-responsive center-block" alt="">
-                                            <img data-ng-src="{{file.data}}" ng-if="file.data.startsWith('data')" class="img-responsive center-block" alt="">
-                                            <div class="overlay">
+                                        <div id="{{vm.removeExt(file.name) + '_hover'}}" on-image-loaded>
+                                            <img id="{{vm.removeExt(file.name)}}" data-ng-src="{{file.data}}" src="images/rolling_1s_200px.gif" class="img-responsive center-block" alt="" image-loaded>
+                                            <div id="{{vm.removeExt(file.name) + '_show'}}" class="overlay none" on-image-loaded>
                                                 <p>
                                                     <span class="glyphicon glyphicon-pencil"
                                                           ng-click="vm.editImage('lg', file)"
@@ -106,9 +105,6 @@
                                                     </span>
                                                 </p>
                                             </div>
-                                        </div>
-                                        <div ng-if="!file.id || !file.data">
-                                            <img ng-src="images/rolling_1s_200px.gif" class="img-responsive center-block" alt="">
                                         </div>
                                     </div>
                                 </div>
@@ -161,28 +157,18 @@
                                  id="{{file._id}}">
                                 <div class="col-md-4 no-padding-left">
                                     <div class="panel-collapse">
-                                        <div ng-if="vm.getParentProperty(file, 'id') || vm.getParentProperty(file, 'data')">
+                                        <div>
                                             <!-- (Konrad) We are using ng-src here because DOM would attempt to load that image
-                                            src before it even exists due to its dependency on ng-if directive -->
-                                            <img data-ng-src="data:image/jpg;base64,{{vm.getParentProperty(file, 'data')}}"
-                                                 ng-if="!vm.getParentProperty(file, 'data').startsWith('data')"
-                                                 class="img-responsive center-block" alt="">
-                                            <img data-ng-src="{{vm.getParentProperty(file, 'data')}}"
-                                                 ng-if="vm.getParentProperty(file, 'data').startsWith('data')"
-                                                 class="img-responsive center-block" alt="">
-                                        </div>
-                                        <div ng-if="!vm.getParentProperty(file, 'id') || !vm.getParentProperty(file, 'data')">
-                                            <img ng-src="images/rolling_1s_200px.gif" class="img-responsive center-block" alt="">
+                                            src before it even exists. So we specify src to be spinner. That gets loaded while ng-src
+                                             is still getting pulled from Trimble Connect.-->
+                                            <img data-ng-src="{{vm.getParentProperty(file, 'data')}}" src="images/rolling_1s_200px.gif" class="img-responsive center-block" alt="">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xs-8">
                                     <div class="row">
-                                        <div class="col-xs-8 no-padding-left" ng-if="vm.getParentProperty(file, 'id') || vm.getParentProperty(file, 'data')">
+                                        <div class="col-xs-8 no-padding-left">
                                             <h2 style="margin: 0">{{vm.getParentProperty(file, 'displayName')}}</h2>
-                                        </div>
-                                        <div class="col-xs-8 no-padding-left" ng-if="!vm.getParentProperty(file, 'id') || !vm.getParentProperty(file, 'data')">
-                                            <h2 style="margin: 0">Loading...</h2>
                                         </div>
                                         <div class="col-xs-4 no-padding-right">
                                             <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
@@ -198,13 +184,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row" ng-if="vm.getParentProperty(file, 'id') || vm.getParentProperty(file, 'data')">
+                                    <div class="row">
                                         <hr style="margin: 5px">
                                         <h4>{{vm.getParentProperty(file, 'description')}}</h4>
-                                    </div>
-                                    <div class="row" ng-if="!vm.getParentProperty(file, 'id') || !vm.getParentProperty(file, 'data')">
-                                        <hr style="margin: 5px">
-                                        <h4>Loading...</h4>
                                     </div>
                                 </div>
                             </div>
@@ -218,7 +200,7 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control input-sm" id="sharableLink" value="bucket._id" ng-model="bucket._id" disabled>
                                     <span class="input-group-btn">
-                                        <button class="btn btn-default btn-sm" type="button">
+                                        <button class="btn btn-default btn-sm" type="button" ng-click="vm.createShare(bucket)">
                                             <span class="fa fa-clone"></span>
                                         </button>
                                     </span>
