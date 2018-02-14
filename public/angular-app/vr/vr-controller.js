@@ -268,7 +268,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                             name: folder.name,
                             images: [],
                             sharableLink: null,
-                            sharedWith: [],
+                            sharedWith: '',
                             id: folder.id,
                             parentId: folder.parentId,
                             projectId: folder.projectId,
@@ -397,13 +397,77 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
         return name.replace(/\.[^/.]+$/, "");
     };
 
-    /**
-     * Creates a sharable
-     * @param bucket
-     */
-    vm.createShare = function (bucket) {
-        console.log("Creating share: " + bucket.name)
+    vm.manageShare = function (bucket, size) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'angular-app/vr/manage-share.html',
+            windowClass: 'zindex',
+            controller: 'ManageShareController as vm',
+            size: size,
+            resolve: {
+                bucket: function (){
+                    return bucket;
+                }}
+        }).result.then(function(request){
+            if(!request) return;
+
+        }).catch(function(){
+            console.log("All Tasks Dialog dismissed...");
+        });
     };
+
+    // /**
+    //  * Creates a sharable
+    //  * @param bucket
+    //  */
+    // vm.createShare = function (bucket) {
+    //     var files = [];
+    //     bucket.images.forEach(function (item) {
+    //         files.push({
+    //             id: item.id,
+    //             type: 'FILE'
+    //         })
+    //     });
+    //
+    //     var emails = [];
+    //     var re = /\s*;\s*/;
+    //     bucket.sharedWith.split(re).forEach(function (item) {
+    //         if(UtilityService.validateEmail(item)){
+    //             emails.push({
+    //                 id: item,
+    //                 type: 'EMAIL'
+    //             })
+    //         }
+    //     });
+    //
+    //     // data: JSON.stringify({
+    //     //     'mode': data.mode,
+    //     //     'projectId': data.projectId,
+    //     //     'objects': data.objects,
+    //     //     'permission': 'DOWNLOAD',
+    //     //     'notify': data.notify,
+    //     //     'message': data.message
+    //     // }),
+    //
+    //     var data = {
+    //         mode: 'PUBLIC',
+    //         projectId: vm.trimbleProject.id,
+    //         objects: files,
+    //         permission: 'DOWNLOAD',
+    //         notify: emails,
+    //         message: 'A link has been shared with you.'
+    //     };
+    //
+    //     console.log(data);
+    //
+    //     // VrFactory.createShare(data)
+    //     //     .then(function (response) {
+    //     //         console.log(response);
+    //     //     })
+    //     //     .catch(function (error) {
+    //     //         console.log(error);
+    //     //     })
+    // };
 
     /**
      * Adds new bucket. Posts it to Trimble Connect.
@@ -414,7 +478,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
             name: name,
             images: [],
             sharableLink: null,
-            sharedWith: [],
+            sharedWith: '',
             id: '',
             parentId: '',
             projectId: '',

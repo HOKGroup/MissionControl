@@ -195,7 +195,7 @@
                     <div class="panel-body row">
                         <div class="panel-collapse">
                             <!-- Sharable id -->
-                            <div class="col-md-6 no-padding-left">
+                            <div class="col-md-10 no-padding-left">
                                 <label for="sharableLink" class="form-control-label">Sharable Id:</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control input-sm" id="sharableLink" value="bucket._id" ng-model="bucket._id" disabled>
@@ -207,15 +207,16 @@
                                 </div>
                             </div>
                             <!-- Recipients -->
-                            <div class="col-md-6 no-padding-right">
-                                <label for="sharedWith" class="form-control-label">Recipients:</label>
+                            <div class="col-md-2 no-padding-right">
+                                <label class="form-control-label" style="color: transparent">Manage</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control input-sm" id="sharedWith" value="bucket.sharedWith" ng-model="bucket.sharedWith">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default btn-sm" type="button">
-                                            <span class="fa fa-envelope-o"></span>
-                                        </button>
-                                    </span>
+                                    <!--<input type="text" class="form-control input-sm" id="sharedWith" value="bucket.sharedWith" ng-model="bucket.sharedWith">-->
+                                    <!--<span class="input-group-btn">-->
+                                        <!--<button class="btn btn-default btn-sm" type="button">-->
+                                            <!--<span class="fa fa-envelope-o"></span>-->
+                                        <!--</button>-->
+                                    <!--</span>-->
+                                    <button class="btn btn-default btn-sm" type="button" ng-click="vm.manageShare(bucket, 'lg')">Share Settings <span class="fa fa-sliders"></span></button>
                                 </div>
                             </div>
                         </div>

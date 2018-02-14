@@ -158,6 +158,7 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
         $uibModal.open({
             animation: true,
             templateUrl: 'angular-app/health-report/family-stats/all-tasks.html',
+            windowClass: 'zindex',
             controller: 'AllFamilyTasksController as vm',
             size: size,
             resolve: {
@@ -191,6 +192,7 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
         $uibModal.open({
             animation: true,
             templateUrl: 'angular-app/health-report/family-stats/edit-task.html',
+            windowClass: 'zindex',
             controller: 'EditFamilyTaskController as vm',
             size: size,
             resolve: {

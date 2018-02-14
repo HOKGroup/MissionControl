@@ -1,0 +1,63 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title pull-left">Share Settings</h5>
+        <button type="button" class="close pull-right" ng-click="vm.cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="panel panel-default" style="margin: 0">
+            <div class="panel-heading" style="padding-top: 10px; padding-bottom: 10px">
+                <h4 class="panel-title">Recipients:</h4>
+            </div>
+            <div class="panel-collapse">
+                <ul class="list-group" id="contact-list">
+                    <li ng-repeat="email in vm.emails" class="list-group-item">
+                        <div class="col-xs-9 col-sm-9">
+                            <p style="margin: 0; padding-top: 5px">
+                                <i class="fa fa-envelope-o"></i>
+                                {{email.id}}
+                            </p>
+                        </div>
+                        <div class="col-xs-3 col-sm-3">
+                            <button ng-click="vm.removeEmail(email)" class="btn btn-danger btn-sm pull-right">
+                                Remove
+                                <i class="fa fa-trash-o"></i>
+                            </button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body row">
+            <div class="panel-collapse">
+                <div class="col-md-10 no-padding">
+                    <label for="sharableLink" class="form-control-label">Add Recipients:</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" id="sharableLink" value="vm.email" ng-model="vm.email" ng-keypress="vm.onEnter(bucket, $event)">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" type="button" ng-click="vm.addEmail()">
+                                Add
+                                <span class="fa fa-plus"></span>
+                            </button>
+                        </span>
+                    </div>
+                    <p class="text-warning">{{ vm.emailWarning }}</p>
+                </div>
+                <div class="col-md-2 no-padding">
+                    <label class="form-control-label" style="color: transparent;">Email</label>
+                    <div class="input-group" style="position: absolute; right: 0">
+                        <button class="btn btn-default btn-sm" type="button" ng-click="vm.addEmail()">
+                            Share
+                            <i class="fa fa-envelope-o"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
+    </div>
+</div>

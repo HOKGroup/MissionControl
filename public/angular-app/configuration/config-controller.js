@@ -142,6 +142,7 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
             animation: true,
             templateUrl: 'angular-app/configuration/edit-file-path.html',
             controller: 'EditFilePathController as vm',
+            windowClass: 'zindex',
             size: size,
             resolve: {
                 filePath: function () {

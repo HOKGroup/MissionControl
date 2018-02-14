@@ -197,6 +197,7 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, DTIns
         $uibModal.open({
             animation: true,
             templateUrl: 'angular-app/sheets/add-sheet.html',
+            windowClass: 'zindex',
             controller: 'AddSheetController as vm',
             size: size,
             resolve: {

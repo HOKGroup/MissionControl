@@ -14,6 +14,7 @@ function AllFamilyTasksController($uibModalInstance, $uibModal, FamiliesFactory,
         $uibModal.open({
             animation: true,
             templateUrl: 'angular-app/health-report/family-stats/edit-task.html',
+            windowClass: 'zindex',
             controller: 'EditFamilyTaskController as vm',
             size: size,
             resolve: {
