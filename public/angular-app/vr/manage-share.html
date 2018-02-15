@@ -32,6 +32,21 @@
         </div>
         <div class="panel-body row">
             <div class="panel-collapse">
+                <label class="form-control-label">Message: </label>
+                <textarea class="form-control" id="comments-text" ng-model="vm.message"></textarea>
+            </div>
+        </div>
+        <div class="panel-body row">
+            <div class="panel-collapse">
+                <div class="col-md-2 no-padding-left">
+                    <label class="form-control-label">Share:</label>
+                    <div class="input-group">
+                        <button class="btn btn-default btn-sm" type="button" ng-click="vm.sendEmail()" ng-disabled="vm.emails.length <= 0 || !vm.status">
+                            Send Email
+                            <i class="fa fa-envelope-o"></i>
+                        </button>
+                    </div>
+                </div>
                 <div class="col-md-10 no-padding">
                     <label for="sharableLink" class="form-control-label">Add Recipients:</label>
                     <div class="input-group">
@@ -45,19 +60,15 @@
                     </div>
                     <p class="text-warning">{{ vm.emailWarning }}</p>
                 </div>
-                <div class="col-md-2 no-padding">
-                    <label class="form-control-label" style="color: transparent;">Email</label>
-                    <div class="input-group" style="position: absolute; right: 0">
-                        <button class="btn btn-default btn-sm" type="button" ng-click="vm.addEmail()">
-                            Share
-                            <i class="fa fa-envelope-o"></i>
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
+        <div class="col-xs-8 no-padding-left">
+            <p class="text-warning text-left" style="margin-bottom: 0; padding-top: 5px">{{ vm.status }}</p>
+        </div>
+        <div class="col-xs-4 no-padding-right">
+            <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
+        </div>
     </div>
 </div>

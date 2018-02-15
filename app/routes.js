@@ -101,4 +101,7 @@ var sheets = require('./models/sheets-model');
      app.post('/api/v1/sheets/:id/deletetasks', sheets.deleteTasks);
      app.post('/api/v1/sheets/:id/updatetasks', sheets.updateSheetTask);
      app.put('/api/v1/sheets/:id/updatefilepath', sheets.updateFilePath);
+
+     var email = require('./controller/emails-controller');
+     app.post('/api/v1/email', email.sendEmail);
   };

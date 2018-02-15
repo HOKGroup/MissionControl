@@ -301,6 +301,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
 
                                         var content = JSON.parse(comment.description);
                                         bucket.position = content.position;
+                                        bucket.sharedWith = content.sharedWith;
                                         bucket.commentId = comment.id;
 
                                         // (Konrad) We need to re-sort the vm.buckets to match our specified order.
@@ -519,7 +520,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                 var data = {
                     'objectId': bucket.id,
                     'objectType': 'FOLDER',
-                    'description': '{"position": ' + bucket.position + '}'
+                    'description': '{"position": ' + bucket.position + ', "sharedWith": ""}'
                 };
 
                 return VrFactory.addComment(data)
@@ -570,23 +571,68 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
             })
     };
 
+    // /**
+    //  * Moves bucket panel up.
+    //  * @param file
+    //  * @param arr
+    //  * @param action
+    //  */
+    // vm.moveUp = function (file, arr, action) {
+    //     var index = file.position;
+    //     var file2 = arr.find(function (item) {
+    //         return item.position === (index - 1);
+    //     });
+    //
+    //     var desc1 = '';
+    //     if(action !== 'bucket'){
+    //         desc1 = '{"parentImageId": "' + file.parentImageId + '", "position": ' + (index - 1) + '}';
+    //     } else {
+    //         //TODO: update sharedWith
+    //         desc1 = '{"position": ' + (index - 1) + '}';
+    //     }
+    //     var data1 = {
+    //         commentId: file.commentId,
+    //         description: desc1
+    //     };
+    //
+    //     var desc2 = '';
+    //     if(action !== 'bucket'){
+    //         desc2 = '{"parentImageId": "' + file2.parentImageId + '", "position": ' + index + '}';
+    //     } else {
+    //         //TODO: update sharedWith
+    //         desc2 = '{"position": ' + index + '}';
+    //     }
+    //     var data2 = {
+    //         commentId: file2.commentId,
+    //         description: desc2
+    //     };
+    //
+    //     file.position = index - 1;
+    //     file2.position = index;
+    //
+    //     updateComment(data1);
+    //     updateComment(data2);
+    // };
+
     /**
-     * Moves bucket panel up.
+     * Moves bucket/image up/down.
      * @param file
      * @param arr
      * @param action
+     * @param dir
      */
-    vm.moveUp = function (file, arr, action) {
+    vm.shiftPosition = function (file, arr, action, dir) {
         var index = file.position;
         var file2 = arr.find(function (item) {
-            return item.position === (index - 1);
+            return item.position === (index + dir);
         });
 
         var desc1 = '';
         if(action !== 'bucket'){
-            desc1 = '{"parentImageId": "' + file.parentImageId + '", "position": ' + (index - 1) + '}';
+            desc1 = '{"parentImageId": "' + file.parentImageId + '", "position": ' + (index + dir) + '}';
         } else {
-            desc1 = '{"position": ' + (index - 1) + '}';
+            var shares = !file.sharedWith ? '' : file.sharedWith;
+            desc1 = '{"position": ' + (index + dir) + ', "sharedWith": "' + shares + '"}';
         }
         var data1 = {
             commentId: file.commentId,
@@ -597,55 +643,15 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
         if(action !== 'bucket'){
             desc2 = '{"parentImageId": "' + file2.parentImageId + '", "position": ' + index + '}';
         } else {
-            desc2 = '{"position": ' + index + '}';
+            var shares2 = !file2.sharedWith ? '' : file.sharedWith;
+            desc2 = '{"position": ' + index + ', "sharedWith": "' + shares2 + '"}';
         }
         var data2 = {
             commentId: file2.commentId,
             description: desc2
         };
 
-        file.position = index - 1;
-        file2.position = index;
-
-        updateComment(data1);
-        updateComment(data2);
-    };
-
-    /**
-     * Moves bucket panel down.
-     * @param file
-     * @param arr
-     * @param action
-     */
-    vm.moveDown = function (file, arr, action) {
-        var index = file.position;
-        var file2 = arr.find(function (item) {
-            return item.position === (index + 1);
-        });
-
-        var desc1 = '';
-        if(action !== 'bucket'){
-            desc1 = '{"parentImageId": "' + file.parentImageId + '", "position": ' + (index + 1) + '}';
-        } else {
-            desc1 = '{"position": ' + (index + 1) + '}';
-        }
-        var data1 = {
-            commentId: file.commentId,
-            description: desc1
-        };
-
-        var desc2 = '';
-        if(action !== 'bucket'){
-            desc2 = '{"parentImageId": "' + file2.parentImageId + '", "position": ' + index + '}';
-        } else {
-            desc2 = '{"position": ' + index + '}';
-        }
-        var data2 = {
-            commentId: file2.commentId,
-            description: desc2
-        };
-
-        file.position = index + 1;
+        file.position = index + dir;
         file2.position = index;
 
         updateComment(data1);

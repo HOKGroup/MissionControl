@@ -238,7 +238,6 @@ function VrFactory($http, $base64){
             }).then(complete).catch(failed);
         },
 
-        //TODO: Create shares
         createShare: function createShare(data) {
             var auth = 'Bearer ' + window.localStorage.getItem('tc_token');
             return $http({
@@ -256,6 +255,50 @@ function VrFactory($http, $base64){
                     'notify': data.notify,
                     'message': data.message
                 }),
+                transformRequest: angular.identity
+            }).then(complete).catch(failed);
+        },
+
+        getShare: function getShare(shareId) {
+            var auth = 'Bearer ' + window.localStorage.getItem('tc_token');
+            return $http({
+                method: 'GET',
+                url: 'https://app.stage.connect.trimble.com/tc/api/2.0/shares/' + shareId,
+                headers: {
+                    'Authorization': auth,
+                    'Content-Type': 'application/json'
+                },
+                transformRequest: angular.identity
+            }).then(complete).catch(failed);
+        },
+
+        updateShare: function updateShare(data) {
+            var auth = 'Bearer ' + window.localStorage.getItem('tc_token');
+            return $http({
+                method: 'PATCH',
+                url: 'https://app.stage.connect.trimble.com/tc/api/2.0/shares/' + data.shareId,
+                headers: {
+                    'Authorization': auth,
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify({
+                    'notify': data.notify,
+                    'message': data.message,
+                    'objects': data.objects
+                }),
+                transformRequest: angular.identity
+            }).then(complete).catch(failed);
+        },
+
+        getShares: function getShares(projectId) {
+            var auth = 'Bearer ' + window.localStorage.getItem('tc_token');
+            return $http({
+                method: 'GET',
+                url: 'https://app.stage.connect.trimble.com/tc/api/2.0/shares?projectId=' + projectId,
+                headers: {
+                    'Authorization': auth,
+                    'Content-Type': 'application/json'
+                },
                 transformRequest: angular.identity
             }).then(complete).catch(failed);
         }
