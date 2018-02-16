@@ -14,6 +14,7 @@
     "dragula.js": "dragula#^3.7.2",
     "angularjs-dragula": "^2.0.0",
     "angular-bootstrap-affix": "^0.2.2",
-    "components-font-awesome": "^4.7.0"
+    "components-font-awesome": "^4.7.0",
+    "ngclipboard": "^1.1.3"
   }
 }

@@ -1,4 +1,4 @@
-angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'datatables', 'mgcrea.bootstrap.affix', 'base64', angularDragula(angular)]).config(config);
+angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'datatables', 'mgcrea.bootstrap.affix', 'base64', 'ngclipboard', angularDragula(angular)]).config(config);
 
 // ngRoute - used for routing below
 // ui.bootstrap - used by modal dialog

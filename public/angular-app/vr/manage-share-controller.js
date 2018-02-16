@@ -98,8 +98,8 @@ function ManageShareController($uibModalInstance, UtilityService, EmailFactory, 
             recipients: vm.emails.join(','),
             template: 'shares',
             locals : {
-                link: 'some link value',
-                message: vm.message
+                link: vm.bucket.sharableLink,
+                message: 'Please copy/paste the above link into HOK VR app.'
             }
         };
 

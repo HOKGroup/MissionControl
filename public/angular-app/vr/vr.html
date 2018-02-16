@@ -196,11 +196,19 @@
                         <div class="panel-collapse">
                             <!-- Sharable id -->
                             <div class="col-md-10 no-padding">
-                                <label for="sharableLink" class="form-control-label">Sharable Id:</label>
+                                <label for="sharableLink" class="form-control-label">Sharable Id (copy to clipboard):</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control input-sm" id="sharableLink" value="bucket.sharableLink" ng-model="bucket.sharableLink" disabled>
+                                    <input id="sharableLink"
+                                           type="text"
+                                           class="form-control input-sm"
+                                           value="bucket.sharableLink"
+                                           ng-model="bucket.sharableLink"
+                                           readonly>
                                     <span class="input-group-btn">
-                                        <button class="btn btn-default btn-sm" type="button" ng-click="vm.createShare(bucket)">
+                                        <button class="btn btn-default btn-sm"
+                                                type="button"
+                                                ng-click="vm.createShare(bucket)"
+                                                ngclipboard data-clipboard-target="#sharableLink">
                                             <span class="fa fa-clone"></span>
                                         </button>
                                     </span>
@@ -210,7 +218,10 @@
                             <div class="col-md-2">
                                 <label class="form-control-label">Settings:</label>
                                 <div class="input-group">
-                                    <button class="btn btn-default btn-sm" type="button" ng-click="vm.manageShare(bucket, 'lg')" ng-disabled="bucket.images.length <= 0">
+                                    <button class="btn btn-default btn-sm"
+                                            type="button"
+                                            ng-click="vm.manageShare(bucket, 'lg')"
+                                            ng-disabled="bucket.images.length <= 0">
                                         Share Setting
                                         <span class="fa fa-sliders"></span>
                                     </button>
@@ -220,7 +231,10 @@
                     </div>
                 </div>
                 <!-- This empty div helps keep the affixed images div from glitching -->
-                <div class="container-fluid" ng-if="vm.buckets.length < 4" ng-style="{'min-height': (800 - (vm.buckets.length * 200)) + 'px'}"></div>
+                <div class="container-fluid"
+                     ng-if="vm.buckets.length < 4"
+                     ng-style="{'min-height': (800 - (vm.buckets.length * 200)) + 'px'}">
+                </div>
             </div>
         </div>
     </div>
