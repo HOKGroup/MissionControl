@@ -95,9 +95,7 @@ function ManageShareController($uibModalInstance, UtilityService, EmailFactory, 
      */
     vm.sendEmail = function () {
         var data = {
-            recipients: Array.prototype.map.call(vm.emails, function (item) {
-                return item.id
-            }).join(','),
+            recipients: vm.emails.join(','),
             template: 'shares',
             locals : {
                 link: 'some link value',
@@ -124,10 +122,21 @@ function ManageShareController($uibModalInstance, UtilityService, EmailFactory, 
         var index = vm.emails.findIndex(function (item) {
             return item.id === email.id;
         });
-
         if(index !== -1) vm.emails.splice(index, 1);
 
-        //TODO: add email to comments
+        var emails = vm.emails.join(';');
+        var data = {
+            commentId: vm.bucket.commentId,
+            description: '{"position": ' + vm.bucket.position + ', "sharedWith": "' + emails + '"}'
+        };
+
+        VrFactory.updateComment(data)
+            .then(function (response) {
+                if(!response || response.status !== 200) return;
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
     };
 
     /**
@@ -148,10 +157,7 @@ function ManageShareController($uibModalInstance, UtilityService, EmailFactory, 
         var re = /\s*;\s*/;
         vm.email.split(re).forEach(function (item) {
             if(UtilityService.validateEmail(item)){
-                vm.emails.push({
-                    id: item,
-                    type: 'EMAIL'
-                });
+                vm.emails.push(item);
                 vm.email = '';
                 vm.emailWarning = '';
             } else {
@@ -159,37 +165,19 @@ function ManageShareController($uibModalInstance, UtilityService, EmailFactory, 
             }
         });
 
-        //TODO: add email to comments
+        var emails = vm.emails.join(';');
+        var data = {
+            commentId: vm.bucket.commentId,
+            description: '{"position": ' + vm.bucket.position + ', "sharedWith": "' + emails + '"}'
+        };
 
-        // var files = [];
-        // vm.bucket.images.forEach(function (item) {
-        //     files.push({
-        //         id: item.id,
-        //         type: 'FILE'
-        //     });
-        // });
-        //
-        // var emails = [];
-        // vm.emails.forEach(function (item) {
-        //     emails.push({
-        //         id: item.id,
-        //         type: 'EMAIL'
-        //     });
-        // });
-        //
-        // var data = {
-        //     shareId: vm.bucket.shareId,
-        //     notify: emails,
-        //     message: vm.message,
-        //     objects: files
-        // };
-        // VrFactory.updateShare(data)
-        //     .then(function (response) {
-        //         if(!response || response.status !== 200) return;
-        //     })
-        //     .catch(function (error) {
-        //         console.log(error);
-        //     })
+        VrFactory.updateComment(data)
+            .then(function (response) {
+                if(!response || response.status !== 200) return;
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
     };
 
     /**

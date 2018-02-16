@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('VrController', VrController);
 
-function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $timeout, $scope, $uibModal, UtilityService){
+function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $base64, $timeout, $scope, $uibModal, UtilityService){
     var vm = this;
 
     vm.projectId = $routeParams.projectId;
@@ -264,10 +264,11 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                     response.data.forEach(function (folder) {
                         if(folder.type !== 'FOLDER') return;
 
+                        var sharableLink = $base64.encode(folder.projectId + ':' + folder.id).toString('base64');
                         var bucket = {
                             name: folder.name,
                             images: [],
-                            sharableLink: null,
+                            sharableLink: sharableLink,
                             sharedWith: '',
                             id: folder.id,
                             parentId: folder.parentId,
@@ -478,7 +479,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
         var bucket = {
             name: name,
             images: [],
-            sharableLink: null,
+            sharableLink: '',
             sharedWith: '',
             id: '',
             parentId: '',
@@ -511,9 +512,12 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                     return;
                 }
 
+                var sharableLink = $base64.encode(response.data.projectId + ':' + response.data.id).toString('base64');
+
                 bucket.id = response.data.id;
                 bucket.parentId = response.data.parentId;
                 bucket.projectId = response.data.projectId;
+                bucket.sharableLink = sharableLink;
 
                 // (Konrad) Since Trimble Connect doesn't support adding custom metadata
                 // to images, we can use Comments to add description and display name.
@@ -1059,7 +1063,8 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                     code: 'danger',
                     message: 'Failed to update Bucket Position. Please reload the page and try again.'
                 });
-                console.log(err);});
+                console.log(err);
+            });
     }
 
     /**
