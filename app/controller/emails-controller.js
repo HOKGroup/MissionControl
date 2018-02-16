@@ -4,7 +4,6 @@
 var config = require('./config');
 var nodemailer = require('nodemailer');
 var Email = require('email-templates');
-var xoauth2 = require('xoauth2');
 
 var transport = nodemailer.createTransport({
     host: config.host,
@@ -17,43 +16,7 @@ module.exports.sendEmail = function (req, res) {
     var email = new Email({
         message: {
             from: config.user,
-            attachments: [
-                {
-                    filename: 'header.png',
-                    path: 'emails/shares/images/header.png',
-                    cid: 'header@hok.com'
-                },
-                {
-                    filename: 'left.png',
-                    path: 'emails/shares/images/left.png',
-                    cid: 'left@hok.com'
-                },
-                {
-                    filename: 'right.png',
-                    path: 'emails/shares/images/right.png',
-                    cid: 'right@hok.com'
-                },
-                {
-                    filename: 'facebook.png',
-                    path: 'emails/shares/images/facebook.png',
-                    cid: 'facebook@hok.com'
-                },
-                {
-                    filename: 'instagram.png',
-                    path: 'emails/shares/images/instagram.png',
-                    cid: 'instagram@hok.com'
-                },
-                {
-                    filename: 'youtube.png',
-                    path: 'emails/shares/images/youtube.png',
-                    cid: 'youtube@hok.com'
-                },
-                {
-                    filename: 'twitter.gif',
-                    path: 'emails/shares/images/twitter.png',
-                    cid: 'twitter@hok.com'
-                }
-            ]
+            attachments: req.body.attachments
         },
         transport: transport
     });

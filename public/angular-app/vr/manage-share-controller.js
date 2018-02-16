@@ -22,71 +22,6 @@ function ManageShareController($uibModalInstance, UtilityService, EmailFactory, 
                     vm.emails.push(item);
                 }
             });
-            // VrFactory.getShare(vm.bucket.shareId)
-            //     .then(function (response) {
-            //         if(!response || response.status !== 200){
-            //             vm.status = 'Failed to retrieve a Share Setting. Please reload the page and try again.';
-            //             return;
-            //         }
-            //
-            //         if(response.data.notify){
-            //             vm.emails = response.data.notify;
-            //         } else {
-            //             vm.emails = [];
-            //         }
-            //         vm.message = response.data.message;
-            //         vm.status = '';
-            //     })
-            //     .catch(function (error) {
-            //         vm.status = 'Failed to retrieve a Share Setting. Please reload the page and try again.';
-            //         console.log(error);
-            //     })
-        } else {
-            // // (Konrad) Create share.
-            // var files = [];
-            // vm.bucket.images.forEach(function (item) {
-            //     files.push({
-            //         id: item.id,
-            //         type: 'FILE'
-            //     })
-            // });
-            //
-            // var shareData = {
-            //     mode: 'PUBLIC',
-            //     projectId: vm.bucket.projectId,
-            //     objects: files,
-            //     permission: 'DOWNLOAD',
-            //     notify: [],
-            //     message: 'A link has been shared with you.'
-            // };
-            //
-            // VrFactory.createShare(shareData)
-            //     .then(function (response) {
-            //         if(!response || response.status !== 201){
-            //             vm.status = 'Failed to create a new Share Settings. Please reload the page and try again.';
-            //             return;
-            //         }
-            //
-            //         vm.bucket.shareId = response.data.id;
-            //         vm.message = response.data.message;
-            //
-            //         var data = {
-            //             commentId: vm.bucket.commentId,
-            //             description: '{"position": ' + vm.bucket.position + ', "shareId": "' + vm.bucket.shareId + '"}'
-            //         };
-            //         return VrFactory.updateComment(data);
-            //     })
-            //     .then(function (response) {
-            //         if(!response || response.status !== 200){
-            //             vm.status = 'Failed to create a new Share Settings. Please reload the page and try again.';
-            //             return;
-            //         }
-            //         vm.status = '';
-            //     })
-            //     .catch(function (error) {
-            //         vm.status = 'Failed to create a new Share Settings. Please reload the page and try again.';
-            //         console.log(error);
-            //     })
         }
     }
 
@@ -98,18 +33,55 @@ function ManageShareController($uibModalInstance, UtilityService, EmailFactory, 
             recipients: vm.emails.join(','),
             template: 'shares',
             locals : {
-                link: vm.bucket.sharableLink,
-                message: 'Please copy/paste the above link into HOK VR app.'
-            }
+                link: vm.bucket.sharableLink
+            },
+            attachments: [
+                {
+                    filename: 'header.png',
+                    path: 'emails/shares/images/header.png',
+                    cid: 'header@hok.com'
+                },
+                {
+                    filename: 'left.png',
+                    path: 'emails/shares/images/left.png',
+                    cid: 'left@hok.com'
+                },
+                {
+                    filename: 'right.png',
+                    path: 'emails/shares/images/right.png',
+                    cid: 'right@hok.com'
+                },
+                {
+                    filename: 'facebook.png',
+                    path: 'emails/shares/images/facebook.png',
+                    cid: 'facebook@hok.com'
+                },
+                {
+                    filename: 'instagram.png',
+                    path: 'emails/shares/images/instagram.png',
+                    cid: 'instagram@hok.com'
+                },
+                {
+                    filename: 'youtube.png',
+                    path: 'emails/shares/images/youtube.png',
+                    cid: 'youtube@hok.com'
+                },
+                {
+                    filename: 'twitter.gif',
+                    path: 'emails/shares/images/twitter.png',
+                    cid: 'twitter@hok.com'
+                }
+            ]
         };
 
         EmailFactory.sendEmail(data)
             .then(function (response) {
                 if(!response || response.status !== 200) return;
 
-                console.log(response);
+                $uibModalInstance.dismiss('cancel');
             })
             .catch(function (error) {
+                vm.status = 'Failed to send email notification. Please reload the page and try again.';
                 console.log(error);
             })
     };
@@ -133,8 +105,11 @@ function ManageShareController($uibModalInstance, UtilityService, EmailFactory, 
         VrFactory.updateComment(data)
             .then(function (response) {
                 if(!response || response.status !== 200) return;
+
+                vm.status = 'Sucessfully update Share Settings.';
             })
             .catch(function (err) {
+                vm.status = 'Failed to update Share Settings. Please reload the page and try again.';
                 console.log(err);
             });
     };
@@ -174,8 +149,11 @@ function ManageShareController($uibModalInstance, UtilityService, EmailFactory, 
         VrFactory.updateComment(data)
             .then(function (response) {
                 if(!response || response.status !== 200) return;
+
+                vm.status = 'Sucessfully update Share Settings.';
             })
             .catch(function (err) {
+                vm.status = 'Failed to update Share Settings. Please reload the page and try again.';
                 console.log(err);
             });
     };

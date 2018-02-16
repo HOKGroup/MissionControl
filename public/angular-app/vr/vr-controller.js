@@ -46,10 +46,10 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
         copy: function (el, source) {
             return source.id.match('#images') //we only allow copy from "images" into "buckets"
         },
-        moves: function (el, source, handle, sibling) {
+        moves: function (el, source, handle) {
             return handle.className === 'handle glyphicon glyphicon-move'; //only drag elements with this class
         },
-        accepts: function (el, target, source, sibling) {
+        accepts: function (el, target, source) {
             return source.id === '#images' && target.id === '#bucket'; // only allow images from "images to be dragged into buckets"
         }
     });
@@ -411,65 +411,11 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                     return bucket;
                 }}
         }).result.then(function(request){
-            if(!request) return;
-
+            // do nothing
         }).catch(function(){
             console.log("All Tasks Dialog dismissed...");
         });
     };
-
-    // /**
-    //  * Creates a sharable
-    //  * @param bucket
-    //  */
-    // vm.createShare = function (bucket) {
-    //     var files = [];
-    //     bucket.images.forEach(function (item) {
-    //         files.push({
-    //             id: item.id,
-    //             type: 'FILE'
-    //         })
-    //     });
-    //
-    //     var emails = [];
-    //     var re = /\s*;\s*/;
-    //     bucket.sharedWith.split(re).forEach(function (item) {
-    //         if(UtilityService.validateEmail(item)){
-    //             emails.push({
-    //                 id: item,
-    //                 type: 'EMAIL'
-    //             })
-    //         }
-    //     });
-    //
-    //     // data: JSON.stringify({
-    //     //     'mode': data.mode,
-    //     //     'projectId': data.projectId,
-    //     //     'objects': data.objects,
-    //     //     'permission': 'DOWNLOAD',
-    //     //     'notify': data.notify,
-    //     //     'message': data.message
-    //     // }),
-    //
-    //     var data = {
-    //         mode: 'PUBLIC',
-    //         projectId: vm.trimbleProject.id,
-    //         objects: files,
-    //         permission: 'DOWNLOAD',
-    //         notify: emails,
-    //         message: 'A link has been shared with you.'
-    //     };
-    //
-    //     console.log(data);
-    //
-    //     // VrFactory.createShare(data)
-    //     //     .then(function (response) {
-    //     //         console.log(response);
-    //     //     })
-    //     //     .catch(function (error) {
-    //     //         console.log(error);
-    //     //     })
-    // };
 
     /**
      * Adds new bucket. Posts it to Trimble Connect.
@@ -575,49 +521,6 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
             })
     };
 
-    // /**
-    //  * Moves bucket panel up.
-    //  * @param file
-    //  * @param arr
-    //  * @param action
-    //  */
-    // vm.moveUp = function (file, arr, action) {
-    //     var index = file.position;
-    //     var file2 = arr.find(function (item) {
-    //         return item.position === (index - 1);
-    //     });
-    //
-    //     var desc1 = '';
-    //     if(action !== 'bucket'){
-    //         desc1 = '{"parentImageId": "' + file.parentImageId + '", "position": ' + (index - 1) + '}';
-    //     } else {
-    //         //TODO: update sharedWith
-    //         desc1 = '{"position": ' + (index - 1) + '}';
-    //     }
-    //     var data1 = {
-    //         commentId: file.commentId,
-    //         description: desc1
-    //     };
-    //
-    //     var desc2 = '';
-    //     if(action !== 'bucket'){
-    //         desc2 = '{"parentImageId": "' + file2.parentImageId + '", "position": ' + index + '}';
-    //     } else {
-    //         //TODO: update sharedWith
-    //         desc2 = '{"position": ' + index + '}';
-    //     }
-    //     var data2 = {
-    //         commentId: file2.commentId,
-    //         description: desc2
-    //     };
-    //
-    //     file.position = index - 1;
-    //     file2.position = index;
-    //
-    //     updateComment(data1);
-    //     updateComment(data2);
-    // };
-
     /**
      * Moves bucket/image up/down.
      * @param file
@@ -683,35 +586,14 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
     /**
      * Watches Images collection for changes.
      */
-    $scope.$watchCollection('vm.images', function (newValue, oldValue, scope) {
+    $scope.$watchCollection('vm.images', function (newValue, oldValue) {
         if(newValue.length > oldValue.length){
             // (Konrad) User added the file to Images
             // We should add it to the Trimble server.
             var newFiles = newValue.diff(oldValue);
             if(newFiles[0].id){
-                // (Konrad) New file has an id assigned. This means that the file is coming from Trimble Connect.
-                // If that's the case the $watchCollection would not pick up each file separately but rather all at once.
-                // newFiles.forEach(function (item) {
-                //     VrFactory.downloadFile(item.id)
-                //         .then(function (response) {
-                //             if(!response || response.status !== 200){
-                //                 changeStatus({
-                //                     code: 'danger',
-                //                     message: 'Failed to download image ' + item.name + ' from Trimble Connect. Reload the page and try again.'
-                //                 });
-                //                 return;
-                //             }
-                //
-                //             item.data = UtilityService.arrayBufferToBase64(response.data);
-                //         })
-                //         .catch(function (err) {
-                //             changeStatus({
-                //                 code: 'danger',
-                //                 message: 'Failed to download image ' + item.name + ' from Trimble Connect. Reload the page and try again.'
-                //             });
-                //             console.log(err);
-                //         });
-                // })
+                // (Konrad) File is coming from Trimble Connect. That means it has the thumbnail property
+                // and we don't want to download the whole thing just to show a thumbnail.
             } else {
                 // (Konrad) If we are uploading files then $watchCollection will trigger for every image.
                 // We can just grab the first item from the diff to get the new image.
@@ -807,7 +689,6 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                             code: 'danger',
                             message: 'Failed to update image Description and Display Name. Reload the page and try again.'
                         });
-                        return;
                     }
                 })
                 .catch(function (err) {
@@ -817,20 +698,6 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                     });
                     console.log(err);
                 });
-
-            // if(vm.buckets.length === 0) return;
-            //
-            // // (Konrad) Since dragula makes a copy of the image, when it's moved to
-            // // a bucket, we need to track them down and update if name/desc changed.
-            // vm.buckets.forEach(function (bucket) {
-            //     bucket.images.forEach(function (image) {
-            //         if(image.id === request.response.id){
-            //             image.displayName = request.response.displayName;
-            //             image.description = request.response.description;
-            //         }
-            //     });
-            // });
-
         }).catch(function(){
             console.log("All Tasks Dialog dismissed...");
         });
@@ -913,7 +780,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
 
         var index = vm.buckets.indexOf(x);
         var id = 'buckets[' + index + '].images';
-        $scope.$watchCollection(id, function(newValue, oldValue, scope) {
+        $scope.$watchCollection(id, function(newValue, oldValue) {
             if(!newValue || !oldValue || newValue.length === oldValue.length) return;
             if(vm.deletedDuplicate){
                 vm.deletedDuplicate = false;
