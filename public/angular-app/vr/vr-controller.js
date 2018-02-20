@@ -786,7 +786,6 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                 vm.deletedDuplicate = false;
                 return;
             }
-
             if(newValue.length > oldValue.length){
                 // File was added.
                 var newFiles = newValue.diff(oldValue);
@@ -798,7 +797,7 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                     var bucket = vm.buckets[index];
                     vm.deletedDuplicate = false;
                     var count = bucket.images.length;
-                    bucket.images = UtilityService.removeDuplicates(bucket.images, 'id');
+                    bucket.images = UtilityService.removeDuplicates(bucket.images, 'name');
                     if(count > bucket.images.length){
                         vm.deletedDuplicate = true;
                         changeStatus({

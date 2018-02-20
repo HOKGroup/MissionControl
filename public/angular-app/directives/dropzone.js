@@ -4,7 +4,7 @@
 angular.module('MissionControlApp').directive('dropZone',[function(){
     var config = {
         template:'<div class="dropzone">'+
-        '<input type="file" multiple accept="jpg" style="width: 100%;"/>'+
+        '<input type="file" multiple accept="jpg" style="width:100%;"/>'+
         '<div ng-transclude></div>'+       // <= transcluded stuff
         '</div>',
         transclude:true,
@@ -43,7 +43,6 @@ angular.module('MissionControlApp').directive('dropZone',[function(){
                     var data = {
                         file: file,
                         data: e.target.result,
-                        dataSize: e.target.result.length,
                         displayName: 'Image Name',
                         description: 'Image Description',
                         versionId: '',

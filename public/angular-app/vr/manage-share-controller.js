@@ -106,10 +106,10 @@ function ManageShareController($uibModalInstance, UtilityService, EmailFactory, 
             .then(function (response) {
                 if(!response || response.status !== 200) return;
 
-                vm.status = 'Sucessfully update Share Settings.';
+                vm.status = 'Sucessfully removed ' + email + ' from Recipients list.';
             })
             .catch(function (err) {
-                vm.status = 'Failed to update Share Settings. Please reload the page and try again.';
+                vm.status = 'Failed to remove ' + email + ' from Recipients list. Please reload the page and try again.';
                 console.log(err);
             });
     };
@@ -150,10 +150,10 @@ function ManageShareController($uibModalInstance, UtilityService, EmailFactory, 
             .then(function (response) {
                 if(!response || response.status !== 200) return;
 
-                vm.status = 'Sucessfully update Share Settings.';
+                vm.status = 'Sucessfully added new email to Recipients list.';
             })
             .catch(function (err) {
-                vm.status = 'Failed to update Share Settings. Please reload the page and try again.';
+                vm.status = 'Failed to add new email to Recipients list. Please reload the page and try again.';
                 console.log(err);
             });
     };
