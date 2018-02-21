@@ -46,7 +46,7 @@ var _addAddinLog = function (req, res, addins){
         if(err){
             res.status(500).json(err);
         } else {
-            res.status(200).json(addinsUpdated.usageLogs[addinsUpdated.usageLogs.length - 1]);
+            res.status(201).json(addinsUpdated.usageLogs[addinsUpdated.usageLogs.length - 1]);
         }
     });
 };
@@ -58,7 +58,7 @@ module.exports.addLog = function (req, res) {
         .select('usageLogs')
         .exec(function (err, doc){
             var response = {
-                status: 200,
+                status: 201,
                 message: []
             };
             if (err){
