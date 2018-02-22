@@ -37,6 +37,9 @@
 						<div ng-show="form.$submitted || form.pName.$touched">
 							<div ng-show="form.pName.$error.required" class="text-danger">(*) Project Name is required.</div>
 						</div>
+						<div ng-show="vm.selectedProject.name.length > 35">
+							<div class="text-danger">(*) Project Name is too long.</div>
+						</div>
 					</fieldset>
 					<fieldset class="form-group">
 						<label for="formOfficeSelect">
@@ -183,7 +186,7 @@
 				</div>
 			</div>
 			<label style="padding-left: 0; margin-top:7px;" class="text-danger">{{vm.status}}</label>
-			<button type="submit" class="btn btn-primary pull-right" ng-click="vm.updateProject()" style="margin:5px;">
+			<button type="submit" class="btn btn-primary pull-right" ng-click="vm.updateProject()" style="margin:5px;" ng-disabled="vm.verifyForm()">
 				<span class="glyphicon glyphicon-ok"></span>
 				Update Project
 			</button>
