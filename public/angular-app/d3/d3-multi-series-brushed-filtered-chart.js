@@ -1,10 +1,12 @@
-angular.module('MissionControlApp').directive('d3MultiSeriesLineBrushed', ['d3', function(d3) {
+/**
+ * Created by konrad.sobon on 2018-02-22.
+ */
+angular.module('MissionControlApp').directive('d3MultiSeriesBrushedFiltered', ['d3', function(d3) {
     return {
         restrict: 'E',
         scope: {
             data: '=',
-            keys: '=',
-            referenceLine: '='
+            callbackMethod: '&formatValue'
         },
         link: function(scope, ele) {
             var svg = d3.select(ele[0])
@@ -48,25 +50,25 @@ angular.module('MissionControlApp').directive('d3MultiSeriesLineBrushed', ['d3',
 
                 var parseDate = d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ');
                 var dateFormat = d3.timeFormat("%d %b,%H:%M");
-                var color = d3.scaleOrdinal(d3.schemeCategory10).domain(scope.keys);
+                var keys = Array.from(new Set(data.map(function(item){
+                    return item.user;
+                })));
+                var color = d3.scaleOrdinal(d3.schemeCategory10).domain(keys);
 
                 var x = d3.scaleTime().range([0, width]),
                     x2 = d3.scaleTime().range([0, width]),
                     y = d3.scaleLinear().range([height, 0]),
                     y2 = d3.scaleLinear().range([height2, 0]);
 
-                data.forEach(function (d) {
-                    d.date = parseDate(d.createdOn)
-                });
-
-                var lineData = color.domain().map(function(name){
-                    return { name: name, values: data.map(function (d) {
-                            return {date: parseDate(d.createdOn), value: +d[name]};
-                        })
+                var data1 = {};
+                data.forEach(function(item){
+                    if(data1.hasOwnProperty(item.user)){
+                        data1[item.user].values.push({date: parseDate(item.createdOn), value: +item.value});
+                    } else {
+                        data1[item.user] = {name: item.user, values: [{date: parseDate(item.createdOn), value: +item.value}]};
                     }
                 });
-
-                console.log(lineData);
+                var lineData = Object.values(data1);
 
                 x.domain(d3.extent(data, function(d) { return d.date; }));
                 var maxValue = d3.max(lineData, function(c) {
@@ -88,7 +90,9 @@ angular.module('MissionControlApp').directive('d3MultiSeriesLineBrushed', ['d3',
 
                 var xAxis = d3.axisBottom(x).ticks(5).tickFormat(dateFormat),
                     xAxis2 = d3.axisBottom(x2).ticks(5).tickFormat(dateFormat),
-                    yAxis = d3.axisLeft(y).tickValues(yAxisTicks);
+                    yAxis = d3.axisLeft(y).tickValues(yAxisTicks).tickFormat(function(d){
+                        return scope.callbackMethod({item: d});
+                    });
 
                 var brush = d3.brushX()
                     .extent([[0, 0], [width, height2]])
@@ -180,32 +184,6 @@ angular.module('MissionControlApp').directive('d3MultiSeriesLineBrushed', ['d3',
                     .selectAll("rect")
                     .attr("y", -6)
                     .attr("height", height2 + 7);
-
-                ////////////////////////////////////////////////////
-                // Optional Horizontal Dashed Line that indicates //
-                // a "goal" or an average for the given chart.    //
-                ////////////////////////////////////////////////////
-
-                if(scope.referenceLine !== null){
-                    svg.append("line")
-                        .attr("class", "goal-line") // defined in CSS
-                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                        .attr("x1", 0)
-                        .attr("y1", function () { return y(scope.referenceLine.value)})
-                        .attr("x2", width)
-                        .attr("y2", function () { return y(scope.referenceLine.value)})
-                        .style("opacity", 0)
-                        .transition()
-                        .duration(1500)
-                        .style("opacity", 1);
-
-                    svg.append("text")
-                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                        .attr("x", width)
-                        .attr("y", function(){ return y(scope.referenceLine.value) - 5; })
-                        .style("text-anchor", "end")
-                        .text(scope.referenceLine.name + "(" + scope.referenceLine.value + ")");
-                }
 
                 ////////////////////////////////////////////////////
                 // The hover over effects. It includes a vertical //
