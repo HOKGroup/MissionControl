@@ -24,7 +24,6 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder){
 
     vm.selectedTableData = 'Synch';
     vm.TableDataTypes = ['Open', 'Synch'];
-    setTableData(vm.selectedTableData);
 
     vm.dtOptions = {
         paginationType: 'simple_numbers',
@@ -34,76 +33,29 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder){
     };
 
     vm.dtColumnDefs = [
-        DTColumnDefBuilder.newColumnDef(0), //opened on
+        DTColumnDefBuilder.newColumnDef(0), //date/time
         DTColumnDefBuilder.newColumnDef(1), //user name
         DTColumnDefBuilder.newColumnDef(2).withOption('orderData', '3'), //open time
-        DTColumnDefBuilder.newColumnDef(3).notVisible(), //open time in ms
+        DTColumnDefBuilder.newColumnDef(3).notVisible(), //duration in ms
         DTColumnDefBuilder.newColumnDef(4).withOption('orderData', '5'), //worksets
         DTColumnDefBuilder.newColumnDef(5).notVisible() //workset percentage
     ];
 
-    function setTableData(dataType){
-        var worksetData = {};
-        var tempData = [];
-        if(dataType === 'Open'){
-            allData.onOpened.forEach(function (item) {
-                if(!item.user) return;
-
-                if(worksetData.hasOwnProperty(item.user)){
-                    worksetData[item.user].push(item);
-                } else {
-                    worksetData[item.user] = [item];
-                }
-            });
-
-            allData.openTimes.forEach(function (item) {
-                if(!item.user) return;
-
-                if(worksetData.hasOwnProperty(item.user)){
-                    var data = worksetData[item.user].find(function (date) {
-                        return Math.abs(new Date(date.createdOn) - new Date(item.createdOn)) < 10000;
-                    });
-                    if(data){
-                        item['worksets'] = parseFloat((data.opened * 100) / (data.closed + data.opened)).toFixed(0) + '%';
-                        item['worksetPercentage'] = (data.opened * 100) / (data.closed + data.opened);
-                        tempData.push(item);
-                    }
-                }
-            });
-        } else if (dataType === 'Synch'){
-            allData.onSynched.forEach(function (item) {
-                if(!item.user) return;
-
-                if(worksetData.hasOwnProperty(item.user)){
-                    worksetData[item.user].push(item);
-                } else {
-                    worksetData[item.user] = [item];
-                }
-            });
-
-            allData.synchTimes.forEach(function (item) {
-                if(!item.user) return;
-
-                if(worksetData.hasOwnProperty(item.user)){
-                    var data = worksetData[item.user].find(function (date) {
-                        return Math.abs(new Date(date.createdOn) - new Date(item.createdOn)) < 10000;
-                    });
-                    if(data){
-                        item['worksets'] = parseFloat((data.opened * 100) / (data.closed + data.opened)).toFixed(0) + '%';
-                        item['worksetPercentage'] = (data.opened * 100) / (data.closed + data.opened);
-                        tempData.push(item);
-                    }
-                }
-            });
-        }
-
-        vm.tableData = tempData;
-    }
-
+    /**
+     * Processes data for table filter Open | Synch.
+     * @param type
+     */
     vm.setTableDataType = function (type) {
         vm.selectedTableData = type;
-        setTableData(vm.selectedTableData);
+
+        if(type === 'Open'){
+            vm.tableData = processData(allData.onOpened, allData.openTimes);
+        } else if (type === 'Synch'){
+            vm.tableData = processData(allData.onSynched, allData.synchTimes);
+        }
     };
+
+    vm.setTableDataType(vm.selectedTableData);
 
     /**
      * Filters Model Open Time data for specific user only.
@@ -158,4 +110,66 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder){
     vm.sortDate = function (item) {
         return new Date(item.createdOn);
     };
+
+    /**
+     * Processes synch times and open times to correlate them with workset data
+     * This info is displayed in the table.
+     * @param worksetArr
+     * @param timeArr
+     * @returns {Array}
+     */
+    function processData(worksetArr, timeArr){
+        var worksetData = {};
+        var tempData = [];
+        worksetArr.forEach(function (item) {
+            if(!item.user) return;
+
+            if(worksetData.hasOwnProperty(item.user)){
+                worksetData[item.user].push(item);
+            } else {
+                worksetData[item.user] = [item];
+            }
+        });
+
+        timeArr.forEach(function (item) {
+            if(!item.user) return;
+
+            if(worksetData.hasOwnProperty(item.user)){
+                var synchTime = item.createdOn;
+                var index = findMinIndex(worksetData[item.user], synchTime);
+
+                var data = worksetData[item.user][index];
+                item['worksets'] = parseFloat((data.opened * 100) / (data.closed + data.opened)).toFixed(0) + '%';
+                item['worksetPercentage'] = (data.opened * 100) / (data.closed + data.opened);
+                tempData.push(item);
+            }
+        });
+        return tempData;
+    }
+
+    /**
+     * Returns index of an item that was the closest time to the given synchTime.
+     * (Konrad) The idea here is that on synch event Workset info gets posted first so the time
+     * stamp for that will have x value. Then when synch is done, a synch time is posted
+     * and its time stamp now is y. When we are matching synch times to workset info we
+     * make sure that y-x is not negative which would mean that synch time occured later than
+     * workset info was posted. That would be info for another synch event. If it's positive
+     * then we are looking for the smallest time difference, and that's our synch time/workset data.
+     * @param arr
+     * @param synchTime
+     * @returns {number}
+     */
+    function findMinIndex(arr, synchTime){
+        var min = 0;
+        var index = 0;
+
+        for (var i = 0, len = arr.length; i < len; i++){
+            var current = arr[i].createdOn;
+            var diff = new Date(synchTime) - new Date(current);
+            min = diff < 0 ? min : diff;
+            index = diff < 0 ? index : i;
+        }
+
+        return index;
+    }
 }
