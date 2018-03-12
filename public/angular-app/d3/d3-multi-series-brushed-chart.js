@@ -66,8 +66,6 @@ angular.module('MissionControlApp').directive('d3MultiSeriesLineBrushed', ['d3',
                     }
                 });
 
-                console.log(lineData);
-
                 x.domain(d3.extent(data, function(d) { return d.date; }));
                 var maxValue = d3.max(lineData, function(c) {
                     return d3.max(c.values, function(v) {
