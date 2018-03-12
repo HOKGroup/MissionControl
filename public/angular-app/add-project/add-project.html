@@ -21,6 +21,9 @@
 								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.newProject.number"></span>
 							</label>
 							<input type="text" name="pNumber" class="form-control" id="formProjectNumber" placeholder="00.00000.00" ng-model="vm.newProject.number" required>
+							<div ng-show="form.$submitted || form.pNumber.$touched">
+								<div ng-show="form.pNumber.$error.required" class="text-danger">(*) Project Number is required.</div>
+							</div>
 						</fieldset>
 						<fieldset class="form-group">
 							<label for="formProjectName">
@@ -29,6 +32,12 @@
 								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.newProject.name"></span>
 							</label>
 							<input type="text" name="pName" class="form-control" id="formProjectName" placeholder="Project Name" ng-model="vm.newProject.name" required>
+							<div ng-show="form.$submitted || form.pName.$touched">
+								<div ng-show="form.pName.$error.required" class="text-danger">(*) Project Name is required.</div>
+							</div>
+							<div ng-show="vm.newProject.name.length > 35">
+								<div class="text-danger">(*) Project Name is too long.</div>
+							</div>
 						</fieldset>
 						<fieldset class="form-group">
 							<label for="formOfficeSelect">
@@ -156,7 +165,7 @@
 						</form>
 				</div>
 			</div>
-			<button type="submit" class="btn btn-primary pull-right" ng-click="vm.addProject()" style="margin:5px;" ng-disabled="!vm.newProject.name || !vm.newProject.number || !vm.newProject.office">
+			<button type="submit" class="btn btn-primary pull-right" ng-click="vm.addProject()" style="margin:5px;" ng-disabled="vm.verifyForm()">
 				<span class="glyphicon glyphicon-plus"></span>
 				Add Project
 			</button>

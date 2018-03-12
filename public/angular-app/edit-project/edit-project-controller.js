@@ -68,6 +68,14 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
     };
 
     /**
+     * Checks that all required fields are filled out.
+     * @returns {boolean}
+     */
+    vm.verifyForm = function () {
+        return !vm.selectedProject.number || !vm.selectedProject.name || vm.selectedProject.name.length > 35 || !vm.selectedProject.office;
+    };
+
+    /**
      * Returns to projects page.
      */
     vm.cancel = function () {

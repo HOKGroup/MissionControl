@@ -52,6 +52,14 @@ function AddProjectController(ProjectFactory, $window){
     };
 
     /**
+     * Checks that all required fields are filled out.
+     * @returns {boolean}
+     */
+    vm.verifyForm = function () {
+        return !vm.newProject.number || !vm.newProject.name || vm.newProject.name.length > 35 || !vm.newProject.office;
+    };
+
+    /**
      * Returns to projects page.
      */
     vm.cancel = function () {

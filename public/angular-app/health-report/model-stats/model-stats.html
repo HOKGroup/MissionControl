@@ -63,12 +63,23 @@
         </div>
     </div>
     <div class="row">
-        <div class="panel-group" id="p4">
+        <div class="panel-group">
             <div class="panel panel-default">
-                <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p4" data-target="#collapseP4">
-                    <h4 class="panel-title">Model Open Time</h4>
+                <div class="panel-heading">
+                    <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
+                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                            {{vm.selectedOpenUser}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 50px">
+                            <li ng-repeat="user in vm.OpenUsers">
+                                <a href="" ng-click="vm.setUserFilter(user, 'openTimes')">{{user}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <h4 class="panel-title" style="padding-top: 5px;">Model Open Time</h4>
                 </div>
-                <div id="collapseP4" class="panel-collapse collapse in">
+                <div class="panel-collapse">
                     <div class="panel-body no-padding">
                         <d3-zoomable-line data="vm.ModelOpenTimes" format-value="vm.formatDuration(item)"></d3-zoomable-line>
                     </div>
@@ -77,14 +88,71 @@
         </div>
     </div>
     <div class="row">
-        <div class="panel-group" id="p5">
+        <div class="panel-group">
             <div class="panel panel-default">
-                <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p5" data-target="#collapseP5">
+                <div class="panel-heading">
+                    <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
+                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                            {{vm.selectedSynchUser}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 50px">
+                            <li ng-repeat="user in vm.SynchUsers">
+                                <a href="" ng-click="vm.setUserFilter(user, 'synchTimes')">{{user}}</a>
+                            </li>
+                        </ul>
+                    </div>
                     <h4 class="panel-title">Model Synch Time</h4>
                 </div>
-                <div id="collapseP5" class="panel-collapse collapse in">
+                <div class="panel-collapse">
                     <div class="panel-body no-padding">
                         <d3-zoomable-line data="vm.ModelSynchTimes" format-value="vm.formatDuration(item)"></d3-zoomable-line>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
+                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                            {{vm.selectedTableData}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 50px">
+                            <li ng-repeat="type in vm.TableDataTypes">
+                                <a href="" ng-click="vm.setTableDataType(type)">{{type}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <h4 class="panel-title" style="padding-top: 5px;">Model {{vm.selectedTableData}} Time / Worksets Opened %</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <table id="table1" datatable="ng" dt-options="vm.dtOptions" dt-column-defs="vm.dtColumnDefs" class="table table-hover table-condensed datatable">
+                            <thead>
+                            <tr>
+                                <th class="col-md-3">Date/Time</th>
+                                <th class="col-md-5">User</th>
+                                <th class="col-md-2 text-center">Duration</th>
+                                <th>Open Time ms</th>
+                                <th class="col-md-2 text-center">Worksets</th>
+                                <th>Worksets %</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="i in vm.tableData | orderBy : vm.sortDate : false">
+                                <td>{{i.createdOn | date:"MM/dd/yy hh:mm"}}</td>
+                                <td>{{i.user}}</td>
+                                <td class="text-center">{{vm.formatDuration(i.value)}}</td>
+                                <td>{{i.value}}</td>
+                                <td class="text-center">{{i.worksets}}</td>
+                                <td>{{i.worksetPercentage}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
