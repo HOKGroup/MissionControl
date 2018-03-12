@@ -45,7 +45,7 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
         DTColumnDefBuilder.newColumnDef(2).withOption('orderData', '3'), //tasks
         DTColumnDefBuilder.newColumnDef(3).notVisible(), //task count
         DTColumnDefBuilder.newColumnDef(4), //instances
-        DTColumnDefBuilder.newColumnDef(5).withOption('orderData', '4'), //size
+        DTColumnDefBuilder.newColumnDef(5).withOption('orderData', '6'), //size
         DTColumnDefBuilder.newColumnDef(6).notVisible() //sizeValue
     ];
 
