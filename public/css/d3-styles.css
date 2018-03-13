@@ -42,6 +42,11 @@
     fill: none;
     stroke: #d3d3d3;
 }
+
+.dot {
+    fill: #D9534F;
+}
+
 text {
     font: 10px sans-serif;
 }

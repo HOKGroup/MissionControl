@@ -1,30 +1,40 @@
 angular.module('MissionControlApp').controller('ModelStatsController', ModelStatsController);
 
-function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder){
+function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, $uibModal){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.ModelData = this.processed;
     var allData = this.full;
+    var synchLimit = 3600000; // 1h
+    var openLimit = 18000000; // 5h
 
     vm.ModelSizes = allData.modelSizes;
-    vm.ModelOpenTimes = allData.openTimes;
-    vm.ModelSynchTimes = allData.synchTimes;
+
+    // set data for synch charts
+    var filtered = filterData(allData.synchTimes, synchLimit, "All"); //1h
+    vm.ModelSynchTimes = filtered.data;
+    vm.ExcludedModelSynchTimes = filtered.excludedData;
+
+    // set data for open charts
+    var filtered1 = filterData(allData.openTimes, openLimit, "All"); //5h
+    vm.ModelOpenTimes = filtered1.data;
+    vm.ExcludedModelOpenTimes = filtered1.excludedData;
+
+    // set data for user filters
     vm.selectedSynchUser = "All";
     vm.selectedOpenUser = "All";
-
     vm.OpenUsers = Array.from(new Set(vm.ModelOpenTimes.map(function(item){
         return item.user;
     })));
     vm.OpenUsers.unshift("All");
-
     vm.SynchUsers = Array.from(new Set(vm.ModelSynchTimes.map(function(item){
         return item.user;
     })));
     vm.SynchUsers.unshift("All");
-
     vm.selectedTableData = 'Synch';
     vm.TableDataTypes = ['Open', 'Synch'];
 
+    // set table options
     vm.dtOptions = {
         paginationType: 'simple_numbers',
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
@@ -40,6 +50,20 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder){
         DTColumnDefBuilder.newColumnDef(4).withOption('orderData', '5'), //worksets
         DTColumnDefBuilder.newColumnDef(5).notVisible() //workset percentage
     ];
+
+    /**
+     * Checks if value is larger than a given limit.
+     * @param item
+     * @returns {boolean}
+     */
+    vm.evaluateEventTime = function(item)
+    {
+        if (vm.selectedTableData === 'Synch'){
+            return item.value > synchLimit;
+        } else {
+            return item.value > openLimit;
+        }
+    };
 
     /**
      * Processes data for table filter Open | Synch.
@@ -65,24 +89,37 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder){
     vm.setUserFilter = function (user, data) {
         if(data === 'synchTimes'){
             vm.selectedSynchUser = user;
-            if(user === 'All'){
-                vm.ModelSynchTimes = allData.synchTimes;
-            } else {
-                vm.ModelSynchTimes = allData.synchTimes.filter(function (item) {
-                    return item.user === user;
-                });
-            }
+            var filtered = filterData(allData.synchTimes, synchLimit, user); // 1h
+            vm.ModelSynchTimes = filtered.data;
+            vm.ExcludedModelSynchTimes = filtered.excludedData;
         } else if (data === 'openTimes'){
             vm.selectedOpenUser = user;
-            if(user === 'All'){
-                vm.ModelOpenTimes = allData.openTimes;
-            } else {
-                vm.ModelOpenTimes = allData.openTimes.filter(function (item) {
-                    return item.user === user;
-                });
-            }
+            var filtered = filterData(allData.openTimes, openLimit, user); // 5h
+            vm.ModelOpenTimes = filtered.data;
+            vm.ExcludedModelOpenTimes = filtered.excludedData;
         }
     };
+
+    /**
+     * Filters selected array by value limit.
+     * @param arr
+     * @param limit
+     * @returns {{data: Array, excludedData: Array}}
+     */
+    function filterData(arr, limit, user){
+        var data = [];
+        var excludedData = [];
+        arr.forEach(function (item) {
+            if(user === 'All'){
+                if(+item.value > limit) excludedData.push(item);
+                else data.push(item);
+            } else {
+                if (+item.value > limit && item.user === user) excludedData.push(item);
+                else if (+item.value < limit && item.user === user) data.push(item);
+            }
+        });
+        return {'data' : data, "excludedData" : excludedData}
+    }
 
     /**
      * Formats file size from bytes to Kb, Mb etc.
@@ -146,6 +183,24 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder){
         });
         return tempData;
     }
+
+    /**
+     * Launches help window for the Sheets.
+     * @param size
+     */
+    vm.launchHelpWindow = function (size) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'angular-app/health-report/model-stats/help.html',
+            controller: 'ModelStatsHelpController as vm',
+            size: size
+        }).result.then(function(request){
+            if(!request) return;
+
+        }).catch(function(){
+            //if modal dismissed
+        });
+    };
 
     /**
      * Returns index of an item that was the closest time to the given synchTime.
