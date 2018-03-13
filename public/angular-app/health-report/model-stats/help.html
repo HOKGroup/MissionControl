@@ -1,0 +1,54 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title pull-left">Help</h5>
+        <button type="button" class="close pull-right" ng-click="vm.cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div id="menu">
+            <div class="panel list-group">
+                <!--Filtering-->
+                <a href="" class="list-group-item" data-toggle="collapse" data-target="#filtering" data-parent="#menu">
+                    Filtering
+                </a>
+                <div id="filtering" class="sublinks collapse">
+                    <div class="list-group-item small">
+                        <img src="images/model-stats/filtering.jpg" class="img-responsive center-block" alt="">
+                        <ul class="list-group list-group-flush" style="margin-top: 15px">
+                            <li class="list-group-item" style="color: black">
+                                <b>"ALL"</b> is a user filter. Select one of the user names and only events for that user will be shown.
+                            </li>
+                            <li class="list-group-item" style="color: black">
+                                <b>"Mouse zoom"</b> is a time filter. It allows you to narrow down a certain time period by using the scroll wheel.
+                            </li>
+                            <li class="list-group-item" style="color: black">
+                                <b>"Brush bar"</b> is a time filter. It allows you to narrow down a certain time period by grabbing the edges of the grey rectangle and dragging them.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!--Functionality-->
+                <a href="" class="list-group-item" data-toggle="collapse" data-target="#colorCoding" data-parent="#menu">
+                    Functionality
+                </a>
+                <div id="colorCoding" class="sublinks collapse in">
+                    <div class="list-group-item small">
+                        <img src="images/model-stats/functionality.jpg" class="img-responsive center-block" alt="">
+                        <ul class="list-group list-group-flush" style="margin-top: 15px">
+                            <li class="list-group-item" style="color: black">
+                                <b>"Red Dots"</b> indicate all events that took more than <b>1h</b> for Model Synch Time and <b>5h</b> for Model Open Times. Hover over it to see more info.
+                            </li>
+                            <li class="list-group-item" style="color: black">
+                                <b>"Blue Line"</b> indicates all events that took less than <b>1h(Synch) or 5h(Open)</b>. Both Line and Dots are filtered by the user.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
+    </div>
+</div>
