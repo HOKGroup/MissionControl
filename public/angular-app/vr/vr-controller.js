@@ -264,7 +264,8 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                     response.data.forEach(function (folder) {
                         if(folder.type !== 'FOLDER') return;
 
-                        var sharableLink = $base64.encode(folder.projectId + ':' + folder.id).toString('base64');
+                        // var sharableLink = $base64.encode(folder.projectId + ':' + folder.id).toString('base64');
+                        var sharableLink = folder.projectId + ':' + folder.id;
                         var bucket = {
                             name: folder.name,
                             images: [],
@@ -458,7 +459,8 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                     return;
                 }
 
-                var sharableLink = $base64.encode(response.data.projectId + ':' + response.data.id).toString('base64');
+                // var sharableLink = $base64.encode(response.data.projectId + ':' + response.data.id).toString('base64');
+                var sharableLink = response.data.projectId + ':' + response.data.id;
 
                 bucket.id = response.data.id;
                 bucket.parentId = response.data.parentId;
