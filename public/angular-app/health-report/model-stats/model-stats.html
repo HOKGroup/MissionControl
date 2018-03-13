@@ -77,11 +77,21 @@
                             </li>
                         </ul>
                     </div>
-                    <h4 class="panel-title" style="padding-top: 5px;">Model Open Time</h4>
+                    <h4 class="panel-title" style="padding-top: 5px;">
+                        Model Open Time
+                        <a href="">
+                            <i class="fa fa-info-circle" ng-click="vm.launchHelpWindow('lg')"></i>
+                        </a>
+                        [> 5h <i class="fa fa-circle" style="color: #D9534F"></i>]
+                    </h4>
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body no-padding">
-                        <d3-zoomable-line data="vm.ModelOpenTimes" format-value="vm.formatDuration(item)"></d3-zoomable-line>
+                        <d3-line-brushed-dots
+                                data="vm.ModelOpenTimes"
+                                excluded="vm.ExcludedModelOpenTimes"
+                                format-value="vm.formatDuration(item)">
+                        </d3-line-brushed-dots>
                     </div>
                 </div>
             </div>
@@ -102,11 +112,21 @@
                             </li>
                         </ul>
                     </div>
-                    <h4 class="panel-title">Model Synch Time</h4>
+                    <h4 class="panel-title" style="padding-top: 5px;">
+                        Model Synch Time
+                        <a href="">
+                            <i class="fa fa-info-circle" ng-click="vm.launchHelpWindow('lg')"></i>
+                        </a>
+                        [> 1h <i class="fa fa-circle" style="color: #D9534F"></i>]
+                    </h4>
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body no-padding">
-                        <d3-zoomable-line data="vm.ModelSynchTimes" format-value="vm.formatDuration(item)"></d3-zoomable-line>
+                        <d3-line-brushed-dots
+                                data="vm.ModelSynchTimes"
+                                excluded="vm.ExcludedModelSynchTimes"
+                                format-value="vm.formatDuration(item)">
+                        </d3-line-brushed-dots>
                     </div>
                 </div>
             </div>
@@ -143,7 +163,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="i in vm.tableData | orderBy : vm.sortDate : false">
+                            <tr ng-repeat="i in vm.tableData | orderBy : vm.sortDate : false"
+                                ng-class="vm.evaluateEventTime(i) ? 'bg-danger' : 'table-info'">
                                 <td>{{i.createdOn | date:"MM/dd/yy hh:mm"}}</td>
                                 <td>{{i.user}}</td>
                                 <td class="text-center">{{vm.formatDuration(i.value)}}</td>
