@@ -1,0 +1,119 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Styles Health Score:</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <div class="col-md-3">
+                            <d3-circle data="vm.StylesData.scoreData" class="cn"></d3-circle>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="small">
+                                <p>
+                                    {{vm.StylesData.description}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div id="menu">
+                                <div class="panel list-group">
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sm" data-parent="#menu">
+                                        Overriden Dimensions
+                                        <span ng-class="vm.StylesData.overridenDimensions <= 10
+                                            ? 'badge progress-bar-success'
+                                            : vm.StylesData.overridenDimensions >= 10 && vm.StylesData.overridenDimensions <= 20
+                                            ? 'badge progress-bar-warning'
+                                            : 'badge progress-bar-danger' ">{{vm.StylesData.overridenDimensions}}</span>
+                                    </a>
+                                    <div id="sm" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            Overriding actual dimension values can be considered bad practice in certain conditions. If we are overriding a dimension
+                                            to indicate that values are all Equal "EQ" or defining given dimension is someone else's scope than it's acceptable. Not
+                                            acceptable is overriding dimension values to "fudge" them, round them or straight up come up with bogus values
+                                            that don't reflect the model. Green is less than 10, orange is more than 10 but less than 20 while more than 20 is red.
+                                        </div>
+                                    </div>
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sl" data-parent="#menu">
+                                        Dimensions use Project Units
+                                        <span ng-class="vm.StylesData.usesProjectUnits === 'Yes'
+                                            ? 'badge progress-bar-success'
+                                            : 'badge progress-bar-danger' ">{{vm.StylesData.usesProjectUnits}}</span>
+                                    </a>
+                                    <div id="sl" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            Dimensions should be using globally defined Project Units instead of Type specific overrides. Note that there is nothing wrong with
+                                            using units overrides when wanting to change from fractional to decimal units etc. However, users often define custom dimension units
+                                            in order to round dimensions to different values, which in return can cause some serious discrepancies for dimension strings spanning
+                                            across multiple grid lines.
+                                        </div>
+                                    </div>
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#s2" data-parent="#menu">
+                                        Unused Dimension Types
+                                        <span ng-class="vm.StylesData.unusedDimensionTypes === 'Yes'
+                                            ? 'badge progress-bar-danger'
+                                            : 'badge progress-bar-success'">{{vm.StylesData.unusedDimensionTypes}}</span>
+                                    </a>
+                                    <div id="s2" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            There is nothing wrong with creating new Types, however this can lead to confusion about which are the standard. Confusion can cause
+                                            chaos and often results with all available Types actually being used on a project. This is pretty bad for consistency and readability.
+                                            If Dimension Types are not being used, they should be deleted.
+                                        </div>
+                                    </div>
+                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#s3" data-parent="#menu">
+                                        Unused Text Types
+                                        <span ng-class="vm.StylesData.unusedTextTypes === 'Yes'
+                                            ? 'badge progress-bar-danger'
+                                            : 'badge progress-bar-success'">{{vm.StylesData.unusedTextTypes}}</span>
+                                    </a>
+                                    <div id="s3" class="sublinks collapse">
+                                        <div class="list-group-item small">
+                                            There is nothing wrong with creating new Types, however this can lead to confusion about which are the standard. Confusion can cause
+                                            chaos and often results with all available Types actually being used on a project. This is pretty bad for consistency and readability.
+                                            If Text Types are not being used, they should be deleted.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="row" ng-if="vm.d3ViewStatsData.length >= 2">-->
+        <!--<div class="panel-group" id="p1">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p1" data-target="#collapseP1">-->
+                    <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #FD8D3C"></span> Views on Sheet</p>-->
+                    <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #3182BD"></span> Total Views</p>-->
+                    <!--<h4 class="panel-title">Views / Views on Sheet</h4>-->
+                <!--</div>-->
+                <!--<div id="collapseP1" class="panel-collapse collapse in">-->
+                    <!--<div class="panel-body no-padding">-->
+                        <!--<d3-multi-series-line-brushed data="vm.d3ViewStatsData" keys="vm.ViewKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row" ng-if="vm.d3ViewStatsData.length >= 2">-->
+        <!--<div class="panel-group" id="p2">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p2" data-target="#collapseP2">-->
+                    <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #FD8D3C"></span> Schedules on Sheet</p>-->
+                    <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #3182BD"></span> Total Schedules</p>-->
+                    <!--<h4 class="panel-title">Schedules / Schedules on Sheet</h4>-->
+                <!--</div>-->
+                <!--<div id="collapseP2" class="panel-collapse collapse in">-->
+                    <!--<div class="panel-body no-padding">-->
+                        <!--<d3-multi-series-line-brushed data="vm.d3ViewStatsData" keys="vm.ScheduleKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+</div>
