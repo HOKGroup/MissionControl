@@ -58,6 +58,7 @@ var sheets = require('./models/sheets-model');
      app.post('/api/v1/healthrecords/:id/onopened', healthReport.onOpened);
      app.post('/api/v1/healthrecords/:id/itemcount', healthReport.postItemCount);
      app.post('/api/v1/healthrecords/:id/viewstats', healthReport.viewStats);
+     app.post('/api/v1/healthrecords/:id/stylestats', healthReport.styleStats);
      app.get('/api/v1/healthrecords/:id/viewstats', healthReport.getViewStats);
      app.post('/api/v1/healthrecords/:id/linkstats', healthReport.postLinkStats);
      app.get('/api/v1/healthrecords/:id/linkstats', healthReport.getLinkStats);
