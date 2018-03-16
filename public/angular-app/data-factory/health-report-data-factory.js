@@ -111,7 +111,6 @@ function HealthReportFactory(UtilityService){
             if(!data) return;
 
             var overridenDimensions = data.dimSegmentStats.length;
-
             var passingChecks = 0;
             overridenDimensions <= 10
                 ? passingChecks += 2
@@ -119,37 +118,35 @@ function HealthReportFactory(UtilityService){
                 ? passingChecks += 1
                 : passingChecks += 0;
 
-            var usesProjectUnits = data.dimStats.every(function(item){
-                return item.usesProjectUnits;
-            });
+            var usesProjectUnits = true;
+            var unusedDimensionTypes = true;
+            var unusedTextTypes = true;
+            var unusedTypes = 0;
+            for (var i = 0; i < data.dimStats.length; i++){
+                if (i.instances === 0){
+                    unusedTypes += 1;
+                    unusedDimensionTypes = false;
+                }
+                if (!i.usesProjectUnits) usesProjectUnits = false;
+            }
+            for (var i = 0; i < data.textStats.length; i++){
+                if (i.instances === 0){
+                    unusedTypes += 1;
+                    unusedTextTypes = false;
+                }
+            }
 
             usesProjectUnits === true
                 ? passingChecks += 2
                 : passingChecks += 0;
 
-            var unusedDimensionTypes = data.dimStats.every(function(item){
-                return item.instances > 0;
-            });
-
-            unusedDimensionTypes === true
+            unusedDimensionTypes === false
                 ? passingChecks += 2
                 : passingChecks += 0;
 
-            var unusedTextTypes = data.textStats.every(function (item) {
-                return item.instances > 0;
-            });
-
-            unusedTextTypes === true
+            unusedTextTypes === false
                 ? passingChecks += 2
                 : passingChecks += 0;
-
-            var unusedTypes = 0;
-            data.dimStats.forEach(function (item) {
-                if (item.instances === 0) unusedTypes += 1;
-            });
-            data.textStats.forEach(function (item) {
-                if (item.instances === 0) unusedTypes += 1;
-            });
 
             var styleScoreData = {
                 passingChecks: passingChecks,
@@ -169,8 +166,8 @@ function HealthReportFactory(UtilityService){
             return {
                 overridenDimensions: overridenDimensions,
                 usesProjectUnits: usesProjectUnits === true ? 'Yes' : 'No',
-                unusedDimensionTypes : unusedDimensionTypes === true ? 'No' : 'Yes',
-                unusedTextTypes : unusedTextTypes === true ? 'No' : 'Yes',
+                unusedDimensionTypes : unusedDimensionTypes === true ? 'Yes' : 'No',
+                unusedTextTypes : unusedTextTypes === true ? 'Yes' : 'No',
                 scoreData: styleScoreData,
                 styleScore: styleScore,
                 description: desc,
