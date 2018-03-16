@@ -103,6 +103,78 @@ function HealthReportFactory(UtilityService){
             };
         },
 
+        /**
+         * Processes Styles Stats data returning data needed to create Health Score graphics.
+         * @param data
+         */
+        processStyleStats: function(data){
+            if(!data) return;
+
+            var overridenDimensions = data.dimSegmentStats.length;
+            var passingChecks = 0;
+            overridenDimensions <= 10
+                ? passingChecks += 2
+                : overridenDimensions > 10 && overridenDimensions <= 20
+                ? passingChecks += 1
+                : passingChecks += 0;
+
+            var usesProjectUnits = true;
+            var unusedDimensionTypes = true;
+            var unusedTextTypes = true;
+            var unusedTypes = 0;
+            for (var i = 0; i < data.dimStats.length; i++){
+                if (i.instances === 0){
+                    unusedTypes += 1;
+                    unusedDimensionTypes = false;
+                }
+                if (!i.usesProjectUnits) usesProjectUnits = false;
+            }
+            for (var i = 0; i < data.textStats.length; i++){
+                if (i.instances === 0){
+                    unusedTypes += 1;
+                    unusedTextTypes = false;
+                }
+            }
+
+            usesProjectUnits === true
+                ? passingChecks += 2
+                : passingChecks += 0;
+
+            unusedDimensionTypes === false
+                ? passingChecks += 2
+                : passingChecks += 0;
+
+            unusedTextTypes === false
+                ? passingChecks += 2
+                : passingChecks += 0;
+
+            var styleScoreData = {
+                passingChecks: passingChecks,
+                count: unusedTypes,
+                label: "Unused Styles",
+                newMax: 8};
+
+            // (Konrad) This score needs to be remaped to 0-6 range
+            var styleScore = Math.round((passingChecks * 6)/8);
+
+            var desc = 'Revit allows users to easily create new Types/Styles. However, too many Types available causes ' +
+                'confusion as to which one to use. Standards desintegrate quickly, and chaos takes reign. Here ' +
+                'we are looking to make sure that there are no excess Types created that are not being used. Also ' +
+                'we are looking at Dimensions and making sure they are not being overriden. That is a bad practice ' +
+                'and should be avoided.';
+
+            return {
+                overridenDimensions: overridenDimensions,
+                usesProjectUnits: usesProjectUnits === true ? 'Yes' : 'No',
+                unusedDimensionTypes : unusedDimensionTypes === true ? 'Yes' : 'No',
+                unusedTextTypes : unusedTextTypes === true ? 'Yes' : 'No',
+                scoreData: styleScoreData,
+                styleScore: styleScore,
+                description: desc,
+                name: "Styles:"
+            };
+        },
+
         processViewStats: function (data) {
             if(!data) return;
 

@@ -7,12 +7,13 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
     vm.ShowFamiliesStats = {name: "families", value: false};
     vm.ShowWorksetStats = {name: "worksets", value: false};
     vm.ShowViewStats = {name: "views", value: false};
+    vm.ShowStyleStats = {name: "styles", value: false};
     vm.ShowModelStats = {name: "models", value: false};
     vm.ShowMainPage = {name: "main", value: true};
     vm.FamilyCollection = null;
     vm.HealthRecords = [];
     vm.loading = false;
-    var allControllers = [vm.ShowLinkStats, vm.ShowFamiliesStats, vm.ShowWorksetStats, vm.ShowViewStats, vm.ShowModelStats, vm.ShowMainPage];
+    var allControllers = [vm.ShowLinkStats, vm.ShowFamiliesStats, vm.ShowWorksetStats, vm.ShowViewStats, vm.ShowStyleStats, vm.ShowModelStats, vm.ShowMainPage];
 
     getSelectedProject(vm.projectId);
 
@@ -96,6 +97,11 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
                 var viewData = response.data.viewStats[response.data.viewStats.length - 1];
                 vm.ViewData = HealthReportFactory.processViewStats(viewData);
                 if(vm.ViewData) vm.AllData.push(vm.ViewData);
+
+                //TODO: Make sure it works
+                var styleData = response.data.styleStats[response.data.styleStats.length - 1];
+                vm.StyleData = HealthReportFactory.processStyleStats(styleData);
+                if(vm.StyleData) vm.AllData.push(vm.StyleData);
 
                 vm.ModelData = HealthReportFactory.processModelStats(response.data);
                 if(vm.ModelData) vm.AllData.push(vm.ModelData);

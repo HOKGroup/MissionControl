@@ -197,6 +197,25 @@ module.exports.viewStats = function (req, res) {
         })
 };
 
+/**
+ * Pushes Style info into an array
+ * @param req
+ * @param res
+ */
+module.exports.styleStats = function (req, res) {
+    var id = req.params.id;
+    HealthRecords.update(
+        {'_id': id},
+        {'$push': {'styleStats': req.body}},
+        function(err){
+            if(err) {
+                console.log(err);
+                res.status(500).json({status: err});
+            } else {
+                res.status(201).json({_id: id});
+            }
+        });
+};
 
 var _addSynchedLog = function (req, res, healthrecord){
     healthrecord.onSynched.push({

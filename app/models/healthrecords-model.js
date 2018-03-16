@@ -24,6 +24,49 @@ var viewStatsSchema = new mongoose.Schema({
     createdOn: Date
 });
 
+/**
+ * Data Schema for Styles Stats
+ */
+var styleStatsSchema = new mongoose.Schema({
+    createdOn: Date,
+    user: String,
+    textStats: [{
+        createdOn: Date,
+        name: String,
+        instances: Number,
+        bold: Boolean,
+        color: [Number],
+        italic: Boolean,
+        leaderArrowhead: String,
+        lineWeight: Number,
+        textFont: String,
+        textSize: String,
+        underline: Boolean
+    }],
+    dimStats: [{
+        createdOn: Date,
+        name: String,
+        instances: Number,
+        usesProjectUnits: Boolean,
+        bold: Boolean,
+        color: [Number],
+        italic: Boolean,
+        leaderType: String,
+        lineWeight: Number,
+        textFont: String,
+        textSize: String,
+        underline: Boolean,
+        styleType: String
+    }],
+    dimSegmentStats: [{
+        createdOn: Date,
+        isOverriden: Boolean,
+        value: String,
+        valueOverride: String,
+        isLocked: Boolean
+    }]
+});
+
 var linksStatsSchema = new mongoose.Schema({
     totalImportedDwg: Number, //total number of ImportInstance objects
     importedDwgFiles:[{
@@ -60,6 +103,7 @@ var healthCheckSchema = new mongoose.Schema({
     onSynched: [worksetEventSchema],
     itemCount : [worksetItemSchema],
     viewStats: [viewStatsSchema],
+    styleStats: [styleStatsSchema],
     linkStats: [linksStatsSchema],
     familyStats: {
         type: mongoose.Schema.Types.ObjectId,
