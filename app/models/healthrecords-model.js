@@ -55,7 +55,8 @@ var styleStatsSchema = new mongoose.Schema({
         lineWeight: Number,
         textFont: String,
         textSize: String,
-        underline: Boolean
+        underline: Boolean,
+        styleType: String
     }],
     dimSegmentStats: [{
         createdOn: Date,
