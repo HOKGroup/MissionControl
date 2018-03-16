@@ -8,13 +8,6 @@ function LinkStatsController($routeParams, DTColumnDefBuilder){
     vm.StylesKeys = ["totalDwgStyles", "totalImportedStyles"];
     vm.d3GoalLine = {name: "Goal", value: 50};
 
-    var importCount = 0;
-    this.processed.importedFiles.forEach(function(item){
-        if(!item.isLinked) importCount++;
-    });
-
-    vm.ImportCount = importCount;
-
     vm.dtOptions1 = {
         paginationType: 'simple_numbers',
         lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']]

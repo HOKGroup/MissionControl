@@ -60,11 +60,20 @@ function HealthReportFactory(UtilityService){
             };
         },
 
+        /**
+         * Processes Links Stats data returning data needed to create Health Score graphics.
+         * @param data
+         */
         processLinkStats: function (data) {
             if(!data) return;
 
+            var importCount = 0;
+            data.importedDwgFiles.forEach(function(item){
+                if(!item.isLinked) importCount++;
+            });
+
             var passingChecks = 0;
-            data.totalImportedDwg === 0
+            importCount === 0
                 ? passingChecks += 2
                 : passingChecks += 0;
             data.unusedLinkedImages === 0
@@ -72,10 +81,12 @@ function HealthReportFactory(UtilityService){
                 : data.unusedLinkedImages <= 2
                 ? passingChecks += 1
                 : passingChecks += 0;
-            data.totalImportedStyles <= 25
+
+            var totalStyles = data.totalDwgStyles + data.totalImportedStyles;
+            totalStyles <= 25
                 ? passingChecks += 2
-                : data.totalImportedStyles > 25 && data.totalImportedStyles <= 50
-                ? passingChecks + 1
+                : totalStyles > 25 && totalStyles <= 50
+                ? passingChecks += 1
                 : passingChecks += 0;
 
             var linkScoreData = {
@@ -92,9 +103,9 @@ function HealthReportFactory(UtilityService){
                 "\n*Not all links have to be placed.";
 
             return {
-                importedContentCount: data.totalImportedDwg,
+                importedContentCount: importCount,
                 unusedImageCount: data.unusedLinkedImages,
-                importedObjectStylesCount: data.totalDwgStyles + data.totalImportedStyles,
+                importedObjectStylesCount: totalStyles,
                 scoreData: linkScoreData,
                 importedFiles: data.importedDwgFiles,
                 linkScore: linkScoreData.passingChecks,
