@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').controller('ConfigController', ConfigController);
 
-function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DTColumnDefBuilder, $window, $uibModal){
+function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DTColumnDefBuilder, $window, $uibModal, UtilityService){
     var vm = this;
     vm.status;
     vm.projectId = $routeParams.projectId;
@@ -29,7 +29,14 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
         startingDay: 1
     };
 
-
+    /**
+     * Checks if given object has any keys.
+     * @param obj
+     * @returns {boolean}
+     */
+    vm.isEmptyObject = function(obj){
+        return UtilityService.isEmptyObject(obj);
+    };
 
     /**
      * Filters Editing Records based on selected date range.

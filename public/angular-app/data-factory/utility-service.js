@@ -71,6 +71,15 @@ function UtilityService(){
 
         rgbToHex : function (r, g, b) {
             return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+        },
+
+        isEmptyObject : function (obj) {
+            for(var prop in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

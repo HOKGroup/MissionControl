@@ -111,6 +111,15 @@
                                     </li>
                                 </ul>
                             </fieldset>
+                            <fieldset class="form-group" ng-show="updater.isUpdaterOn && !vm.isEmptyObject(updater.userOverrides)">
+                                <label>User Overrides</label>
+                                <ul ng-repeat="(key, value) in updater.userOverrides" class="list-unstyled">
+                                    <li>
+                                        {{ value.description }}
+                                        <input type="text" class="form-control" placeholder="Enter override value." ng-model="updater.userOverrides[key].value">
+                                    </li>
+                                </ul>
+                            </fieldset>
                         </form>
                     </div>
                 </div>
