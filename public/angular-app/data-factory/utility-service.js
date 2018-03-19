@@ -64,6 +64,7 @@ function UtilityService(){
             array.splice(to, 0, array.splice(from, 1)[0]);
         },
 
+<<<<<<< HEAD
         guid: function () {
             function gen(count) {
                 var out = "";
@@ -130,6 +131,15 @@ function UtilityService(){
                         (comparison * -1) : comparison
                 );
             };
+=======
+        componentToHex: function (c) {
+            var hex = c.toString(16);
+            return hex.length === 1 ? "0" + hex : hex;
+        },
+
+        rgbToHex : function (r, g, b) {
+            return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+>>>>>>> master
         }
     }
 }

@@ -429,6 +429,7 @@ a {
   text-overflow: ellipsis;
 }
 
+<<<<<<< HEAD
 /*Hides contents.*/
 .none{
   display: none;
@@ -443,4 +444,8 @@ to front while pushing background just behind it.*/
 
 .modal-backdrop {
   z-index: 98999 !important;
+=======
+.pointer {
+  cursor: pointer;
+>>>>>>> master
 }

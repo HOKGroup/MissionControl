@@ -42,3 +42,12 @@ angular.module('MissionControlApp').component('viewStats', {
         processed: '=',
         full: '='}
 });
+
+angular.module('MissionControlApp').component('styleStats', {
+    templateUrl: 'angular-app/health-report/styles-stats/styles-stats.html',
+    controller: 'StyleStatsController',
+    controllerAs: 'vm',
+    bindings: {
+        processed: '=',
+        full: '='}
+});
