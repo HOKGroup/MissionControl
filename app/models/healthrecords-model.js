@@ -61,7 +61,8 @@ var styleStatsSchema = new mongoose.Schema({
     dimSegmentStats: [{
         createdOn: Date,
         isOverriden: Boolean,
-        value: String,
+        value: Number,
+        valueString: String,
         valueOverride: String,
         isLocked: Boolean
     }]
