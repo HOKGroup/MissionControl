@@ -37,7 +37,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
     // set table options for dimension types
     vm.dtOptions2 = DTOptionsBuilder.newOptions()
         .withOption('data', vm.DimensionStats)
-        .withPaginationType('full_numbers')
+        .withPaginationType('simple_numbers')
         .withDisplayLength(10)
         .withOption('order', [0, 'asc'])
         .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
@@ -52,7 +52,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
         DTColumnBuilder.newColumn('name')
             .withTitle('Name')
             .withOption('className', 'details-control pointer')
-            .withOption('width', '40%'),
+            .withOption('width', '50%'),
         DTColumnBuilder.newColumn('styleType')
             .withTitle('Type')
             .withOption('width', '15%'),
@@ -65,10 +65,6 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
             .withOption('className', 'text-center')
             .withOption('width', '15%')
             .renderWith(stringFromBool),
-        DTColumnBuilder.newColumn('textFont')
-            .withTitle('Font')
-            .withOption('className', 'text-center')
-            .withOption('width', '10%'),
         DTColumnBuilder.newColumn('textSize')
             .withTitle('Size')
             .withOption('className', 'text-center')
@@ -87,7 +83,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
     // set table options for dimension types
     vm.dtOptions3 = DTOptionsBuilder.newOptions()
         .withOption('data', vm.TextStats)
-        .withPaginationType('full_numbers')
+        .withPaginationType('simple_numbers')
         .withDisplayLength(10)
         .withOption('order', [0, 'asc'])
         .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
@@ -102,23 +98,28 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
         DTColumnBuilder.newColumn('name')
             .withTitle('Name')
             .withOption('className', 'details-control3 pointer')
-            .withOption('width', '40%'),
+            .withOption('width', '50%'),
         DTColumnBuilder.newColumn('instances')
             .withTitle('Count')
             .withOption('className', 'text-center')
-            .withOption('width', '15%'),
+            .withOption('width', '10%'),
         DTColumnBuilder.newColumn('textFont')
             .withTitle('Font')
             .withOption('className', 'text-center')
-            .withOption('width', '15%'),
+            .withOption('width', '20%'),
+        DTColumnBuilder.newColumn('textSizeString')
+            .withTitle('Size')
+            .withOption('className', 'text-center')
+            .withOption('width', '10%')
+            .withOption('orderData', 4),
         DTColumnBuilder.newColumn('textSize')
             .withTitle('Size')
             .withOption('className', 'text-center')
-            .withOption('width', '15%'),
+            .notVisible(),
         DTColumnBuilder.newColumn('color')
             .withTitle('Color')
             .withOption('className', 'text-center')
-            .withOption('width', '15%')
+            .withOption('width', '10%')
             .renderWith(renderColor)
     ];
 

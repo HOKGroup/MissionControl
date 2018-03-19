@@ -98,16 +98,16 @@
                                class="table table-hover table-condensed datatable">
                             <thead>
                             <tr>
-                                <th class="col-md-5">Date/Time</th>
-                                <th class="col-md-3 text-center">Value</th>
-                                <th class="col-md-3 text-center">Value Override</th>
+                                <th class="col-md-3">Date/Time</th>
+                                <th class="col-md-4 text-center">Value</th>
+                                <th class="col-md-4 text-center">Value Override</th>
                                 <th class="col-md-2 text-center">Locked</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="i in vm.DimensionSegmentStats | orderBy : vm.sortDate : false">
                                 <td>{{i.createdOn | date:"MM/dd/yy hh:mm"}}</td>
-                                <td class="text-center">{{i.value}}</td>
+                                <td class="text-center">{{i.valueString}}</td>
                                 <td class="text-center">{{i.valueOverride}}</td>
                                 <td class="text-center">{{i.isLocked}}</td>
                             </tr>
