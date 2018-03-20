@@ -64,7 +64,6 @@ function UtilityService(){
             array.splice(to, 0, array.splice(from, 1)[0]);
         },
 
-<<<<<<< HEAD
         guid: function () {
             function gen(count) {
                 var out = "";
@@ -108,9 +107,9 @@ function UtilityService(){
         },
 
         compareValues: function compareValues(key, order) {
-            if(!order) order = 'asc';
-            return function(a, b) {
-                if(!a.hasOwnProperty(key) ||
+            if (!order) order = 'asc';
+            return function (a, b) {
+                if (!a.hasOwnProperty(key) ||
                     !b.hasOwnProperty(key)) {
                     return 0;
                 }
@@ -131,7 +130,8 @@ function UtilityService(){
                         (comparison * -1) : comparison
                 );
             };
-=======
+        },
+
         componentToHex: function (c) {
             var hex = c.toString(16);
             return hex.length === 1 ? "0" + hex : hex;
@@ -139,7 +139,6 @@ function UtilityService(){
 
         rgbToHex : function (r, g, b) {
             return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
->>>>>>> master
         }
     }
 }
