@@ -123,7 +123,8 @@ function AddConfigController($routeParams, ConfigFactory, $window){
                 description: 'This tool will prevent users from Unloading Linked Revit files for "all users" which causes such Linked File to be unloaded by default when opening project.',
                 addInId: '9C4D37B2-155D-4AC8-ACCF-383D86673F1C',
                 addInName: 'Mission Control',
-                isUpdaterOn: true
+                isUpdaterOn: true,
+                categoryTriggers: []
             };
 
         var updater_healthRecords = {
@@ -132,7 +133,18 @@ function AddConfigController($routeParams, ConfigFactory, $window){
             description: 'This tool will monitor and report on some of the most critical Revit Model "health" metrics like Worksets, Families, Views etc.',
             addInId: 'd812f403-125c-4e76-83f4-32d6f7227dfe',
             addInName: 'Mission Control',
-            isUpdaterOn: false
+            isUpdaterOn: false,
+            categoryTriggers: [],
+            userOverrides: {
+                familyNameCheck: {
+                    description: "Family Name Check:",
+                    values: ["HOK_I", "HOK_M"]
+                },
+                dimensionValueCheck: {
+                    description: "Dimension Override Check:",
+                    values: ["EQ"]
+                }
+            }
         };
 
         var monitor_sharedParameters = {
@@ -245,4 +257,57 @@ function AddConfigController($routeParams, ConfigFactory, $window){
         }
         if(!vm.HasFiles || vm.newConfig.name.length === 0) vm.status = "Please fill out all required fields."
     };
+
+    //region Family Name Overrides
+    vm.familyNameCheckTag = null;
+    vm.dimensionValueCheckTag = null;
+
+    /**
+     * Add tag to family name overrides.
+     * @param arr
+     * @constructor
+     */
+    vm.AddFamilyTag = function (arr) {
+        if(vm.familyNameCheckTag === null) return;
+
+        arr.push(vm.familyNameCheckTag);
+        vm.familyNameCheckTag = null;
+    };
+
+    vm.AddDimensionTag = function (arr) {
+        if(vm.dimensionValueCheckTag === null) return;
+
+        arr.push(vm.dimensionValueCheckTag);
+        vm.dimensionValueCheckTag = null;
+    };
+
+    /**
+     *
+     * @param event
+     * @param arr
+     * @param action
+     */
+    vm.onEnter = function (event, arr, action) {
+        if(event.which !== 13) return;
+
+        switch (action){
+            case 'FamilyNameCheck':
+                vm.AddFamilyTag(arr);
+                break;
+            case 'DimensionValueCheck':
+                vm.AddDimensionTag(arr);
+                break;
+        }
+    };
+
+    /**
+     * Removes a string from arry by index.
+     * @param arr
+     * @param index
+     * @constructor
+     */
+    vm.RemoveTag = function (arr, index) {
+        arr.splice(index, 1);
+    };
+    //endregion
 }

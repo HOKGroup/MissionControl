@@ -31,6 +31,7 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
 
     //region Family Name Overrides
     vm.familyNameCheckTag = null;
+    vm.dimensionValueCheckTag = null;
 
     /**
      * Add tag to family name overrides.
@@ -38,8 +39,36 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
      * @constructor
      */
     vm.AddFamilyTag = function (arr) {
+        if(vm.familyNameCheckTag === null) return;
+
         arr.push(vm.familyNameCheckTag);
         vm.familyNameCheckTag = null;
+    };
+
+    vm.AddDimensionTag = function (arr) {
+        if(vm.dimensionValueCheckTag === null) return;
+
+        arr.push(vm.dimensionValueCheckTag);
+        vm.dimensionValueCheckTag = null;
+    };
+
+    /**
+     *
+     * @param event
+     * @param arr
+     * @param action
+     */
+    vm.onEnter = function (event, arr, action) {
+        if(event.which !== 13) return;
+
+        switch (action){
+            case 'FamilyNameCheck':
+                vm.AddFamilyTag(arr);
+                break;
+            case 'DimensionValueCheck':
+                vm.AddDimensionTag(arr);
+                break;
+        }
     };
 
     /**
@@ -50,17 +79,6 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
      */
     vm.RemoveTag = function (arr, index) {
         arr.splice(index, 1);
-    };
-
-    /**
-     * Catches keyboard Enter key when user finishes editing bucket name.
-     * @param arr
-     * @param event
-     */
-    vm.onEnter = function (event, arr) {
-        if(event.which !== 13) return;
-        arr.push(vm.familyNameCheckTag);
-        vm.familyNameCheckTag = null;
     };
     //endregion
 

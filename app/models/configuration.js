@@ -30,11 +30,15 @@ var configSchema = new mongoose.Schema(
 			  modifiedBy: String,
 			  modified: Date
 		}],
-          userOverrides: {
-		  	familyNameCheck: {
-		  		description: String,
-				values: [String]
-			}
+		  userOverrides: {
+		  	  familyNameCheck: {
+		  		  description: String,
+				  values: [String]
+			  },
+			  dimensionValueCheck: {
+		  	      description: String,
+			      values: [String]
+		  	  }
 		  }
 
       }]
