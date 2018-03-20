@@ -51,6 +51,17 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
     vm.RemoveTag = function (arr, index) {
         arr.splice(index, 1);
     };
+
+    /**
+     * Catches keyboard Enter key when user finishes editing bucket name.
+     * @param arr
+     * @param event
+     */
+    vm.onEnter = function (event, arr) {
+        if(event.which !== 13) return;
+        arr.push(vm.familyNameCheckTag);
+        vm.familyNameCheckTag = null;
+    };
     //endregion
 
     /**

@@ -117,14 +117,17 @@
                                 <label>User Overrides</label>
                                 <ul class="list-unstyled">
                                     <li>
-                                        <div class="col-md-3" style="padding-top: 5px">{{ updater.userOverrides['familyNameCheck'].description }}</div>
+                                        <div class="col-md-3" style="padding-top: 5px">
+                                            {{ updater.userOverrides['familyNameCheck'].description }}
+                                        </div>
                                         <div class="col-md-3">
                                             <div class="input-group">
                                                 <input id="sharableLink"
                                                        type="text"
                                                        placeholder="Add Tag..."
                                                        class="form-control input-sm"
-                                                ng-model="vm.familyNameCheckTag">
+                                                       ng-model="vm.familyNameCheckTag"
+                                                       ng-keypress="vm.onEnter($event, updater.userOverrides.familyNameCheck.values)">
                                                 <span class="input-group-btn">
                                                     <button class="btn btn-default btn-sm"
                                                             type="button"
