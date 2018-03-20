@@ -29,14 +29,29 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
         startingDay: 1
     };
 
+    //region Family Name Overrides
+    vm.familyNameCheckTag = null;
+
     /**
-     * Checks if given object has any keys.
-     * @param obj
-     * @returns {boolean}
+     * Add tag to family name overrides.
+     * @param arr
+     * @constructor
      */
-    vm.isEmptyObject = function(obj){
-        return UtilityService.isEmptyObject(obj);
+    vm.AddFamilyTag = function (arr) {
+        arr.push(vm.familyNameCheckTag);
+        vm.familyNameCheckTag = null;
     };
+
+    /**
+     * Removes a string from arry by index.
+     * @param arr
+     * @param index
+     * @constructor
+     */
+    vm.RemoveTag = function (arr, index) {
+        arr.splice(index, 1);
+    };
+    //endregion
 
     /**
      * Filters Editing Records based on selected date range.
@@ -243,11 +258,19 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
             });
     };
 
+    /**
+     * Updates current Configuration.
+     */
     vm.updateConfiguration = function(){
+        console.log(vm.selectedConfig);
         ConfigFactory.updateConfiguration(vm.selectedConfig)
             .then(function(response){
-                $window.location.reload();
-                vm.status = 'Configuration updated';
+                if (response && response.status === 202){
+                    $window.location.reload();
+                    vm.status = 'Configuration updated';
+                } else {
+                    vm.status = 'Configuration update failed.';
+                }
             }, function(error){
                 vm.status = 'Unabl to update configuration: ' + error.message;
             });

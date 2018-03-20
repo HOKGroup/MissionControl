@@ -55,10 +55,10 @@
                                 <td>{{ file.centralPath | uppercase }}</td>
                                 <td class="text-right">
                                     <button type="button" class="btn btn-default" ng-click="vm.editPath(file.centralPath, 'lg')">
-                                        <span class="glyphicon glyphicon-pencil" style="margin-right: 0px"></span>
+                                        <span class="glyphicon glyphicon-pencil" style="margin-right: 0"></span>
                                     </button>
                                     <button type="button" class="btn btn-danger" ng-click="vm.deleteFile(file.centralPath)">
-                                        <span class="glyphicon glyphicon-trash" style="margin-right: 0px"></span>
+                                        <span class="glyphicon glyphicon-trash" style="margin-right: 0"></span>
                                     </button>
                                 </td>
                             </tr>
@@ -79,7 +79,7 @@
                                 </td>
                                 <td class="col-md-2 text-right">
                                     <button type="button" class="btn btn-default" ng-click="vm.addFile()">
-                                        <span class="glyphicon glyphicon-plus" style="margin-right: 0px"></span>
+                                        <span class="glyphicon glyphicon-plus" style="margin-right: 0"></span>
                                     </button>
                                 </td>
                             </tr>
@@ -111,12 +111,36 @@
                                     </li>
                                 </ul>
                             </fieldset>
-                            <fieldset class="form-group" ng-show="updater.isUpdaterOn && !vm.isEmptyObject(updater.userOverrides)">
+
+                            <!--HEALTH REPORT OVERRIDES-->
+                            <fieldset class="form-group" ng-show="updater.updaterId === '56603be6-aeb2-45d0-9ebc-2830fad6368b'">
                                 <label>User Overrides</label>
-                                <ul ng-repeat="(key, value) in updater.userOverrides" class="list-unstyled">
+                                <ul class="list-unstyled">
                                     <li>
-                                        {{ value.description }}
-                                        <input type="text" class="form-control" placeholder="Enter override value." ng-model="updater.userOverrides[key].value">
+                                        <div class="col-md-3" style="padding-top: 5px">{{ updater.userOverrides['familyNameCheck'].description }}</div>
+                                        <div class="col-md-3">
+                                            <div class="input-group">
+                                                <input id="sharableLink"
+                                                       type="text"
+                                                       placeholder="Add Tag..."
+                                                       class="form-control input-sm"
+                                                ng-model="vm.familyNameCheckTag">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-default btn-sm"
+                                                            type="button"
+                                                            ng-click="vm.AddFamilyTag(updater.userOverrides.familyNameCheck.values)">
+                                                        <span class="fa fa-plus"></span>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button ng-repeat="tag in updater.userOverrides.familyNameCheck.values track by $index"
+                                                    class="btn btn-default btn-sm"
+                                                    ng-click="vm.RemoveTag(updater.userOverrides.familyNameCheck.values, $index)">
+                                                {{tag}}
+                                            </button>
+                                        </div>
                                     </li>
                                 </ul>
                             </fieldset>
@@ -193,7 +217,7 @@
                                                        datepicker-options="vm.dateOptions"
                                                        ng-required="true"
                                                        show-button-bar="false"
-                                                       close-text="Close" />
+                                                       close-text="Close"/>
                                                 <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default btn-sm" ng-click="vm.openDatePicket('to')">
                                                     <span class="glyphicon glyphicon-calendar"></span>

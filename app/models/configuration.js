@@ -33,7 +33,7 @@ var configSchema = new mongoose.Schema(
           userOverrides: {
 		  	familyNameCheck: {
 		  		description: String,
-				value: String
+				values: [String]
 			}
 		  }
 
