@@ -6,10 +6,6 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
     vm.FamilyData = this.processed;
     var data = this.full;
 
-    // Socket.on('task_updated', function(data){
-    //     console.log('task_updated');
-    // });
-
     vm.AllFamilies = [];
     data.families.forEach(function (item) {
         if(!item.isDeleted && item.isFailingChecks){
@@ -54,10 +50,19 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
         dtInstance = inst;
     });
 
+    /**
+     * Applies selected filer and reloads DataTable.
+     * @constructor
+     */
     vm.FilterTable = function () {
         if(dtInstance) {dtInstance.reloadData(false);}
     };
 
+    /**
+     * Handler for brushing event on Parallel Coordinates chart.
+     * @param item
+     * @constructor
+     */
     vm.OnBrush = function(item){
         vm.AllFamilies = data.families.filter(function(family){
             var found = false;
@@ -71,6 +76,11 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
         });
     };
 
+    /**
+     * Returns file size as string ex. KiB, MiB
+     * @param item
+     * @returns {string|*}
+     */
     vm.formatValue = function(item){
         return UtilityService.formatNumber(item);
     };
@@ -89,6 +99,11 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
         return !!open ? {"color": "#5cb85c"} : {"color": "#D9534F"};
     };
 
+    /**
+     * Evaluates family health and returns appropriate style.
+     * @param f
+     * @returns {number}
+     */
     vm.evaluateFamily = function (f) {
         if(f.tasks.length > 0){
             var override = f.tasks.find(function(item){
@@ -99,11 +114,17 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
 
         var score = 0;
         if (f.sizeValue > 1000000) score++;
+        //TODO: This should be using new Configuration user overrides.
         if (f.name.indexOf('_HOK_I') === -1 && f.name.indexOf('_HOK_M') === -1) score++;
         if (f.instances === 0) score++;
         return score;
     };
 
+    /**
+     *
+     * @param f
+     * @returns {boolean}
+     */
     vm.evaluateName = function(f){
         if(f.tasks.length > 0){
             var override = f.tasks.find(function(item){
@@ -112,6 +133,7 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
             if(override) return true;
         }
 
+        //TODO: This should be using new Configuration user overrides.
         return f.name.indexOf('_HOK_I') !== -1 || f.name.indexOf('_HOK_M') !== -1
     };
 
