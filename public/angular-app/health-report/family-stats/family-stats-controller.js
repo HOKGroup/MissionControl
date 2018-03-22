@@ -86,7 +86,7 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
     };
 
     /**
-     * Checks if family has tasks and returns appropriate color for the task icon.
+     * Checks if family has tasks. If tasks are not completed it returns red.
      * @param f
      * @returns {*}
      */
@@ -100,7 +100,7 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
     };
 
     /**
-     * Evaluates family health and returns appropriate style.
+     * Evaluates family health and returns score between 0-3. 0 is good. 3 is bad.
      * @param f
      * @returns {number}
      */
@@ -114,14 +114,16 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
 
         var score = 0;
         if (f.sizeValue > 1000000) score++;
-        //TODO: This should be using new Configuration user overrides.
-        if (f.name.indexOf('_HOK_I') === -1 && f.name.indexOf('_HOK_M') === -1) score++;
+        if (!vm.FamilyData.nameCheckValues.some(function (x) {
+                return f.name.indexOf(x) !== -1;
+            })) score++;
         if (f.instances === 0) score++;
+
         return score;
     };
 
     /**
-     *
+     * Checks if file name contains values defined in Configuration.
      * @param f
      * @returns {boolean}
      */
@@ -133,10 +135,16 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
             if(override) return true;
         }
 
-        //TODO: This should be using new Configuration user overrides.
-        return f.name.indexOf('_HOK_I') !== -1 || f.name.indexOf('_HOK_M') !== -1
+        return vm.FamilyData.nameCheckValues.some(function (x) {
+            return f.name.indexOf(x) !== -1;
+        });
     };
 
+    /**
+     * Checks if there are more than 0 instances.
+     * @param f
+     * @returns {boolean}
+     */
     vm.evaluateInstances = function(f){
         if(f.tasks.length > 0){
             var override = f.tasks.find(function(item){
@@ -148,6 +156,11 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, DTIn
         return f.instances > 0;
     };
 
+    /**
+     * Checks if file is smaller than 1MB
+     * @param f
+     * @returns {boolean}
+     */
     vm.evaluateSize = function(f){
         if(f.tasks.length > 0){
             var override = f.tasks.find(function(item){

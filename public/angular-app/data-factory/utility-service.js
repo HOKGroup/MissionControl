@@ -80,6 +80,16 @@ function UtilityService(){
                 }
             }
             return true;
+        },
+
+        getHttpSafeFilePath : function (centralPath){
+            var rgx;
+            if(centralPath.includes('RSN:') || centralPath.includes('A360:')){
+                rgx = centralPath.replace(/\//g, "|").toLowerCase();
+            } else {
+                rgx = centralPath.replace(/\\/g, "|").toLowerCase();
+            }
+            return rgx;
         }
     }
 }

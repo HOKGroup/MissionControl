@@ -113,8 +113,12 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
                         .then(function(response){
                             if(!response || response.status !== 200) return;
 
+                            // (Konrad) Since we are making a call inside of the processing call, the result
+                            // is going to be asynch. We can use a callback here to set the FamilyData.
                             vm.FamilyCollection = response.data;
-                            vm.FamilyData = HealthReportFactory.processFamilyStats(vm.FamilyCollection);
+                            HealthReportFactory.processFamilyStats(vm.FamilyCollection, function(result){
+                                vm.FamilyData = result;
+                            });
                             if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
 
                             vm.SelectionChanged(vm.ShowMainPage.name);

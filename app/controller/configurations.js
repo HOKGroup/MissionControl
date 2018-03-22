@@ -89,6 +89,7 @@ module.exports.findByCentralPath  = function(req, res){
         rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
     }
 
+    console.log(rgx);
     Configuration.find(
         {'files.centralPath': rgx}, function (err, result) {
             var response = {
