@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('StyleStatsController', StyleStatsController);
 
-function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder, DTColumnBuilder, $scope, $compile, UtilityService){
+function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder, DTColumnBuilder, UtilityService){
     var vm = this;
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
@@ -112,199 +112,190 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
                 .withOption('width', '10%')
                 .renderWith(renderColor)
         ];
-    };
 
-
-
-    /**
-     * Converts bool to string true=Yes, false=No
-     * @param value
-     * @returns {string}
-     */
-    function stringFromBool(value){
-        return value ? "Yes" : "No";
-    }
-
-
-
-    /**
-     * Custom renderer to convert Array[r,g,b] to #HexColor
-     * @param data
-     * @returns {string}
-     */
-    function renderColor(data) {
-        var colorHex = UtilityService.rgbToHex(data[0], data[1], data[2]);
-        return ' <i class="fa fa-square" style="color: ' + colorHex + '"></i>';
-    }
-
-    /**
-     * Formatting function to add table with details about Dimension Type.
-     * @param d
-     * @returns {*}
-     */
-    var format = function ( d ) {
-        // `d` is the original data object for the row
-        if (!d) return '';
-        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:100px;">'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Type Name:</td>'+
-            '<td><b>' + d.name + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Type:</td>'+
-            '<td><b>'+ d.styleType + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Instances:</td>'+
-            '<td><b>' + d.instances + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Uses Project Units:</td>'+
-            '<td><b>'+ stringFromBool(d.usesProjectUnits) + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Bold:</td>'+
-            '<td><b>'+ stringFromBool(d.bold) + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Italic:</td>'+
-            '<td><b>'+ stringFromBool(d.italic) + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Leader Type:</td>'+
-            '<td><b>'+ d.leaderType + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Line Weight:</td>'+
-            '<td><b>'+ d.lineWeight + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Font:</td>'+
-            '<td><b>'+ d.textFont + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Size:</td>'+
-            '<td><b>'+ d.textSizeString + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Underline:</td>'+
-            '<td><b>'+ stringFromBool(d.underline) + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '</table>';
-    };
-
-    /**
-     * Formatting function to add table with details about Text Type.
-     * @param d
-     * @returns {*}
-     */
-    var format3 = function ( d ) {
-        // `d` is the original data object for the row
-        if (!d) return '';
-        var colorHex = UtilityService.rgbToHex(d.color[0], d.color[1], d.color[2]);
-        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:100px;">'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Type Name:</td>'+
-            '<td><b>' + d.name + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Instances:</td>'+
-            '<td><b>' + d.instances + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Bold:</td>'+
-            '<td><b>'+ stringFromBool(d.bold) + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Italic:</td>'+
-            '<td><b>'+ stringFromBool(d.italic) + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Leader Arrowhead:</td>'+
-            '<td><b>'+ d.leaderArrowhead + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Line Weight:</td>'+
-            '<td><b>'+ d.lineWeight + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Font:</td>'+
-            '<td><b>'+ d.textFont + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Size:</td>'+
-            '<td><b>'+ d.textSizeString + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<tr>'+
-            '<td style="padding-left: 25px">Underline:</td>'+
-            '<td><b>'+ stringFromBool(d.underline) + '</b></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '<td style="padding-left: 25px">Color:</td>'+
-            '<td><i class="fa fa-square" style="color: ' + colorHex + '"></i></td>'+
-            '<td></td>'+
-            '</tr>'+
-            '</table>';
-    };
-
-    /**
-     * Sorts Table by date.
-     * @param item
-     * @returns {Date}
-     */
-    vm.sortDate = function (item) {
-        return new Date(item.createdOn);
-    };
-
-
-
-    $('body').on('click', '.details-control', function() {
-        var tr = $(this).closest('tr');
-        var row = vm.dtInstance1.DataTable.row( tr );
-        if ( row.child.isShown() ) {
-            // This row is already open - close it
-            row.child.hide();
-            tr.removeClass('shown');
+        /**
+         * Converts bool to string true=Yes, false=No
+         * @param value
+         * @returns {string}
+         */
+        function stringFromBool(value){
+            return value ? "Yes" : "No";
         }
-        else {
-            // Open this row
-            row.child( format(row.data()) ).show();
-            tr.addClass('shown');
-        }
-    }).on('click', '.details-control3', function() {
-        var tr = $(this).closest('tr');
-        var row = vm.dtInstance2.DataTable.row( tr );
-        if ( row.child.isShown() ) {
-            // This row is already open - close it
-            row.child.hide();
-            tr.removeClass('shown');
-        }
-        else {
-            // Open this row
-            row.child( format3(row.data()) ).show();
-            tr.addClass('shown');
-        }
-    });
 
+        /**
+         * Custom renderer to convert Array[r,g,b] to #HexColor
+         * @param data
+         * @returns {string}
+         */
+        function renderColor(data) {
+            var colorHex = UtilityService.rgbToHex(data[0], data[1], data[2]);
+            return ' <i class="fa fa-square" style="color: ' + colorHex + '"></i>';
+        }
 
+        /**
+         * Formatting function to add table with details about Dimension Type.
+         * @param d
+         * @returns {*}
+         */
+        var format = function ( d ) {
+            // `d` is the original data object for the row
+            if (!d) return '';
+            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:100px;">'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Type Name:</td>'+
+                '<td><b>' + d.name + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Type:</td>'+
+                '<td><b>'+ d.styleType + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Instances:</td>'+
+                '<td><b>' + d.instances + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Uses Project Units:</td>'+
+                '<td><b>'+ stringFromBool(d.usesProjectUnits) + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Bold:</td>'+
+                '<td><b>'+ stringFromBool(d.bold) + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Italic:</td>'+
+                '<td><b>'+ stringFromBool(d.italic) + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Leader Type:</td>'+
+                '<td><b>'+ d.leaderType + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Line Weight:</td>'+
+                '<td><b>'+ d.lineWeight + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Font:</td>'+
+                '<td><b>'+ d.textFont + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Size:</td>'+
+                '<td><b>'+ d.textSizeString + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Underline:</td>'+
+                '<td><b>'+ stringFromBool(d.underline) + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '</table>';
+        };
 
+        /**
+         * Formatting function to add table with details about Text Type.
+         * @param d
+         * @returns {*}
+         */
+        var format3 = function ( d ) {
+            // `d` is the original data object for the row
+            if (!d) return '';
+            var colorHex = UtilityService.rgbToHex(d.color[0], d.color[1], d.color[2]);
+            return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:100px;">'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Type Name:</td>'+
+                '<td><b>' + d.name + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Instances:</td>'+
+                '<td><b>' + d.instances + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Bold:</td>'+
+                '<td><b>'+ stringFromBool(d.bold) + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Italic:</td>'+
+                '<td><b>'+ stringFromBool(d.italic) + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Leader Arrowhead:</td>'+
+                '<td><b>'+ d.leaderArrowhead + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Line Weight:</td>'+
+                '<td><b>'+ d.lineWeight + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Font:</td>'+
+                '<td><b>'+ d.textFont + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Size:</td>'+
+                '<td><b>'+ d.textSizeString + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Underline:</td>'+
+                '<td><b>'+ stringFromBool(d.underline) + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<td style="padding-left: 25px">Color:</td>'+
+                '<td><i class="fa fa-square" style="color: ' + colorHex + '"></i></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '</table>';
+        };
+
+        /**
+         * Sorts Table by date.
+         * @param item
+         * @returns {Date}
+         */
+        vm.sortDate = function (item) {
+            return new Date(item.createdOn);
+        };
+
+        $('body').on('click', '.details-control', function() {
+            var tr = $(this).closest('tr');
+            var row = vm.dtInstance1.DataTable.row( tr );
+            if ( row.child.isShown() ) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                row.child( format(row.data()) ).show();
+                tr.addClass('shown');
+            }
+        }).on('click', '.details-control3', function() {
+            var tr = $(this).closest('tr');
+            var row = vm.dtInstance2.DataTable.row( tr );
+            if ( row.child.isShown() ) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                row.child( format3(row.data()) ).show();
+                tr.addClass('shown');
+            }
+        });
+    };
 }
