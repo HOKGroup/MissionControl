@@ -23,10 +23,11 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
     };
 
     vm.dtColumnDefs = [
-        DTColumnDefBuilder.newColumnDef(0), //date/time
-        DTColumnDefBuilder.newColumnDef(1), //value
-        DTColumnDefBuilder.newColumnDef(2), //value override
-        DTColumnDefBuilder.newColumnDef(3) //is locked
+        DTColumnDefBuilder.newColumnDef(0), //value
+        DTColumnDefBuilder.newColumnDef(1), //value override
+        DTColumnDefBuilder.newColumnDef(2), //is locked
+        DTColumnDefBuilder.newColumnDef(3), //view type
+        DTColumnDefBuilder.newColumnDef(4) //view id
     ];
 
     var dtInstances;
@@ -65,7 +66,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
             .withOption('className', 'text-center')
             .withOption('width', '15%')
             .renderWith(stringFromBool),
-        DTColumnBuilder.newColumn('textSize')
+        DTColumnBuilder.newColumn('textSizeString')
             .withTitle('Size')
             .withOption('className', 'text-center')
             .withOption('width', '10%')
@@ -189,7 +190,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
             '</tr>'+
             '<tr>'+
             '<td style="padding-left: 25px">Size:</td>'+
-            '<td><b>'+ d.textSize + '</b></td>'+
+            '<td><b>'+ d.textSizeString + '</b></td>'+
             '<td></td>'+
             '</tr>'+
             '<tr>'+
@@ -247,7 +248,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
             '</tr>'+
             '<tr>'+
             '<td style="padding-left: 25px">Size:</td>'+
-            '<td><b>'+ d.textSize + '</b></td>'+
+            '<td><b>'+ d.textSizeString + '</b></td>'+
             '<td></td>'+
             '</tr>'+
             '<tr>'+

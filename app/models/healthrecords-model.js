@@ -67,8 +67,8 @@ var styleStatsSchema = new mongoose.Schema({
         valueString: String,
         valueOverride: String,
         isLocked: Boolean,
-        isOnSheet: Boolean,
-        ownerViewId: Number
+        ownerViewId: Number,
+        ownerViewType: String
     }]
 });
 
