@@ -1,63 +1,92 @@
 angular.module('MissionControlApp').factory('HealthReportFactory', HealthReportFactory);
 
-function HealthReportFactory(UtilityService){
+function HealthReportFactory(UtilityService, ConfigFactory){
     return {
-        processFamilyStats: function processFamilyStats(data){
+        /**
+         * This utility method processes information about Families and
+         * returns a summary info used to populate the Health Report page.
+         * @param data
+         * @param callback
+         */
+        processFamilyStats: function processFamilyStats(data, callback){
             if(!data) return;
 
-            var misnamed = 0;
-            data.families.forEach(function(item){
-                if(item.name.indexOf('_HOK_I') === -1 && item.name.indexOf('_HOK_M') === -1){
-                    misnamed++;
-                }
-            });
+            var centralPath = UtilityService.getHttpSafeFilePath(data.centralPath);
+            ConfigFactory.getByCentralPath(centralPath)
+                .then(function (response) {
+                    if (!response || response.status !== 200) return null;
 
-            var passingChecks = 0;
-            data.oversizedFamilies <= 10
-                ? passingChecks += 2
-                : data.oversizedFamilies > 10 && data.oversizedFamilies < 20
-                ? passingChecks += 1
-                : passingChecks += 0;
-            misnamed <= 10
-                ? passingChecks += 2
-                : misnamed > 10 && misnamed < 20
-                ? passingChecks += 1
-                : passingChecks += 0;
-            data.unusedFamilies <= 10
-                ? passingChecks += 2
-                : data.unusedFamilies > 10 && data.unusedFamilies < 20
-                ? passingChecks += 1
-                : passingChecks += 0;
-            data.inPlaceFamilies <= 5
-                ? passingChecks += 2
-                : data.inPlaceFamilies > 5 && data.inPlaceFamilies < 10
-                ? passingChecks += 1
-                : passingChecks += 0;
+                    return response.data[0];
+                })
+                .then(function (configuration){
+                    var nameCheckValues;
+                    if (!configuration){
+                        // (Konrad) Unable to get a config. Use defaults.
+                        nameCheckValues = ['HOK_I', 'HOK_M']; //defaults
+                    } else {
+                        nameCheckValues = configuration.updaters.find(function (item) {
+                            return item.updaterId === '56603be6-aeb2-45d0-9ebc-2830fad6368b'; //health report updater
+                        }).userOverrides.familyNameCheck.values;
+                    }
 
-            var familyScoreData = {
-                passingChecks: passingChecks,
-                count: data.totalFamilies,
-                label: "Families",
-                newMax: 8};
+                    var misnamed = 0;
+                    data.families.forEach(function(item){
+                        var result = nameCheckValues.some(function (x) {
+                            return item.name.indexOf(x) !== -1;
+                        });
+                        if (!result) misnamed++;
+                    });
 
-            // (Konrad) This score needs to be remaped to 0-6 range
-            var familyScore = Math.round((passingChecks * 6)/8);
+                    var passingChecks = 0;
+                    data.oversizedFamilies <= 10
+                        ? passingChecks += 2
+                        : data.oversizedFamilies > 10 && data.oversizedFamilies < 20
+                        ? passingChecks += 1
+                        : passingChecks += 0;
+                    misnamed <= 10
+                        ? passingChecks += 2
+                        : misnamed > 10 && misnamed < 20
+                        ? passingChecks += 1
+                        : passingChecks += 0;
+                    data.unusedFamilies <= 10
+                        ? passingChecks += 2
+                        : data.unusedFamilies > 10 && data.unusedFamilies < 20
+                        ? passingChecks += 1
+                        : passingChecks += 0;
+                    data.inPlaceFamilies <= 5
+                        ? passingChecks += 2
+                        : data.inPlaceFamilies > 5 && data.inPlaceFamilies < 10
+                        ? passingChecks += 1
+                        : passingChecks += 0;
 
-            var desc = "Families are integral part of Revit functionality. It is however, importatnt to remember," +
-                "that oversized (>1MB) families can be a sign of trouble (poorly modeled, imported DWGs etc.). That's " +
-                "why it's imperative to follow HOK's best practices in modeling and naming Revit Families. InPlace families " +
-                "should be limited in use as they do not allow full functionality of the regular Families.";
+                    var familyScoreData = {
+                        passingChecks: passingChecks,
+                        count: data.totalFamilies,
+                        label: "Families",
+                        newMax: 8};
 
-            return {
-                misnamed: misnamed,
-                inPlaceFamilies: data.inPlaceFamilies,
-                unusedFamilies: data.unusedFamilies,
-                oversizedFamilies: data.oversizedFamilies,
-                scoreData: familyScoreData,
-                familyScore: familyScore,
-                description: desc,
-                name: "Families:"
-            };
+                    // (Konrad) This score needs to be remaped to 0-6 range
+                    var familyScore = Math.round((passingChecks * 6)/8);
+
+                    var desc = "Families are integral part of Revit functionality. It is however, importatnt to remember," +
+                        "that oversized (>1MB) families can be a sign of trouble (poorly modeled, imported DWGs etc.). That's " +
+                        "why it's imperative to follow HOK's best practices in modeling and naming Revit Families. InPlace families " +
+                        "should be limited in use as they do not allow full functionality of the regular Families.";
+
+                    callback({
+                        nameCheckValues: nameCheckValues,
+                        misnamed: misnamed,
+                        inPlaceFamilies: data.inPlaceFamilies,
+                        unusedFamilies: data.unusedFamilies,
+                        oversizedFamilies: data.oversizedFamilies,
+                        scoreData: familyScoreData,
+                        familyScore: familyScore,
+                        description: desc,
+                        name: "Families:"
+                    });
+                }, function (error) {
+                    console.log(error);
+                });
         },
 
         /**

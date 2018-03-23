@@ -55,7 +55,8 @@ var styleStatsSchema = new mongoose.Schema({
         leaderType: String,
         lineWeight: Number,
         textFont: String,
-        textSize: String,
+        textSize: Number,
+        textSizeString: String,
         underline: Boolean,
         styleType: String
     }],

@@ -29,7 +29,18 @@ var configSchema = new mongoose.Schema(
 			  locked: Boolean,
 			  modifiedBy: String,
 			  modified: Date
-		}]
+		}],
+		  userOverrides: {
+		  	  familyNameCheck: {
+		  		  description: String,
+				  values: [String]
+			  },
+			  dimensionValueCheck: {
+		  	      description: String,
+			      values: [String]
+		  	  }
+		  }
+
       }]
   },
     { timestamps: true });

@@ -71,6 +71,25 @@ function UtilityService(){
 
         rgbToHex : function (r, g, b) {
             return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+        },
+
+        isEmptyObject : function (obj) {
+            for(var prop in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                    return false;
+                }
+            }
+            return true;
+        },
+
+        getHttpSafeFilePath : function (centralPath){
+            var rgx;
+            if(centralPath.includes('RSN:') || centralPath.includes('A360:')){
+                rgx = centralPath.replace(/\//g, "|").toLowerCase();
+            } else {
+                rgx = centralPath.replace(/\\/g, "|").toLowerCase();
+            }
+            return rgx;
         }
     }
 }
