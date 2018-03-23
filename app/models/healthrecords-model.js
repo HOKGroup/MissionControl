@@ -40,7 +40,8 @@ var styleStatsSchema = new mongoose.Schema({
         leaderArrowhead: String,
         lineWeight: Number,
         textFont: String,
-        textSize: String,
+        textSize: Number,
+        textSizeString: String,
         underline: Boolean
     }],
     dimStats: [{
@@ -54,14 +55,16 @@ var styleStatsSchema = new mongoose.Schema({
         leaderType: String,
         lineWeight: Number,
         textFont: String,
-        textSize: String,
+        textSize: Number,
+        textSizeString: String,
         underline: Boolean,
         styleType: String
     }],
     dimSegmentStats: [{
         createdOn: Date,
         isOverriden: Boolean,
-        value: String,
+        value: Number,
+        valueString: String,
         valueOverride: String,
         isLocked: Boolean
     }]
