@@ -3,86 +3,118 @@
  */
 angular.module('MissionControlApp').controller('StyleStatsController', StyleStatsController);
 
-function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder, DTColumnBuilder, DTInstances, $scope, $compile, UtilityService){
+function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder, DTColumnBuilder, $scope, $compile, UtilityService){
     var vm = this;
-    vm.projectId = $routeParams.projectId;
-    vm.StylesData = this.processed;
-    var allData = this.full;
+    this.$onInit = function () {
+        vm.projectId = $routeParams.projectId;
+        vm.StylesData = this.processed;
+        var allData = this.full;
 
-    var index = allData.styleStats.length - 1;
-    vm.DimensionSegmentStats = allData.styleStats[index].dimSegmentStats;
-    vm.DimensionStats = allData.styleStats[index].dimStats;
-    vm.TextStats = allData.styleStats[index].textStats;
+        var index = allData.styleStats.length - 1;
+        vm.DimensionSegmentStats = allData.styleStats[index].dimSegmentStats;
+        vm.DimensionStats = allData.styleStats[index].dimStats;
+        vm.TextStats = allData.styleStats[index].textStats;
 
-    // set table options for dimension segments
-    vm.dtOptions = {
-        paginationType: 'simple_numbers',
-        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
-        stateSave: false,
-        deferRender: true
+        // set table options for dimension segments
+        vm.dtOptions = {
+            paginationType: 'simple_numbers',
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+            stateSave: false,
+            deferRender: true
+        };
+
+        vm.dtColumnDefs = [
+            DTColumnDefBuilder.newColumnDef(0), //value
+            DTColumnDefBuilder.newColumnDef(1), //value override
+            DTColumnDefBuilder.newColumnDef(2), //is locked
+            DTColumnDefBuilder.newColumnDef(3), //view type
+            DTColumnDefBuilder.newColumnDef(4) //view id
+        ];
+
+        // set table options for dimension types
+        vm.dtInstance1 = {};
+        vm.dtOptions2 = DTOptionsBuilder.newOptions()
+            .withOption('data', vm.DimensionStats)
+            .withPaginationType('simple_numbers')
+            .withDisplayLength(10)
+            .withOption('order', [0, 'asc'])
+            .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
+            .withDataProp('data')
+            .withOption('rowCallback', function (row, data, index) {
+                if (data.instances === 0){
+                    row.className = row.className + ' bg-warning';
+                }
+            });
+
+        vm.dtColumns2 = [
+            DTColumnBuilder.newColumn('name')
+                .withTitle('Name')
+                .withOption('className', 'details-control pointer')
+                .withOption('width', '50%'),
+            DTColumnBuilder.newColumn('styleType')
+                .withTitle('Type')
+                .withOption('width', '15%'),
+            DTColumnBuilder.newColumn('instances')
+                .withTitle('Count')
+                .withOption('className', 'text-center')
+                .withOption('width', '10%'),
+            DTColumnBuilder.newColumn('usesProjectUnits')
+                .withTitle('Uses PU')
+                .withOption('className', 'text-center')
+                .withOption('width', '15%')
+                .renderWith(stringFromBool),
+            DTColumnBuilder.newColumn('textSizeString')
+                .withTitle('Size')
+                .withOption('className', 'text-center')
+                .withOption('width', '10%')
+        ];
+
+        // set table options for dimension types
+        vm.dtInstance2 = {};
+        vm.dtOptions3 = DTOptionsBuilder.newOptions()
+            .withOption('data', vm.TextStats)
+            .withPaginationType('simple_numbers')
+            .withDisplayLength(10)
+            .withOption('order', [0, 'asc'])
+            .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
+            .withDataProp('data')
+            .withOption('rowCallback', function (row, data, index) {
+                if (data.instances === 0){
+                    row.className = row.className + ' bg-warning';
+                }
+            });
+
+        vm.dtColumns3 = [
+            DTColumnBuilder.newColumn('name')
+                .withTitle('Name')
+                .withOption('className', 'details-control3 pointer')
+                .withOption('width', '50%'),
+            DTColumnBuilder.newColumn('instances')
+                .withTitle('Count')
+                .withOption('className', 'text-center')
+                .withOption('width', '10%'),
+            DTColumnBuilder.newColumn('textFont')
+                .withTitle('Font')
+                .withOption('className', 'text-center')
+                .withOption('width', '20%'),
+            DTColumnBuilder.newColumn('textSizeString')
+                .withTitle('Size')
+                .withOption('className', 'text-center')
+                .withOption('width', '10%')
+                .withOption('orderData', 4),
+            DTColumnBuilder.newColumn('textSize')
+                .withTitle('Size')
+                .withOption('className', 'text-center')
+                .notVisible(),
+            DTColumnBuilder.newColumn('color')
+                .withTitle('Color')
+                .withOption('className', 'text-center')
+                .withOption('width', '10%')
+                .renderWith(renderColor)
+        ];
     };
 
-    vm.dtColumnDefs = [
-        DTColumnDefBuilder.newColumnDef(0), //value
-        DTColumnDefBuilder.newColumnDef(1), //value override
-        DTColumnDefBuilder.newColumnDef(2), //is locked
-        DTColumnDefBuilder.newColumnDef(3), //view type
-        DTColumnDefBuilder.newColumnDef(4) //view id
-    ];
 
-    var dtInstances;
-    DTInstances.getList().then(function(inst){
-        dtInstances = inst;
-    });
-
-    // set table options for dimension types
-    vm.dtOptions2 = DTOptionsBuilder.newOptions()
-        .withOption('data', vm.DimensionStats)
-        .withPaginationType('simple_numbers')
-        .withDisplayLength(10)
-        .withOption('order', [0, 'asc'])
-        .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
-        .withDataProp('data')
-        .withOption('rowCallback', function (row, data, index) {
-            if (data.instances === 0){
-                row.className = row.className + ' bg-warning';
-            }
-        })
-        .withTableToolsButtons([
-            {
-                extend: "excelHtml5",
-                filename:  "Data_Analysis",
-                title:"Data Analysis Report",
-                exportOptions: {
-                    columns: ':visible'
-                },
-                //CharSet: "utf8",
-                exportData: { decodeEntities: true }
-            }
-        ]);
-
-    vm.dtColumns2 = [
-        DTColumnBuilder.newColumn('name')
-            .withTitle('Name')
-            .withOption('className', 'details-control pointer')
-            .withOption('width', '50%'),
-        DTColumnBuilder.newColumn('styleType')
-            .withTitle('Type')
-            .withOption('width', '15%'),
-        DTColumnBuilder.newColumn('instances')
-            .withTitle('Count')
-            .withOption('className', 'text-center')
-            .withOption('width', '10%'),
-        DTColumnBuilder.newColumn('usesProjectUnits')
-            .withTitle('Uses PU')
-            .withOption('className', 'text-center')
-            .withOption('width', '15%')
-            .renderWith(stringFromBool),
-        DTColumnBuilder.newColumn('textSizeString')
-            .withTitle('Size')
-            .withOption('className', 'text-center')
-            .withOption('width', '10%')
-    ];
 
     /**
      * Converts bool to string true=Yes, false=No
@@ -93,48 +125,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
         return value ? "Yes" : "No";
     }
 
-    // set table options for dimension types
-    vm.dtOptions3 = DTOptionsBuilder.newOptions()
-        .withOption('data', vm.TextStats)
-        .withPaginationType('simple_numbers')
-        .withDisplayLength(10)
-        .withOption('order', [0, 'asc'])
-        .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
-        .withDataProp('data')
-        .withOption('rowCallback', function (row, data, index) {
-            if (data.instances === 0){
-                row.className = row.className + ' bg-warning';
-            }
-        });
 
-    vm.dtColumns3 = [
-        DTColumnBuilder.newColumn('name')
-            .withTitle('Name')
-            .withOption('className', 'details-control3 pointer')
-            .withOption('width', '50%'),
-        DTColumnBuilder.newColumn('instances')
-            .withTitle('Count')
-            .withOption('className', 'text-center')
-            .withOption('width', '10%'),
-        DTColumnBuilder.newColumn('textFont')
-            .withTitle('Font')
-            .withOption('className', 'text-center')
-            .withOption('width', '20%'),
-        DTColumnBuilder.newColumn('textSizeString')
-            .withTitle('Size')
-            .withOption('className', 'text-center')
-            .withOption('width', '10%')
-            .withOption('orderData', 4),
-        DTColumnBuilder.newColumn('textSize')
-            .withTitle('Size')
-            .withOption('className', 'text-center')
-            .notVisible(),
-        DTColumnBuilder.newColumn('color')
-            .withTitle('Color')
-            .withOption('className', 'text-center')
-            .withOption('width', '10%')
-            .renderWith(renderColor)
-    ];
 
     /**
      * Custom renderer to convert Array[r,g,b] to #HexColor
@@ -275,9 +266,20 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
             '</table>';
     };
 
+    /**
+     * Sorts Table by date.
+     * @param item
+     * @returns {Date}
+     */
+    vm.sortDate = function (item) {
+        return new Date(item.createdOn);
+    };
+
+
+
     $('body').on('click', '.details-control', function() {
         var tr = $(this).closest('tr');
-        var row = dtInstances.table2.DataTable.row( tr );
+        var row = vm.dtInstance1.DataTable.row( tr );
         if ( row.child.isShown() ) {
             // This row is already open - close it
             row.child.hide();
@@ -290,7 +292,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
         }
     }).on('click', '.details-control3', function() {
         var tr = $(this).closest('tr');
-        var row = dtInstances.table3.DataTable.row( tr );
+        var row = vm.dtInstance2.DataTable.row( tr );
         if ( row.child.isShown() ) {
             // This row is already open - close it
             row.child.hide();
@@ -304,12 +306,5 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
     });
 
 
-    /**
-     * Sorts Table by date.
-     * @param item
-     * @returns {Date}
-     */
-    vm.sortDate = function (item) {
-        return new Date(item.createdOn);
-    };
+
 }

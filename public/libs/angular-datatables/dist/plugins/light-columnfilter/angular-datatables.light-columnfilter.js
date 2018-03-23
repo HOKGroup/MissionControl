@@ -4,19 +4,19 @@
  * License: MIT
  */
 if (typeof module !== "undefined" && typeof exports !== "undefined" && module.exports === exports) {
-    module.exports = 'datatables.fixedheader';
+    module.exports = 'datatables.light-columnfilter';
 }
 (function(window, document, $, angular) {
 
     'use strict';
 
-    // See https://datatables.net/extensions/fixedheader/
-    angular.module('datatables.fixedheader', ['datatables'])
-        .config(dtFixedHeaderConfig)
-        .run(initFixedHeaderPlugin);
+    // See https://github.com/thansen-solire/datatables-light-columnfilter
+    angular.module('datatables.light-columnfilter', ['datatables'])
+        .config(dtLightColumnFilterConfig)
+        .run(initLightColumnFilterPlugin);
 
     /* @ngInject */
-    function dtFixedHeaderConfig($provide) {
+    function dtLightColumnFilterConfig($provide) {
         $provide.decorator('DTOptionsBuilder', dtOptionsBuilderDecorator);
 
         function dtOptionsBuilderDecorator($delegate) {
@@ -38,18 +38,18 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
 
             function _decorateOptions(fn, params) {
                 var options = fn(params);
-                options.withFixedHeader = withFixedHeader;
+                options.withLightColumnFilter = withLightColumnFilter;
                 return options;
 
                 /**
-                 * Add fixed header support
-                 * @param fixedHeaderOptions the plugin options
+                 * Add column filter support
+                 * @param lightColumnFilterOptions the plugins options
                  * @returns {DTOptions} the options
                  */
-                function withFixedHeader(fixedHeaderOptions) {
-                    options.hasFixedHeader = true;
-                    if (fixedHeaderOptions) {
-                        options.fixedHeaderOptions = fixedHeaderOptions;
+                function withLightColumnFilter(lightColumnFilterOptions) {
+                    options.hasLightColumnFilter = true;
+                    if (lightColumnFilterOptions) {
+                        options.lightColumnFilterOptions = lightColumnFilterOptions;
                     }
                     return options;
                 }
@@ -57,22 +57,22 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
         }
         dtOptionsBuilderDecorator.$inject = ['$delegate'];
     }
-    dtFixedHeaderConfig.$inject = ['$provide'];
+    dtLightColumnFilterConfig.$inject = ['$provide'];
 
     /* @ngInject */
-    function initFixedHeaderPlugin(DTRendererService) {
-        var fixedHeaderPlugin = {
+    function initLightColumnFilterPlugin(DTRendererService) {
+        var lightColumnFilterPlugin = {
             postRender: postRender
         };
-        DTRendererService.registerPlugin(fixedHeaderPlugin);
+        DTRendererService.registerPlugin(lightColumnFilterPlugin);
 
         function postRender(options, result) {
-            if (options && options.hasFixedHeader) {
-                new $.fn.dataTable.FixedHeader(result.DataTable, options.fixedHeaderOptions);
+            if (options && options.hasLightColumnFilter) {
+                new $.fn.dataTable.ColumnFilter(result.DataTable, options.lightColumnFilterOptions);
             }
         }
     }
-    initFixedHeaderPlugin.$inject = ['DTRendererService'];
+    initLightColumnFilterPlugin.$inject = ['DTRendererService'];
 
 
 })(window, document, jQuery, angular);

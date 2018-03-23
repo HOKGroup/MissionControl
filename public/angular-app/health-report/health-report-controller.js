@@ -50,6 +50,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
      * @constructor
      */
     vm.SelectionChanged = function (name) {
+        console.log(vm.ViewData);
         allControllers.forEach(function (item) {
             item.value = item.name === name;
         })

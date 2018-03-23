@@ -2,17 +2,27 @@ angular.module('MissionControlApp').controller('WorksetsController', WorksetsCon
 
 function WorksetsController($routeParams, UtilityService){
     var vm = this;
-    vm.projectId = $routeParams.projectId;
-    vm.UserData = [];
+    this.$onInit = function () {
+        vm.WorksetData = this.processed;
+        vm.selectedWorkset = this.full;
+        vm.projectId = $routeParams.projectId;
+        vm.UserData = [];
+        vm.d3GoalLine = {name: "Goal", value: 50}; // reference line
+    };
 
+    /**
+     * Returns formatted string for time.
+     * @param item
+     * @returns {*}
+     */
     vm.formatDuration = function(item){
         return UtilityService.formatPercentage(item);
     };
 
-    vm.WorksetData = this.processed;
-    vm.selectedWorkset = this.full;
-    vm.d3GoalLine = {name: "Goal", value: 50}; // reference line
-
+    /**
+     *
+     * @param item
+     */
     vm.d3OnClick = function(item){
         var allData;
         if(item.name === "onOpened"){
