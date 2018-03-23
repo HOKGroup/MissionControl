@@ -47,7 +47,19 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
             if (data.instances === 0){
                 row.className = row.className + ' bg-warning';
             }
-        });
+        })
+        .withTableToolsButtons([
+            {
+                extend: "excelHtml5",
+                filename:  "Data_Analysis",
+                title:"Data Analysis Report",
+                exportOptions: {
+                    columns: ':visible'
+                },
+                //CharSet: "utf8",
+                exportData: { decodeEntities: true }
+            }
+        ]);
 
     vm.dtColumns2 = [
         DTColumnBuilder.newColumn('name')

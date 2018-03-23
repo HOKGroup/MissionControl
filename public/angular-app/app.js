@@ -5,7 +5,8 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
 // ngAnimate - used by modal dialog
 // datatables - used by all tables
 
-function config($routeProvider){
+function config($routeProvider, $locationProvider){
+    $locationProvider.hashPrefix('');
     $routeProvider
         //home page
         .when('/', {
