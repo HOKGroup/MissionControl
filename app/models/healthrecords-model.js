@@ -94,14 +94,6 @@ var eventTimeSchema = new mongoose.Schema({
     createdOn: Date
 });
 
-var sessionLogSchema = new mongoose.Schema({
-    user: String,
-    from: Date,
-    to: Date,
-    synched: [Date],
-    createdOn: Date
-});
-
 var healthCheckSchema = new mongoose.Schema({
     centralPath: String,
     onOpened: [worksetEventSchema],
@@ -116,8 +108,7 @@ var healthCheckSchema = new mongoose.Schema({
     },
     openTimes: [eventTimeSchema],
     synchTimes: [eventTimeSchema],
-    modelSizes: [eventTimeSchema],
-    sessionLogs: [sessionLogSchema]
+    modelSizes: [eventTimeSchema]
 });
 
 healthCheckSchema.index({'centralPath': 'text'});
