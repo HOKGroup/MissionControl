@@ -148,7 +148,7 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
          * @returns {Date}
          */
         vm.sortDate = function (item) {
-            return new Date(item.createdOn);
+            return UtilityService.convertUTCDateToLocalDate(new Date(item.createdOn));
         };
 
         /**
