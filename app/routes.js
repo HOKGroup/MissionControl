@@ -67,8 +67,6 @@ var sheets = require('./models/sheets-model');
      app.post('/api/v1/healthrecords/:id/modelsize', healthReport.postModelSize);
      app.post('/api/v1/healthrecords/:id/modelopentime', healthReport.postModelOpenTime);
      app.post('/api/v1/healthrecords/:id/modelsynchtime', healthReport.postModelSynchTime);
-     // app.post('/api/v1/healthrecords/:id/sessioninfo', healthReport.postModelSessionInfo);
-     // app.put('/api/v1/healthrecords/:id/sessioninfo/:logid', healthReport.updateSynchedCollection);
      app.get('/api/v1/healthrecords/:id/modelstats', healthReport.getModelStats);
      app.put('/api/v1/healthrecords/:id/addfamilies', healthReport.addFamilies);
      app.put('/api/v1/healthrecords/:id/updatefilepath', healthReport.updateFilePath);
