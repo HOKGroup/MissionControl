@@ -44,7 +44,23 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
                 if (data.instances === 0){
                     row.className = row.className + ' bg-warning';
                 }
-            });
+            })
+            // (Konrad) We need to style the columns ourselves otherwise they look .net-ish
+            .withOption('initComplete', function() {
+                $('.dataTables_length').addClass('col-md-7 no-padding');
+                $('.dataTables_filter').addClass('col-md-4 no-padding');
+                $('.dt-buttons').removeClass('dt-buttons').addClass('col-md-1 no-padding');
+                $('.dt-button').removeClass('dt-button');
+            })
+            .withButtons([
+                {
+                    extend: 'csv',
+                    title : 'DimensionTypes' + '.xlsx',
+                    text: 'Excel',
+                    exportOptions: { columns:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
+                    className: 'btn btn-sm btn-default'
+                }
+            ]);
 
         vm.dtColumns2 = [
             DTColumnBuilder.newColumn('name')
@@ -66,7 +82,14 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
             DTColumnBuilder.newColumn('textSizeString')
                 .withTitle('Size')
                 .withOption('className', 'text-center')
-                .withOption('width', '10%')
+                .withOption('width', '10%'),
+            DTColumnBuilder.newColumn('bold').withTitle('Bold').notVisible(),
+            DTColumnBuilder.newColumn('italic').withTitle('Italic').notVisible(),
+            DTColumnBuilder.newColumn('leaderType').withTitle('Leader Type').notVisible(),
+            DTColumnBuilder.newColumn('lineWeight').withTitle('Line Weight').notVisible(),
+            DTColumnBuilder.newColumn('textFont').withTitle('Font').notVisible(),
+            DTColumnBuilder.newColumn('textSizeString').withTitle('Size').notVisible(),
+            DTColumnBuilder.newColumn('underline').withTitle('Underline').notVisible()
         ];
 
         // set table options for dimension types
@@ -82,7 +105,24 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
                 if (data.instances === 0){
                     row.className = row.className + ' bg-warning';
                 }
-            });
+            })
+            // (Konrad) We need to style the columns ourselves otherwise they look .net-ish
+            .withOption('initComplete', function() {
+                console.log("callback method for init");
+                $('.dataTables_length').addClass('col-md-7 no-padding');
+                $('.dataTables_filter').addClass('col-md-4 no-padding');
+                $('.dt-buttons').removeClass('dt-buttons').addClass('col-md-1 no-padding');
+                $('.dt-button').removeClass('dt-button');
+            })
+            .withButtons([
+                {
+                    extend: 'csv',
+                    title : 'TextTypes' + '.xlsx',
+                    text: 'Excel',
+                    exportOptions: { columns:[0, 1, 2, 3, 5, 6, 7, 8, 9, 10] },
+                    className: 'btn btn-sm btn-default'
+                }
+            ]);
 
         vm.dtColumns3 = [
             DTColumnBuilder.newColumn('name')
@@ -110,7 +150,12 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
                 .withTitle('Color')
                 .withOption('className', 'text-center')
                 .withOption('width', '10%')
-                .renderWith(renderColor)
+                .renderWith(renderColor),
+            DTColumnBuilder.newColumn('bold').withTitle('Bold').notVisible(),
+            DTColumnBuilder.newColumn('italic').withTitle('Italic').notVisible(),
+            DTColumnBuilder.newColumn('leaderArrowhead').withTitle('Leader Arrowhead').notVisible(),
+            DTColumnBuilder.newColumn('lineWeight').withTitle('Line Weight').notVisible(),
+            DTColumnBuilder.newColumn('underline').withTitle('Underline').notVisible()
         ];
 
         /**
@@ -152,7 +197,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Instances:</td>'+
+                '<td style="padding-left: 25px">Count:</td>'+
                 '<td><b>' + d.instances + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
@@ -215,8 +260,23 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Instances:</td>'+
+                '<td style="padding-left: 25px">Count:</td>'+
                 '<td><b>' + d.instances + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Font:</td>'+
+                '<td><b>'+ d.textFont + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Size:</td>'+
+                '<td><b>'+ d.textSizeString + '</b></td>'+
+                '<td></td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td style="padding-left: 25px">Color:</td>'+
+                '<td><i class="fa fa-square" style="color: ' + colorHex + '"></i></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
@@ -240,22 +300,8 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Font:</td>'+
-                '<td><b>'+ d.textFont + '</b></td>'+
-                '<td></td>'+
-                '</tr>'+
-                '<tr>'+
-                '<td style="padding-left: 25px">Size:</td>'+
-                '<td><b>'+ d.textSizeString + '</b></td>'+
-                '<td></td>'+
-                '</tr>'+
-                '<tr>'+
                 '<td style="padding-left: 25px">Underline:</td>'+
                 '<td><b>'+ stringFromBool(d.underline) + '</b></td>'+
-                '<td></td>'+
-                '</tr>'+
-                '<td style="padding-left: 25px">Color:</td>'+
-                '<td><i class="fa fa-square" style="color: ' + colorHex + '"></i></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '</table>';

@@ -240,3 +240,15 @@ a {
 .pointer {
   cursor: pointer;
 }
+
+.left-div {
+  float: left;
+  width: 100px;
+  height: 20px;
+  margin-right: 8px;
+  background-color: linen;
+}
+.right-div {
+  margin-left: 108px;
+  background-color: lime;
+}

@@ -1,4 +1,4 @@
-angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'datatables']).config(config);
+angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'datatables', 'datatables.buttons']).config(config);
 
 // ngRoute - used for routing below
 // ui.bootstrap - used by modal dialog
