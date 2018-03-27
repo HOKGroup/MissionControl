@@ -47,10 +47,11 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
             })
             // (Konrad) We need to style the columns ourselves otherwise they look .net-ish
             .withOption('initComplete', function() {
-                $('.dataTables_length').addClass('col-md-7 no-padding');
-                $('.dataTables_filter').addClass('col-md-4 no-padding');
-                $('.dt-buttons').removeClass('dt-buttons').addClass('col-md-1 no-padding');
-                $('.dt-button').removeClass('dt-button');
+                $('#table2_wrapper').prepend('<div class="row" id="table2_row1">');
+                $('#table2_row1')
+                    .append( $('#table2_length').addClass('col-md-6'))
+                    .append( $('#table2_filter').addClass('col-md-5'))
+                    .append( $('#table2_wrapper > .dt-buttons').addClass('col-md-1').css({'padding-left': '5px'}))
             })
             .withButtons([
                 {
@@ -108,11 +109,11 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
             })
             // (Konrad) We need to style the columns ourselves otherwise they look .net-ish
             .withOption('initComplete', function() {
-                console.log("callback method for init");
-                $('.dataTables_length').addClass('col-md-7 no-padding');
-                $('.dataTables_filter').addClass('col-md-4 no-padding');
-                $('.dt-buttons').removeClass('dt-buttons').addClass('col-md-1 no-padding');
-                $('.dt-button').removeClass('dt-button');
+                $('#table3_wrapper').prepend('<div class="row" id="table3_row1">');
+                $('#table3_row1')
+                    .append( $('#table3_length').addClass('col-md-6'))
+                    .append( $("#table3_filter").addClass('col-md-5'))
+                    .append( $('#table3_wrapper > .dt-buttons').addClass('col-md-1').css({'padding-left': '5px'}))
             })
             .withButtons([
                 {

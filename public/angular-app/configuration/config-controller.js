@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').controller('ConfigController', ConfigController);
 
-function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DTColumnDefBuilder, $window, $uibModal, UtilityService){
+function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DTColumnDefBuilder, $window, $uibModal){
     var vm = this;
     vm.status;
     vm.projectId = $routeParams.projectId;
@@ -345,6 +345,6 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
         indices.splice(-2); // drop last two folders
         var index = indices[indices.length - 1]; // index of E-Bim folder
 
-        return path.substring(0, index) + "\Support\\SharedParameterFileName.txt";
+        return path.substring(0, index) + "\\Support\\SharedParameterFileName.txt";
     }
 }
