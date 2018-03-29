@@ -98,7 +98,6 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
                 vm.ViewData = HealthReportFactory.processViewStats(viewData);
                 if(vm.ViewData) vm.AllData.push(vm.ViewData);
 
-                //TODO: Make sure it works
                 var styleData = response.data.styleStats[response.data.styleStats.length - 1];
                 vm.StyleData = HealthReportFactory.processStyleStats(styleData);
                 if(vm.StyleData) vm.AllData.push(vm.StyleData);
@@ -118,11 +117,10 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
                             vm.FamilyCollection = response.data;
                             HealthReportFactory.processFamilyStats(vm.FamilyCollection, function(result){
                                 vm.FamilyData = result;
+                                if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
+                                vm.SelectionChanged(vm.ShowMainPage.name);
+                                vm.loading = false;
                             });
-                            if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
-
-                            vm.SelectionChanged(vm.ShowMainPage.name);
-                            vm.loading = false;
                         })
                         .catch(function(err){
                             console.log('Unable to load Families Data: ' + err.message);
