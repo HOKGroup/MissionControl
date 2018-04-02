@@ -13,6 +13,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
     vm.FamilyCollection = null;
     vm.HealthRecords = [];
     vm.loading = false;
+    vm.AllData = [];
     var allControllers = [vm.ShowLinkStats, vm.ShowFamiliesStats, vm.ShowWorksetStats, vm.ShowViewStats, vm.ShowStyleStats, vm.ShowModelStats, vm.ShowMainPage];
 
     getSelectedProject(vm.projectId);
@@ -79,65 +80,130 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
      */
     vm.SetProject = function (link){
         vm.loading = true;
-        HealthRecordsFactory.getById(link._id)
-            .then(function (response) {
-                if(!response || response.status !== 200) return;
 
-                vm.selectedHealthRecord = response.data;
-                vm.selectedFileName = vm.fileNameFromPath(response.data.centralPath);
-                vm.AllData = [];
+        HealthReportFactory.processWorksetStats(link._id, function (result) {
+            vm.WorksetData = result;
+            if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
 
-                vm.WorksetData = HealthReportFactory.processWorksetStats(response.data);
-                if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
-
-                var linkData = response.data.linkStats[response.data.linkStats.length - 1];
-                vm.LinkData = HealthReportFactory.processLinkStats(linkData);
-                if(vm.LinkData) vm.AllData.push(vm.LinkData);
-
-                var viewData = response.data.viewStats[response.data.viewStats.length - 1];
-                vm.ViewData = HealthReportFactory.processViewStats(viewData);
-                if(vm.ViewData) vm.AllData.push(vm.ViewData);
-
-                var styleData = response.data.styleStats[response.data.styleStats.length - 1];
-                vm.StyleData = HealthReportFactory.processStyleStats(styleData);
-                if(vm.StyleData) vm.AllData.push(vm.StyleData);
-
-                vm.ModelData = HealthReportFactory.processModelStats(response.data);
+            // (Konrad) Since Model Stats charts rely on Worksets being there we
+            // have to call them afterwards.
+            HealthReportFactory.processModelStats(link._id, function (result) {
+                result.modelStats['onSynched'] = vm.WorksetData.worksetStats.onSynched;
+                result.modelStats['onOpened'] = vm.WorksetData.worksetStats.onOpened;
+                vm.ModelData = result;
                 if(vm.ModelData) vm.AllData.push(vm.ModelData);
 
-                if(vm.selectedHealthRecord.familyStats
-                    && vm.selectedHealthRecord.familyStats !== null
-                    && vm.selectedHealthRecord.familyStats !== ''){
-                    FamiliesFactory.getById(vm.selectedHealthRecord.familyStats)
-                        .then(function(response){
-                            if(!response || response.status !== 200) return;
-
-                            // (Konrad) Since we are making a call inside of the processing call, the result
-                            // is going to be asynch. We can use a callback here to set the FamilyData.
-                            vm.FamilyCollection = response.data;
-                            HealthReportFactory.processFamilyStats(vm.FamilyCollection, function(result){
-                                vm.FamilyData = result;
-                                if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
-                                vm.SelectionChanged(vm.ShowMainPage.name);
-                                vm.loading = false;
-                            });
-                        })
-                        .catch(function(err){
-                            console.log('Unable to load Families Data: ' + err.message);
-                        })
-                } else {
-                    vm.FamilyCollection = null;
-                    vm.FamilyData = null;
-                    vm.ShowFamiliesStats.value = false;
-
-                    vm.SelectionChanged(vm.ShowMainPage.name);
-                    vm.loading = false;
-                }
-            })
-            .catch(function (err) {
-                console.log(err);
+                vm.SelectionChanged(vm.ShowMainPage.name);
+                vm.loading = false;
             });
+
+            vm.SelectionChanged(vm.ShowMainPage.name);
+            vm.loading = false;
+        });
+
+        HealthReportFactory.processLinkStats(link._id, function (result) {
+            vm.LinkData = result;
+            if(vm.LinkData) vm.AllData.push(vm.LinkData);
+
+            vm.SelectionChanged(vm.ShowMainPage.name);
+            vm.loading = false;
+        });
+
+        HealthReportFactory.processViewStats(link._id, function (result) {
+            vm.ViewData = result;
+            if(vm.ViewData) vm.AllData.push(vm.ViewData);
+
+            vm.SelectionChanged(vm.ShowMainPage.name);
+            vm.loading = false;
+        });
+
+        HealthReportFactory.processStyleStats(link._id, function (result) {
+            vm.StyleData = result;
+            if(vm.StyleData) vm.AllData.push(vm.StyleData);
+
+            vm.SelectionChanged(vm.ShowMainPage.name);
+            vm.loading = false;
+        });
+
+
+
+        HealthReportFactory.processFamilyStats(link._id, function (result) {
+            vm.StyleData = result;
+            if(vm.StyleData) vm.AllData.push(vm.StyleData);
+
+            vm.SelectionChanged(vm.ShowMainPage.name);
+            vm.loading = false;
+        });
+
+
+
+
+
+        // HealthRecordsFactory.getById(link._id)
+        //     .then(function (response) {
+        //         if(!response || response.status !== 200) return;
+        //
+        //         vm.selectedHealthRecord = response.data;
+        //         vm.selectedFileName = vm.fileNameFromPath(response.data.centralPath);
+        //         vm.AllData = [];
+        //
+        //         vm.WorksetData = HealthReportFactory.processWorksetStats(response.data);
+        //         if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
+        //
+        //         var linkData = response.data.linkStats[response.data.linkStats.length - 1];
+        //         vm.LinkData = HealthReportFactory.processLinkStats(linkData);
+        //         if(vm.LinkData) vm.AllData.push(vm.LinkData);
+        //
+        //         var viewData = response.data.viewStats[response.data.viewStats.length - 1];
+        //         vm.ViewData = HealthReportFactory.processViewStats(viewData);
+        //         if(vm.ViewData) vm.AllData.push(vm.ViewData);
+        //
+        //         var styleData = response.data.styleStats[response.data.styleStats.length - 1];
+        //         vm.StyleData = HealthReportFactory.processStyleStats(styleData);
+        //         if(vm.StyleData) vm.AllData.push(vm.StyleData);
+        //
+        //         vm.ModelData = HealthReportFactory.processModelStats(response.data);
+        //         if(vm.ModelData) vm.AllData.push(vm.ModelData);
+        //
+        //         if(vm.selectedHealthRecord.familyStats
+        //             && vm.selectedHealthRecord.familyStats !== null
+        //             && vm.selectedHealthRecord.familyStats !== ''){
+        //             FamiliesFactory.getById(vm.selectedHealthRecord.familyStats)
+        //                 .then(function(response){
+        //                     if(!response || response.status !== 200) return;
+        //
+        //                     // (Konrad) Since we are making a call inside of the processing call, the result
+        //                     // is going to be asynch. We can use a callback here to set the FamilyData.
+        //                     vm.FamilyCollection = response.data;
+        //                     HealthReportFactory.processFamilyStats(vm.FamilyCollection, onFamilyStatsProcessed);
+        //                 })
+        //                 .catch(function(err){
+        //                     console.log('Unable to load Families Data: ' + err.message);
+        //                 })
+        //         } else {
+        //             vm.FamilyCollection = null;
+        //             vm.FamilyData = null;
+        //             vm.ShowFamiliesStats.value = false;
+        //
+        //             vm.SelectionChanged(vm.ShowMainPage.name);
+        //             vm.loading = false;
+        //         }
+        //     })
+        //     .catch(function (err) {
+        //         console.log(err);
+        //     });
     };
+
+    /**
+     * Callback method when Family Data finishes processing.
+     * @param result
+     */
+    function onFamilyStatsProcessed(result){
+        vm.FamilyData = result;
+        if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
+        vm.SelectionChanged(vm.ShowMainPage.name);
+        vm.loading = false;
+    }
 
     /**
      * Returns a sort order for objects by a given property on that object.

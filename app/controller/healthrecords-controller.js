@@ -389,118 +389,161 @@ module.exports.postModelSynchTime = function (req, res) {
         });
 };
 
+/**
+ *
+ * @param req
+ * @param res
+ */
+module.exports.getWorksetStats = function (req, res) {
+    var id = req.params.id;
+    HealthRecords
+        .find({ '_id': id })
+        .select( 'onOpened onSynched' )
+        .select({ 'itemCount': { $slice: -1 } })
+        .exec(function (err, response){
+            var result = {
+                status: 200,
+                message: response
+            };
+            if (err){
+                response.status = 500;
+                response.message = err;
+            } else {
+                res.status(result.status).json(result.message);
+            }
+        });
+};
+
+/**
+ *
+ * @param req
+ * @param res
+ */
 module.exports.getViewStats = function (req, res) {
     var id = req.params.id;
     HealthRecords
-        .findById(id)
+        .find( {'_id': id })
         .select('viewStats')
-        .exec(function (err, doc){
-            var response = {
+        .exec(function (err, response){
+            var result = {
                 status: 200,
-                message: []
+                message: response
             };
             if (err){
                 response.status = 500;
                 response.message = err;
-            } else if(!doc){
-                response.status = 404;
-                response.message = {"message": "Workset Id not found."}
-            }
-            if(doc){
-                res
-                    .status(response.status)
-                    .json(doc)
             } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
+                res.status(result.status).json(result.message);
             }
         });
 };
 
+/**
+ *
+ * @param req
+ * @param res
+ */
+module.exports.getStyleStats = function (req, res) {
+    var id = req.params.id;
+    HealthRecords
+        .find(
+            { '_id': id },
+            { 'styleStats': { $slice: -1 },
+                'viewStats': 0,
+                'itemCount': 0,
+                'modelSizes': 0,
+                'sessionLogs': 0,
+                'synchTimes': 0,
+                'openTimes': 0,
+                'linkStats': 0,
+                'onSynched': 0,
+                'onOpened': 0,
+                'familyStats': 0
+            })
+        .exec(function (err, response){
+            var result = {
+                status: 200,
+                message: response
+            };
+            if (err){
+                response.status = 500;
+                response.message = err;
+            } else {
+                res.status(result.status).json(result.message);
+            }
+        });
+};
+
+/**
+ * Retrieves latest entry in the Link Stats array. Since 'slice' cannot
+ * be combined with select we have to exclude all other arrays.
+ * https://stackoverflow.com/questions/7670073/how-to-combine-both-slice-and-select-returned-keys-operation-in-function-update
+ * @param req
+ * @param res
+ */
 module.exports.getLinkStats = function (req, res) {
     var id = req.params.id;
     HealthRecords
-        .findById(id)
+        .find({ '_id': id })
         .select('linkStats')
-        .exec(function (err, doc){
-            var response = {
+        .exec(function (err, response){
+            var result = {
                 status: 200,
-                message: []
+                message: response
             };
             if (err){
                 response.status = 500;
                 response.message = err;
-            } else if(!doc){
-                response.status = 404;
-                response.message = {"message": "Workset Id not found."}
-            }
-            if(doc){
-                res
-                    .status(response.status)
-                    .json(doc)
             } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
+                res.status(result.status).json(result.message);
             }
         });
 };
 
+/**
+ *
+ * @param req
+ * @param res
+ */
 module.exports.getFamilyStats = function (req, res) {
     var id = req.params.id;
     HealthRecords
-        .findById(id)
+        .find({ '_id': id })
         .select('familyStats')
-        .exec(function (err, doc){
-            var response = {
+        .exec(function (err, response){
+            var result = {
                 status: 200,
-                message: []
+                message: response
             };
             if (err){
                 response.status = 500;
                 response.message = err;
-            } else if(!doc){
-                response.status = 404;
-                response.message = {"message": "Workset Id not found."}
-            }
-            if(doc){
-                res
-                    .status(response.status)
-                    .json(doc)
             } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
+                res.status(result.status).json(result.message);
             }
         });
 };
 
+/**
+ *
+ * @param req
+ * @param res
+ */
 module.exports.getModelStats = function (req, res) {
     var id = req.params.id;
     HealthRecords
         .findById(id)
-        .select('modelSizes openTimes synchTimes sessionLogs')
-        .exec(function (err, doc){
-            var response = {
+        .select('modelSizes openTimes synchTimes')
+        .exec(function (err, response){
+            var result = {
                 status: 200,
-                message: []
+                message: response
             };
             if (err){
                 response.status = 500;
                 response.message = err;
-            } else if(!doc){
-                response.status = 404;
-                response.message = {"message": "Workset Id not found."}
-            }
-            if(doc){
-                res
-                    .status(response.status)
-                    .json(doc)
             } else {
-                res
-                    .status(response.status)
-                    .json(response.message);
+                res.status(result.status).json(result.message);
             }
         });
 };

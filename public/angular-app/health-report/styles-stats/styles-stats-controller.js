@@ -10,10 +10,12 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
         vm.StylesData = this.processed;
         var allData = this.full;
 
-        var index = allData.styleStats.length - 1;
-        vm.DimensionSegmentStats = allData.styleStats[index].dimSegmentStats;
-        vm.DimensionStats = allData.styleStats[index].dimStats;
-        vm.TextStats = allData.styleStats[index].textStats;
+        console.log(allData);
+
+        // var index = allData.styleStats.length - 1;
+        vm.DimensionSegmentStats = allData.dimSegmentStats;
+        vm.DimensionStats = allData.dimStats;
+        vm.TextStats = allData.textStats;
 
         // set table options for dimension segments
         vm.dtOptions = {

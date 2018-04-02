@@ -3,9 +3,9 @@ angular.module('MissionControlApp').controller('WorksetsController', WorksetsCon
 function WorksetsController($routeParams, UtilityService){
     var vm = this;
     this.$onInit = function () {
+        vm.projectId = $routeParams.projectId;
         vm.WorksetData = this.processed;
         vm.selectedWorkset = this.full;
-        vm.projectId = $routeParams.projectId;
         vm.UserData = [];
         vm.d3GoalLine = {name: "Goal", value: 50}; // reference line
 

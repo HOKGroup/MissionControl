@@ -108,19 +108,19 @@
             </div>
             <div ng-show="!vm.loading">
                 <div class="col-xs-12 col-sm-9">
-                    <workset-stats processed="vm.WorksetData" full="vm.selectedHealthRecord" ng-if="vm.ShowWorksetStats.value"></workset-stats>
+                    <workset-stats processed="vm.WorksetData" full="vm.WorksetData.worksetStats" ng-if="vm.ShowWorksetStats.value"></workset-stats>
                 </div>
                 <div class="col-xs-12 col-sm-9">
-                    <link-stats processed="vm.LinkData" full="vm.selectedHealthRecord" ng-if="vm.ShowLinkStats.value"></link-stats>
+                    <link-stats processed="vm.LinkData" full="vm.LinkData.linkStats" ng-if="vm.ShowLinkStats.value"></link-stats>
                 </div>
                 <div class="col-xs-12 col-sm-9">
-                    <view-stats processed="vm.ViewData" full="vm.selectedHealthRecord" ng-if="vm.ShowViewStats.value"></view-stats>
+                    <view-stats processed="vm.ViewData" full="vm.ViewData.viewStats" ng-if="vm.ShowViewStats.value"></view-stats>
                 </div>
                 <div class="col-xs-12 col-sm-9">
-                    <style-stats processed="vm.StyleData" full="vm.selectedHealthRecord" ng-if="vm.ShowStyleStats.value"></style-stats>
+                    <style-stats processed="vm.StyleData" full="vm.StyleData.styleStats" ng-if="vm.ShowStyleStats.value"></style-stats>
                 </div>
                 <div class="col-xs-12 col-sm-9">
-                    <model-stats processed="vm.ModelData" full="vm.selectedHealthRecord" ng-if="vm.ShowModelStats.value"></model-stats>
+                    <model-stats processed="vm.ModelData" full="vm.ModelData.modelStats" ng-if="vm.ShowModelStats.value"></model-stats>
                 </div>
                 <div class="col-xs-12 col-sm-9">
                     <family-stats processed="vm.FamilyData" full="vm.FamilyCollection" ng-if="vm.ShowFamiliesStats.value"></family-stats>

@@ -59,15 +59,17 @@ var sheets = require('./models/sheets-model');
      app.post('/api/v1/healthrecords/:id/itemcount', healthReport.postItemCount);
      app.post('/api/v1/healthrecords/:id/viewstats', healthReport.viewStats);
      app.post('/api/v1/healthrecords/:id/stylestats', healthReport.styleStats);
-     app.get('/api/v1/healthrecords/:id/viewstats', healthReport.getViewStats);
-     app.post('/api/v1/healthrecords/:id/linkstats', healthReport.postLinkStats);
-     app.get('/api/v1/healthrecords/:id/linkstats', healthReport.getLinkStats);
+     app.get('/api/v1/healthrecords/:id/viewstats', healthReport.getViewStats); //used
+     app.get('/api/v1/healthrecords/:id/stylestats', healthReport.getStyleStats); //used
+     app.get('/api/v1/healthrecords/:id/worksetstats', healthReport.getWorksetStats); //used
+     app.post('/api/v1/healthrecords/:id/linkstats', healthReport.postLinkStats); //used
+     app.get('/api/v1/healthrecords/:id/linkstats', healthReport.getLinkStats); //used
      app.post('/api/v1/healthrecords/:id/familystats', healthReport.postFamilyStats);
-     app.get('/api/v1/healthrecords/:id/familystats', healthReport.getFamilyStats);
+     app.get('/api/v1/healthrecords/:id/familystats', healthReport.getFamilyStats); //used
      app.post('/api/v1/healthrecords/:id/modelsize', healthReport.postModelSize);
      app.post('/api/v1/healthrecords/:id/modelopentime', healthReport.postModelOpenTime);
      app.post('/api/v1/healthrecords/:id/modelsynchtime', healthReport.postModelSynchTime);
-     app.get('/api/v1/healthrecords/:id/modelstats', healthReport.getModelStats);
+     app.get('/api/v1/healthrecords/:id/modelstats', healthReport.getModelStats); //used
      app.put('/api/v1/healthrecords/:id/addfamilies', healthReport.addFamilies);
      app.put('/api/v1/healthrecords/:id/updatefilepath', healthReport.updateFilePath);
      app.post('/api/v1/healthrecords/names', healthReport.getNames);

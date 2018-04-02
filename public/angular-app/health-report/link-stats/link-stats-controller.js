@@ -5,7 +5,7 @@ function LinkStatsController($routeParams, DTColumnDefBuilder){
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
         vm.LinkData = this.processed;
-        vm.d3ViewStatsData = this.full.linkStats;
+        vm.d3ViewStatsData = this.full;
         vm.StylesKeys = ["totalDwgStyles", "totalImportedStyles"];
         vm.d3GoalLine = {name: "Goal", value: 50};
 

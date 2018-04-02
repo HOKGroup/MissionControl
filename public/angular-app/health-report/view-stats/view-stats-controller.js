@@ -3,11 +3,10 @@ angular.module('MissionControlApp').controller('ViewStatsController', ViewStatsC
 function ViewStatsController($routeParams){
     var vm = this;
     this.$onInit = function () {
-        vm.FamilyData = this.processed;
-        vm.AllData = this.full;
-
         vm.projectId = $routeParams.projectId;
-        vm.d3ViewStatsData = vm.AllData.viewStats;
+        vm.FamilyData = this.processed;
+        vm.d3ViewStatsData = this.full;
+        
         vm.ViewKeys = ["totalViews", "viewsOnSheet"]; // chart 1
         vm.ScheduleKeys = ["totalSchedules", "schedulesOnSheet"]; // chart2
         vm.d3GoalLine = null;

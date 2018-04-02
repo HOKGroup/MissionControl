@@ -16,6 +16,30 @@ function HealthRecordsFactory($http){
 
         updateFilePath: function updateFilePath(id, data) {
             return $http.put('/api/v1/healthrecords/' + id + '/updatefilepath', data).then(complete).catch(failed);
+        },
+
+        getWorksetStats: function getWorksetStats(id) {
+            return $http.get('/api/v1/healthrecords/' + id + '/worksetstats').then(complete).catch(failed);
+        },
+
+        getLinkStats: function getLinkStats(id) {
+            return $http.get('/api/v1/healthrecords/' + id + '/linkstats').then(complete).catch(failed);
+        },
+
+        getViewStats: function getViewStats(id) {
+            return $http.get('/api/v1/healthrecords/' + id + '/viewstats').then(complete).catch(failed);
+        },
+
+        getStyleStats: function getStyleStats(id) {
+            return $http.get('/api/v1/healthrecords/' + id + '/stylestats').then(complete).catch(failed);
+        },
+
+        getModelStats: function getModelStats(id) {
+            return $http.get('/api/v1/healthrecords/' + id + '/modelstats').then(complete).catch(failed);
+        },
+
+        getFamilyStats: function getFamilyStats(id) {
+            return $http.get('/api/v1/healthrecords/' + id + '/familystats').then(complete).catch(failed);
         }
     };
 
