@@ -1,13 +1,82 @@
 <div class="container-fluid">
+    <div class="row animate-show-hide ng-hide" ng-show="vm.showTimeSettings" >
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" style="padding-top: 5px;">Time Settings:</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class ="panel-body" >
+                        <div class="row panel-body" style="padding-top: 0; padding-bottom: 0">
+                            <div class="col-md-5 no-padding-left">
+                                <div class="col-sm-2" style="padding: 0">
+                                    <label for="fromInput" class="form-control-label" style="margin-top: 7px">From: </label>
+                                </div>
+                                <div class="col-sm-10 no-padding-left no-padding-right">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control input-sm" id="fromInput"
+                                               uib-datepicker-popup="{{vm.format}}"
+                                               ng-model="vm.dtFrom"
+                                               is-open="vm.popup1.opened"
+                                               datepicker-options="vm.dateOptions"
+                                               ng-required="true"
+                                               close-text="Close"
+                                               show-button-bar="false"/>
+                                        <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default btn-sm" ng-click="vm.openDatePicker('from')">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </button>
+                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5 no-padding-left">
+                                <div class="col-sm-2" style="padding: 0">
+                                    <label for="fromInput" class="form-control-label" style="margin-top: 7px">To: </label>
+                                </div>
+                                <div class="col-sm-10 no-padding-right no-padding-left">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control input-sm"
+                                               uib-datepicker-popup="{{vm.format}}"
+                                               ng-model="vm.dtTo"
+                                               is-open="vm.popup2.opened"
+                                               datepicker-options="vm.dateOptions"
+                                               ng-required="true"
+                                               show-button-bar="false"
+                                               close-text="Close"/>
+                                        <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default btn-sm" ng-click="vm.openDatePicker('to')">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </button>
+                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 no-padding-right">
+                                <button class="btn btn-primary btn-sm pull-right" id="run" ng-click="vm.filterDate()">
+                                    <i class="fa fa-circle-o-notch fa-spin ng-hide" ng-show="vm.loading"></i>
+                                    Filter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title">Worksets Health Score:</h4>
+                    <h4 class="panel-title">Worksets Health Score:
+                        <a href="" class="faa-parent faa-slow animated-hover">
+                            <i class="fa fa-gear faa-spin" ng-click="vm.showTimeSettings = !vm.showTimeSettings"></i>
+                        </a>
+                    </h4>
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <div class="col-md-3">
+                        <div class="col-md-3 no-padding">
                             <d3-circle data="vm.WorksetData.scoreData" class="cn"></d3-circle>
                         </div>
                         <div class="col-md-4">
@@ -17,7 +86,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-5 no-padding">
                             <div id="menu">
                                 <div class="panel list-group">
                                     <a href="" class="list-group-item" data-toggle="collapse" data-target="#sm" data-parent="#menu">
@@ -62,7 +131,6 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="panel-group">
             <div class="panel panel-default">

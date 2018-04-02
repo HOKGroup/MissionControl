@@ -509,7 +509,7 @@ module.exports.getFamilyStats = function (req, res) {
     var id = req.params.id;
     HealthRecords
         .find({ '_id': id })
-        .select('familyStats')
+        .select('familyStats centralPath')
         .exec(function (err, response){
             var result = {
                 status: 200,

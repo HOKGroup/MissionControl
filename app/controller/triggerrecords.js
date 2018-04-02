@@ -41,9 +41,11 @@ TriggerRecordService = {
     var to = new Date(req.query.to);
     if(from && to){
         TriggerRecord
-            .find({'configId': configid, 'edited': {'$gte': from, '$lte': to}}, function (err, result) {
-                if(err) return console.log(err);
-                return res.send(result);
+            .find({
+                'configId': configid,
+                'edited': {'$gte': from, '$lte': to}}, function (err, result) {
+            if(err) return console.log(err);
+            return res.send(result);
         })
     } else {
         TriggerRecord

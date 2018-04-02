@@ -9,6 +9,74 @@ function WorksetsController($routeParams, UtilityService){
         vm.UserData = [];
         vm.d3GoalLine = {name: "Goal", value: 50}; // reference line
 
+        vm.loading = false;
+        vm.dtFrom = null;
+        vm.dtTo = null;
+        vm.format = 'dd-MMMM-yyyy';
+        vm.dateOptions = {
+            formatYear: 'yy',
+            maxDate: new Date(2020, 5, 22),
+            minDate: new Date(2015, 5, 22),
+            startingDay: 1
+        };
+
+        SetFilter();
+
+        /**
+         * Set filter dates.
+         */
+        function SetFilter() {
+            vm.dtFrom = new Date();
+            vm.dtFrom.setMonth(vm.dtFrom.getMonth() - 1);
+            vm.dtTo = new Date();
+        }
+
+        /**
+         * Filters Editing Records based on selected date range.
+         */
+        vm.filterDate = function () {
+
+            // if(!vm.selectedConfig) return;
+            //
+            vm.loading = true;
+            // var data = {
+            //     from: vm.dtFrom,
+            //     to: vm.dtTo,
+            //     configId: vm.selectedConfig._id
+            // };
+            // TriggerRecordsFactory.getByConfigIdDates(data)
+            //     .then(function (response) {
+            //         if(!response || response.status !== 200) return;
+            //
+            //         vm.selectedRecords = response.data;
+            //         vm.loading = false;
+            //     })
+            //     .catch(function (err) {
+            //         console.log(err);
+            //     });
+        };
+
+        vm.popup1 = {
+            opened: false
+        };
+
+        vm.popup2 = {
+            opened: false
+        };
+
+        /**
+         * Opens pop-up date pickers.
+         * @param popup
+         */
+        vm.openDatePicker = function(popup) {
+            popup === 'from' ? vm.popup1.opened = true : vm.popup2.opened = true;
+        };
+
+        vm.showTimeSettings = false;
+        vm.toggleTimeSettings = function() {
+            vm.showTimeSettings = !vm.showTimeSettings;
+        };
+
         /**
          * Returns formatted string for time.
          * @param item

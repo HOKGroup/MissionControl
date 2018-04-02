@@ -5,108 +5,100 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
         /**
          * This utility method processes information about Families and
          * returns a summary info used to populate the Health Report page.
-         * @param data
+         * @param id
          * @param callback
          */
-        processFamilyStats: function processFamilyStats(id, callback){
+        processFamilyStats: function (id, callback){
+            var familyStatsId = null;
+            var nameCheckValues = ['HOK_I', 'HOK_M'];
+
             HealthRecordsFactory.getFamilyStats(id)
                 .then(function (response) {
-                    if(!response || response.status !== 200) return;
+                    if(!response || response.status !== 200) return null;
 
-                    var familyStatsId = response.data[0].familyStats;
+                    familyStatsId = response.data[0].familyStats;
+                    var centralPath = UtilityService.getHttpSafeFilePath(response.data[0].centralPath);
                     if(familyStatsId && familyStatsId !== null && familyStatsId !== ''){
-                        return FamiliesFactory.getById(familyStatsId);
+                        return ConfigFactory.getByCentralPath(centralPath)
                     }
 
-                    return;
-
+                    return null;
                 })
                 .then(function (response) {
                     if(!response || response.status !== 200) return;
 
-                    var familyStats = response.data;
+                    var configuration = response.data[0];
+                    if (configuration){
+                        nameCheckValues = configuration.updaters.find(function (item) {
+                            return item.updaterId === '56603be6-aeb2-45d0-9ebc-2830fad6368b'; //health report updater
+                        }).userOverrides.familyNameCheck.values;
+                    }
+                    return FamiliesFactory.getById(familyStatsId);
+                })
+                .then(function (response) {
+                    if(!response || response.status !== 200) return;
 
-                    return;
+                    var data = response.data;
+                    var misnamed = 0;
+                    data.families.forEach(function(item){
+                        var result = nameCheckValues.some(function (x) {
+                            return item.name.indexOf(x) !== -1;
+                        });
+                        if (!result) misnamed++;
+                    });
+
+                    var passingChecks = 0;
+                    data.oversizedFamilies <= 10
+                        ? passingChecks += 2
+                        : data.oversizedFamilies > 10 && data.oversizedFamilies < 20
+                        ? passingChecks += 1
+                        : passingChecks += 0;
+                    misnamed <= 10
+                        ? passingChecks += 2
+                        : misnamed > 10 && misnamed < 20
+                        ? passingChecks += 1
+                        : passingChecks += 0;
+                    data.unusedFamilies <= 10
+                        ? passingChecks += 2
+                        : data.unusedFamilies > 10 && data.unusedFamilies < 20
+                        ? passingChecks += 1
+                        : passingChecks += 0;
+                    data.inPlaceFamilies <= 5
+                        ? passingChecks += 2
+                        : data.inPlaceFamilies > 5 && data.inPlaceFamilies < 10
+                        ? passingChecks += 1
+                        : passingChecks += 0;
+
+                    var familyScoreData = {
+                        passingChecks: passingChecks,
+                        count: data.totalFamilies,
+                        label: "Families",
+                        newMax: 8};
+
+                    // (Konrad) This score needs to be remaped to 0-6 range
+                    var familyScore = Math.round((passingChecks * 6)/8);
+
+                    var desc = "Families are integral part of Revit functionality. It is however, importatnt to remember," +
+                        "that oversized (>1MB) families can be a sign of trouble (poorly modeled, imported DWGs etc.). That's " +
+                        "why it's imperative to follow HOK's best practices in modeling and naming Revit Families. InPlace families " +
+                        "should be limited in use as they do not allow full functionality of the regular Families.";
+
+                    callback({
+                        nameCheckValues: nameCheckValues,
+                        misnamed: misnamed,
+                        inPlaceFamilies: data.inPlaceFamilies,
+                        unusedFamilies: data.unusedFamilies,
+                        oversizedFamilies: data.oversizedFamilies,
+                        scoreData: familyScoreData,
+                        familyScore: familyScore,
+                        description: desc,
+                        name: "Families:",
+                        familyStats: data
+                    });
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
-
-            // var centralPath = UtilityService.getHttpSafeFilePath(data.centralPath);
-            // ConfigFactory.getByCentralPath(centralPath)
-            //     .then(function (response) {
-            //         if (!response || response.status !== 200) return null;
-            //
-            //         var configuration = response.data[0];
-            //         var nameCheckValues;
-            //         if (!configuration){
-            //             // (Konrad) Unable to get a config. Use defaults.
-            //             nameCheckValues = ['HOK_I', 'HOK_M']; //defaults
-            //         } else {
-            //             nameCheckValues = configuration.updaters.find(function (item) {
-            //                 return item.updaterId === '56603be6-aeb2-45d0-9ebc-2830fad6368b'; //health report updater
-            //             }).userOverrides.familyNameCheck.values;
-            //         }
-            //
-            //         var misnamed = 0;
-            //         data.families.forEach(function(item){
-            //             var result = nameCheckValues.some(function (x) {
-            //                 return item.name.indexOf(x) !== -1;
-            //             });
-            //             if (!result) misnamed++;
-            //         });
-            //
-            //         var passingChecks = 0;
-            //         data.oversizedFamilies <= 10
-            //             ? passingChecks += 2
-            //             : data.oversizedFamilies > 10 && data.oversizedFamilies < 20
-            //             ? passingChecks += 1
-            //             : passingChecks += 0;
-            //         misnamed <= 10
-            //             ? passingChecks += 2
-            //             : misnamed > 10 && misnamed < 20
-            //             ? passingChecks += 1
-            //             : passingChecks += 0;
-            //         data.unusedFamilies <= 10
-            //             ? passingChecks += 2
-            //             : data.unusedFamilies > 10 && data.unusedFamilies < 20
-            //             ? passingChecks += 1
-            //             : passingChecks += 0;
-            //         data.inPlaceFamilies <= 5
-            //             ? passingChecks += 2
-            //             : data.inPlaceFamilies > 5 && data.inPlaceFamilies < 10
-            //             ? passingChecks += 1
-            //             : passingChecks += 0;
-            //
-            //         var familyScoreData = {
-            //             passingChecks: passingChecks,
-            //             count: data.totalFamilies,
-            //             label: "Families",
-            //             newMax: 8};
-            //
-            //         // (Konrad) This score needs to be remaped to 0-6 range
-            //         var familyScore = Math.round((passingChecks * 6)/8);
-            //
-            //         var desc = "Families are integral part of Revit functionality. It is however, importatnt to remember," +
-            //             "that oversized (>1MB) families can be a sign of trouble (poorly modeled, imported DWGs etc.). That's " +
-            //             "why it's imperative to follow HOK's best practices in modeling and naming Revit Families. InPlace families " +
-            //             "should be limited in use as they do not allow full functionality of the regular Families.";
-            //
-            //         callback({
-            //             nameCheckValues: nameCheckValues,
-            //             misnamed: misnamed,
-            //             inPlaceFamilies: data.inPlaceFamilies,
-            //             unusedFamilies: data.unusedFamilies,
-            //             oversizedFamilies: data.oversizedFamilies,
-            //             scoreData: familyScoreData,
-            //             familyScore: familyScore,
-            //             description: desc,
-            //             name: "Families:"
-            //         });
-            //     })
-            //     .catch(function (error) {
-            //         console.log(error);
-            //     });
         },
 
         /**
@@ -184,6 +176,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
             HealthRecordsFactory.getStyleStats(id)
                 .then(function (response) {
                     if (!response || response.status !== 200) return;
+                    if (!response.data[0].stylesStats || response.data[0].stylesStats.length === 0) return;
 
                     var data = response.data[0].styleStats[0];
                     var overridenDimensions = data.dimSegmentStats.length;
@@ -257,11 +250,11 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
         },
 
         /**
-         *
+         * Processes View Stats data returning data needed to create Health Score graphics.
          * @param id
          * @param callback
          */
-        processViewStats: function (id, callback) {
+        processViewStats: function(id, callback) {
 
             HealthRecordsFactory.getViewStats(id)
                 .then(function (response) {
@@ -333,11 +326,11 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
         },
 
         /**
-         *
+         * Processes Model Stats data returning data needed to create Health Score graphics.
          * @param id
          * @param callback
          */
-        processModelStats: function (id, callback) {
+        processModelStats: function(id, callback) {
 
             HealthRecordsFactory.getModelStats(id)
                 .then(function (response) {
@@ -380,7 +373,12 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                 })
         },
 
-        processWorksetStats: function (id, callback) {
+        /**
+         * Processes Workset Stats data returning data needed to create Health Score graphics.
+         * @param id
+         * @param callback
+         */
+        processWorksetStats: function(id, callback) {
 
             HealthRecordsFactory.getWorksetStats(id)
                 .then(function (response) {
@@ -496,6 +494,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
         },
 
         /**
+         * Formats file size into proper Mb/kb strings.
          * @return {string}
          */
         formatNumber: function (n) {
@@ -518,6 +517,13 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
         }
     };
 
+    /**
+     *
+     * @param items
+     * @param prop
+     * @returns {*}
+     * @constructor
+     */
     function SumProperty(items, prop){
         return items.reduce(function (a, b) {
             return a + b[prop];
