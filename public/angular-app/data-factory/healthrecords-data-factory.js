@@ -34,8 +34,12 @@ function HealthRecordsFactory($http){
             return $http.get('/api/v1/healthrecords/' + id + '/stylestats').then(complete).catch(failed);
         },
 
-        getModelStats: function getModelStats(id) {
-            return $http.get('/api/v1/healthrecords/' + id + '/modelstats').then(complete).catch(failed);
+        getModelStats: function getModelStats(id, dateRange) {
+            return $http.get('/api/v1/healthrecords/' + id + '/modelstats', {
+                params: {
+                    from: dateRange.from,
+                    to: dateRange.to }
+            }).then(complete).catch(failed);
         },
 
         getFamilyStats: function getFamilyStats(id) {

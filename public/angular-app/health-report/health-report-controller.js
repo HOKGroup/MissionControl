@@ -85,7 +85,6 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
         // Users can change that range in specific needs.
         var dtFrom = new Date();
         dtFrom.setMonth(dtFrom.getMonth() - 1);
-
         var dateRange = {
             from: dtFrom,
             to: new Date()
@@ -94,45 +93,36 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
         HealthReportFactory.processWorksetStats(link._id, dateRange, function (result) {
             vm.WorksetData = result;
             if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
+            dataProcessed();
+        });
 
-            // (Konrad) Since Model Stats charts rely on Worksets being there we
-            // have to call them afterwards.
-            HealthReportFactory.processModelStats(link._id, function (result) {
-                result.modelStats['onSynched'] = vm.WorksetData.worksetStats.onSynched;
-                result.modelStats['onOpened'] = vm.WorksetData.worksetStats.onOpened;
-
-                vm.ModelData = result;
-                if(vm.ModelData) vm.AllData.push(vm.ModelData);
-            });
-
+        HealthReportFactory.processModelStats(link._id, dateRange, function (result) {
+            vm.ModelData = result;
+            if(vm.ModelData) vm.AllData.push(vm.ModelData);
             dataProcessed();
         });
 
         HealthReportFactory.processLinkStats(link._id, function (result) {
             vm.LinkData = result;
             if(vm.LinkData) vm.AllData.push(vm.LinkData);
-
             dataProcessed();
         });
 
         HealthReportFactory.processViewStats(link._id, function (result) {
             vm.ViewData = result;
             if(vm.ViewData) vm.AllData.push(vm.ViewData);
-
             dataProcessed();
         });
 
         HealthReportFactory.processStyleStats(link._id, function (result) {
             vm.StyleData = result;
             if(vm.StyleData) vm.AllData.push(vm.StyleData);
-
             dataProcessed();
         });
 
         HealthReportFactory.processFamilyStats(link._id, function (result) {
             vm.FamilyData = result;
             if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
-
             dataProcessed();
         });
     };

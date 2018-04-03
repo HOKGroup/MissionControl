@@ -1,9 +1,17 @@
 <div class="container-fluid">
+    <div class="row animate-show-hide ng-hide" ng-show="vm.showTimeSettings" >
+        <time-range-selection on-hide="vm.toggleTimeSettings()" on-filter="vm.OnFilter(date)"></time-range-selection>
+    </div>
     <div class="row">
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title">Model Health Score:</h4>
+                    <h4 class="panel-title">
+                        Model Health Score:
+                        <a href="" class="faa-parent faa-slow animated-hover">
+                            <i class="fa fa-gear faa-spin text-primary" ng-click="vm.showTimeSettings = !vm.showTimeSettings"></i>
+                        </a>
+                    </h4>
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body">
@@ -79,10 +87,10 @@
                     </div>
                     <h4 class="panel-title" style="padding-top: 5px;">
                         Model Open Time
-                        <a href="">
-                            <i class="fa fa-info-circle" ng-click="vm.launchHelpWindow('lg')"></i>
-                        </a>
                         [> 5h <i class="fa fa-circle" style="color: #D9534F"></i>]
+                        <a href="">
+                            <i class="fa fa-info-circle text-primary" ng-click="vm.launchHelpWindow('lg')"></i>
+                        </a>
                     </h4>
                 </div>
                 <div class="panel-collapse">
@@ -114,10 +122,10 @@
                     </div>
                     <h4 class="panel-title" style="padding-top: 5px;">
                         Model Synch Time
-                        <a href="">
-                            <i class="fa fa-info-circle" ng-click="vm.launchHelpWindow('lg')"></i>
-                        </a>
                         [> 1h <i class="fa fa-circle" style="color: #D9534F"></i>]
+                        <a href="">
+                            <i class="fa fa-info-circle text-primary" ng-click="vm.launchHelpWindow('lg')"></i>
+                        </a>
                     </h4>
                 </div>
                 <div class="panel-collapse">

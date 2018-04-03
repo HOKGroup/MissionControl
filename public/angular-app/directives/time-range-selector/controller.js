@@ -19,7 +19,6 @@ function TimeRangeSelectorController(){
         };
         vm.popup1 = { opened: false };
         vm.popup2 = { opened: false };
-        vm.showTimeSettings = false;
 
         /**
          * Opens pop-up date pickers.
@@ -27,6 +26,13 @@ function TimeRangeSelectorController(){
          */
         vm.openDatePicker = function(popup) {
             popup === 'from' ? vm.popup1.opened = true : vm.popup2.opened = true;
+        };
+
+        /**
+         * Call defined hide function that will hide the div.
+         */
+        vm.hide = function () {
+            this.onHide()
         };
 
         /**

@@ -554,21 +554,67 @@ module.exports.getFamilyStats = function (req, res) {
  * @param res
  */
 module.exports.getModelStats = function (req, res) {
-    var id = req.params.id;
+    var id = mongoose.Types.ObjectId(req.params.id);
+    var from = new Date(req.query.from);
+    var to = new Date(req.query.to);
     HealthRecords
-        .findById(id)
-        .select('modelSizes openTimes synchTimes')
-        .exec(function (err, response){
+        .aggregate([
+            { $match: { _id: id }},
+            { $project: {
+                'modelSizes': { $filter: {
+                    input: '$modelSizes',
+                    as: 'item',
+                    cond: { $and: [
+                        { $gte: ['$$item.createdOn', from]},
+                        { $lte: ['$$item.createdOn', to]}
+                    ]}
+                }},
+                'openTimes': { $filter: {
+                    input: '$openTimes',
+                    as: 'item',
+                    cond: { $and: [
+                        { $gte: ['$$item.createdOn', from]},
+                        { $lte: ['$$item.createdOn', to]}
+                    ]}
+                }},
+                'synchTimes': { $filter: {
+                    input: '$synchTimes',
+                    as: 'item',
+                    cond: { $and: [
+                        { $gte: ['$$item.createdOn', from]},
+                        { $lte: ['$$item.createdOn', to]}
+                    ]}
+                }},
+                'onOpened': { $filter: {
+                    input: '$onOpened',
+                    as: 'item',
+                    cond: { $and: [
+                        { $gte: ['$$item.createdOn', from]},
+                        { $lte: ['$$item.createdOn', to]}
+                    ]}
+                }},
+                'onSynched': { $filter: {
+                    input: '$onSynched',
+                    as: 'item',
+                    cond: { $and: [
+                        { $gte: ['$$item.createdOn', from]},
+                        { $lte: ['$$item.createdOn', to]}
+                    ]}
+                }}
+            }}]
+        ).exec(function (err, response){
             var result = {
                 status: 200,
                 message: response
             };
             if (err){
-                response.status = 500;
-                response.message = err;
-            } else {
-                res.status(result.status).json(result.message);
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
             }
+            res.status(result.status).json(result.message);
         });
 };
 

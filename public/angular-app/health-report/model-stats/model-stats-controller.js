@@ -1,39 +1,36 @@
 angular.module('MissionControlApp').controller('ModelStatsController', ModelStatsController);
 
-function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, $uibModal){
+function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, $uibModal, HealthReportFactory){
     var vm = this;
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
-        vm.ModelData = this.processed;
-        vm.Data = this.full;
         var synchLimit = 3600000; // 1h
         var openLimit = 18000000; // 5h
-
-        vm.ModelSizes = vm.Data.modelSizes;
-
-        // set data for synch charts
-        var filtered = filterData(vm.Data.synchTimes, synchLimit, "All"); //1h
-        vm.ModelSynchTimes = filtered.data;
-        vm.ExcludedModelSynchTimes = filtered.excludedData;
-
-        // set data for open charts
-        var filtered1 = filterData(vm.Data.openTimes, openLimit, "All"); //5h
-        vm.ModelOpenTimes = filtered1.data;
-        vm.ExcludedModelOpenTimes = filtered1.excludedData;
-
-        // set data for user filters
-        vm.selectedSynchUser = "All";
-        vm.selectedOpenUser = "All";
-        vm.OpenUsers = Array.from(new Set(vm.ModelOpenTimes.map(function(item){
-            return item.user;
-        })));
-        vm.OpenUsers.unshift("All");
-        vm.SynchUsers = Array.from(new Set(vm.ModelSynchTimes.map(function(item){
-            return item.user;
-        })));
-        vm.SynchUsers.unshift("All");
-        vm.selectedTableData = 'Synch';
+        vm.showTimeSettings = false;
+        vm.ModelData = this.processed;
+        vm.Data = this.full;
         vm.TableDataTypes = ['Open', 'Synch'];
+
+        /**
+         * Callback method for Date Time Range selection.
+         * @param date
+         * @constructor
+         */
+        vm.OnFilter = function (date) {
+            HealthReportFactory.processModelStats(vm.Data._id, date, function (result) {
+                vm.ModelData = result;
+                vm.Data = result.modelStats;
+
+                setDefaults();
+            });
+        };
+
+        /**
+         * Toggles Date Time picker div on/off.
+         */
+        vm.toggleTimeSettings = function() {
+            vm.showTimeSettings = !vm.showTimeSettings;
+        };
 
         // set table options
         vm.dtOptions = {
@@ -80,7 +77,39 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
             }
         };
 
-        vm.setTableDataType(vm.selectedTableData);
+        setDefaults();
+
+        /**
+         * Method that sets/resets all calcs for tables/charts.
+         */
+        function setDefaults() {
+            vm.ModelSizes = vm.Data.modelSizes;
+
+            // set data for synch charts
+            var filtered = filterData(vm.Data.synchTimes, synchLimit, "All"); //1h
+            vm.ModelSynchTimes = filtered.data;
+            vm.ExcludedModelSynchTimes = filtered.excludedData;
+
+            // set data for open charts
+            var filtered1 = filterData(vm.Data.openTimes, openLimit, "All"); //5h
+            vm.ModelOpenTimes = filtered1.data;
+            vm.ExcludedModelOpenTimes = filtered1.excludedData;
+
+            // set data for user filters
+            vm.selectedSynchUser = "All";
+            vm.selectedOpenUser = "All";
+            vm.OpenUsers = Array.from(new Set(vm.ModelOpenTimes.map(function(item){
+                return item.user;
+            })));
+            vm.OpenUsers.unshift("All");
+            vm.SynchUsers = Array.from(new Set(vm.ModelSynchTimes.map(function(item){
+                return item.user;
+            })));
+            vm.SynchUsers.unshift("All");
+            vm.selectedTableData = 'Synch';
+
+            vm.setTableDataType(vm.selectedTableData);
+        }
 
         /**
          * Filters Model Open Time data for specific user only.

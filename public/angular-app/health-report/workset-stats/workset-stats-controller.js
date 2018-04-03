@@ -8,6 +8,7 @@ function WorksetsController($routeParams, UtilityService, HealthReportFactory){
         vm.selectedWorkset = this.full;
         vm.UserData = [];
         vm.d3GoalLine = {name: "Goal", value: 50}; // reference line
+        vm.showTimeSettings = false;
 
         /**
          * Callback method for Date Time Range selection.

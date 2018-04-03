@@ -328,15 +328,15 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
         /**
          * Processes Model Stats data returning data needed to create Health Score graphics.
          * @param id
+         * @param dateRange
          * @param callback
          */
-        processModelStats: function(id, callback) {
-
-            HealthRecordsFactory.getModelStats(id)
+        processModelStats: function(id, dateRange, callback) {
+            HealthRecordsFactory.getModelStats(id, dateRange)
                 .then(function (response) {
                     if (!response || response.status !== 200) return;
 
-                    var data = response.data;
+                    var data = response.data[0];
                     // (Konrad) Since all these are displayed in a chart we need at least two (2) data points.
                     if(data.modelSizes.length <= 1) return;
                     if(data.openTimes.length <= 1) return;
