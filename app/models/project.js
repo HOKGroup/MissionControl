@@ -32,8 +32,7 @@ var projectSchema = new mongoose.Schema({
     	type: mongoose.Schema.Types.ObjectId,
 		ref: 'Configuration'}],
 	healthrecords: [{
-    	type: mongoose.Schema.Types.ObjectId,
-		ref: 'HealthRecords'}],
+    	type: mongoose.Schema.Types.ObjectId }],
     sheets: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Sheets'

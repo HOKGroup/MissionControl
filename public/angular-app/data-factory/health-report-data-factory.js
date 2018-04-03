@@ -376,11 +376,11 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
         /**
          * Processes Workset Stats data returning data needed to create Health Score graphics.
          * @param id
+         * @param dateRange
          * @param callback
          */
-        processWorksetStats: function(id, callback) {
-
-            HealthRecordsFactory.getWorksetStats(id)
+        processWorksetStats: function(id, dateRange, callback) {
+            HealthRecordsFactory.getWorksetStats(id, dateRange)
                 .then(function (response) {
                     if(!response || response.status !== 200) return;
 

@@ -395,22 +395,46 @@ module.exports.postModelSynchTime = function (req, res) {
  * @param res
  */
 module.exports.getWorksetStats = function (req, res) {
-    var id = req.params.id;
+    var id = mongoose.Types.ObjectId(req.params.id);
+    var from = new Date(req.query.from);
+    var to = new Date(req.query.to);
     HealthRecords
-        .find({ '_id': id })
-        .select( 'onOpened onSynched' )
-        .select({ 'itemCount': { $slice: -1 } })
-        .exec(function (err, response){
+        .aggregate(
+            [
+                { $match: { _id: id }},
+                { $project: {
+                    'onOpened': { $filter: {
+                        input: '$onOpened',
+                        as: 'item',
+                        cond: { $and: [
+                            { $gte: ['$$item.createdOn', from]},
+                            { $lte: ['$$item.createdOn', to]}
+                        ]}
+                    }},
+                    'onSynched': { $filter: {
+                        input: '$onSynched',
+                        as: 'item',
+                        cond: { $and: [
+                            { $gte: ['$$item.createdOn', from]},
+                            { $lte: ['$$item.createdOn', to]}
+                        ]}
+                    }},
+                    'itemCount': { $slice: ['$itemCount', -1]}
+                }}
+            ]
+        ).exec(function (err, response){
             var result = {
                 status: 200,
                 message: response
             };
             if (err){
-                response.status = 500;
-                response.message = err;
-            } else {
-                res.status(result.status).json(result.message);
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
             }
+            res.status(result.status).json(result.message);
         });
 };
 

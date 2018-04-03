@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').controller('WorksetsController', WorksetsController);
 
-function WorksetsController($routeParams, UtilityService){
+function WorksetsController($routeParams, UtilityService, HealthReportFactory){
     var vm = this;
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
@@ -35,25 +35,17 @@ function WorksetsController($routeParams, UtilityService){
          * Filters Editing Records based on selected date range.
          */
         vm.filterDate = function () {
-
-            // if(!vm.selectedConfig) return;
-            //
             vm.loading = true;
-            // var data = {
-            //     from: vm.dtFrom,
-            //     to: vm.dtTo,
-            //     configId: vm.selectedConfig._id
-            // };
-            // TriggerRecordsFactory.getByConfigIdDates(data)
-            //     .then(function (response) {
-            //         if(!response || response.status !== 200) return;
-            //
-            //         vm.selectedRecords = response.data;
-            //         vm.loading = false;
-            //     })
-            //     .catch(function (err) {
-            //         console.log(err);
-            //     });
+            var dateRange = {
+                from: vm.dtFrom,
+                to: vm.dtTo
+            };
+
+            HealthReportFactory.processWorksetStats(vm.selectedWorkset._id, dateRange, function (result) {
+                vm.WorksetData = result;
+                vm.selectedWorkset = result.worksetStats;
+                vm.loading = false;
+            });
         };
 
         vm.popup1 = {

@@ -81,7 +81,17 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
     vm.SetProject = function (link){
         vm.loading = true;
 
-        HealthReportFactory.processWorksetStats(link._id, function (result) {
+        // (Konrad) By default we will take only last month worth of data.
+        // Users can change that range in specific needs.
+        var dtFrom = new Date();
+        dtFrom.setMonth(dtFrom.getMonth() - 1);
+
+        var dateRange = {
+            from: dtFrom,
+            to: new Date()
+        };
+
+        HealthReportFactory.processWorksetStats(link._id, dateRange, function (result) {
             vm.WorksetData = result;
             if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
 
