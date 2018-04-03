@@ -2,10 +2,20 @@ angular.module('MissionControlApp').factory('UtilityService', UtilityService);
 
 function UtilityService(){
     return {
+        /**
+         * Formats number from double to int with % sign.
+         * @param value
+         * @returns {string}
+         */
         formatPercentage: function (value) {
             return parseInt(value).toFixed(0) + '%';
         },
 
+        /**
+         * Formats time from ms to hh:mm:ss
+         * @param ms
+         * @returns {*}
+         */
         formatDuration: function (ms) {
             if (ms <= 0) return "0s";
 
@@ -16,13 +26,18 @@ function UtilityService(){
             seconds = (seconds % 60).toFixed(0);
 
             var output = "";
-            if (hours !== "0") output = hours + "h:";
-            if (minutes !== "0") output = output + minutes + "m:";
-            if (seconds !== "0") output = output + seconds + "s";
+            if (hours !== "0") output = hours + ":";
+            if (minutes !== "0") output = output + minutes + ":";
+            if (seconds !== "0") output = output + seconds;
 
             return output;
         },
 
+        /**
+         * Formats file size from bytes to KiB, MiB...
+         * @param bytes
+         * @returns {string}
+         */
         formatNumber: function (bytes) {
             var thresh = 1024;
             if (Math.abs(bytes) < thresh) {
@@ -37,6 +52,10 @@ function UtilityService(){
             return bytes.toFixed(1) + units[u];
         },
 
+        /**
+         * Extracts file name from file path assuming that extension is 3 letters.
+         * @param path
+         */
         fileNameFromPath: function (path) {
             if (!path) return;
             return path.replace(/^.*[\\\/]/, '').slice(0, -4); //removed file extension
@@ -82,6 +101,11 @@ function UtilityService(){
             return true;
         },
 
+        /**
+         * Formats Revit file paths to http safe parameter by replacing slashes with pipes.
+         * @param centralPath
+         * @returns {*}
+         */
         getHttpSafeFilePath : function (centralPath){
             var rgx;
             if(centralPath.includes('RSN:') || centralPath.includes('A360:')){
@@ -92,14 +116,16 @@ function UtilityService(){
             return rgx;
         },
 
+        /**
+         * Converts UTC time stored in DB to local time.
+         * @param date
+         * @returns {Date}
+         */
         convertUTCDateToLocalDate : function convertUTCDateToLocalDate(date) {
             var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
-
             var offset = date.getTimezoneOffset() / 60;
             var hours = date.getHours();
-
             newDate.setHours(hours - offset);
-
             return newDate;
         }
     }

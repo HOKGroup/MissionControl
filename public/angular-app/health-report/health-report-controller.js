@@ -102,7 +102,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
             dataProcessed();
         });
 
-        HealthReportFactory.processLinkStats(link._id, function (result) {
+        HealthReportFactory.processLinkStats(link._id, dateRange, function (result) {
             vm.LinkData = result;
             if(vm.LinkData) vm.AllData.push(vm.LinkData);
             dataProcessed();

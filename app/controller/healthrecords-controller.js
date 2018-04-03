@@ -463,7 +463,9 @@ module.exports.getViewStats = function (req, res) {
 };
 
 /**
- *
+ * Retrieves latest entry in the Link Stats array. Since 'slice' cannot
+ * be combined with select we have to exclude all other arrays.
+ * https://stackoverflow.com/questions/7670073/how-to-combine-both-slice-and-select-returned-keys-operation-in-function-update
  * @param req
  * @param res
  */
@@ -499,28 +501,40 @@ module.exports.getStyleStats = function (req, res) {
 };
 
 /**
- * Retrieves latest entry in the Link Stats array. Since 'slice' cannot
- * be combined with select we have to exclude all other arrays.
- * https://stackoverflow.com/questions/7670073/how-to-combine-both-slice-and-select-returned-keys-operation-in-function-update
+ * Retrieves latest entry in the Link Stats array.
  * @param req
  * @param res
  */
 module.exports.getLinkStats = function (req, res) {
-    var id = req.params.id;
+    var id = mongoose.Types.ObjectId(req.params.id);
+    var from = new Date(req.query.from);
+    var to = new Date(req.query.to);
     HealthRecords
-        .find({ '_id': id })
-        .select('linkStats')
-        .exec(function (err, response){
+        .aggregate([
+            { $match: { _id: id }},
+            { $project: {
+                'linkStats': { $filter: {
+                    input: '$linkStats',
+                    as: 'item',
+                    cond: { $and: [
+                        { $gte: ['$$item.createdOn', from]},
+                        { $lte: ['$$item.createdOn', to]}
+                    ]}
+                }}
+            }}]
+        ).exec(function (err, response){
             var result = {
                 status: 200,
                 message: response
             };
             if (err){
-                response.status = 500;
-                response.message = err;
-            } else {
-                res.status(result.status).json(result.message);
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
             }
+            res.status(result.status).json(result.message);
         });
 };
 

@@ -104,16 +104,16 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
         /**
          * Processes Links Stats data returning data needed to create Health Score graphics.
          * @param id
+         * @param dateRange
          * @param callback
          */
-        processLinkStats: function (id, callback) {
-
-            HealthRecordsFactory.getLinkStats(id)
+        processLinkStats: function (id, dateRange, callback) {
+            HealthRecordsFactory.getLinkStats(id, dateRange)
                 .then(function (response) {
                     if(!response || response.status !== 200) return;
 
-                    var data = response.data[0].linkStats;
-                    var latest = data[data.length - 1];
+                    var data = response.data[0];
+                    var latest = data.linkStats[data.linkStats.length - 1];
                     var importCount = 0;
                     latest.importedDwgFiles.forEach(function(item){
                         if(!item.isLinked) importCount++;

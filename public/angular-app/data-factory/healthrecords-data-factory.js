@@ -22,8 +22,12 @@ function HealthRecordsFactory($http){
             }).then(complete).catch(failed);
         },
 
-        getLinkStats: function getLinkStats(id) {
-            return $http.get('/api/v1/healthrecords/' + id + '/linkstats').then(complete).catch(failed);
+        getLinkStats: function getLinkStats(id, dateRange) {
+            return $http.get('/api/v1/healthrecords/' + id + '/linkstats', {
+                params: {
+                    from: dateRange.from,
+                    to: dateRange.to }
+            }).then(complete).catch(failed);
         },
 
         getViewStats: function getViewStats(id) {
