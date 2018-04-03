@@ -108,18 +108,19 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
             dataProcessed();
         });
 
-        HealthReportFactory.processViewStats(link._id, function (result) {
+        HealthReportFactory.processViewStats(link._id, dateRange, function (result) {
             vm.ViewData = result;
             if(vm.ViewData) vm.AllData.push(vm.ViewData);
             dataProcessed();
         });
 
-        HealthReportFactory.processStyleStats(link._id, function (result) {
+        HealthReportFactory.processStyleStats(link._id, dateRange, function (result) {
             vm.StyleData = result;
             if(vm.StyleData) vm.AllData.push(vm.StyleData);
             dataProcessed();
         });
 
+        //TODO:
         HealthReportFactory.processFamilyStats(link._id, function (result) {
             vm.FamilyData = result;
             if(vm.FamilyData) vm.AllData.push(vm.FamilyData);

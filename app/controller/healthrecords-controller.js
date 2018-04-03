@@ -399,29 +399,27 @@ module.exports.getWorksetStats = function (req, res) {
     var from = new Date(req.query.from);
     var to = new Date(req.query.to);
     HealthRecords
-        .aggregate(
-            [
-                { $match: { _id: id }},
-                { $project: {
-                    'onOpened': { $filter: {
-                        input: '$onOpened',
-                        as: 'item',
-                        cond: { $and: [
-                            { $gte: ['$$item.createdOn', from]},
-                            { $lte: ['$$item.createdOn', to]}
-                        ]}
-                    }},
-                    'onSynched': { $filter: {
-                        input: '$onSynched',
-                        as: 'item',
-                        cond: { $and: [
-                            { $gte: ['$$item.createdOn', from]},
-                            { $lte: ['$$item.createdOn', to]}
-                        ]}
-                    }},
-                    'itemCount': { $slice: ['$itemCount', -1]}
-                }}
-            ]
+        .aggregate([
+            { $match: { _id: id }},
+            { $project: {
+                'onOpened': { $filter: {
+                    input: '$onOpened',
+                    as: 'item',
+                    cond: { $and: [
+                        { $gte: ['$$item.createdOn', from]},
+                        { $lte: ['$$item.createdOn', to]}
+                    ]}
+                }},
+                'onSynched': { $filter: {
+                    input: '$onSynched',
+                    as: 'item',
+                    cond: { $and: [
+                        { $gte: ['$$item.createdOn', from]},
+                        { $lte: ['$$item.createdOn', to]}
+                    ]}
+                }},
+                'itemCount': { $slice: ['$itemCount', -1]}
+            }}]
         ).exec(function (err, response){
             var result = {
                 status: 200,
@@ -444,21 +442,35 @@ module.exports.getWorksetStats = function (req, res) {
  * @param res
  */
 module.exports.getViewStats = function (req, res) {
-    var id = req.params.id;
+    var id = mongoose.Types.ObjectId(req.params.id);
+    var from = new Date(req.query.from);
+    var to = new Date(req.query.to);
     HealthRecords
-        .find( {'_id': id })
-        .select('viewStats')
-        .exec(function (err, response){
+        .aggregate([
+            { $match: { _id: id }},
+            { $project: {
+                'viewStats': { $filter: {
+                    input: '$viewStats',
+                    as: 'item',
+                    cond: { $and: [
+                        { $gte: ['$$item.createdOn', from]},
+                        { $lte: ['$$item.createdOn', to]}
+                    ]}
+                }}
+            }}]
+        ).exec(function (err, response){
             var result = {
                 status: 200,
                 message: response
             };
             if (err){
-                response.status = 500;
-                response.message = err;
-            } else {
-                res.status(result.status).json(result.message);
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
             }
+            res.status(result.status).json(result.message);
         });
 };
 
@@ -470,33 +482,28 @@ module.exports.getViewStats = function (req, res) {
  * @param res
  */
 module.exports.getStyleStats = function (req, res) {
-    var id = req.params.id;
+    var id = mongoose.Types.ObjectId(req.params.id);
+    // var from = new Date(req.query.from);
+    // var to = new Date(req.query.to);
     HealthRecords
-        .find(
-            { '_id': id },
-            { 'styleStats': { $slice: -1 },
-                'viewStats': 0,
-                'itemCount': 0,
-                'modelSizes': 0,
-                'sessionLogs': 0,
-                'synchTimes': 0,
-                'openTimes': 0,
-                'linkStats': 0,
-                'onSynched': 0,
-                'onOpened': 0,
-                'familyStats': 0
-            })
-        .exec(function (err, response){
+        .aggregate([
+            { $match: { _id: id }},
+            { $project: {
+                'styleStats': { $slice: ['$styleStats', -1]}
+            }}]
+        ).exec(function (err, response){
             var result = {
                 status: 200,
                 message: response
             };
             if (err){
-                response.status = 500;
-                response.message = err;
-            } else {
-                res.status(result.status).json(result.message);
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
             }
+            res.status(result.status).json(result.message);
         });
 };
 

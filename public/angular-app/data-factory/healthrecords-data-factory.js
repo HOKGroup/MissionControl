@@ -30,12 +30,20 @@ function HealthRecordsFactory($http){
             }).then(complete).catch(failed);
         },
 
-        getViewStats: function getViewStats(id) {
-            return $http.get('/api/v1/healthrecords/' + id + '/viewstats').then(complete).catch(failed);
+        getViewStats: function getViewStats(id, dateRange) {
+            return $http.get('/api/v1/healthrecords/' + id + '/viewstats', {
+                params: {
+                    from: dateRange.from,
+                    to: dateRange.to }
+            }).then(complete).catch(failed);
         },
 
-        getStyleStats: function getStyleStats(id) {
-            return $http.get('/api/v1/healthrecords/' + id + '/stylestats').then(complete).catch(failed);
+        getStyleStats: function getStyleStats(id, dateRange) {
+            return $http.get('/api/v1/healthrecords/' + id + '/stylestats', {
+                params: {
+                    from: dateRange.from,
+                    to: dateRange.to }
+            }).then(complete).catch(failed);
         },
 
         getModelStats: function getModelStats(id, dateRange) {

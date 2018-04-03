@@ -169,17 +169,18 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
         /**
          * Processes Styles Stats data returning data needed to create Health Score graphics.
          * @param id
+         * @param dateRange
          * @param callback
          */
-        processStyleStats: function(id, callback){
-
-            HealthRecordsFactory.getStyleStats(id)
+        processStyleStats: function(id, dateRange, callback){
+            HealthRecordsFactory.getStyleStats(id, dateRange)
                 .then(function (response) {
                     if (!response || response.status !== 200) return;
-                    if (!response.data[0].stylesStats || response.data[0].stylesStats.length === 0) return;
+                    if (!response.data[0].styleStats || response.data[0].styleStats.length === 0) return;
 
-                    var data = response.data[0].styleStats[0];
-                    var overridenDimensions = data.dimSegmentStats.length;
+                    var data = response.data[0];
+                    var latest = data.styleStats[0];
+                    var overridenDimensions = latest.dimSegmentStats.length;
                     var passingChecks = 0;
                     overridenDimensions <= 10
                         ? passingChecks += 2
@@ -191,14 +192,14 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                     var unusedDimensionTypes = true;
                     var unusedTextTypes = true;
                     var unusedTypes = 0;
-                    for (var i = 0; i < data.dimStats.length; i++){
+                    for (var i = 0; i < latest.dimStats.length; i++){
                         if (i.instances === 0){
                             unusedTypes += 1;
                             unusedDimensionTypes = false;
                         }
                         if (!i.usesProjectUnits) usesProjectUnits = false;
                     }
-                    for (var j = 0; j < data.textStats.length; j++){
+                    for (var j = 0; j < latest.textStats.length; j++){
                         if (j.instances === 0){
                             unusedTypes += 1;
                             unusedTextTypes = false;
@@ -252,16 +253,16 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
         /**
          * Processes View Stats data returning data needed to create Health Score graphics.
          * @param id
+         * @param dateRange
          * @param callback
          */
-        processViewStats: function(id, callback) {
-
-            HealthRecordsFactory.getViewStats(id)
+        processViewStats: function(id, dateRange, callback) {
+            HealthRecordsFactory.getViewStats(id, dateRange)
                 .then(function (response) {
                     if(!response || response.status !== 200) return;
 
-                    var data = response.data[0].viewStats;
-                    var latest = data[data.length - 1];
+                    var data = response.data[0];
+                    var latest = data.viewStats[data.viewStats.length - 1];
 
                     var viewsNotOnSheet = latest.totalViews - latest.viewsOnSheet;
                     var schedulesOnSheet = latest.totalSchedules - latest.schedulesOnSheet;
