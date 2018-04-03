@@ -51,3 +51,12 @@ angular.module('MissionControlApp').component('styleStats', {
         processed: '=',
         full: '='}
 });
+
+angular.module('MissionControlApp').component('timeRangeSelection', {
+    templateUrl: 'angular-app/directives/time-range-selector/template.html',
+    controller: 'TimeRangeSelectorController',
+    controllerAs: 'vm',
+    bindings: {
+        onFilter: '&onFilter'
+    }
+});

@@ -9,62 +9,21 @@ function WorksetsController($routeParams, UtilityService, HealthReportFactory){
         vm.UserData = [];
         vm.d3GoalLine = {name: "Goal", value: 50}; // reference line
 
-        vm.loading = false;
-        vm.dtFrom = null;
-        vm.dtTo = null;
-        vm.format = 'dd-MMMM-yyyy';
-        vm.dateOptions = {
-            formatYear: 'yy',
-            maxDate: new Date(2020, 5, 22),
-            minDate: new Date(2015, 5, 22),
-            startingDay: 1
-        };
-
-        SetFilter();
-
         /**
-         * Set filter dates.
+         * Callback method for Date Time Range selection.
+         * @param date
+         * @constructor
          */
-        function SetFilter() {
-            vm.dtFrom = new Date();
-            vm.dtFrom.setMonth(vm.dtFrom.getMonth() - 1);
-            vm.dtTo = new Date();
-        }
-
-        /**
-         * Filters Editing Records based on selected date range.
-         */
-        vm.filterDate = function () {
-            vm.loading = true;
-            var dateRange = {
-                from: vm.dtFrom,
-                to: vm.dtTo
-            };
-
-            HealthReportFactory.processWorksetStats(vm.selectedWorkset._id, dateRange, function (result) {
+        vm.OnFilter = function (date) {
+            HealthReportFactory.processWorksetStats(vm.selectedWorkset._id, date, function (result) {
                 vm.WorksetData = result;
                 vm.selectedWorkset = result.worksetStats;
-                vm.loading = false;
             });
         };
 
-        vm.popup1 = {
-            opened: false
-        };
-
-        vm.popup2 = {
-            opened: false
-        };
-
         /**
-         * Opens pop-up date pickers.
-         * @param popup
+         * Toggles Date Time picker div on/off.
          */
-        vm.openDatePicker = function(popup) {
-            popup === 'from' ? vm.popup1.opened = true : vm.popup2.opened = true;
-        };
-
-        vm.showTimeSettings = false;
         vm.toggleTimeSettings = function() {
             vm.showTimeSettings = !vm.showTimeSettings;
         };
@@ -79,14 +38,15 @@ function WorksetsController($routeParams, UtilityService, HealthReportFactory){
         };
 
         /**
-         *
+         * Handler for user clicking on one of the Worksets Chart's bars.
+         * It filters data just for that user and type (onOpend/onSynched).
          * @param item
          */
-        vm.d3OnClick = function(item){
+        vm.d3OnClick = function(item) {
             var allData;
-            if(item.name === "onOpened"){
+            if(item.name === "onOpened") {
                 allData = vm.selectedWorkset.onOpened;
-            }else{
+            } else {
                 allData = vm.selectedWorkset.onSynched;
             }
 
@@ -100,7 +60,7 @@ function WorksetsController($routeParams, UtilityService, HealthReportFactory){
                     })
                 }
             });
-            // return userData;
+
             vm.UserData = userData;
             vm.SelectedUser = item.user;
             vm.WorksetsOpenedType = item.name;
