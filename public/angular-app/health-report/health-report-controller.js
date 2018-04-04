@@ -32,7 +32,10 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
                 }
             })
             .then(function (response) {
-                if(!response || response.status !== 200) return;
+                if(!response || response.status !== 200) {
+                    vm.showMenu = false;
+                    return;
+                }
 
                 vm.HealthRecords = response.data;
                 var selected = response.data.sort(dynamicSort('centralPath'))[0];
@@ -80,6 +83,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
      */
     vm.SetProject = function (link){
         vm.loading = true;
+        vm.showMenu = true;
 
         // (Konrad) By default we will take only last month worth of data.
         // Users can change that range in specific needs.
