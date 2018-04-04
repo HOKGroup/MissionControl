@@ -1,13 +1,35 @@
 angular.module('MissionControlApp').controller('ViewStatsController', ViewStatsController);
 
-function ViewStatsController($routeParams){
+function ViewStatsController($routeParams, HealthReportFactory){
     var vm = this;
     this.$onInit = function () {
-        vm.FamilyData = this.processed;
-        vm.AllData = this.full;
-
         vm.projectId = $routeParams.projectId;
-        vm.d3ViewStatsData = vm.AllData.viewStats;
+        vm.FamilyData = this.processed;
+        vm.d3ViewStatsData = this.full;
+        vm.showTimeSettings = false;
+        vm.loading = false;
+
+        /**
+         * Callback method for Date Time Range selection.
+         * @param date
+         * @constructor
+         */
+        vm.OnFilter = function (date) {
+            vm.loading = true;
+            HealthReportFactory.processViewStats(vm.d3ViewStatsData._id, date, function (result) {
+                vm.FamilyData = result;
+                vm.d3ViewStatsData = result.viewStats;
+                vm.loading = false;
+            });
+        };
+
+        /**
+         * Toggles Date Time picker div on/off.
+         */
+        vm.toggleTimeSettings = function() {
+            vm.showTimeSettings = !vm.showTimeSettings;
+        };
+
         vm.ViewKeys = ["totalViews", "viewsOnSheet"]; // chart 1
         vm.ScheduleKeys = ["totalSchedules", "schedulesOnSheet"]; // chart2
         vm.d3GoalLine = null;

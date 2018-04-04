@@ -13,6 +13,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
     vm.FamilyCollection = null;
     vm.HealthRecords = [];
     vm.loading = false;
+    vm.AllData = [];
     var allControllers = [vm.ShowLinkStats, vm.ShowFamiliesStats, vm.ShowWorksetStats, vm.ShowViewStats, vm.ShowStyleStats, vm.ShowModelStats, vm.ShowMainPage];
 
     getSelectedProject(vm.projectId);
@@ -31,7 +32,10 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
                 }
             })
             .then(function (response) {
-                if(!response || response.status !== 200) return;
+                if(!response || response.status !== 200) {
+                    vm.showMenu = false;
+                    return;
+                }
 
                 vm.HealthRecords = response.data;
                 var selected = response.data.sort(dynamicSort('centralPath'))[0];
@@ -79,65 +83,61 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
      */
     vm.SetProject = function (link){
         vm.loading = true;
-        HealthRecordsFactory.getById(link._id)
-            .then(function (response) {
-                if(!response || response.status !== 200) return;
+        vm.showMenu = true;
 
-                vm.selectedHealthRecord = response.data;
-                vm.selectedFileName = vm.fileNameFromPath(response.data.centralPath);
-                vm.AllData = [];
+        // (Konrad) By default we will take only last month worth of data.
+        // Users can change that range in specific needs.
+        var dtFrom = new Date();
+        dtFrom.setMonth(dtFrom.getMonth() - 1);
+        var dateRange = {
+            from: dtFrom,
+            to: new Date()
+        };
 
-                vm.WorksetData = HealthReportFactory.processWorksetStats(response.data);
-                if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
+        HealthReportFactory.processWorksetStats(link._id, dateRange, function (result) {
+            vm.WorksetData = result;
+            if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
+            dataProcessed();
+        });
 
-                var linkData = response.data.linkStats[response.data.linkStats.length - 1];
-                vm.LinkData = HealthReportFactory.processLinkStats(linkData);
-                if(vm.LinkData) vm.AllData.push(vm.LinkData);
+        HealthReportFactory.processModelStats(link._id, dateRange, function (result) {
+            vm.ModelData = result;
+            if(vm.ModelData) vm.AllData.push(vm.ModelData);
+            dataProcessed();
+        });
 
-                var viewData = response.data.viewStats[response.data.viewStats.length - 1];
-                vm.ViewData = HealthReportFactory.processViewStats(viewData);
-                if(vm.ViewData) vm.AllData.push(vm.ViewData);
+        HealthReportFactory.processLinkStats(link._id, dateRange, function (result) {
+            vm.LinkData = result;
+            if(vm.LinkData) vm.AllData.push(vm.LinkData);
+            dataProcessed();
+        });
 
-                var styleData = response.data.styleStats[response.data.styleStats.length - 1];
-                vm.StyleData = HealthReportFactory.processStyleStats(styleData);
-                if(vm.StyleData) vm.AllData.push(vm.StyleData);
+        HealthReportFactory.processViewStats(link._id, dateRange, function (result) {
+            vm.ViewData = result;
+            if(vm.ViewData) vm.AllData.push(vm.ViewData);
+            dataProcessed();
+        });
 
-                vm.ModelData = HealthReportFactory.processModelStats(response.data);
-                if(vm.ModelData) vm.AllData.push(vm.ModelData);
+        HealthReportFactory.processStyleStats(link._id, dateRange, function (result) {
+            vm.StyleData = result;
+            if(vm.StyleData) vm.AllData.push(vm.StyleData);
+            dataProcessed();
+        });
 
-                if(vm.selectedHealthRecord.familyStats
-                    && vm.selectedHealthRecord.familyStats !== null
-                    && vm.selectedHealthRecord.familyStats !== ''){
-                    FamiliesFactory.getById(vm.selectedHealthRecord.familyStats)
-                        .then(function(response){
-                            if(!response || response.status !== 200) return;
-
-                            // (Konrad) Since we are making a call inside of the processing call, the result
-                            // is going to be asynch. We can use a callback here to set the FamilyData.
-                            vm.FamilyCollection = response.data;
-                            HealthReportFactory.processFamilyStats(vm.FamilyCollection, function(result){
-                                vm.FamilyData = result;
-                                if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
-                                vm.SelectionChanged(vm.ShowMainPage.name);
-                                vm.loading = false;
-                            });
-                        })
-                        .catch(function(err){
-                            console.log('Unable to load Families Data: ' + err.message);
-                        })
-                } else {
-                    vm.FamilyCollection = null;
-                    vm.FamilyData = null;
-                    vm.ShowFamiliesStats.value = false;
-
-                    vm.SelectionChanged(vm.ShowMainPage.name);
-                    vm.loading = false;
-                }
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
+        HealthReportFactory.processFamilyStats(link._id, function (result) {
+            vm.FamilyData = result;
+            if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
+            dataProcessed();
+        });
     };
+
+    /**
+     *
+     */
+    function dataProcessed() {
+        vm.SelectionChanged(vm.ShowMainPage.name);
+        vm.loading = false;
+    }
 
     /**
      * Returns a sort order for objects by a given property on that object.

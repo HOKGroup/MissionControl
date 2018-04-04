@@ -1,13 +1,36 @@
 angular.module('MissionControlApp').controller('LinkStatsController', LinkStatsController);
 
-function LinkStatsController($routeParams, DTColumnDefBuilder){
+function LinkStatsController($routeParams, DTColumnDefBuilder, HealthReportFactory){
     var vm = this;
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
         vm.LinkData = this.processed;
-        vm.d3ViewStatsData = this.full.linkStats;
+        vm.d3ViewStatsData = this.full;
         vm.StylesKeys = ["totalDwgStyles", "totalImportedStyles"];
         vm.d3GoalLine = {name: "Goal", value: 50};
+        vm.showTimeSettings = false;
+        vm.loading = false;
+
+        /**
+         * Callback method for Date Time Range selection.
+         * @param date
+         * @constructor
+         */
+        vm.OnFilter = function (date) {
+            vm.loading = true;
+            HealthReportFactory.processLinkStats(vm.d3ViewStatsData._id, date, function (result) {
+                vm.LinkData = result;
+                vm.d3ViewStatsData = result.linkStats;
+                vm.loading = false;
+            });
+        };
+
+        /**
+         * Toggles Date Time picker div on/off.
+         */
+        vm.toggleTimeSettings = function() {
+            vm.showTimeSettings = !vm.showTimeSettings;
+        };
 
         vm.dtOptions1 = {
             paginationType: 'simple_numbers',

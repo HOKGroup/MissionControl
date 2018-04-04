@@ -1,13 +1,21 @@
 <div class="container-fluid">
+    <!--<div class="row animate-show-hide ng-hide" ng-show="vm.showTimeSettings" >-->
+        <!--<time-range-selection on-hide="vm.toggleTimeSettings()" on-filter="vm.OnFilter(date)"></time-range-selection>-->
+    <!--</div>-->
     <div class="row">
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title">Styles Health Score:</h4>
+                    <h4 class="panel-title">
+                        Styles Health Score:
+                        <!--<a href="" class="faa-parent faa-slow animated-hover">-->
+                            <!--<i class="fa fa-gear faa-spin text-primary" ng-click="vm.showTimeSettings = !vm.showTimeSettings"></i>-->
+                        <!--</a>-->
+                    </h4>
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <div class="col-md-3">
+                        <div class="col-md-3 no-padding">
                             <d3-circle data="vm.StylesData.scoreData" class="cn"></d3-circle>
                         </div>
                         <div class="col-md-4">
@@ -17,7 +25,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-5 no-padding">
                             <div id="menu">
                                 <div class="panel list-group">
                                     <a href="" class="list-group-item" data-toggle="collapse" data-target="#sm" data-parent="#menu">
@@ -106,7 +114,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="i in vm.DimensionSegmentStats">
+                            <tr ng-repeat="i in vm.Data.dimSegmentStats">
                                 <td class="text-center">{{i.valueString}}</td>
                                 <td class="text-center">{{i.valueOverride}}</td>
                                 <td class="text-center">{{i.isLocked}}</td>

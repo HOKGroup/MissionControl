@@ -291,7 +291,6 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
      * Updates current Configuration.
      */
     vm.updateConfiguration = function(){
-        console.log(vm.selectedConfig);
         ConfigFactory.updateConfiguration(vm.selectedConfig)
             .then(function(response){
                 if (response && response.status === 202){

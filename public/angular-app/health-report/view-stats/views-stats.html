@@ -1,13 +1,21 @@
 <div class="container-fluid">
+    <div class="row animate-show-hide ng-hide" ng-show="vm.showTimeSettings" >
+        <time-range-selection loading="vm.loading" on-hide="vm.toggleTimeSettings()" on-filter="vm.OnFilter(date)"></time-range-selection>
+    </div>
     <div class="row">
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title">Views Health Score:</h4>
+                    <h4 class="panel-title">
+                        Views Health Score:
+                        <a href="" class="faa-parent faa-slow animated-hover">
+                            <i class="fa fa-gear faa-spin text-primary" ng-click="vm.showTimeSettings = !vm.showTimeSettings"></i>
+                        </a>
+                    </h4>
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <div class="col-md-3">
+                        <div class="col-md-3 no-padding">
                             <d3-circle data="vm.FamilyData.scoreData" class="cn"></d3-circle>
                         </div>
                         <div class="col-md-4">
@@ -17,7 +25,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-5 no-padding">
                             <div id="menu">
                                 <div class="panel list-group">
                                     <a href="" class="list-group-item" data-toggle="collapse" data-target="#sm" data-parent="#menu">
@@ -82,7 +90,7 @@
             </div>
         </div>
     </div>
-    <div class="row" ng-if="vm.d3ViewStatsData.length >= 2">
+    <div class="row" ng-if="vm.d3ViewStatsData.viewStats.length >= 2">
         <div class="panel-group" id="p1">
             <div class="panel panel-default">
                 <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p1" data-target="#collapseP1">
@@ -92,13 +100,13 @@
                 </div>
                 <div id="collapseP1" class="panel-collapse collapse in">
                     <div class="panel-body no-padding">
-                        <d3-multi-series-line-brushed data="vm.d3ViewStatsData" keys="vm.ViewKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>
+                        <d3-multi-series-line-brushed data="vm.d3ViewStatsData.viewStats" keys="vm.ViewKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row" ng-if="vm.d3ViewStatsData.length >= 2">
+    <div class="row" ng-if="vm.d3ViewStatsData.viewStats.length >= 2">
         <div class="panel-group" id="p2">
             <div class="panel panel-default">
                 <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p2" data-target="#collapseP2">
@@ -108,7 +116,7 @@
                 </div>
                 <div id="collapseP2" class="panel-collapse collapse in">
                     <div class="panel-body no-padding">
-                        <d3-multi-series-line-brushed data="vm.d3ViewStatsData" keys="vm.ScheduleKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>
+                        <d3-multi-series-line-brushed data="vm.d3ViewStatsData.viewStats" keys="vm.ScheduleKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>
                     </div>
                 </div>
             </div>
