@@ -546,7 +546,7 @@ module.exports.getLinkStats = function (req, res) {
 };
 
 /**
- *
+ * Returns Family Stats Id, and Central Path.
  * @param req
  * @param res
  */
@@ -561,11 +561,13 @@ module.exports.getFamilyStats = function (req, res) {
                 message: response
             };
             if (err){
-                response.status = 500;
-                response.message = err;
-            } else {
-                res.status(result.status).json(result.message);
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
             }
+            res.status(result.status).json(result.message);
         });
 };
 

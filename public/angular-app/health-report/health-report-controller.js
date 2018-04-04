@@ -120,7 +120,6 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
             dataProcessed();
         });
 
-        //TODO:
         HealthReportFactory.processFamilyStats(link._id, function (result) {
             vm.FamilyData = result;
             if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
