@@ -58,6 +58,7 @@ angular.module('MissionControlApp').component('timeRangeSelection', {
     controllerAs: 'vm',
     bindings: {
         onFilter: '&onFilter',
-        onHide: '&onHide'
+        onHide: '&onHide',
+        loading: '='
     }
 });

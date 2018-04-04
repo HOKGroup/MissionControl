@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="row animate-show-hide ng-hide" ng-show="vm.showTimeSettings" >
-        <time-range-selection on-hide="vm.toggleTimeSettings()" on-filter="vm.OnFilter(date)"></time-range-selection>
+        <time-range-selection loading="vm.loading" on-hide="vm.toggleTimeSettings()" on-filter="vm.OnFilter(date)"></time-range-selection>
     </div>
     <div class="row">
         <div class="panel-group">

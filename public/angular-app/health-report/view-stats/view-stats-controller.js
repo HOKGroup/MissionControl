@@ -7,6 +7,7 @@ function ViewStatsController($routeParams, HealthReportFactory){
         vm.FamilyData = this.processed;
         vm.d3ViewStatsData = this.full;
         vm.showTimeSettings = false;
+        vm.loading = false;
 
         /**
          * Callback method for Date Time Range selection.
@@ -14,9 +15,11 @@ function ViewStatsController($routeParams, HealthReportFactory){
          * @constructor
          */
         vm.OnFilter = function (date) {
+            vm.loading = true;
             HealthReportFactory.processViewStats(vm.d3ViewStatsData._id, date, function (result) {
                 vm.FamilyData = result;
                 vm.d3ViewStatsData = result.viewStats;
+                vm.loading = false;
             });
         };
 

@@ -9,6 +9,7 @@ function WorksetsController($routeParams, UtilityService, HealthReportFactory){
         vm.UserData = [];
         vm.d3GoalLine = {name: "Goal", value: 50}; // reference line
         vm.showTimeSettings = false;
+        vm.loading = false;
 
         /**
          * Callback method for Date Time Range selection.
@@ -16,9 +17,11 @@ function WorksetsController($routeParams, UtilityService, HealthReportFactory){
          * @constructor
          */
         vm.OnFilter = function (date) {
+            vm.loading = true;
             HealthReportFactory.processWorksetStats(vm.selectedWorkset._id, date, function (result) {
                 vm.WorksetData = result;
                 vm.selectedWorkset = result.worksetStats;
+                vm.loading = false;
             });
         };
 

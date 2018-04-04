@@ -10,6 +10,7 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
         vm.ModelData = this.processed;
         vm.Data = this.full;
         vm.TableDataTypes = ['Open', 'Synch'];
+        vm.loading = false;
 
         /**
          * Callback method for Date Time Range selection.
@@ -17,11 +18,13 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
          * @constructor
          */
         vm.OnFilter = function (date) {
+            vm.loading = true;
             HealthReportFactory.processModelStats(vm.Data._id, date, function (result) {
                 vm.ModelData = result;
                 vm.Data = result.modelStats;
 
                 setDefaults();
+                vm.loading = false;
             });
         };
 

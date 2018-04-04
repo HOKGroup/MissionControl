@@ -9,6 +9,7 @@ function LinkStatsController($routeParams, DTColumnDefBuilder, HealthReportFacto
         vm.StylesKeys = ["totalDwgStyles", "totalImportedStyles"];
         vm.d3GoalLine = {name: "Goal", value: 50};
         vm.showTimeSettings = false;
+        vm.loading = false;
 
         /**
          * Callback method for Date Time Range selection.
@@ -16,9 +17,11 @@ function LinkStatsController($routeParams, DTColumnDefBuilder, HealthReportFacto
          * @constructor
          */
         vm.OnFilter = function (date) {
+            vm.loading = true;
             HealthReportFactory.processLinkStats(vm.d3ViewStatsData._id, date, function (result) {
                 vm.LinkData = result;
                 vm.d3ViewStatsData = result.linkStats;
+                vm.loading = false;
             });
         };
 

@@ -6,7 +6,7 @@ angular.module('MissionControlApp').controller('TimeRangeSelectorController', Ti
 function TimeRangeSelectorController(){
     var vm = this;
     this.$onInit = function () {
-        vm.loading = false;
+        vm.loading = this.loading;
         vm.dtFrom = new Date();
         vm.dtFrom.setMonth(vm.dtFrom.getMonth() - 1);
         vm.dtTo = new Date();
