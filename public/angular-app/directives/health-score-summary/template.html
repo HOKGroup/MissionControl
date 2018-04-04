@@ -1,0 +1,28 @@
+<div class="col-md-3 no-padding">
+    <d3-circle data="vm.data" class="cn"></d3-circle>
+</div>
+<div class="col-md-5">
+    <div class="small">
+        <h4 style="margin: 0; padding-bottom: 5px">{{vm.title}}</h4>
+        <p>
+            {{vm.description}}
+        </p>
+    </div>
+</div>
+<div class="col-md-4 no-padding">
+    <div id="menu">
+        <div class="panel list-group">
+            <div ng-repeat="bullet in vm.bullets">
+                <a href="" class="list-group-item" data-toggle="collapse" ng-attr-data-target="{{'#' + vm.title + '-' + $index}}" data-parent="#menu">
+                    {{bullet.title}}
+                    <span ng-class="bullet.bulletColor">{{bullet.bulletText}}</span>
+                </a>
+                <div ng-attr-id="{{vm.title + '-' + $index}}" class="sublinks collapse">
+                    <div class="list-group-item small">
+                        {{bullet.description}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

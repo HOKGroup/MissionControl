@@ -126,13 +126,19 @@
                     <family-stats processed="vm.FamilyData" full="vm.FamilyData.familyStats" ng-if="vm.ShowFamiliesStats.value"></family-stats>
                 </div>
                 <div class="col-xs-12 col-sm-9" ng-if="vm.ShowMainPage.value">
-                    <div class="row grid-divider top-buffer" ng-repeat="d in vm.AllData">
-                        <div class="col-sm-3">
-                            <d3-circle class="cn" data="d.scoreData"></d3-circle>
-                        </div>
-                        <div class="col-sm-9">
-                            <h4 class="p pad-left"><b>{{d.name}}</b></h4>
-                            <p class="p pad-left">{{d.description}}</p>
+                    <div class="row" ng-repeat="d in vm.AllData">
+                        <div class="panel-group">
+                            <div class="panel panel-default" style="border: none; box-shadow: none">
+                                <div class="panel-collapse">
+                                    <div class="panel-body no-padding">
+                                        <health-report-summary data="d.scoreData"
+                                                               description="d.description"
+                                                               bullets="d.bullets"
+                                                               title="d.name">
+                                        </health-report-summary>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -83,6 +83,34 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         "why it's imperative to follow HOK's best practices in modeling and naming Revit Families. InPlace families " +
                         "should be limited in use as they do not allow full functionality of the regular Families.";
 
+                    //TODO:
+                    var bullets = [
+                        {
+                            title: 'Unplaced Families',
+                            description: '',
+                            bulletText: ,
+                            bulletColor:
+                        },
+                        {
+                            title: 'InPlace Families',
+                            description: '',
+                            bulletText: ,
+                            bulletColor:
+                        },
+                        {
+                            title: 'Misnamed Families',
+                            description: '',
+                            bulletText: ,
+                            bulletColor:
+                        },
+                        {
+                            title: 'Oversized Families',
+                            description: '',
+                            bulletText: ,
+                            bulletColor:
+                        }
+                    ];
+
                     callback({
                         nameCheckValues: nameCheckValues,
                         misnamed: misnamed,
@@ -115,26 +143,35 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                     var data = response.data[0];
                     var latest = data.linkStats[data.linkStats.length - 1];
                     var importCount = 0;
+                    var importCountColor = UtilityService.color().red;
+                    var unusedImages = latest.unusedLinkedImages;
+                    var unusedImagesColor = UtilityService.color().red;
+                    var totalStyles = latest.totalDwgStyles + latest.totalImportedStyles;
+                    var totalStylesColor = UtilityService.color().red;
+
                     latest.importedDwgFiles.forEach(function(item){
                         if(!item.isLinked) importCount++;
                     });
 
                     var passingChecks = 0;
-                    importCount === 0
-                        ? passingChecks += 2
-                        : passingChecks += 0;
-                    latest.unusedLinkedImages === 0
-                        ? passingChecks += 2
-                        : latest.unusedLinkedImages <= 2
-                        ? passingChecks += 1
-                        : passingChecks += 0;
-
-                    var totalStyles = latest.totalDwgStyles + latest.totalImportedStyles;
-                    totalStyles <= 25
-                        ? passingChecks += 2
-                        : totalStyles > 25 && totalStyles <= 50
-                        ? passingChecks += 1
-                        : passingChecks += 0;
+                    if (importCount === 0){
+                        passingChecks += 2;
+                        importCountColor = UtilityService.color().green;
+                    }
+                    if (unusedImages === 0){
+                        passingChecks += 2;
+                        unusedImagesColor = UtilityService.color().green;
+                    } else if (unusedImages <= 2){
+                        passingChecks += 1;
+                        unusedImagesColor = UtilityService.color().orange;
+                    }
+                    if (totalStyles <= 25){
+                        passingChecks += 2;
+                        totalStylesColor = UtilityService.color().green;
+                    } else if (totalStyles > 25 && totalStyles <= 50){
+                        passingChecks += 1;
+                        totalStylesColor = UtilityService.color().orange;
+                    }
 
                     var linkScoreData = {
                         passingChecks: passingChecks,
@@ -149,16 +186,41 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         "and " + latest.totalLinkedDwg + " Linked CAD Files. These links were placed " + latest.totalImportedDwg + " times." +
                         "\n*Not all links have to be placed.";
 
+                    var bullets = [
+                        {
+                            title: 'Imported External Content',
+                            description: 'Importing of any DWG/STL/SKP content is considered bad practice. All external ' +
+                            'content if necessary should be linked in. Importing content can cause decreased model ' +
+                            'performance due to excessive number of Object Styles or decrese accuracy, and cause graphic ' +
+                            'artifacts due to large XYZ Coordinates.',
+                            bulletText: importCount,
+                            bulletColor: importCountColor
+                        },
+                        {
+                            title: 'Unused Imported Images',
+                            description: 'Imported image content can increase file size and impact model performance. ' +
+                            'It is recommended to periodically purge unused image content from the model.',
+                            bulletText: unusedImages,
+                            bulletColor: unusedImagesColor
+                        },
+                        {
+                            title: 'Imported Object Styles',
+                            description: 'There are typically 276 Object Styles in standard Revit file. Importing DWG ' +
+                            'content either directly or into Families may cause this number to grow. Excessive number of ' +
+                            'Object Styles that were created via importing of external content can have negative performance impact.',
+                            bulletText: totalStyles,
+                            bulletColor: totalStylesColor
+                        }
+                    ];
+
                     callback({
-                        importedContentCount: importCount,
-                        unusedImageCount: latest.unusedLinkedImages,
-                        importedObjectStylesCount: totalStyles,
                         scoreData: linkScoreData,
                         importedFiles: latest.importedDwgFiles,
                         linkScore: linkScoreData.passingChecks,
                         description: desc,
                         name: "Links:",
-                        linkStats: data
+                        linkStats: data,
+                        bullets: bullets
                     });
                 })
                 .catch(function (error) {
@@ -181,42 +243,48 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                     var data = response.data[0];
                     var latest = data.styleStats[0];
                     var overridenDimensions = latest.dimSegmentStats.length;
+                    var overridenDimensionsColor = UtilityService.color().red;
+
                     var passingChecks = 0;
-                    overridenDimensions <= 10
-                        ? passingChecks += 2
-                        : overridenDimensions > 10 && overridenDimensions <= 20
-                        ? passingChecks += 1
-                        : passingChecks += 0;
+
+                    if (overridenDimensions <= 10){
+                        passingChecks += 2;
+                        overridenDimensionsColor = UtilityService.color().green;
+                    } else if (overridenDimensions > 10 && overridenDimensions <= 20) {
+                        passingChecks += 1;
+                        overridenDimensionsColor = UtilityService.color().orange;
+                    }
 
                     var usesProjectUnits = true;
-                    var unusedDimensionTypes = true;
-                    var unusedTextTypes = true;
+                    var usesProjectUnitsColor = UtilityService.color().green;
+                    var unusedDimensionTypes = false;
+                    var unusedDimensionTypesColor = UtilityService.color().green;
+                    var unusedTextTypes = false;
+                    var unusedTextTypesColor = UtilityService.color().green;
+
                     var unusedTypes = 0;
                     for (var i = 0; i < latest.dimStats.length; i++){
-                        if (i.instances === 0){
+                        var dim = latest.dimStats[i];
+                        if (dim.instances === 0){
                             unusedTypes += 1;
-                            unusedDimensionTypes = false;
+                            unusedDimensionTypes = true;
                         }
-                        if (!i.usesProjectUnits) usesProjectUnits = false;
+                        if (!dim.usesProjectUnits) usesProjectUnits = false;
                     }
                     for (var j = 0; j < latest.textStats.length; j++){
-                        if (j.instances === 0){
+                        var text = latest.textStats[j];
+                        if (text.instances === 0){
                             unusedTypes += 1;
-                            unusedTextTypes = false;
+                            unusedTextTypes = true;
                         }
                     }
 
-                    usesProjectUnits === true
-                        ? passingChecks += 2
-                        : passingChecks += 0;
-
-                    unusedDimensionTypes === false
-                        ? passingChecks += 2
-                        : passingChecks += 0;
-
-                    unusedTextTypes === false
-                        ? passingChecks += 2
-                        : passingChecks += 0;
+                    if (usesProjectUnits === true) passingChecks += 2;
+                    else usesProjectUnitsColor = UtilityService.color().red;
+                    if (unusedDimensionTypes === false) passingChecks += 2;
+                    else unusedDimensionTypesColor = UtilityService.color().red;
+                    if (unusedTextTypes === false) passingChecks += 2;
+                    else unusedTextTypesColor = UtilityService.color().red;
 
                     var styleScoreData = {
                         passingChecks: passingChecks,
@@ -233,16 +301,55 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         'we are looking at Dimensions and making sure they are not being overriden. That is a bad practice ' +
                         'and should be avoided.';
 
+                    var bullets = [
+                        {
+                            title: 'Overriden Dimensions',
+                            description: 'Overriding actual dimension values can be considered bad practice in certain ' +
+                            'conditions. If we are overriding a dimension to indicate that values are all Equal "EQ" or ' +
+                            'defining given dimension is someone else\'s scope than it\'s acceptable. Not acceptable is overriding ' +
+                            'dimension values to "fudge" them, round them or straight up come up with bogus values that ' +
+                            'don\'t reflect the model. Green is less than 10, orange is more than 10 but less than 20 while ' +
+                            'more than 20 is red.',
+                            bulletText: overridenDimensions,
+                            bulletColor: overridenDimensionsColor
+                        },
+                        {
+                            title: 'Dimensions use Project Units',
+                            description: 'Dimensions should be using globally defined Project Units instead of Type ' +
+                            'specific overrides. Note that there is nothing wrong with using units overrides when wanting ' +
+                            'to change from fractional to decimal units etc. However, users often define custom dimension ' +
+                            'units in order to round dimensions to different values, which in return can cause some serious ' +
+                            'discrepancies for dimension strings spanning across multiple grid lines.',
+                            bulletText: usesProjectUnits === true ? 'Yes' : 'No',
+                            bulletColor: usesProjectUnitsColor
+                        },
+                        {
+                            title: 'Unused Dimension Types',
+                            description: 'There is nothing wrong with creating new Types, however this can lead to ' +
+                            'confusion about which are the standard. Confusion can cause chaos and often results with ' +
+                            'all available Types actually being used on a project. This is pretty bad for consistency ' +
+                            'and readability. If Dimension Types are not being used, they should be deleted.',
+                            bulletText: unusedDimensionTypes === true ? 'Yes' : 'No',
+                            bulletColor: unusedDimensionTypesColor
+                        },
+                        {
+                            title: 'Unused Text Types',
+                            description: 'There is nothing wrong with creating new Types, however this can lead to ' +
+                            'confusion about which are the standard. Confusion can cause chaos and often results with ' +
+                            'all available Types actually being used on a project. This is pretty bad for consistency ' +
+                            'and readability. If Text Types are not being used, they should be deleted.',
+                            bulletText: unusedTextTypes === true ? 'Yes' : 'No',
+                            bulletColor: unusedTextTypesColor
+                        }
+                    ];
+
                     callback({
-                        overridenDimensions: overridenDimensions,
-                        usesProjectUnits: usesProjectUnits === true ? 'Yes' : 'No',
-                        unusedDimensionTypes : unusedDimensionTypes === true ? 'Yes' : 'No',
-                        unusedTextTypes : unusedTextTypes === true ? 'Yes' : 'No',
                         scoreData: styleScoreData,
                         styleScore: styleScore,
                         description: desc,
                         name: "Styles:",
-                        styleStats: data
+                        styleStats: data,
+                        bullets: bullets
                     });
                 })
                 .catch(function (error) {
@@ -264,36 +371,49 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                     var data = response.data[0];
                     var latest = data.viewStats[data.viewStats.length - 1];
 
-                    var viewsNotOnSheet = latest.totalViews - latest.viewsOnSheet;
-                    var schedulesOnSheet = latest.totalSchedules - latest.schedulesOnSheet;
-
                     // Percentage of views not on sheet
-                    var viewsNotOnSheetsP = parseFloat((viewsNotOnSheet * 100) / latest.totalViews).toFixed(0);
-                    var schedulesNotOnSheetsP = parseFloat((schedulesOnSheet * 100) / latest.totalSchedules).toFixed(0);
+                    var viewsNotOnSheet = parseFloat(((latest.totalViews - latest.viewsOnSheet) * 100) / latest.totalViews).toFixed(0);
+                    var viewsNotOnSheetColor = UtilityService.color().red;
+                    var schedulesOnSheet = parseFloat(((latest.totalSchedules - latest.schedulesOnSheet) * 100) / latest.totalSchedules).toFixed(0);
+                    var schedulesOnSheetColor = UtilityService.color().red;
 
                     var passingChecks = 0;
-                    viewsNotOnSheetsP <= 20
-                        ? passingChecks += 2
-                        : viewsNotOnSheetsP > 20 && viewsNotOnSheetsP <= 40
-                        ? passingChecks += 1
-                        : passingChecks += 0;
+                    if (viewsNotOnSheet <= 20){
+                        passingChecks += 2;
+                        viewsNotOnSheetColor = UtilityService.color().green;
+                    } else if (viewsNotOnSheet > 20 && viewsNotOnSheet <= 40){
+                        passingChecks += 1;
+                        viewsNotOnSheetColor = UtilityService.color().orange;
+                    }
 
-                    schedulesNotOnSheetsP <= 20
-                        ? passingChecks += 2
-                        : schedulesNotOnSheetsP > 20 && schedulesNotOnSheetsP <= 40
-                        ? passingChecks += 1
-                        : passingChecks += 0;
+                    if (schedulesOnSheet <= 20){
+                        passingChecks += 2;
+                        schedulesOnSheetColor = UtilityService.color().green;
+                    } else if (schedulesOnSheet > 20 && schedulesOnSheet <= 40){
+                        passingChecks += 1;
+                        schedulesOnSheetColor = UtilityService.color().orange;
+                    }
+
+                    var unclippedViews = latest.unclippedViews;
+                    var unclippedViewsColor = UtilityService.color().red;
+                    if (unclippedViews <= 10){
+                        passingChecks += 2;
+                        unclippedViewsColor = UtilityService.color().green;
+                    } else if (unclippedViews > 10 && unclippedViews <= 20){
+                        passingChecks += 1;
+                        unclippedViewsColor = UtilityService.color().orange;
+                    }
+
 
                     var templateValue = parseFloat((latest.viewsOnSheetWithTemplate * 100) / latest.viewsOnSheet).toFixed(0);
-                    templateValue >= 80
-                        ? passingChecks += 2
-                        : templateValue > 70 && templateValue <= 80
-                        ? passingChecks += 1
-                        : passingChecks += 0;
+                    var templateValueColor = UtilityService.color().red;
 
-                    latest.unclippedViews <= 20
-                        ? passingChecks += 2
-                        : passingChecks += 0;
+                    if (templateValue >= 80){
+                        passingChecks += 2;
+                        templateValueColor = UtilityService.color().green;
+                    } else if (templateValue > 70 && templateValue <= 80){
+                        templateValueColor = UtilityService.color().orange;
+                    }
 
                     var viewScoreData = {
                         passingChecks: passingChecks,
@@ -308,17 +428,51 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         'however, can increase file size and impact performance. Please keep the number of "working views" ' +
                         'to minimum in order to preserve your computer hardware resources.';
 
+                    var bullets = [
+                        {
+                            title: 'Views not on Sheet',
+                            description: 'Creating excessive amount of "working views" can bloat file size and slow down ' +
+                            'model performance. A score is assigned based on percentage of Views not on Sheets. Less than ' +
+                            '20% is Green, more than 20% but less than 40% is Orange while more than 40% is Red.',
+                            bulletText: viewsNotOnSheet + ' %',
+                            bulletColor: viewsNotOnSheetColor
+                        },
+                        {
+                            title: 'Schedules not on Sheet',
+                            description: 'Schedules represent live model data, and are updated in real time. Excessive ' +
+                            'amount of unused Schedules can bloat file size and slow down model performance. A score is ' +
+                            'assigned based on percentage of Views not on Sheets. Less than 20% is Green, more than 20% ' +
+                            'but less than 40% is Orange while more than 40% is Red.',
+                            bulletText: schedulesOnSheet + ' %',
+                            bulletColor: schedulesOnSheetColor
+                        },
+                        {
+                            title: 'Unclipped Views',
+                            description: 'Plan, Section, Elevation and 3D Views in Revit can be "clipped". This feature ' +
+                            'of Revit allows for limiting the amount of content that is rendered for each View, hence can ' +
+                            'increase performance when used. All Views should have Clipping Plane set to either "Clipped ' +
+                            'without Line" or "Clipped with Line".',
+                            bulletText: unclippedViews,
+                            bulletColor: unclippedViewsColor
+                        },
+                        {
+                            title: 'Views w/ View Template',
+                            description: 'It\'s considered a good practice to apply View Templates to all Views that are ' +
+                            'placed on Sheets. This ensures consistent graphics across all drawings. Less than 70% is red, ' +
+                            'more than 70% but less than 80% is orange while more than 80% is green.',
+                            bulletText: templateValue + ' %',
+                            bulletColor: templateValueColor
+                        }
+                    ];
+
                     callback({
-                        unclippedViews: latest.unclippedViews,
-                        viewsNotOnSheets: viewsNotOnSheetsP,
-                        schedulesNotOnSheet: schedulesNotOnSheetsP,
                         totalViews: latest.totalViews,
-                        viewsOnSheetWithTemplate: templateValue,
                         scoreData: viewScoreData,
                         viewScore: viewScore,
                         description: desc,
                         name: "Views:",
-                        viewStats: data
+                        viewStats: data,
+                        bullets: bullets
                     });
                 })
                 .catch(function (error) {
@@ -358,15 +512,45 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         'open and synch times. Model size is also a good early indicator that something bad has happened to ' +
                         'the model - it\'s size can increase significantly if we link and/or explode DWG/STL content.';
 
+                    var bullets = [
+                        {
+                            title: 'Model Size',
+                            description: 'It\'s best practice to keep the model size under 200MB. It helps preserve your ' +
+                            'hardware resources, and potentially increse model open and synch times. Model Size is often a ' +
+                            'good indicator of potential modeling issues. Use of imported objects like DWG or STL often bloats ' +
+                            'model size giving Model Managers clues about potential issues.',
+                            bulletText: modelSize,
+                            bulletColor: UtilityService.color().grey
+                        },
+                        {
+                            title: 'Average Open Time',
+                            description: 'This is not a measure of model health, but rather a glance at potential user ' +
+                            '"discomfort". Users tend to get frustrated at time lost, while waiting for the model to open. ' +
+                            'If we can minimize that time, they will be able to spend it doing more meaningful things, ' +
+                            'than waiting for Revit to open. Potential ways to speed up the model opening time, is to ' +
+                            'minimize amount of plug-ins that are being loaded at startup.',
+                            bulletText: avgOpenTime,
+                            bulletColor: UtilityService.color().grey
+                        },
+                        {
+                            title: 'Average Synch Time',
+                            description: 'This is not a measure of model health, but rather a glance at potential user ' +
+                            '"discomfort". Users tend to get frustrated at time lost, while waiting for the model to synch. ' +
+                            'Synch time can be decresed by reducing number of warnings in the model, model size, number ' +
+                            'of links etc. All of these things contribute to time that is being needed by Revit to reconsile ' +
+                            'all of the changes. Another quick way to minimize synch time, is to Reload Latest before Synchronizing.',
+                            bulletText: avgSynchTime,
+                            bulletColor: UtilityService.color().grey
+                        }
+                    ];
+
                     callback({
-                        modelSize: modelSize,
-                        averageOpenTime: avgOpenTime,
-                        averageSynchTime: avgSynchTime,
                         scoreData: modelScoreData,
                         modelScore: 7,
                         description: desc,
                         name: "Model:",
-                        modelStats: data
+                        modelStats: data,
+                        bullets: bullets
                     });
                 })
                 .catch(function (error) {
@@ -442,8 +626,11 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                     // (Konrad) This section collects all data about Workset Item Counts (horizontal bar chart)
                     // Returns most recently added workset count information (response.data.itemCount.length-1)
                     var onlyDefaultWorksets = "No";
+                    var onlyDefaultWorksetsColor = UtilityService.color().green;
                     var contentOnSingleWorkset = "No";
+                    var contentOnSingleWorksetColor = UtilityService.color().green;
                     var unusedWorksets = 0;
+                    var unusedWorksetsColor = UtilityService.color().green;
                     var workset1 = false;
                     var sharedLevels = false;
                     var overallCount = worksetItemCountData.length;
@@ -453,13 +640,23 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         if(item.count <= 0) unusedWorksets += 1;
                         if(item.name === "Workset1") workset1 = true;
                         if(item.name === "Shared Levels and Grids") sharedLevels = true;
-                        if((item.count * 100)/worksetCountTotal >= 50) contentOnSingleWorkset = "Yes";
+                        if((item.count * 100)/worksetCountTotal >= 50) {
+                            contentOnSingleWorksetColor = UtilityService.color().red;
+                            contentOnSingleWorkset = "Yes";
+                        }
                     });
 
-                    if(workset1 && sharedLevels && overallCount === 2) onlyDefaultWorksets = "Yes";
+                    if(workset1 && sharedLevels && overallCount === 2){
+                        onlyDefaultWorksetsColor = UtilityService.color().red;
+                        onlyDefaultWorksets = "Yes";
+                    }
 
                     var passingChecks = 0;
-                    if(unusedWorksets === 0) passingChecks += 2;
+                    if(unusedWorksets === 0) {
+                        passingChecks += 2;
+                    } else {
+                        unusedWorksetsColor = UtilityService.color().red;
+                    }
                     if(onlyDefaultWorksets === "No") passingChecks += 2;
                     if(contentOnSingleWorkset === "No") passingChecks += 2;
 
@@ -474,16 +671,39 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         'from best practice use of Worksets would include placing a bulk of the elements on a single ' +
                         'Workset, having many unused Worksets, or using only the default worksets.';
 
+                    var bullets = [
+                        {
+                            title: 'Unused Worksets',
+                            description: 'Unused Worksets are Worksets in the model that have 0 elements on them. It is ' +
+                            'detrimental to model performance to create Worksets containing no or very few elements.',
+                            bulletText: unusedWorksets,
+                            bulletColor: unusedWorksetsColor
+                        },
+                        {
+                            title: 'Using only default Worksets',
+                            description: 'Default Worksets are "Shared Levels and Grids" and "Workset1". If model has ' +
+                            'only these two Worksets, it\'s likely that it should not be a Workshared model.',
+                            bulletText: onlyDefaultWorksets,
+                            bulletColor: onlyDefaultWorksetsColor
+                        },
+                        {
+                            title: 'Bulk of content on one Workset',
+                            description: 'Bulk of content refers to 50% or more of content being placed on a single ' +
+                            'Workset. Turning off Worksets can conserve computer resources and make it run faster. ' +
+                            'Keeping all/most of content on a single Workset does not allow for turning them off.',
+                            bulletText: contentOnSingleWorkset,
+                            bulletColor: contentOnSingleWorksetColor
+                        }
+                    ];
+
                     callback({
+                        scoreData: worksetScoreData, //used by circle d3 chart
+                        bullets: bullets, //used by bullet points
+                        description: desc, // used for the summary text
                         dataWorksetItemCount: worksetItemCountData,
-                        scoreData: worksetScoreData,
                         worksetOpenedData: output,
                         worksetCountTotal: worksetCountTotal,
-                        unusedWorksets: unusedWorksets,
                         worksetScore: passingChecks,
-                        onlyDefaultWorksets: onlyDefaultWorksets,
-                        contentOnSingleWorkset: contentOnSingleWorkset,
-                        description: desc,
                         name: "Worksets:",
                         worksetStats: data
                     });

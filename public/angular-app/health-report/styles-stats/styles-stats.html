@@ -15,78 +15,11 @@
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <div class="col-md-3 no-padding">
-                            <d3-circle data="vm.StylesData.scoreData" class="cn"></d3-circle>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="small">
-                                <p>
-                                    {{vm.StylesData.description}}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-md-5 no-padding">
-                            <div id="menu">
-                                <div class="panel list-group">
-                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sm" data-parent="#menu">
-                                        Overriden Dimensions
-                                        <span ng-class="vm.StylesData.overridenDimensions <= 10
-                                            ? 'badge progress-bar-success'
-                                            : vm.StylesData.overridenDimensions >= 10 && vm.StylesData.overridenDimensions <= 20
-                                            ? 'badge progress-bar-warning'
-                                            : 'badge progress-bar-danger' ">{{vm.StylesData.overridenDimensions}}</span>
-                                    </a>
-                                    <div id="sm" class="sublinks collapse">
-                                        <div class="list-group-item small">
-                                            Overriding actual dimension values can be considered bad practice in certain conditions. If we are overriding a dimension
-                                            to indicate that values are all Equal "EQ" or defining given dimension is someone else's scope than it's acceptable. Not
-                                            acceptable is overriding dimension values to "fudge" them, round them or straight up come up with bogus values
-                                            that don't reflect the model. Green is less than 10, orange is more than 10 but less than 20 while more than 20 is red.
-                                        </div>
-                                    </div>
-                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sl" data-parent="#menu">
-                                        Dimensions use Project Units
-                                        <span ng-class="vm.StylesData.usesProjectUnits === 'Yes'
-                                            ? 'badge progress-bar-success'
-                                            : 'badge progress-bar-danger' ">{{vm.StylesData.usesProjectUnits}}</span>
-                                    </a>
-                                    <div id="sl" class="sublinks collapse">
-                                        <div class="list-group-item small">
-                                            Dimensions should be using globally defined Project Units instead of Type specific overrides. Note that there is nothing wrong with
-                                            using units overrides when wanting to change from fractional to decimal units etc. However, users often define custom dimension units
-                                            in order to round dimensions to different values, which in return can cause some serious discrepancies for dimension strings spanning
-                                            across multiple grid lines.
-                                        </div>
-                                    </div>
-                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#s2" data-parent="#menu">
-                                        Unused Dimension Types
-                                        <span ng-class="vm.StylesData.unusedDimensionTypes === 'Yes'
-                                            ? 'badge progress-bar-danger'
-                                            : 'badge progress-bar-success'">{{vm.StylesData.unusedDimensionTypes}}</span>
-                                    </a>
-                                    <div id="s2" class="sublinks collapse">
-                                        <div class="list-group-item small">
-                                            There is nothing wrong with creating new Types, however this can lead to confusion about which are the standard. Confusion can cause
-                                            chaos and often results with all available Types actually being used on a project. This is pretty bad for consistency and readability.
-                                            If Dimension Types are not being used, they should be deleted.
-                                        </div>
-                                    </div>
-                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#s3" data-parent="#menu">
-                                        Unused Text Types
-                                        <span ng-class="vm.StylesData.unusedTextTypes === 'Yes'
-                                            ? 'badge progress-bar-danger'
-                                            : 'badge progress-bar-success'">{{vm.StylesData.unusedTextTypes}}</span>
-                                    </a>
-                                    <div id="s3" class="sublinks collapse">
-                                        <div class="list-group-item small">
-                                            There is nothing wrong with creating new Types, however this can lead to confusion about which are the standard. Confusion can cause
-                                            chaos and often results with all available Types actually being used on a project. This is pretty bad for consistency and readability.
-                                            If Text Types are not being used, they should be deleted.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <health-report-summary data="vm.StylesData.scoreData"
+                                               description="vm.StylesData.description"
+                                               bullets="vm.StylesData.bullets"
+                                               title="vm.StylesData.name">
+                        </health-report-summary>
                     </div>
                 </div>
             </div>
