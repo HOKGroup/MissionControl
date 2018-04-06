@@ -102,6 +102,9 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
+                        <button class="btn btn-xs btn-primary" ng-click="vm.ReloadTable()">
+                            Refresh
+                        </button>
                         <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
                             {{vm.selectedTableData}}
                             <span class="caret"></span>
@@ -111,33 +114,19 @@
                                 <a href="" ng-click="vm.setTableDataType(type)">{{type}}</a>
                             </li>
                         </ul>
+
                     </div>
                     <h4 class="panel-title" style="padding-top: 5px;">Model {{vm.selectedTableData}} Time / Worksets Opened %</h4>
                 </div>
+
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <table id="table1" datatable="ng" dt-options="vm.dtOptions" dt-column-defs="vm.dtColumnDefs" class="table table-hover table-condensed datatable">
-                            <thead>
-                            <tr>
-                                <th class="col-md-3">Date/Time</th>
-                                <th class="col-md-5">User</th>
-                                <th class="col-md-2 text-center">Duration</th>
-                                <th>Open Time ms</th>
-                                <th class="col-md-2 text-center">Worksets</th>
-                                <th>Worksets %</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="i in vm.tableData | orderBy : vm.sortDate : false"
-                                ng-class="vm.evaluateEventTime(i) ? 'bg-danger' : 'table-info'">
-                                <td>{{i.createdOn | date:"MM/dd/yy hh:mm"}}</td>
-                                <td>{{i.user}}</td>
-                                <td class="text-center">{{vm.formatDuration(i.value)}}</td>
-                                <td>{{i.value}}</td>
-                                <td class="text-center">{{i.worksets}}</td>
-                                <td>{{i.worksetPercentage}}</td>
-                            </tr>
-                            </tbody>
+                        <table id="modelStatsTable"
+                               datatable=""
+                               dt-options="vm.dtOptions"
+                               dt-columns="vm.dtColumns"
+                               dt-instance="vm.dtInstance"
+                               class="table table-hover table-condensed datatable">
                         </table>
                     </div>
                 </div>

@@ -54,37 +54,37 @@
                 <div class="col-xs-12 col-sm-9">
                     <workset-stats processed="vm.WorksetData"
                                    ng-if="vm.LoadPage('worksets')"
-                                   ng-show="vm.ShowPage('worksets')">
+                                   ng-hide="!vm.ShowPage('worksets')">
                     </workset-stats>
                 </div>
                 <div class="col-xs-12 col-sm-9">
                     <link-stats processed="vm.LinkData"
                                 ng-if="vm.LoadPage('links')"
-                                ng-show="vm.ShowPage('links')">
+                                ng-hide="!vm.ShowPage('links')">
                     </link-stats>
                 </div>
                 <div class="col-xs-12 col-sm-9">
                     <view-stats processed="vm.ViewData"
                                 ng-if="vm.LoadPage('views')"
-                                ng-show="vm.ShowPage('views')">
+                                ng-hide="!vm.ShowPage('views')">
                     </view-stats>
                 </div>
                 <div class="col-xs-12 col-sm-9">
                     <style-stats processed="vm.StyleData"
                                  ng-if="vm.LoadPage('styles')"
-                                 ng-show="vm.ShowPage('styles')">
+                                 ng-hide="!vm.ShowPage('styles')">
                     </style-stats>
                 </div>
                 <div class="col-xs-12 col-sm-9">
                     <model-stats processed="vm.ModelData"
                                  ng-if="vm.LoadPage('models')"
-                                 ng-show="vm.ShowPage('models')">
+                                 ng-hide="!vm.ShowPage('models')">
                     </model-stats>
                 </div>
                 <div class="col-xs-12 col-sm-9">
                     <family-stats processed="vm.FamilyData"
                                   ng-if="vm.LoadPage('families')"
-                                  ng-show="vm.ShowPage('families')">
+                                  ng-hide="!vm.ShowPage('families')">
                     </family-stats>
                 </div>
                 <div class="col-xs-12 col-sm-9" ng-if="vm.ShowPage('main')">
