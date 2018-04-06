@@ -20,6 +20,8 @@ angular.module('MissionControlApp').component('healthReportSummary', {
         data: '=',
         description: '=',
         bullets: '=',
-        title: '='
+        title: '=',
+        details: '=',
+        name: '='
     }
 });

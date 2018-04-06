@@ -39,7 +39,12 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                     if(!response || response.status !== 200) return;
 
                     var data = response.data;
+                    var inPlaceFamiliesColor = UtilityService.color().red;
+                    var unusedFamiliesColor = UtilityService.color().red;
                     var misnamed = 0;
+                    var misnamedFamiliesColor = UtilityService.color().red;
+                    var oversizedFamiliesColor = UtilityService.color().red;
+
                     data.families.forEach(function(item){
                         var result = nameCheckValues.some(function (x) {
                             return item.name.indexOf(x) !== -1;
@@ -48,26 +53,34 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                     });
 
                     var passingChecks = 0;
-                    data.oversizedFamilies <= 10
-                        ? passingChecks += 2
-                        : data.oversizedFamilies > 10 && data.oversizedFamilies < 20
-                        ? passingChecks += 1
-                        : passingChecks += 0;
-                    misnamed <= 10
-                        ? passingChecks += 2
-                        : misnamed > 10 && misnamed < 20
-                        ? passingChecks += 1
-                        : passingChecks += 0;
-                    data.unusedFamilies <= 10
-                        ? passingChecks += 2
-                        : data.unusedFamilies > 10 && data.unusedFamilies < 20
-                        ? passingChecks += 1
-                        : passingChecks += 0;
-                    data.inPlaceFamilies <= 5
-                        ? passingChecks += 2
-                        : data.inPlaceFamilies > 5 && data.inPlaceFamilies < 10
-                        ? passingChecks += 1
-                        : passingChecks += 0;
+                    if (data.oversizedFamilies <= 10){
+                        passingChecks += 2;
+                        oversizedFamiliesColor = UtilityService.color().green;
+                    } else if (data.oversizedFamilies > 10 && data.oversizedFamilies < 20){
+                        passingChecks += 1;
+                        oversizedFamiliesColor = UtilityService.color().orange;
+                    }
+                    if (misnamed <= 10){
+                        passingChecks += 2;
+                        misnamedFamiliesColor = UtilityService.color().green;
+                    } else if (misnamed > 10 && misnamed < 20){
+                        passingChecks += 1;
+                        misnamedFamiliesColor = UtilityService.color().orange;
+                    }
+                    if (data.unusedFamilies <= 10){
+                        passingChecks += 2;
+                        unusedFamiliesColor = UtilityService.color().green;
+                    } else if (data.unusedFamilies > 10 && data.unusedFamilies < 20){
+                        passingChecks += 1;
+                        unusedFamiliesColor = UtilityService.color().orange;
+                    }
+                    if (data.inPlaceFamilies <= 5){
+                        passingChecks += 2;
+                        inPlaceFamiliesColor = UtilityService.color().green;
+                    } else if (data.inPlaceFamilies > 5 && data.inPlaceFamilies < 10) {
+                        passingChecks += 1;
+                        inPlaceFamiliesColor = UtilityService.color().orange;
+                    }
 
                     var familyScoreData = {
                         passingChecks: passingChecks,
@@ -83,45 +96,60 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         "why it's imperative to follow HOK's best practices in modeling and naming Revit Families. InPlace families " +
                         "should be limited in use as they do not allow full functionality of the regular Families.";
 
-                    //TODO:
                     var bullets = [
                         {
                             title: 'Unplaced Families',
-                            description: '',
-                            bulletText: ,
-                            bulletColor:
+                            description: 'Families are integral part of Revit project. However, unused/unplaced Families ' +
+                            'unnecessarily bloat file size and degrade performance. Less than 10 is green, more than ' +
+                            '10 but less than 20 is orange while more than 20 is red.',
+                            bulletText: data.unusedFamilies,
+                            bulletColor: unusedFamiliesColor
                         },
                         {
                             title: 'InPlace Families',
-                            description: '',
-                            bulletText: ,
-                            bulletColor:
+                            description: 'Usage of InPlace families should be limited to minimum possible. InPlace ' +
+                            'Families cannot be scheduled, hence limited in traditional usage. They are also constrained ' +
+                            'to given model, and cannot be reused on other projects.',
+                            bulletText: data.inPlaceFamilies,
+                            bulletColor: inPlaceFamiliesColor
                         },
                         {
                             title: 'Misnamed Families',
-                            description: '',
-                            bulletText: ,
-                            bulletColor:
+                            description: 'It\'s considered good practive to use HOK created and curated families. ' +
+                            'These families will typically have a name containing "_HOK" in it. Family naming has no ' +
+                            'performance impact, but is good practice that should be followed. Less than 10 is green, more ' +
+                            'than 10 but less than 20 is orange while more than 20 is red.',
+                            bulletText: misnamed,
+                            bulletColor: misnamedFamiliesColor
                         },
                         {
                             title: 'Oversized Families',
-                            description: '',
-                            bulletText: ,
-                            bulletColor:
+                            description: 'Anything over 1MB will be considered oversized. Large families can be a good ' +
+                            'indicator of mismodelled or families with imported CAD objects. Generally it\'s a good ' +
+                            'idea to keep Family file size low. Less than 10 is green, more than 10 but less than 20 ' +
+                            'is orange while more than 20 is red.',
+                            bulletText: data.oversizedFamilies,
+                            bulletColor: oversizedFamiliesColor
                         }
                     ];
 
+                    var color  = UtilityService.color().red;
+                    if (passingChecks >= 6){
+                        color  = UtilityService.color().green;
+                    } else if (passingChecks >= 3 && passingChecks <= 5){
+                        color  = UtilityService.color().orange;
+                    }
+
                     callback({
                         nameCheckValues: nameCheckValues,
-                        misnamed: misnamed,
-                        inPlaceFamilies: data.inPlaceFamilies,
-                        unusedFamilies: data.unusedFamilies,
-                        oversizedFamilies: data.oversizedFamilies,
                         scoreData: familyScoreData,
                         familyScore: familyScore,
                         description: desc,
-                        name: "Families:",
-                        familyStats: data
+                        name: "Families",
+                        familyStats: data,
+                        bullets: bullets,
+                        show: {name: "families", value: false},
+                        color: color
                     });
                 })
                 .catch(function (error) {
@@ -213,14 +241,23 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         }
                     ];
 
+                    var color  = UtilityService.color().red;
+                    if (passingChecks >= 5){
+                        color  = UtilityService.color().green;
+                    } else if (passingChecks >= 3 && passingChecks <= 4){
+                        color  = UtilityService.color().orange;
+                    }
+
                     callback({
                         scoreData: linkScoreData,
                         importedFiles: latest.importedDwgFiles,
                         linkScore: linkScoreData.passingChecks,
                         description: desc,
-                        name: "Links:",
+                        name: "Links",
                         linkStats: data,
-                        bullets: bullets
+                        bullets: bullets,
+                        show: {name: "links", value: false},
+                        color: color
                     });
                 })
                 .catch(function (error) {
@@ -343,13 +380,22 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         }
                     ];
 
+                    var color  = UtilityService.color().red;
+                    if (passingChecks >= 6){
+                        color  = UtilityService.color().green;
+                    } else if (passingChecks >= 3 && passingChecks <= 5){
+                        color  = UtilityService.color().orange;
+                    }
+
                     callback({
                         scoreData: styleScoreData,
                         styleScore: styleScore,
                         description: desc,
-                        name: "Styles:",
+                        name: "Styles",
                         styleStats: data,
-                        bullets: bullets
+                        bullets: bullets,
+                        show: {name: "styles", value: false},
+                        color: color
                     });
                 })
                 .catch(function (error) {
@@ -428,6 +474,13 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         'however, can increase file size and impact performance. Please keep the number of "working views" ' +
                         'to minimum in order to preserve your computer hardware resources.';
 
+                    var color  = UtilityService.color().red;
+                    if (passingChecks >= 6){
+                        color  = UtilityService.color().green;
+                    } else if (passingChecks >= 3 && passingChecks <= 5){
+                        color  = UtilityService.color().orange;
+                    }
+
                     var bullets = [
                         {
                             title: 'Views not on Sheet',
@@ -470,9 +523,11 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         scoreData: viewScoreData,
                         viewScore: viewScore,
                         description: desc,
-                        name: "Views:",
+                        name: "Views",
                         viewStats: data,
-                        bullets: bullets
+                        bullets: bullets,
+                        show: {name: "views", value: false},
+                        color: color
                     });
                 })
                 .catch(function (error) {
@@ -505,7 +560,8 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         passingChecks: 7,
                         count: modelSize,
                         label: "Model Size",
-                        newMax: 6};
+                        newMax: 6
+                    };
 
                     var desc = 'There are a few simple measurements that we can use to judge model speed and responsiveness. ' +
                         'The good rule of thumb is to keep the model size smaller than 200Mb and that will help increase both ' +
@@ -548,9 +604,11 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         scoreData: modelScoreData,
                         modelScore: 7,
                         description: desc,
-                        name: "Model:",
+                        name: "Model",
                         modelStats: data,
-                        bullets: bullets
+                        bullets: bullets,
+                        show: {name: "models", value: false},
+                        color: UtilityService.color().grey
                     });
                 })
                 .catch(function (error) {
@@ -696,6 +754,13 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         }
                     ];
 
+                    var color  = UtilityService.color().red;
+                    if (passingChecks >= 5){
+                        color  = UtilityService.color().green;
+                    } else if (passingChecks >= 3 && passingChecks <= 4){
+                        color  = UtilityService.color().orange;
+                    }
+
                     callback({
                         scoreData: worksetScoreData, //used by circle d3 chart
                         bullets: bullets, //used by bullet points
@@ -703,9 +768,11 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         dataWorksetItemCount: worksetItemCountData,
                         worksetOpenedData: output,
                         worksetCountTotal: worksetCountTotal,
-                        worksetScore: passingChecks,
-                        name: "Worksets:",
-                        worksetStats: data
+                        // worksetScore: passingChecks,
+                        name: "Worksets",
+                        color: color,
+                        worksetStats: data,
+                        show: {name: "worksets", value: false}
                     });
 
                 })

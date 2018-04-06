@@ -18,6 +18,8 @@
                         <health-report-summary data="vm.StylesData.scoreData"
                                                description="vm.StylesData.description"
                                                bullets="vm.StylesData.bullets"
+                                               details="true"
+                                               name="'Secondary'"
                                                title="vm.StylesData.name">
                         </health-report-summary>
                     </div>
@@ -47,7 +49,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="i in vm.Data.dimSegmentStats">
+                            <tr ng-repeat="i in vm.StylesData.styleStats.styleStats[0].dimSegmentStats">
                                 <td class="text-center">{{i.valueString}}</td>
                                 <td class="text-center">{{i.valueOverride}}</td>
                                 <td class="text-center">{{i.isLocked}}</td>

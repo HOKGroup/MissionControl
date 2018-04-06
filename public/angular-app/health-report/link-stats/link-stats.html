@@ -18,6 +18,8 @@
                         <health-report-summary data="vm.LinkData.scoreData"
                                                description="vm.LinkData.description"
                                                bullets="vm.LinkData.bullets"
+                                               details="true"
+                                               name="'Secondary'"
                                                title="vm.LinkData.name">
                         </health-report-summary>
                     </div>
@@ -25,7 +27,7 @@
             </div>
         </div>
     </div>
-    <div class="row" ng-if="vm.d3ViewStatsData.linkStats.length >= 2">
+    <div class="row" ng-if="vm.LinkData.linkStats.linkStats.length >= 2">
         <div class="panel-group" id="p3">
             <div class="panel panel-default">
                 <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p3" data-target="#collapseP3">
@@ -35,7 +37,7 @@
                 </div>
                 <div id="collapseP3" class="panel-collapse collapse in">
                     <div class="panel-body no-padding">
-                        <d3-multi-series-line-brushed data="vm.d3ViewStatsData.linkStats" keys="vm.StylesKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>
+                        <d3-multi-series-line-brushed data="vm.LinkData.linkStats.linkStats" keys="vm.StylesKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>
                     </div>
                 </div>
             </div>

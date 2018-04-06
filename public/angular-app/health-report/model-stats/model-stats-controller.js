@@ -8,7 +8,6 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
         var openLimit = 18000000; // 5h
         vm.showTimeSettings = false;
         vm.ModelData = this.processed;
-        vm.Data = this.full;
         vm.TableDataTypes = ['Open', 'Synch'];
         vm.loading = false;
 
@@ -19,9 +18,8 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
          */
         vm.OnFilter = function (date) {
             vm.loading = true;
-            HealthReportFactory.processModelStats(vm.Data._id, date, function (result) {
+            HealthReportFactory.processModelStats(vm.ModelData.modelStats._id, date, function (result) {
                 vm.ModelData = result;
-                vm.Data = result.modelStats;
 
                 setDefaults();
                 vm.loading = false;
@@ -74,9 +72,9 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
             vm.selectedTableData = type;
 
             if(type === 'Open'){
-                vm.tableData = processData(vm.Data.onOpened, vm.Data.openTimes);
+                vm.tableData = processData(vm.ModelData.modelStats.onOpened, vm.ModelData.modelStats.openTimes);
             } else if (type === 'Synch'){
-                vm.tableData = processData(vm.Data.onSynched, vm.Data.synchTimes);
+                vm.tableData = processData(vm.ModelData.modelStats.onSynched, vm.ModelData.modelStats.synchTimes);
             }
         };
 
@@ -86,15 +84,15 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
          * Method that sets/resets all calcs for tables/charts.
          */
         function setDefaults() {
-            vm.ModelSizes = vm.Data.modelSizes;
+            vm.ModelSizes = vm.ModelData.modelStats.modelSizes;
 
             // set data for synch charts
-            var filtered = filterData(vm.Data.synchTimes, synchLimit, "All"); //1h
+            var filtered = filterData(vm.ModelData.modelStats.synchTimes, synchLimit, "All"); //1h
             vm.ModelSynchTimes = filtered.data;
             vm.ExcludedModelSynchTimes = filtered.excludedData;
 
             // set data for open charts
-            var filtered1 = filterData(vm.Data.openTimes, openLimit, "All"); //5h
+            var filtered1 = filterData(vm.ModelData.modelStats.openTimes, openLimit, "All"); //5h
             vm.ModelOpenTimes = filtered1.data;
             vm.ExcludedModelOpenTimes = filtered1.excludedData;
 
@@ -123,12 +121,12 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
             var filtered;
             if(data === 'synchTimes'){
                 vm.selectedSynchUser = user;
-                filtered = filterData(vm.Data.synchTimes, synchLimit, user); // 1h
+                filtered = filterData(vm.ModelData.modelStats.synchTimes, synchLimit, user); // 1h
                 vm.ModelSynchTimes = filtered.data;
                 vm.ExcludedModelSynchTimes = filtered.excludedData;
             } else if (data === 'openTimes'){
                 vm.selectedOpenUser = user;
-                filtered = filterData(vm.Data.openTimes, openLimit, user); // 5h
+                filtered = filterData(vm.ModelData.modelStats.openTimes, openLimit, user); // 5h
                 vm.ModelOpenTimes = filtered.data;
                 vm.ExcludedModelOpenTimes = filtered.excludedData;
             }
