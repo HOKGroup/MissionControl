@@ -15,70 +15,19 @@
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <div class="col-md-3 no-padding">
-                            <d3-circle data="vm.LinkData.scoreData" class="cn"></d3-circle>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="small">
-                                <p>
-                                    {{vm.LinkData.description}}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-md-5 no-padding">
-                            <div id="menu">
-                                <div class="panel list-group">
-                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sm" data-parent="#menu">
-                                        Imported external content
-                                        <span ng-class="vm.LinkData.importedContentCount > 0
-                                ? 'badge progress-bar-danger'
-                                : 'badge progress-bar-success' ">{{vm.LinkData.importedContentCount}}</span>
-                                    </a>
-                                    <div id="sm" class="sublinks collapse">
-                                        <div class="list-group-item small">
-                                            Importing of any DWG/STL/SKP content is considered bad practice. All external content if necessary should be linked in.
-                                            Importing content can cause decreased model performance due to excessive number of Object Styles or decrese accuracy, and cause graphic
-                                            artifacts due to large XYZ Coordinates.
-                                        </div>
-                                    </div>
-                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sl" data-parent="#menu">
-                                        Unused imported images
-                                        <span ng-class="vm.LinkData.unusedImageCount === 0
-                                ? 'badge progress-bar-success'
-                                : vm.LinkData.unusedImageCount <= 2 && vm.LinkData.unusedImageCount > 0
-                                ? 'badge progress-bar-warning'
-                                : 'badge progress-bar-danger' ">{{vm.LinkData.unusedImageCount}}</span>
-                                    </a>
-                                    <div id="sl" class="sublinks collapse">
-                                        <div class="list-group-item small">
-                                            Imported image content can increase file size and impact model performance. It is recommended to periodically purge unused image content
-                                            from the model.
-                                        </div>
-                                    </div>
-                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#s2" data-parent="#menu">
-                                        Imported Object Styles
-                                        <span ng-class="vm.LinkData.importedObjectStylesCount <= 25
-                                ? 'badge progress-bar-success'
-                                : vm.LinkData.importedObjectStylesCount >25 && vm.LinkData.importedObjectStylesCount <= 50
-                                ? 'badge progress-bar-warning'
-                                : 'badge progress-bar-danger'">{{vm.LinkData.importedObjectStylesCount}}</span>
-                                    </a>
-                                    <div id="s2" class="sublinks collapse">
-                                        <div class="list-group-item small">
-                                            There are typically 276 Object Styles in standard Revit file. Importing DWG content either directly or into Families may cause
-                                            this number to grow. Excessive number of Object Styles that were created via importing of external content can have negative
-                                            performance impact.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <health-report-summary data="vm.LinkData.scoreData"
+                                               description="vm.LinkData.description"
+                                               bullets="vm.LinkData.bullets"
+                                               details="true"
+                                               name="'Secondary'"
+                                               title="vm.LinkData.name">
+                        </health-report-summary>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row" ng-if="vm.d3ViewStatsData.linkStats.length >= 2">
+    <div class="row" ng-if="vm.LinkData.linkStats.linkStats.length >= 2">
         <div class="panel-group" id="p3">
             <div class="panel panel-default">
                 <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p3" data-target="#collapseP3">
@@ -88,7 +37,7 @@
                 </div>
                 <div id="collapseP3" class="panel-collapse collapse in">
                     <div class="panel-body no-padding">
-                        <d3-multi-series-line-brushed data="vm.d3ViewStatsData.linkStats" keys="vm.StylesKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>
+                        <d3-multi-series-line-brushed data="vm.LinkData.linkStats.linkStats" keys="vm.StylesKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>
                     </div>
                 </div>
             </div>

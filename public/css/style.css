@@ -102,8 +102,8 @@ p.normal {
 }
 
 /*Top Padding between Divs*/
-.top-buffer {
-    margin-top:20px;
+.bottom-buffer {
+    margin-bottom:20px;
 }
 
 /*Left padded text*/

@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').controller('ModelStatsController', ModelStatsController);
 
-function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, $uibModal, HealthReportFactory){
+function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, DTColumnBuilder, DTOptionsBuilder, $timeout, $scope, $uibModal, HealthReportFactory){
     var vm = this;
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
@@ -8,77 +8,9 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
         var openLimit = 18000000; // 5h
         vm.showTimeSettings = false;
         vm.ModelData = this.processed;
-        vm.Data = this.full;
         vm.TableDataTypes = ['Open', 'Synch'];
         vm.loading = false;
-
-        /**
-         * Callback method for Date Time Range selection.
-         * @param date
-         * @constructor
-         */
-        vm.OnFilter = function (date) {
-            vm.loading = true;
-            HealthReportFactory.processModelStats(vm.Data._id, date, function (result) {
-                vm.ModelData = result;
-                vm.Data = result.modelStats;
-
-                setDefaults();
-                vm.loading = false;
-            });
-        };
-
-        /**
-         * Toggles Date Time picker div on/off.
-         */
-        vm.toggleTimeSettings = function() {
-            vm.showTimeSettings = !vm.showTimeSettings;
-        };
-
-        // set table options
-        vm.dtOptions = {
-            paginationType: 'simple_numbers',
-            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
-            stateSave: false,
-            deferRender: true
-        };
-
-        vm.dtColumnDefs = [
-            DTColumnDefBuilder.newColumnDef(0), //date/time
-            DTColumnDefBuilder.newColumnDef(1), //user name
-            DTColumnDefBuilder.newColumnDef(2).withOption('orderData', '3'), //open time
-            DTColumnDefBuilder.newColumnDef(3).notVisible(), //duration in ms
-            DTColumnDefBuilder.newColumnDef(4).withOption('orderData', '5'), //worksets
-            DTColumnDefBuilder.newColumnDef(5).notVisible() //workset percentage
-        ];
-
-        /**
-         * Checks if value is larger than a given limit.
-         * @param item
-         * @returns {boolean}
-         */
-        vm.evaluateEventTime = function(item)
-        {
-            if (vm.selectedTableData === 'Synch'){
-                return item.value > synchLimit;
-            } else {
-                return item.value > openLimit;
-            }
-        };
-
-        /**
-         * Processes data for table filter Open | Synch.
-         * @param type
-         */
-        vm.setTableDataType = function (type) {
-            vm.selectedTableData = type;
-
-            if(type === 'Open'){
-                vm.tableData = processData(vm.Data.onOpened, vm.Data.openTimes);
-            } else if (type === 'Synch'){
-                vm.tableData = processData(vm.Data.onSynched, vm.Data.synchTimes);
-            }
-        };
+        vm.tableData = [];
 
         setDefaults();
 
@@ -86,15 +18,15 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
          * Method that sets/resets all calcs for tables/charts.
          */
         function setDefaults() {
-            vm.ModelSizes = vm.Data.modelSizes;
+            vm.ModelSizes = vm.ModelData.modelStats.modelSizes;
 
             // set data for synch charts
-            var filtered = filterData(vm.Data.synchTimes, synchLimit, "All"); //1h
+            var filtered = filterData(vm.ModelData.modelStats.synchTimes, synchLimit, "All"); //1h
             vm.ModelSynchTimes = filtered.data;
             vm.ExcludedModelSynchTimes = filtered.excludedData;
 
             // set data for open charts
-            var filtered1 = filterData(vm.Data.openTimes, openLimit, "All"); //5h
+            var filtered1 = filterData(vm.ModelData.modelStats.openTimes, openLimit, "All"); //5h
             vm.ModelOpenTimes = filtered1.data;
             vm.ExcludedModelOpenTimes = filtered1.excludedData;
 
@@ -109,10 +41,149 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
                 return item.user;
             })));
             vm.SynchUsers.unshift("All");
-            vm.selectedTableData = 'Synch';
-
-            vm.setTableDataType(vm.selectedTableData);
+            vm.selectedTableData = 'Open';
         }
+
+        /**
+         * Method to recalculate data table contents and reload it.
+         * @constructor
+         */
+        vm.ReloadTable = function () {
+            if(vm.dtInstance) {vm.dtInstance.reloadData();} //reloads table
+            if(vm.dtInstance) {vm.dtInstance.rerender();} //reloads table
+        };
+
+        /**
+         * Processes data for table filter Open | Synch.
+         * @param type
+         */
+        vm.setTableDataType = function (type) {
+            vm.selectedTableData = type;
+            vm.ReloadTable();
+        };
+
+        /**
+         * Callback method for Date Time Range selection.
+         * @param date
+         * @constructor
+         */
+        vm.OnFilter = function (date) {
+            vm.loading = true;
+            HealthReportFactory.processModelStats(vm.ModelData.modelStats._id, date, function (result) {
+                vm.ModelData = result;
+
+                vm.ReloadTable();
+                setDefaults();
+                vm.loading = false;
+            });
+        };
+
+        /**
+         * Toggles Date Time picker div on/off.
+         */
+        vm.toggleTimeSettings = function() {
+            vm.showTimeSettings = !vm.showTimeSettings;
+        };
+
+        // set table options for dimension types
+        vm.dtInstance = {};
+        vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
+            return getData()
+        }).withPaginationType('simple_numbers')
+            .withDisplayLength(10)
+            .withOption('order', [0, 'asc'])
+            .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
+            .withOption('rowCallback', function (row, data, index) {
+                if (evaluateEventTime(data)){
+                    row.className = row.className + ' bg-danger'
+                } else {
+                    row.className = row.className + ' table-info'
+                }
+            });
+
+        /**
+         * Retrieves data. We need a function that returns a promise here so that we can
+         * use it with the datatables. It will also call this method when we call
+         * dt.instance.reloadData() which helps when we do filtering.
+         * @returns {*}
+         */
+        function getData() {
+            return new Promise(function(resolve, reject){
+                var data = [];
+                if(vm.selectedTableData === 'Open'){
+                    data = processData(vm.ModelData.modelStats.onOpened, vm.ModelData.modelStats.openTimes);
+                } else if (vm.selectedTableData === 'Synch'){
+                    data = processData(vm.ModelData.modelStats.onSynched, vm.ModelData.modelStats.synchTimes);
+                }
+
+                if (!data) reject();
+                else resolve(data);
+            });
+        }
+
+        vm.dtColumns = [
+            DTColumnBuilder.newColumn('createdOn')
+                .withTitle('Date/Time')
+                .withOption('width', '15%')
+                .renderWith(parseDateTime),
+            DTColumnBuilder.newColumn('user')
+                .withTitle('User')
+                .withOption('width', '50%'),
+            DTColumnBuilder.newColumn('value')
+                .withTitle('Duration')
+                .withOption('className', 'text-center')
+                .withOption('width', '15%')
+                .renderWith(durationFromValue),
+            DTColumnBuilder.newColumn('value')
+                .withTitle('Hidden')
+                .notVisible(),
+            DTColumnBuilder.newColumn('worksets')
+                .withTitle('Size')
+                .withOption('className', 'text-center')
+                .withOption('width', '10%'),
+            DTColumnBuilder.newColumn('worksetPercentage')
+                .withTitle('Hidden')
+                .notVisible()
+        ];
+
+        /**
+         *
+         * @param value
+         * @returns {string}
+         */
+        function parseDateTime(value) {
+            return new Date(value).toLocaleString('en-US', {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        /**
+         *
+         * @param value
+         * @returns {*}
+         */
+        function durationFromValue(value)
+        {
+            return UtilityService.formatDuration(value);
+        }
+
+        /**
+         * Checks if value is larger than a given limit.
+         * @param item
+         * @returns {boolean}
+         */
+        var evaluateEventTime = function(item)
+        {
+            if (vm.selectedTableData === 'Synch'){
+                return item.value > synchLimit;
+            } else {
+                return item.value > openLimit;
+            }
+        };
 
         /**
          * Filters Model Open Time data for specific user only.
@@ -123,12 +194,12 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
             var filtered;
             if(data === 'synchTimes'){
                 vm.selectedSynchUser = user;
-                filtered = filterData(vm.Data.synchTimes, synchLimit, user); // 1h
+                filtered = filterData(vm.ModelData.modelStats.synchTimes, synchLimit, user); // 1h
                 vm.ModelSynchTimes = filtered.data;
                 vm.ExcludedModelSynchTimes = filtered.excludedData;
             } else if (data === 'openTimes'){
                 vm.selectedOpenUser = user;
-                filtered = filterData(vm.Data.openTimes, openLimit, user); // 5h
+                filtered = filterData(vm.ModelData.modelStats.openTimes, openLimit, user); // 5h
                 vm.ModelOpenTimes = filtered.data;
                 vm.ExcludedModelOpenTimes = filtered.excludedData;
             }
@@ -188,7 +259,6 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
          * This info is displayed in the table.
          * @param worksetArr
          * @param timeArr
-         * @returns {Array}
          */
         function processData(worksetArr, timeArr){
             var worksetData = {};
@@ -216,6 +286,7 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
                     tempData.push(item);
                 }
             });
+
             return tempData;
         }
 

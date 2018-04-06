@@ -4,8 +4,7 @@ function ViewStatsController($routeParams, HealthReportFactory){
     var vm = this;
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
-        vm.FamilyData = this.processed;
-        vm.d3ViewStatsData = this.full;
+        vm.ViewData = this.processed;
         vm.showTimeSettings = false;
         vm.loading = false;
 
@@ -16,9 +15,8 @@ function ViewStatsController($routeParams, HealthReportFactory){
          */
         vm.OnFilter = function (date) {
             vm.loading = true;
-            HealthReportFactory.processViewStats(vm.d3ViewStatsData._id, date, function (result) {
-                vm.FamilyData = result;
-                vm.d3ViewStatsData = result.viewStats;
+            HealthReportFactory.processViewStats(vm.ViewData.viewStats._id, date, function (result) {
+                vm.ViewData = result;
                 vm.loading = false;
             });
         };

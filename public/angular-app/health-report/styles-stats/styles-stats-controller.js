@@ -8,7 +8,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
         vm.StylesData = this.processed;
-        vm.Data = this.full.styleStats[0];
+        // vm.Data = this.full.styleStats[0];
 
         // set table options for dimension segments
         vm.dtOptions = {
@@ -29,7 +29,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
         // set table options for dimension types
         vm.dtInstance1 = {};
         vm.dtOptions2 = DTOptionsBuilder.newOptions()
-            .withOption('data', vm.Data.dimStats)
+            .withOption('data', vm.StylesData.styleStats.styleStats[0].dimStats)
             .withPaginationType('simple_numbers')
             .withDisplayLength(10)
             .withOption('order', [0, 'asc'])
@@ -91,7 +91,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
         // set table options for dimension types
         vm.dtInstance2 = {};
         vm.dtOptions3 = DTOptionsBuilder.newOptions()
-            .withOption('data', vm.Data.textStats)
+            .withOption('data', vm.StylesData.styleStats.styleStats[0].textStats)
             .withPaginationType('simple_numbers')
             .withDisplayLength(10)
             .withOption('order', [0, 'asc'])

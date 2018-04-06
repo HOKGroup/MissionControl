@@ -5,12 +5,11 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, Util
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
         vm.FamilyData = this.processed;
-        vm.Data = this.full;
 
         vm.AllFamilies = [];
-        vm.Data.families.forEach(function (item) {
+        vm.FamilyData.familyStats.families.forEach(function (item) {
             if(!item.isDeleted && item.isFailingChecks){
-                item['collectionId'] = vm.Data._id;
+                item['collectionId'] = vm.FamilyData.familyStats._id;
                 vm.AllFamilies.push(item);
             }
         });
@@ -61,7 +60,7 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, Util
          * @constructor
          */
         vm.OnBrush = function(item){
-            vm.AllFamilies = vm.Data.families.filter(function(family){
+            vm.AllFamilies = vm.FamilyData.familyStats.families.filter(function(family){
                 var found = false;
                 for (var i = 0; i < item.length; i++){
                     if(item[i].name === family.name){

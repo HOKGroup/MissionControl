@@ -2,6 +2,15 @@ angular.module('MissionControlApp').factory('UtilityService', UtilityService);
 
 function UtilityService(){
     return {
+        color: function(){
+            return {
+                red: 'badge progress-bar-danger',
+                orange: "badge progress-bar-warning",
+                green: "badge progress-bar-success",
+                grey: "badge"
+            }
+        },
+
         /**
          * Formats number from double to int with % sign.
          * @param value

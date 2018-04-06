@@ -1,20 +1,13 @@
 angular.module('MissionControlApp').controller('HealthReportController', HealthReportController);
 
-function HealthReportController($routeParams, HealthRecordsFactory, ProjectFactory, HealthReportFactory, FamiliesFactory){
+function HealthReportController($routeParams, HealthRecordsFactory, ProjectFactory, HealthReportFactory){
     var vm = this;
     vm.projectId = $routeParams.projectId;
-    vm.ShowLinkStats = {name: "links", value: false};
-    vm.ShowFamiliesStats = {name: "families", value: false};
-    vm.ShowWorksetStats = {name: "worksets", value: false};
-    vm.ShowViewStats = {name: "views", value: false};
-    vm.ShowStyleStats = {name: "styles", value: false};
-    vm.ShowModelStats = {name: "models", value: false};
-    vm.ShowMainPage = {name: "main", value: true};
     vm.FamilyCollection = null;
     vm.HealthRecords = [];
-    vm.loading = false;
-    vm.AllData = [];
-    var allControllers = [vm.ShowLinkStats, vm.ShowFamiliesStats, vm.ShowWorksetStats, vm.ShowViewStats, vm.ShowStyleStats, vm.ShowModelStats, vm.ShowMainPage];
+    vm.AllData = [{
+        show: {name: "main", value: true}
+    }];
 
     getSelectedProject(vm.projectId);
 
@@ -41,7 +34,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
                 var selected = response.data.sort(dynamicSort('centralPath'))[0];
                 vm.selectedFileName = vm.fileNameFromPath(selected.centralPath);
 
-                vm.SetProject(selected);
+                vm.SetProject(selected, false);
             })
             .catch(function(err){
                 console.log('Unable to load Health Records data: ' + err.message);
@@ -54,9 +47,9 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
      * @constructor
      */
     vm.SelectionChanged = function (name) {
-        allControllers.forEach(function (item) {
-            item.value = item.name === name;
-        })
+        vm.AllData.forEach(function (item) {
+            item.show.value = item.show.name === name;
+        });
     };
 
     /**
@@ -77,12 +70,42 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
     };
 
     /**
-     * Sets currently selected project by retrieving all stats.
-     * @param link
+     * Checks if data was loaded for given asset and returns true/false.
+     * @param name
+     * @returns {boolean}
      * @constructor
      */
-    vm.SetProject = function (link){
-        vm.loading = true;
+    vm.LoadPage = function (name) {
+        return vm.AllData.some(function (item) {
+            return item.show.name === name;
+        });
+    };
+
+    /**
+     * Checks if given asset was toggled on/off and returns true/false.
+     * @param name
+     * @returns {boolean}
+     * @constructor
+     */
+    vm.ShowPage = function (name) {
+        return vm.AllData.some(function(item){
+            if (item.show.name === name){
+                return item.show.value;
+            }
+        });
+    };
+
+    /**
+     * Sets currently selected project by retrieving all stats.
+     * @param link
+     * @param reset
+     * @constructor
+     */
+    vm.SetProject = function (link, reset){
+        if (reset) vm.AllData = [{
+            show: {name: "main", value: true}
+        }];
+
         vm.showMenu = true;
 
         // (Konrad) By default we will take only last month worth of data.
@@ -95,49 +118,53 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
         };
 
         HealthReportFactory.processWorksetStats(link._id, dateRange, function (result) {
-            vm.WorksetData = result;
-            if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
-            dataProcessed();
+            if(result) {
+                vm.WorksetData = result;
+                vm.AllData.splice(3, 0, result);
+            }
+            vm.SelectionChanged('main');
         });
 
         HealthReportFactory.processModelStats(link._id, dateRange, function (result) {
-            vm.ModelData = result;
-            if(vm.ModelData) vm.AllData.push(vm.ModelData);
-            dataProcessed();
+            if(result){
+                vm.ModelData = result;
+                vm.AllData.splice(4, 0, result);
+            }
+            vm.SelectionChanged('main');
         });
 
         HealthReportFactory.processLinkStats(link._id, dateRange, function (result) {
-            vm.LinkData = result;
-            if(vm.LinkData) vm.AllData.push(vm.LinkData);
-            dataProcessed();
+            if(result){
+                vm.LinkData = result;
+                vm.AllData.splice(0, 0, result);
+            }
+            vm.SelectionChanged('main');
         });
 
         HealthReportFactory.processViewStats(link._id, dateRange, function (result) {
-            vm.ViewData = result;
-            if(vm.ViewData) vm.AllData.push(vm.ViewData);
-            dataProcessed();
+            if(result){
+                vm.ViewData = result;
+                vm.AllData.splice(1, 0, result);
+            }
+            vm.SelectionChanged('main');
         });
 
         HealthReportFactory.processStyleStats(link._id, dateRange, function (result) {
-            vm.StyleData = result;
-            if(vm.StyleData) vm.AllData.push(vm.StyleData);
-            dataProcessed();
+            if(result){
+                vm.StyleData = result;
+                vm.AllData.splice(2, 0, result);
+            }
+            vm.SelectionChanged('main');
         });
 
         HealthReportFactory.processFamilyStats(link._id, function (result) {
-            vm.FamilyData = result;
-            if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
-            dataProcessed();
+            if(result){
+                vm.FamilyData = result;
+                vm.AllData.splice(5, 0, result);
+            }
+            vm.SelectionChanged('main');
         });
     };
-
-    /**
-     *
-     */
-    function dataProcessed() {
-        vm.SelectionChanged(vm.ShowMainPage.name);
-        vm.loading = false;
-    }
 
     /**
      * Returns a sort order for objects by a given property on that object.

@@ -41,79 +41,13 @@
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <div class="col-md-3 no-padding">
-                            <d3-circle data="vm.FamilyData.scoreData" class="cn"></d3-circle>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="small">
-                                <p>
-                                    {{vm.FamilyData.description}}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-md-5 no-padding">
-                            <div id="menu">
-                                <div class="panel list-group">
-                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sm" data-parent="#menu">
-                                        Unplaced Families
-                                        <span ng-class="vm.FamilyData.unusedFamilies <= 10
-                                ? 'badge progress-bar-success'
-                                : vm.FamilyData.unusedFamilies > 10 && vm.FamilyData.unusedFamilies <= 20
-                                ? 'badge progress-bar-warning'
-                                : 'badge progress-bar-danger' ">{{vm.FamilyData.unusedFamilies}}</span>
-                                    </a>
-                                    <div id="sm" class="sublinks collapse">
-                                        <div class="list-group-item small">
-                                            Families are integral part of Revit project. However, unused/unplaced Families unnecessarily bloat file size
-                                            and degrade performance. Less than 10 is green, more than 10 but less than 20 is orange while more than 20 is red.
-                                        </div>
-                                    </div>
-                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#sl" data-parent="#menu">
-                                        InPlace Families
-                                        <span ng-class="vm.FamilyData.inPlaceFamilies <= 5
-                                ? 'badge progress-bar-success'
-                                : vm.FamilyData.inPlaceFamilies > 5 && vm.FamilyData.inPlaceFamilies <= 10
-                                ? 'badge progress-bar-warning'
-                                : 'badge progress-bar-danger' ">{{vm.FamilyData.inPlaceFamilies}}</span>
-                                    </a>
-                                    <div id="sl" class="sublinks collapse">
-                                        <div class="list-group-item small">
-                                            Usage of InPlace families should be limited to minimum possible. InPlace Families cannot be scheduled, hence limited in traditional
-                                            usage. They are also constrained to given model, and cannot be reused on other projects.
-                                        </div>
-                                    </div>
-                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#s2" data-parent="#menu">
-                                        Misnamed Families
-                                        <span ng-class="vm.FamilyData.misnamed <= 10
-                                ? 'badge progress-bar-success'
-                                : vm.FamilyData.misnamed > 10 && vm.FamilyData.misnamed <= 20
-                                ? 'badge progress-bar-warning'
-                                : 'badge progress-bar-danger'">{{vm.FamilyData.misnamed}}</span>
-                                    </a>
-                                    <div id="s2" class="sublinks collapse">
-                                        <div class="list-group-item small">
-                                            It's considered good practive to use HOK created and curated families. These families will typically have a name containing "_HOK" in it.
-                                            Family naming has no performance impact, but is good practice that should be followed. Less than 10 is green, more than 10 but less
-                                            than 20 is orange while more than 20 is red.
-                                        </div>
-                                    </div>
-                                    <a href="" class="list-group-item" data-toggle="collapse" data-target="#s3" data-parent="#menu">
-                                        Oversized Families
-                                        <span ng-class="vm.FamilyData.oversizedFamilies <= 10
-                                ? 'badge progress-bar-success'
-                                : vm.FamilyData.oversizedFamilies > 10 && vm.FamilyData.oversizedFamilies <= 20
-                                ? 'badge progress-bar-warning'
-                                : 'badge progress-bar-danger'">{{vm.FamilyData.oversizedFamilies}}</span>
-                                    </a>
-                                    <div id="s3" class="sublinks collapse">
-                                        <div class="list-group-item small">
-                                            Anything over 1MB will be considered oversized. Large families can be a good indicator of mismodelled or families with imported
-                                            CAD objects. Generally it's a good idea to keep Family file size low. Less than 10 is green, more than 10 but less than 20 is orange while more than 20 is red.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <health-report-summary data="vm.FamilyData.scoreData"
+                                               description="vm.FamilyData.description"
+                                               bullets="vm.FamilyData.bullets"
+                                               details="true"
+                                               name="'Secondary'"
+                                               title="vm.FamilyData.name">
+                        </health-report-summary>
                     </div>
                 </div>
             </div>
@@ -147,7 +81,12 @@
                 </div>
                 <div id="collapseP1" class="panel-collapse collapse in">
                     <div class="panel-body">
-                        <table id="table1" datatable="ng" dt-options="vm.dtOptions" dt-column-defs="vm.dtColumnDefs" dt-instance="vm.dtInstance" class="table table-hover table-condensed datatable">
+                        <table id="table1"
+                               datatable="ng"
+                               dt-options="vm.dtOptions"
+                               dt-column-defs="vm.dtColumnDefs"
+                               dt-instance="vm.dtInstance"
+                               class="table table-hover table-condensed datatable">
                             <thead>
                             <tr>
                                 <th class="col-md-1 text-center">#</th>
@@ -173,8 +112,20 @@
                                 <td class="text-center"
                                     ng-mouseenter="onHover = true"
                                     ng-mouseleave="onHover = false">
-                                    <a href=""><span class="glyphicon glyphicon-plus" ng-if="i.tasks.length === 0 && onHover" ng-style="vm.evaluateTasks(i)" ng-click="vm.launchEditor(i)"></span></a>
-                                    <a href=""><span class="glyphicon glyphicon-tasks" ng-show="i.tasks.length > 0" ng-style="vm.evaluateTasks(i)" ng-click="vm.launchEditor(i)"></span></a>
+                                    <a href="">
+                                        <span class="glyphicon glyphicon-plus"
+                                              ng-if="i.tasks.length === 0 && onHover"
+                                              ng-style="vm.evaluateTasks(i)"
+                                              ng-click="vm.launchEditor(i)">
+                                        </span>
+                                    </a>
+                                    <a href="">
+                                        <span class="glyphicon glyphicon-tasks"
+                                              ng-show="i.tasks.length > 0"
+                                              ng-style="vm.evaluateTasks(i)"
+                                              ng-click="vm.launchEditor(i)">
+                                        </span>
+                                    </a>
                                 </td>
                                 <td>{{i.tasks.length}}</td>
                                 <td class="text-center">

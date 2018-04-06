@@ -3,8 +3,8 @@ angular.module('MissionControlApp').component('linkStats', {
     controller: 'LinkStatsController',
     controllerAs: 'vm',
     bindings: {
-        processed: '=',
-        full: '='}
+        processed: '='
+    }
 });
 
 angular.module('MissionControlApp').component('worksetStats', {
@@ -12,8 +12,8 @@ angular.module('MissionControlApp').component('worksetStats', {
     controller: 'WorksetsController',
     controllerAs: 'vm',
     bindings: {
-        processed: '=',
-        full: '='}
+        processed: '='
+    }
 });
 
 angular.module('MissionControlApp').component('familyStats', {
@@ -21,8 +21,8 @@ angular.module('MissionControlApp').component('familyStats', {
     controller: 'FamilyStatsController',
     controllerAs: 'vm',
     bindings: {
-        processed: '=',
-        full: '='}
+        processed: '='
+    }
 });
 
 angular.module('MissionControlApp').component('modelStats', {
@@ -30,8 +30,8 @@ angular.module('MissionControlApp').component('modelStats', {
     controller: 'ModelStatsController',
     controllerAs: 'vm',
     bindings: {
-        processed: '=',
-        full: '='}
+        processed: '='
+    }
 });
 
 angular.module('MissionControlApp').component('viewStats', {
@@ -39,8 +39,8 @@ angular.module('MissionControlApp').component('viewStats', {
     controller: 'ViewStatsController',
     controllerAs: 'vm',
     bindings: {
-        processed: '=',
-        full: '='}
+        processed: '='
+    }
 });
 
 angular.module('MissionControlApp').component('styleStats', {
@@ -48,17 +48,6 @@ angular.module('MissionControlApp').component('styleStats', {
     controller: 'StyleStatsController',
     controllerAs: 'vm',
     bindings: {
-        processed: '=',
-        full: '='}
-});
-
-angular.module('MissionControlApp').component('timeRangeSelection', {
-    templateUrl: 'angular-app/directives/time-range-selector/template.html',
-    controller: 'TimeRangeSelectorController',
-    controllerAs: 'vm',
-    bindings: {
-        onFilter: '&onFilter',
-        onHide: '&onHide',
-        loading: '='
+        processed: '='
     }
 });

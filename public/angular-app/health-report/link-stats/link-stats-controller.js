@@ -5,7 +5,6 @@ function LinkStatsController($routeParams, DTColumnDefBuilder, HealthReportFacto
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
         vm.LinkData = this.processed;
-        vm.d3ViewStatsData = this.full;
         vm.StylesKeys = ["totalDwgStyles", "totalImportedStyles"];
         vm.d3GoalLine = {name: "Goal", value: 50};
         vm.showTimeSettings = false;
@@ -18,9 +17,8 @@ function LinkStatsController($routeParams, DTColumnDefBuilder, HealthReportFacto
          */
         vm.OnFilter = function (date) {
             vm.loading = true;
-            HealthReportFactory.processLinkStats(vm.d3ViewStatsData._id, date, function (result) {
+            HealthReportFactory.processLinkStats(vm.LinkData.linkStats._id, date, function (result) {
                 vm.LinkData = result;
-                vm.d3ViewStatsData = result.linkStats;
                 vm.loading = false;
             });
         };
