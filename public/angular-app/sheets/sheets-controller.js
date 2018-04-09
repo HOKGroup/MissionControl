@@ -9,7 +9,7 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
     vm.selectAll = false; // select all checkbox
-
+    vm.Data = [];
     vm.dtInstance = {};
 
     vm.dtSheetsOptions = {
@@ -46,18 +46,16 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
      */
     vm.SetCurrentModelFilter = function (file) {
         vm.selectedModel = file;
+        vm.allSheets = [];
+        vm.Data.forEach(function (item) {
+            if (item.fileName.toLowerCase() === file.name.toLowerCase() || file.name === 'All'){
+                vm.allSheets.push(item);
+            }
+        });
 
         //(Konrad) We need to re-render the table when Filter is updated.
+        vm.dtInstance.reloadData();
         vm.dtInstance.rerender();
-    };
-
-    /**
-     * Returns True if file name matches filter selected or filter selected is All.
-     * @param file
-     * @returns {boolean}
-     */
-    vm.filterFile = function (file) {
-        return file.fileName === vm.selectedModel.name || vm.selectedModel.name === "All";
     };
 
     /**
@@ -320,6 +318,7 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
                                     if(!sheet.isDeleted){
                                         sheet['collectionId'] = item._id;
                                         vm.allSheets.push(sheet);
+                                        vm.Data.push(sheet);
                                     }
                                 })
                             });
