@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').controller('ModelStatsController', ModelStatsController);
 
-function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, DTColumnBuilder, DTOptionsBuilder, $timeout, $scope, $uibModal, HealthReportFactory){
+function ModelStatsController($routeParams, UtilityService, DTColumnBuilder, DTOptionsBuilder, $scope, $uibModal, HealthReportFactory){
     var vm = this;
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
@@ -49,8 +49,8 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
          * @constructor
          */
         vm.ReloadTable = function () {
-            if(vm.dtInstance) {vm.dtInstance.reloadData();} //reloads table
-            if(vm.dtInstance) {vm.dtInstance.rerender();} //reloads table
+            if(vm.dtInstance.value !== null) {vm.dtInstance.reloadData(false);}
+            if(vm.dtInstance.value !== null) {vm.dtInstance.rerender();}
         };
 
         /**
@@ -72,8 +72,8 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
             HealthReportFactory.processModelStats(vm.ModelData.modelStats._id, date, function (result) {
                 vm.ModelData = result;
 
-                vm.ReloadTable();
                 setDefaults();
+                vm.ReloadTable();
                 vm.loading = false;
             });
         };
@@ -86,7 +86,7 @@ function ModelStatsController($routeParams, UtilityService, DTColumnDefBuilder, 
         };
 
         // set table options for dimension types
-        vm.dtInstance = {};
+        vm.dtInstance = {value: null};
         vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
             return getData()
         }).withPaginationType('simple_numbers')
