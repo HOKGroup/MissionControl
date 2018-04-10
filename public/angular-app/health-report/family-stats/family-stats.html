@@ -116,14 +116,14 @@
                                         <span class="glyphicon glyphicon-plus"
                                               ng-if="i.tasks.length === 0 && onHover"
                                               ng-style="vm.evaluateTasks(i)"
-                                              ng-click="vm.launchEditor(i)">
+                                              ng-click="vm.launchEditor(i, vm.FamilyData.userNames)">
                                         </span>
                                     </a>
                                     <a href="">
                                         <span class="glyphicon glyphicon-tasks"
                                               ng-show="i.tasks.length > 0"
                                               ng-style="vm.evaluateTasks(i)"
-                                              ng-click="vm.launchEditor(i)">
+                                              ng-click="vm.launchEditor(i, vm.FamilyData.userNames)">
                                         </span>
                                     </a>
                                 </td>

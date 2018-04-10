@@ -3,10 +3,39 @@
  */
 angular.module('MissionControlApp').controller('EditSheetController', EditSheetController);
 
-function EditSheetController($uibModalInstance, SheetsFactory, sheet, action) {
+function EditSheetController($uibModalInstance, SheetsFactory, HealthRecordsFactory, UtilityService, sheet, action) {
     var vm = this;
     vm.sheet = sheet; // parent sheet.
     vm.title = action;
+    vm.userNames;
+
+    var path = UtilityService.getHttpSafeFilePath(vm.sheet.centralPath);
+    getUserNames(path);
+
+
+
+    /**
+     *
+     * @param centralPath
+     */
+    function getUserNames(centralPath) {
+        HealthRecordsFactory.getUserNamesByCentralPath(centralPath)
+            .then(function (response) {
+                if(!response || response.status !== 200) return;
+
+                // (Konrad) We need all unique user names of people that ever opened the model.
+                // These will be used to populate dropdowns when assigning tasks. It will allow
+                // us to only assign tasks to people that actually work in the model.
+                var userNamesSet = new Set(response.data[0].openTimes.filter(function (item) {
+                    return item.user;
+                }).map(function (item) {
+                    return item.user;
+                }));
+
+                vm.userNames = Array.from(userNamesSet);
+                console.log(vm.userNames);
+            })
+    }
 
     // (Konrad) Resetting these values will clear the form for new task.
     if(action === 'Add Task'){

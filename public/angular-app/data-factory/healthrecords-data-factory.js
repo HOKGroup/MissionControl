@@ -6,6 +6,10 @@ function HealthRecordsFactory($http){
             return $http.get('/api/v1/healthrecords/' + id).then(complete).catch(failed);
         },
 
+        getByCentralPath: function getByCentralPath(centralPath) {
+            return $http.get('/api/v1/healthrecords/centralpath/' + centralPath).then(complete).catch(failed);
+        },
+
         getNames: function getNames(ids) {
             return $http.post('/api/v1/healthrecords/names', ids).then(complete).catch(failed);
         },
@@ -56,6 +60,10 @@ function HealthRecordsFactory($http){
 
         getFamilyStats: function getFamilyStats(id) {
             return $http.get('/api/v1/healthrecords/' + id + '/familystats').then(complete).catch(failed);
+        },
+
+        getUserNamesByCentralPath: function getUserNamesByCentralPath(centralPath) {
+            return $http.get('/api/v1/healthrecords/usernames/' + centralPath).then(complete).catch(failed);
         }
     };
 

@@ -117,18 +117,26 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
             to: new Date()
         };
 
-        HealthReportFactory.processWorksetStats(link._id, dateRange, function (result) {
-            if(result) {
-                vm.WorksetData = result;
-                vm.AllData.splice(3, 0, result);
+        HealthReportFactory.processModelStats(link._id, dateRange, function (result) {
+            if(result){
+                vm.ModelData = result;
+                vm.AllData.splice(0, 0, result);
             }
             vm.SelectionChanged('main');
         });
 
-        HealthReportFactory.processModelStats(link._id, dateRange, function (result) {
+        HealthReportFactory.processFamilyStats(link._id, function (result) {
             if(result){
-                vm.ModelData = result;
-                vm.AllData.splice(4, 0, result);
+                vm.FamilyData = result;
+                vm.AllData.splice(0, 0, result);
+            }
+            vm.SelectionChanged('main');
+        });
+
+        HealthReportFactory.processStyleStats(link._id, dateRange, function (result) {
+            if(result){
+                vm.StyleData = result;
+                vm.AllData.splice(0, 0, result);
             }
             vm.SelectionChanged('main');
         });
@@ -144,23 +152,15 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
         HealthReportFactory.processViewStats(link._id, dateRange, function (result) {
             if(result){
                 vm.ViewData = result;
-                vm.AllData.splice(1, 0, result);
+                vm.AllData.splice(0, 0, result);
             }
             vm.SelectionChanged('main');
         });
 
-        HealthReportFactory.processStyleStats(link._id, dateRange, function (result) {
-            if(result){
-                vm.StyleData = result;
-                vm.AllData.splice(2, 0, result);
-            }
-            vm.SelectionChanged('main');
-        });
-
-        HealthReportFactory.processFamilyStats(link._id, function (result) {
-            if(result){
-                vm.FamilyData = result;
-                vm.AllData.splice(5, 0, result);
+        HealthReportFactory.processWorksetStats(link._id, dateRange, function (result) {
+            if(result) {
+                vm.WorksetData = result;
+                vm.AllData.splice(0, 0, result);
             }
             vm.SelectionChanged('main');
         });

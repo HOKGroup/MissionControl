@@ -1,10 +1,9 @@
 /**
  * Created by konrad.sobon on 2017-10-24.
  */
-angular.module('MissionControlApp')
-    .controller('SheetsController', SheetsController);
+angular.module('MissionControlApp').controller('SheetsController', SheetsController);
 
-function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibModal, UtilityService){
+function SheetsController($routeParams, SheetsFactory, ProjectFactory, HealthRecordsFactory, DTColumnDefBuilder, $uibModal, UtilityService){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
@@ -293,42 +292,43 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
      * @param projectId
      */
     function getSelectedProject(projectId) {
-        SheetsFactory
-            .getProjectById(projectId)
+        ProjectFactory.getProjectById(projectId)
             .then(function(response){
-                if(!response) return;
+                if(!response || response.status !== 200) return {status: 500};
 
                 vm.selectedProject = response.data;
                 if(response.data.sheets.length > 0){
-                    SheetsFactory
-                        .populateSheets(projectId).then(function (sheetsResponse) {
-                            if(!sheetsResponse) return;
-
-                            vm.selectedProject = sheetsResponse.data;
-                            vm.allSheets = [];
-                            vm.selectedProject.sheets.forEach(function (item) {
-                                // (Konrad) Select all model names for filtering.
-                                vm.availableModels.push({
-                                    name: UtilityService.fileNameFromPath(item.centralPath),
-                                    collectionId: item._id,
-                                    centralPath: item.centralPath
-                                });
-                                // (Konrad) Assign CollectionId to all sheets.
-                                item.sheets.forEach(function (sheet) {
-                                    if(!sheet.isDeleted){
-                                        sheet['collectionId'] = item._id;
-                                        vm.allSheets.push(sheet);
-                                        vm.Data.push(sheet);
-                                    }
-                                })
-                            });
-                            if(vm.availableModels.length > 0) vm.selectedModel = vm.availableModels[0];
-                        }, function (error) {
-                            console.log('Unable to load Sheets data ' + error.message);
-                        });
+                    return ProjectFactory.populateSheets(projectId);
+                } else {
+                    return {status: 500};
                 }
-            },function(error){
-                console.log('Unable to load project data: ' + error.message);
+            })
+            .then(function (response) {
+                if(!response || response.status !== 200) return;
+
+                vm.selectedProject = response.data;
+                vm.allSheets = [];
+                vm.selectedProject.sheets.forEach(function (item) {
+                    // (Konrad) Select all model names for filtering.
+                    vm.availableModels.push({
+                        name: UtilityService.fileNameFromPath(item.centralPath),
+                        collectionId: item._id,
+                        centralPath: item.centralPath
+                    });
+                    // (Konrad) Assign CollectionId to all sheets.
+                    item.sheets.forEach(function (sheet) {
+                        if(!sheet.isDeleted){
+                            sheet['collectionId'] = item._id;
+                            sheet['centralPath'] = item.centralPath;
+                            vm.allSheets.push(sheet);
+                            vm.Data.push(sheet);
+                        }
+                    })
+                });
+                if(vm.availableModels.length > 0) vm.selectedModel = vm.availableModels[0];
+            })
+            .catch(function (error) {
+                console.log(error);
             });
     }
 }

@@ -73,6 +73,7 @@ var sheets = require('./models/sheets-model');
      app.post('/api/v1/healthrecords/:id/familystats', healthReport.postFamilyStats);
      app.put('/api/v1/healthrecords/:id/addfamilies', healthReport.addFamilies);
      app.put('/api/v1/healthrecords/:id/updatefilepath', healthReport.updateFilePath);
+     app.get('/api/v1/healthrecords/usernames/:uri*', healthReport.getUserNamesByCentralPath);
 
      var addins = require('./controller/addins-controller');
      app.get('/api/v1/addins', addins.findAll);

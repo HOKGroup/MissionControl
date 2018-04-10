@@ -22,7 +22,7 @@
                     <div class="pull-right action-buttons">
                         <span ng-if="task.completedBy != null" class="glyphicon glyphicon-ok-circle" style="color: green;"></span>
                         <span ng-if="task.completedBy == null" class="glyphicon glyphicon-remove-circle" style="color: red"></span>
-                        <a href=""><span class="glyphicon glyphicon-pencil" ng-click="vm.editTask('lg', vm.family, task, 'Edit Task')"></span></a>
+                        <a href=""><span class="glyphicon glyphicon-pencil" ng-click="vm.editTask('lg', vm.family, task, 'Edit Task', vm.userNames)"></span></a>
                     </div>
                 </li>
             </ul>
@@ -40,6 +40,11 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-danger pull-left" ng-click="vm.delete()"><span class="glyphicon glyphicon-trash"></span> Delete</button>
         <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
-        <button type="button" class="btn btn-primary" ng-click="vm.editTask('lg', vm.family, null, 'Add Task')"><span class="glyphicon glyphicon-plus"></span> Add Task</button>
+        <button type="button"
+                class="btn btn-primary"
+                ng-click="vm.editTask('lg', vm.family, null, 'Add Task', vm.userNames)">
+            <span class="glyphicon glyphicon-plus"></span>
+            Add Task
+        </button>
     </div>
 </div>

@@ -171,12 +171,13 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, Util
         /**
          * Launches appropriate modal window.
          * @param family
+         * @param userNames
          */
-        vm.launchEditor = function (family) {
+        vm.launchEditor = function (family, userNames) {
             if(family.tasks.length > 0){
-                openAllTasks('lg', family);
+                openAllTasks('lg', family, userNames);
             } else {
-                openEditTask('lg', family, null, 'Add Task')
+                openEditTask('lg', family, null, 'Add Task', userNames)
             }
         };
 
@@ -184,8 +185,9 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, Util
          * Launches all tasks dialog.
          * @param size
          * @param family
+         * @param userNames
          */
-        var openAllTasks = function (size, family) {
+        var openAllTasks = function (size, family, userNames) {
             $uibModal.open({
                 animation: true,
                 templateUrl: 'angular-app/health-report/family-stats/all-tasks.html',
@@ -194,6 +196,9 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, Util
                 resolve: {
                     family: function (){
                         return family;
+                    },
+                    userNames: function(){
+                        return userNames;
                     }}
             }).result.then(function(request){
                 if(!request) return;
@@ -217,8 +222,9 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, Util
          * @param family
          * @param task
          * @param action
+         * @param userNames
          */
-        var openEditTask = function (size, family, task, action) {
+        var openEditTask = function (size, family, task, action, userNames) {
             $uibModal.open({
                 animation: true,
                 templateUrl: 'angular-app/health-report/family-stats/edit-task.html',
@@ -233,6 +239,9 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, Util
                     },
                     action: function(){
                         return action;
+                    },
+                    userNames: function(){
+                        return userNames;
                     }}
             }).result.then(function(request){
                 if(!request) return;

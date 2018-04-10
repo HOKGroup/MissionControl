@@ -553,9 +553,10 @@ module.exports.getLinkStats = function (req, res) {
 module.exports.getFamilyStats = function (req, res) {
     var id = req.params.id;
     HealthRecords
-        .find({ '_id': id })
-        .select('familyStats centralPath')
-        .exec(function (err, response){
+        .find(
+            { '_id': id },
+            {'familyStats': 1, 'centralPath': 1, 'openTimes.user': 1}
+        ).exec(function (err, response){
             var result = {
                 status: 200,
                 message: response
@@ -569,6 +570,39 @@ module.exports.getFamilyStats = function (req, res) {
             }
             res.status(result.status).json(result.message);
         });
+};
+
+/**
+ * Retrieves all user names from openTimes data.
+ * This is useful to find out all users that were in the model.
+ * @param req
+ * @param res
+ */
+module.exports.getUserNamesByCentralPath = function (req, res) {
+    // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
+    // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.
+    var rgx;
+    if(req.params.uri.includes('RSN:') || req.params.uri.includes('A360:')){
+        rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
+    } else {
+        rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
+    }
+    HealthRecords
+        .find(
+            {"centralPath": rgx}, {'openTimes.user': 1}, function (err, result) {
+                var response = {
+                    status: 200,
+                    message: result
+                };
+                if(err){
+                    response.status = 500;
+                    response.message = err;
+                } else if(!result){
+                    console.log("File Path wasn't found in any Health Records Collections.");
+                }
+                res.status(response.status).json(response.message);
+            }
+        )
 };
 
 /**

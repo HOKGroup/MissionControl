@@ -10,11 +10,22 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
          */
         processFamilyStats: function (id, callback){
             var familyStatsId = null;
+            var userNames = [];
             var nameCheckValues = ['HOK_I', 'HOK_M'];
 
             HealthRecordsFactory.getFamilyStats(id)
                 .then(function (response) {
                     if(!response || response.status !== 200) return null;
+
+                    // (Konrad) We need all unique user names of people that ever opened the model.
+                    // These will be used to populate dropdowns when assigning tasks. It will allow
+                    // us to only assign tasks to people that actually work in the model.
+                    var userNamesSet = new Set(response.data[0].openTimes.filter(function (item) {
+                        return item.user;
+                    }).map(function (item) {
+                        return item.user;
+                    }));
+                    userNames = Array.from(userNamesSet);
 
                     familyStatsId = response.data[0].familyStats;
                     var centralPath = UtilityService.getHttpSafeFilePath(response.data[0].centralPath);
@@ -149,7 +160,8 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         familyStats: data,
                         bullets: bullets,
                         show: {name: "families", value: false},
-                        color: color
+                        color: color,
+                        userNames: userNames
                     });
                 })
                 .catch(function (error) {

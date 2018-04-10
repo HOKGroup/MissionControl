@@ -85,7 +85,12 @@
                 <!--SHEETS TABLE-->
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <table id="table2" datatable="ng" dt-options="vm.dtSheetsOptions" dt-column-defs="vm.dtSheetsColumnDefs" dt-instance="vm.dtInstance" class="table table-hover table-condensed datatable">
+                        <table id="table2"
+                               datatable="ng"
+                               dt-options="vm.dtSheetsOptions"
+                               dt-column-defs="vm.dtSheetsColumnDefs"
+                               dt-instance="vm.dtInstance"
+                               class="table table-hover table-condensed datatable">
                             <thead>
                             <tr>
                                 <th class="col-md-1" style="padding-left: 30px">
@@ -97,16 +102,26 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="sheet in vm.allSheets | orderBy: 'number' : false" ng-class="vm.assignClass(sheet)">
+                            <tr ng-repeat="sheet in vm.allSheets | orderBy: 'number' : false"
+                                ng-class="vm.assignClass(sheet)">
                                 <td style="padding-left: 30px">
                                     <input type="checkbox" ng-model="sheet.isSelected">
                                 </td>
                                 <td ng-click="vm.launchSheetEditor(sheet)">
                                     {{vm.assignDisplayValue(sheet, 'number')}}
-                                    <span class="glyphicon glyphicon-alert" ng-if="vm.propertiesMatch(sheet)" uib-tooltip="Possible that user has not synched approved changes." tooltip-placement="top" style="color: #d9534f"></span>
+                                    <span class="glyphicon glyphicon-alert"
+                                          ng-if="vm.propertiesMatch(sheet)"
+                                          uib-tooltip="Possible that user has not synched approved changes."
+                                          tooltip-placement="top"
+                                          style="color: #d9534f">
+                                    </span>
                                 </td>
-                                <td ng-click="vm.launchSheetEditor(sheet)">{{vm.assignDisplayValue(sheet, 'name')}}</td>
-                                <td class="text-center" ng-click="vm.launchSheetEditor(sheet)">{{vm.assignDisplayValue(sheet, 'revisionNumber')}}</td>
+                                <td ng-click="vm.launchSheetEditor(sheet)">
+                                    {{vm.assignDisplayValue(sheet, 'name')}}
+                                </td>
+                                <td class="text-center" ng-click="vm.launchSheetEditor(sheet)">
+                                    {{vm.assignDisplayValue(sheet, 'revisionNumber')}}
+                                </td>
                             </tr>
                             </tbody>
                         </table>
