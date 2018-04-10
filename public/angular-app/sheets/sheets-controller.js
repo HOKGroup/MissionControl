@@ -9,24 +9,6 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, DTColumnD
     vm.selectedProject = null;
     vm.selectAll = false; // select all checkbox
     vm.Data = [];
-    vm.dtInstance = {};
-
-    vm.dtSheetsOptions = {
-        paginationType: 'simple_numbers',
-        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
-        stateSave: true,
-        deferRender: true,
-        order: [[ 2, 'asc' ]],
-        columnDefs: [{orderable: false, targets: [0]}]
-    };
-
-    vm.dtSheetsColumnDefs = [
-        DTColumnDefBuilder.newColumnDef(0).notSortable(), //checkbox
-        DTColumnDefBuilder.newColumnDef(1), //number
-        DTColumnDefBuilder.newColumnDef(2), //name
-        DTColumnDefBuilder.newColumnDef(3) //revisionNumber
-    ];
-
     vm.selectedModel = "";
     vm.availableModels = [
         {
@@ -53,7 +35,7 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, DTColumnD
         });
 
         //(Konrad) We need to re-render the table when Filter is updated.
-        vm.dtInstance.reloadData();
+        // vm.dtInstance.reloadData();
         vm.dtInstance.rerender();
     };
 
@@ -286,6 +268,8 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, DTColumnD
         }
     };
 
+    //region Utilities
+
     /**
      * Used to retrieve the Project info.
      * Also, parses through sheets/sheetsChanges to populate DataTable.
@@ -326,9 +310,34 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, DTColumnD
                     })
                 });
                 if(vm.availableModels.length > 0) vm.selectedModel = vm.availableModels[0];
+
+                createTable();
             })
             .catch(function (error) {
                 console.log(error);
             });
     }
+
+    /**
+     * Creates all of the DataTables options.
+     */
+    function createTable() {
+        vm.dtInstance = {};
+        vm.dtSheetsOptions = {
+            paginationType: 'simple_numbers',
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+            stateSave: true,
+            deferRender: true,
+            order: [[ 2, 'asc' ]],
+            columnDefs: [{orderable: false, targets: [0]}]
+        };
+        vm.dtSheetsColumnDefs = [
+            DTColumnDefBuilder.newColumnDef(0).notSortable(), //checkbox
+            DTColumnDefBuilder.newColumnDef(1), //number
+            DTColumnDefBuilder.newColumnDef(2), //name
+            DTColumnDefBuilder.newColumnDef(3) //revisionNumber
+        ];
+    }
+
+    //endregion
 }
