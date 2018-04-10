@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('SheetsController', SheetsController);
 
-function SheetsController($routeParams, SheetsFactory, ProjectFactory, HealthRecordsFactory, DTColumnDefBuilder, $uibModal, UtilityService){
+function SheetsController($routeParams, SheetsFactory, ProjectFactory, DTColumnDefBuilder, $uibModal, UtilityService){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;

@@ -7,15 +7,13 @@ function EditSheetController($uibModalInstance, SheetsFactory, HealthRecordsFact
     var vm = this;
     vm.sheet = sheet; // parent sheet.
     vm.title = action;
-    vm.userNames;
+    vm.userNames = null;
 
     var path = UtilityService.getHttpSafeFilePath(vm.sheet.centralPath);
     getUserNames(path);
 
-
-
     /**
-     *
+     * Retrieves all user names that ever opened the model.
      * @param centralPath
      */
     function getUserNames(centralPath) {
@@ -33,7 +31,9 @@ function EditSheetController($uibModalInstance, SheetsFactory, HealthRecordsFact
                 }));
 
                 vm.userNames = Array.from(userNamesSet);
-                console.log(vm.userNames);
+            })
+            .catch(function (error) {
+                console.log(error);
             })
     }
 
