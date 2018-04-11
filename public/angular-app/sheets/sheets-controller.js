@@ -17,6 +17,23 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, DTColumnD
         }
     ];
 
+    vm.dtInstance = {};
+    vm.dtSheetsOptions = {
+        paginationType: 'simple_numbers',
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+        stateSave: true,
+        deferRender: true,
+        // destroy: true,
+        order: [[ 2, 'asc' ]],
+        columnDefs: [{orderable: false, targets: [0]}]
+    };
+    vm.dtSheetsColumnDefs = [
+        DTColumnDefBuilder.newColumnDef(0).notSortable(), //checkbox
+        DTColumnDefBuilder.newColumnDef(1), //number
+        DTColumnDefBuilder.newColumnDef(2), //name
+        DTColumnDefBuilder.newColumnDef(3) //revisionNumber
+    ];
+
     // (Konrad) Retrieves selected project from MongoDB.
     getSelectedProject(vm.projectId);
 
@@ -34,9 +51,10 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, DTColumnD
             }
         });
 
+        console.log(vm.dtInstance);
         //(Konrad) We need to re-render the table when Filter is updated.
-        // vm.dtInstance.reloadData();
-        vm.dtInstance.rerender();
+        // if (vm.dtInstance) vm.dtInstance.reloadData(false);
+        if (vm.dtInstance) vm.dtInstance._renderer.rerender();
     };
 
     /**
@@ -311,7 +329,7 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, DTColumnD
                 });
                 if(vm.availableModels.length > 0) vm.selectedModel = vm.availableModels[0];
 
-                createTable();
+                // createTable();
             })
             .catch(function (error) {
                 console.log(error);
@@ -322,21 +340,7 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, DTColumnD
      * Creates all of the DataTables options.
      */
     function createTable() {
-        vm.dtInstance = {};
-        vm.dtSheetsOptions = {
-            paginationType: 'simple_numbers',
-            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
-            stateSave: true,
-            deferRender: true,
-            order: [[ 2, 'asc' ]],
-            columnDefs: [{orderable: false, targets: [0]}]
-        };
-        vm.dtSheetsColumnDefs = [
-            DTColumnDefBuilder.newColumnDef(0).notSortable(), //checkbox
-            DTColumnDefBuilder.newColumnDef(1), //number
-            DTColumnDefBuilder.newColumnDef(2), //name
-            DTColumnDefBuilder.newColumnDef(3) //revisionNumber
-        ];
+
     }
 
     //endregion
