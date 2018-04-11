@@ -55,7 +55,8 @@ var styleStatsSchema = new mongoose.Schema({
         leaderType: String,
         lineWeight: Number,
         textFont: String,
-        textSize: String,
+        textSize: Number,
+        textSizeString: String,
         underline: Boolean,
         styleType: String
     }],
@@ -65,7 +66,9 @@ var styleStatsSchema = new mongoose.Schema({
         value: Number,
         valueString: String,
         valueOverride: String,
-        isLocked: Boolean
+        isLocked: Boolean,
+        ownerViewId: Number,
+        ownerViewType: String
     }]
 });
 
@@ -91,14 +94,6 @@ var eventTimeSchema = new mongoose.Schema({
     createdOn: Date
 });
 
-var sessionLogSchema = new mongoose.Schema({
-    user: String,
-    from: Date,
-    to: Date,
-    synched: [Date],
-    createdOn: Date
-});
-
 var healthCheckSchema = new mongoose.Schema({
     centralPath: String,
     onOpened: [worksetEventSchema],
@@ -113,8 +108,7 @@ var healthCheckSchema = new mongoose.Schema({
     },
     openTimes: [eventTimeSchema],
     synchTimes: [eventTimeSchema],
-    modelSizes: [eventTimeSchema],
-    sessionLogs: [sessionLogSchema]
+    modelSizes: [eventTimeSchema]
 });
 
 healthCheckSchema.index({'centralPath': 'text'});

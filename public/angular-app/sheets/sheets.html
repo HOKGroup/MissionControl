@@ -79,14 +79,14 @@
                     <h4 class="panel-title" style="padding-top: 5px;">
                         Sheets
                         <a href="">
-                            <i class="fa fa-info-circle" ng-click="vm.launchHelpWindow('lg')"></i>
+                            <i class="fa fa-info-circle text-primary" ng-click="vm.launchHelpWindow('lg')"></i>
                         </a>
                     </h4>
                 </div>
                 <!--SHEETS TABLE-->
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <table id="table2" datatable="ng" dt-options="vm.dtSheetsOptions" dt-column-defs="vm.dtSheetsColumnDefs" class="table table-hover table-condensed datatable">
+                        <table id="table2" datatable="ng" dt-options="vm.dtSheetsOptions" dt-column-defs="vm.dtSheetsColumnDefs" dt-instance="vm.dtInstance" class="table table-hover table-condensed datatable">
                             <thead>
                             <tr>
                                 <th class="col-md-1" style="padding-left: 30px">

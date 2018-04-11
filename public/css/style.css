@@ -102,8 +102,8 @@ p.normal {
 }
 
 /*Top Padding between Divs*/
-.top-buffer {
-    margin-top:20px;
+.bottom-buffer {
+    margin-bottom:20px;
 }
 
 /*Left padded text*/
@@ -448,4 +448,13 @@ to front while pushing background just behind it.*/
 .pointer {
   cursor: pointer;
 >>>>>>> master
+}
+
+.animate-show-hide.ng-hide {
+  opacity: 0;
+}
+
+.animate-show-hide.ng-hide-add,
+.animate-show-hide.ng-hide-remove {
+  transition: all linear 0.5s;
 }

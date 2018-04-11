@@ -29,7 +29,58 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
         startingDay: 1
     };
 
+    //region Family Name Overrides
+    vm.familyNameCheckTag = null;
+    vm.dimensionValueCheckTag = null;
 
+    /**
+     * Add tag to family name overrides.
+     * @param arr
+     * @constructor
+     */
+    vm.AddFamilyTag = function (arr) {
+        if(vm.familyNameCheckTag === null) return;
+
+        arr.push(vm.familyNameCheckTag);
+        vm.familyNameCheckTag = null;
+    };
+
+    vm.AddDimensionTag = function (arr) {
+        if(vm.dimensionValueCheckTag === null) return;
+
+        arr.push(vm.dimensionValueCheckTag);
+        vm.dimensionValueCheckTag = null;
+    };
+
+    /**
+     *
+     * @param event
+     * @param arr
+     * @param action
+     */
+    vm.onEnter = function (event, arr, action) {
+        if(event.which !== 13) return;
+
+        switch (action){
+            case 'FamilyNameCheck':
+                vm.AddFamilyTag(arr);
+                break;
+            case 'DimensionValueCheck':
+                vm.AddDimensionTag(arr);
+                break;
+        }
+    };
+
+    /**
+     * Removes a string from arry by index.
+     * @param arr
+     * @param index
+     * @constructor
+     */
+    vm.RemoveTag = function (arr, index) {
+        arr.splice(index, 1);
+    };
+    //endregion
 
     /**
      * Filters Editing Records based on selected date range.
@@ -237,11 +288,18 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
             });
     };
 
+    /**
+     * Updates current Configuration.
+     */
     vm.updateConfiguration = function(){
         ConfigFactory.updateConfiguration(vm.selectedConfig)
             .then(function(response){
-                $window.location.reload();
-                vm.status = 'Configuration updated';
+                if (response && response.status === 202){
+                    $window.location.reload();
+                    vm.status = 'Configuration updated';
+                } else {
+                    vm.status = 'Configuration update failed.';
+                }
             }, function(error){
                 vm.status = 'Unabl to update configuration: ' + error.message;
             });
@@ -287,6 +345,6 @@ function ConfigController($routeParams, ConfigFactory, TriggerRecordsFactory, DT
         indices.splice(-2); // drop last two folders
         var index = indices[indices.length - 1]; // index of E-Bim folder
 
-        return path.substring(0, index) + "\Support\\SharedParameterFileName.txt";
+        return path.substring(0, index) + "\\Support\\SharedParameterFileName.txt";
     }
 }

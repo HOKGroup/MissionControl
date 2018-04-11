@@ -1,19 +1,13 @@
 angular.module('MissionControlApp').controller('HealthReportController', HealthReportController);
 
-function HealthReportController($routeParams, HealthRecordsFactory, ProjectFactory, HealthReportFactory, FamiliesFactory){
+function HealthReportController($routeParams, HealthRecordsFactory, ProjectFactory, HealthReportFactory){
     var vm = this;
     vm.projectId = $routeParams.projectId;
-    vm.ShowLinkStats = {name: "links", value: false};
-    vm.ShowFamiliesStats = {name: "families", value: false};
-    vm.ShowWorksetStats = {name: "worksets", value: false};
-    vm.ShowViewStats = {name: "views", value: false};
-    vm.ShowStyleStats = {name: "styles", value: false};
-    vm.ShowModelStats = {name: "models", value: false};
-    vm.ShowMainPage = {name: "main", value: true};
     vm.FamilyCollection = null;
     vm.HealthRecords = [];
-    vm.loading = false;
-    var allControllers = [vm.ShowLinkStats, vm.ShowFamiliesStats, vm.ShowWorksetStats, vm.ShowViewStats, vm.ShowStyleStats, vm.ShowModelStats, vm.ShowMainPage];
+    vm.AllData = [{
+        show: {name: "main", value: true}
+    }];
 
     getSelectedProject(vm.projectId);
 
@@ -31,13 +25,16 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
                 }
             })
             .then(function (response) {
-                if(!response || response.status !== 200) return;
+                if(!response || response.status !== 200) {
+                    vm.showMenu = false;
+                    return;
+                }
 
                 vm.HealthRecords = response.data;
                 var selected = response.data.sort(dynamicSort('centralPath'))[0];
                 vm.selectedFileName = vm.fileNameFromPath(selected.centralPath);
 
-                vm.SetProject(selected);
+                vm.SetProject(selected, false);
             })
             .catch(function(err){
                 console.log('Unable to load Health Records data: ' + err.message);
@@ -50,9 +47,9 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
      * @constructor
      */
     vm.SelectionChanged = function (name) {
-        allControllers.forEach(function (item) {
-            item.value = item.name === name;
-        })
+        vm.AllData.forEach(function (item) {
+            item.show.value = item.show.name === name;
+        });
     };
 
     /**
@@ -73,68 +70,100 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
     };
 
     /**
-     * Sets currently selected project by retrieving all stats.
-     * @param link
+     * Checks if data was loaded for given asset and returns true/false.
+     * @param name
+     * @returns {boolean}
      * @constructor
      */
-    vm.SetProject = function (link){
-        vm.loading = true;
-        HealthRecordsFactory.getById(link._id)
-            .then(function (response) {
-                if(!response || response.status !== 200) return;
+    vm.LoadPage = function (name) {
+        return vm.AllData.some(function (item) {
+            return item.show.name === name;
+        });
+    };
 
-                vm.selectedHealthRecord = response.data;
-                vm.selectedFileName = vm.fileNameFromPath(response.data.centralPath);
-                vm.AllData = [];
+    /**
+     * Checks if given asset was toggled on/off and returns true/false.
+     * @param name
+     * @returns {boolean}
+     * @constructor
+     */
+    vm.ShowPage = function (name) {
+        return vm.AllData.some(function(item){
+            if (item.show.name === name){
+                return item.show.value;
+            }
+        });
+    };
 
-                vm.WorksetData = HealthReportFactory.processWorksetStats(response.data);
-                if(vm.WorksetData) vm.AllData.push(vm.WorksetData);
+    /**
+     * Sets currently selected project by retrieving all stats.
+     * @param link
+     * @param reset
+     * @constructor
+     */
+    vm.SetProject = function (link, reset){
+        if (reset) vm.AllData = [{
+            show: {name: "main", value: true}
+        }];
 
-                var linkData = response.data.linkStats[response.data.linkStats.length - 1];
-                vm.LinkData = HealthReportFactory.processLinkStats(linkData);
-                if(vm.LinkData) vm.AllData.push(vm.LinkData);
+        vm.showMenu = true;
 
-                var viewData = response.data.viewStats[response.data.viewStats.length - 1];
-                vm.ViewData = HealthReportFactory.processViewStats(viewData);
-                if(vm.ViewData) vm.AllData.push(vm.ViewData);
+        // (Konrad) By default we will take only last month worth of data.
+        // Users can change that range in specific needs.
+        var dtFrom = new Date();
+        dtFrom.setMonth(dtFrom.getMonth() - 1);
+        var dateRange = {
+            from: dtFrom,
+            to: new Date()
+        };
 
-                //TODO: Make sure it works
-                var styleData = response.data.styleStats[response.data.styleStats.length - 1];
-                vm.StyleData = HealthReportFactory.processStyleStats(styleData);
-                if(vm.StyleData) vm.AllData.push(vm.StyleData);
+        HealthReportFactory.processWorksetStats(link._id, dateRange, function (result) {
+            if(result) {
+                vm.WorksetData = result;
+                vm.AllData.splice(3, 0, result);
+            }
+            vm.SelectionChanged('main');
+        });
 
-                vm.ModelData = HealthReportFactory.processModelStats(response.data);
-                if(vm.ModelData) vm.AllData.push(vm.ModelData);
+        HealthReportFactory.processModelStats(link._id, dateRange, function (result) {
+            if(result){
+                vm.ModelData = result;
+                vm.AllData.splice(4, 0, result);
+            }
+            vm.SelectionChanged('main');
+        });
 
-                if(vm.selectedHealthRecord.familyStats
-                    && vm.selectedHealthRecord.familyStats !== null
-                    && vm.selectedHealthRecord.familyStats !== ''){
-                    FamiliesFactory.getById(vm.selectedHealthRecord.familyStats)
-                        .then(function(response){
-                            if(!response || response.status !== 200) return;
+        HealthReportFactory.processLinkStats(link._id, dateRange, function (result) {
+            if(result){
+                vm.LinkData = result;
+                vm.AllData.splice(0, 0, result);
+            }
+            vm.SelectionChanged('main');
+        });
 
-                            vm.FamilyCollection = response.data;
-                            vm.FamilyData = HealthReportFactory.processFamilyStats(vm.FamilyCollection);
-                            if(vm.FamilyData) vm.AllData.push(vm.FamilyData);
+        HealthReportFactory.processViewStats(link._id, dateRange, function (result) {
+            if(result){
+                vm.ViewData = result;
+                vm.AllData.splice(1, 0, result);
+            }
+            vm.SelectionChanged('main');
+        });
 
-                            vm.SelectionChanged(vm.ShowMainPage.name);
-                            vm.loading = false;
-                        })
-                        .catch(function(err){
-                            console.log('Unable to load Families Data: ' + err.message);
-                        })
-                } else {
-                    vm.FamilyCollection = null;
-                    vm.FamilyData = null;
-                    vm.ShowFamiliesStats.value = false;
+        HealthReportFactory.processStyleStats(link._id, dateRange, function (result) {
+            if(result){
+                vm.StyleData = result;
+                vm.AllData.splice(2, 0, result);
+            }
+            vm.SelectionChanged('main');
+        });
 
-                    vm.SelectionChanged(vm.ShowMainPage.name);
-                    vm.loading = false;
-                }
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
+        HealthReportFactory.processFamilyStats(link._id, function (result) {
+            if(result){
+                vm.FamilyData = result;
+                vm.AllData.splice(5, 0, result);
+            }
+            vm.SelectionChanged('main');
+        });
     };
 
     /**

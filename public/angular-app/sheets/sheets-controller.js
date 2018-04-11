@@ -3,20 +3,13 @@
  */
 angular.module('MissionControlApp').controller('SheetsController', SheetsController);
 
-function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, DTInstances, $uibModal, UtilityService){
+function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibModal, UtilityService){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
     vm.selectAll = false; // select all checkbox
 
-    var dtInstance;
-    DTInstances.getLast().then(function(inst) {
-        dtInstance = inst;
-    });
-
-    // Socket.on('sheet_changes_updated', function(data){
-    //     console.log('sheet_changes_updated');
-    // });
+    vm.dtInstance = {};
 
     vm.dtSheetsOptions = {
         paginationType: 'simple_numbers',
@@ -54,7 +47,7 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, DTIns
         vm.selectedModel = file;
 
         //(Konrad) We need to re-render the table when Filter is updated.
-        dtInstance.rerender();
+        vm.dtInstance.rerender();
     };
 
     /**

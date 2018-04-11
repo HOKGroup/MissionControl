@@ -36,12 +36,17 @@ module.exports.add = function(req, res) {
         });
 };
 
+/**
+ * Updates given Configuration by Id.
+ * @param req
+ * @param res
+ */
 module.exports.update = function(req, res) {
     var id = req.params.id;
-    Configuration.update({"_id":id}, req.body, {upsert:true},
-        function (err, numberAffected) {
-            if (err) return console.log(err);
-            return res.sendStatus(202);
+    Configuration.update(
+        { "_id":id }, req.body, { upsert: true }, function (err, result) {
+            if(err) res.status(501).json(err);
+            else res.status(202).json(result);
         });
 };
 
@@ -62,17 +67,18 @@ module.exports.deleteMany = function (req, res) {
     var ids = req.body.map(function (id){
         return mongoose.Types.ObjectId(id);
     });
-    Configuration
-        .remove(
-            {'_id': { $in: ids }}, function (err, result) {
-        if(err) {
-            res.status(501).json(err);
-        } else {
-            res.status(201).json(result);
-        }
+    Configuration.remove(
+        {'_id': { $in: ids }}, function (err, result) {
+            if(err) res.status(501).json(err);
+            else res.status(201).json(result);
     });
 };
 
+/**
+ * Retrieves Configuration by its Central Path.
+ * @param req
+ * @param res
+ */
 module.exports.findByCentralPath  = function(req, res){
     // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
     // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.

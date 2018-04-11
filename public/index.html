@@ -12,6 +12,8 @@
 	<link rel="stylesheet" href="libs/datatables.net-bs/css/dataTables.bootstrap.min.css"> <!-- custom tables -->
 	<link rel="stylesheet" href="libs/angularjs-dragula/dist/dragula.css"> <!-- draggable content -->
 	<link rel="stylesheet" href="libs/datatables.net-bs/css/dataTables.bootstrap.min.css">
+	<link rel="stylesheet" href="libs/font-awesome-animation/dist/font-awesome-animation.min.css">
+	<!--Polyfills-->
 	<script src="angular-app/data-factory/polyfills.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 </head>
@@ -75,6 +77,9 @@
 	<script src="libs/datatables.net/js/jquery.dataTables.min.js"></script>
 	<script src="libs/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 	<script src="libs/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+	<script src="libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+	<script src="libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+	<script src="libs/angular-datatables/dist/plugins/buttons/angular-datatables.buttons.min.js"></script>
     <!-- Controllers -->
     <script src="angular-app/app.js"></script>
     <script src="angular-app/add-configuration/add-config-controller.js"></script>
@@ -125,6 +130,10 @@
 	<script src="angular-app/project-map/google-drawing-map-directive.js"></script>
 	<script src="angular-app/directives/dropzone.js"></script> <!-- image upload vr app -->
 	<script src="angular-app/directives/image-loaded.js"></script>
+	<script src="angular-app/directives/directives.js"></script>
+	<!--Directive Controllers-->
+	<script src="angular-app/directives/time-range-selector/controller.js"></script>
+	<script src="angular-app/directives/health-score-summary/controller.js"></script>
 	<!--D3 Directives-->
 	<script src="angular-app/d3/d3-horizontal-bar-chart.js"></script>
 	<script src="angular-app/d3/d3-horizontal-bar-chart-timeout.js"></script>

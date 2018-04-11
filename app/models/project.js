@@ -2,18 +2,17 @@ var mongoose = require( 'mongoose' );
 var Configuration = require('./configuration');
 
 var geoSchema = new mongoose.Schema({
-	type:{
-		type: String,
-		required: true,
-		enum: ['Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon']
-	}, 
-	coordinates:{
-		type: Array
-	}
+    type:{
+        type: String,
+        required: true,
+        enum: ['Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon']
+    },
+    coordinates:{
+        type: Array
+    }
 },{_id: false});
 
-var projectSchema = new mongoose.Schema(
-    {
+var projectSchema = new mongoose.Schema({
         number: String,
         name: String,
         office: String,
@@ -33,21 +32,15 @@ var projectSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Configuration'}],
         healthrecords: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'HealthRecords'}],
+            type: mongoose.Schema.Types.ObjectId }],
         sheets: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Sheets'
-        }],
-        vr: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Vrs'
-        }
+        }]
     },
     {
         timestamps: true
     });
-
 projectSchema.index({ geoLocation: '2dsphere'});
 projectSchema.index({ geoPolygon: '2dsphere'});
 
