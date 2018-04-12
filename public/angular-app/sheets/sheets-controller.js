@@ -132,7 +132,7 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, $scope, $
     function getDisplayValue(sheet, propName) {
         if(sheet.tasks.length > 0){
             var task = sheet.tasks[sheet.tasks.length - 1]; // latest task is the last one
-            if(task.completedBy) return task[propName]; // only return task props when task is not completed
+            if(!task.completedBy) return task[propName]; // only return task props when task is not completed
             else return sheet[propName];
         } else {
             return sheet[propName];
@@ -185,8 +185,10 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, $scope, $
      * Method to recalculate data table contents and reload it.
      */
     function reloadTable() {
-        if(vm.dtInstance) {vm.dtInstance.reloadData();}
-        if(vm.dtInstance) {vm.dtInstance.rerender();}
+        if(vm.dtInstance){
+            vm.dtInstance.reloadData();
+            vm.dtInstance.rerender();
+        }
     }
 
     /**
@@ -270,6 +272,7 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, $scope, $
                     if(index !== -1) sheet.tasks.splice(index, 1);
                 });
             }
+            reloadTable();
         }).catch(function(){
             console.log("All Tasks Dialog dismissed...");
         });
@@ -321,6 +324,7 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, $scope, $
                 return item._id.toString() === sheet._id.toString();
             });
             if(updatedSheet) sheet.tasks = updatedSheet.tasks;
+            reloadTable();
         }).catch(function(){
             //if modal dismissed
         });
@@ -358,6 +362,8 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, $scope, $
                             if(newSheet) vm.Data.push(newSheet);
                         })
                     }
+
+                    reloadTable();
                 }, function (err) {
                     console.log('Unable to create Multiple Sheets: ' + err.message);
                 });
