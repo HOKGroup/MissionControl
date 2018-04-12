@@ -8,7 +8,10 @@
     <div class="modal-body">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title">{{vm.sheet.number}} - {{vm.sheet.name}}</h4>
+                <h4 class="panel-title">
+                    <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                    {{vm.sheet.number}} - {{vm.sheet.name}}
+                </h4>
             </div>
             <div class="panel-body">
                 <div class="form-group">
@@ -34,7 +37,7 @@
                                 <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.sheet.assignedTo"></span>
                             </label>
                             <div class="btn-group" style="width: 100%" id="recipient_name">
-                                <button class="btn btn-default dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
+                                <button class="btn btn-default dropdown-toggle scrollable-menu-centered" data-toggle="dropdown" ng-disabled="vm.sheet.completedBy">
                                     <span class="caret"></span>
                                     {{vm.sheet.assignedTo}}
                                 </button>

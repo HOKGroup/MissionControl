@@ -47,7 +47,7 @@
             </h1>
         </div>
     </div>
-    <div class="row" ng-if="vm.allSheets.length > 0">
+    <div class="row" ng-if="vm.Data.length > 0">
         <div class="panel-group" id="p1">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -85,45 +85,52 @@
                 <!--SHEETS TABLE-->
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <table id="table2"
-                               datatable="ng"
-                               dt-options="vm.dtSheetsOptions"
-                               dt-column-defs="vm.dtSheetsColumnDefs"
+                        <table id="sheetsTable"
+                               datatable=""
+                               dt-options="vm.dtOptions"
+                               dt-columns="vm.dtColumns"
                                dt-instance="vm.dtInstance"
                                class="table table-hover table-condensed datatable">
-                            <thead>
-                            <tr>
-                                <th class="col-md-1" style="padding-left: 30px">
-                                    <input type="checkbox" ng-model="vm.selectAll" ng-click="vm.toggleAll()">
-                                </th>
-                                <th class="col-md-3">Number</th>
-                                <th class="col-md-7">Name</th>
-                                <th class="col-md-1 text-center">Revision</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="sheet in vm.allSheets | orderBy: 'number' : false" ng-class="vm.assignClass(sheet)">
-                                <td style="padding-left: 30px">
-                                    <input type="checkbox" ng-model="sheet.isSelected">
-                                </td>
-                                <td ng-click="vm.launchSheetEditor(sheet)">
-                                    {{vm.assignDisplayValue(sheet, 'number')}}
-                                    <span class="glyphicon glyphicon-alert"
-                                          ng-if="vm.propertiesMatch(sheet)"
-                                          uib-tooltip="Possible that user has not synched approved changes."
-                                          tooltip-placement="top"
-                                          style="color: #d9534f">
-                                    </span>
-                                </td>
-                                <td ng-click="vm.launchSheetEditor(sheet)">
-                                    {{vm.assignDisplayValue(sheet, 'name')}}
-                                </td>
-                                <td class="text-center" ng-click="vm.launchSheetEditor(sheet)">
-                                    {{vm.assignDisplayValue(sheet, 'revisionNumber')}}
-                                </td>
-                            </tr>
-                            </tbody>
                         </table>
+                        <!--<table id="table2"-->
+                               <!--datatable="ng"-->
+                               <!--dt-options="vm.dtSheetsOptions"-->
+                               <!--dt-column-defs="vm.dtSheetsColumnDefs"-->
+                               <!--dt-instance="vm.dtInstance"-->
+                               <!--class="table table-hover table-condensed datatable">-->
+                            <!--<thead>-->
+                            <!--<tr>-->
+                                <!--<th class="col-md-1" style="padding-left: 30px">-->
+                                    <!--<input type="checkbox" ng-model="vm.selectAll" ng-click="vm.toggleAll()">-->
+                                <!--</th>-->
+                                <!--<th class="col-md-3">Number</th>-->
+                                <!--<th class="col-md-7">Name</th>-->
+                                <!--<th class="col-md-1 text-center">Revision</th>-->
+                            <!--</tr>-->
+                            <!--</thead>-->
+                            <!--<tbody>-->
+                            <!--<tr ng-repeat="sheet in vm.allSheets | orderBy: 'number' : false" ng-class="vm.assignClass(sheet)">-->
+                                <!--<td style="padding-left: 30px">-->
+                                    <!--<input type="checkbox" ng-model="sheet.isSelected">-->
+                                <!--</td>-->
+                                <!--<td ng-click="vm.launchSheetEditor(sheet)">-->
+                                    <!--{{vm.assignDisplayValue(sheet, 'number')}}-->
+                                    <!--<span class="glyphicon glyphicon-alert"-->
+                                          <!--ng-if="vm.propertiesMatch(sheet)"-->
+                                          <!--uib-tooltip="Possible that user has not synched approved changes."-->
+                                          <!--tooltip-placement="top"-->
+                                          <!--style="color: #d9534f">-->
+                                    <!--</span>-->
+                                <!--</td>-->
+                                <!--<td ng-click="vm.launchSheetEditor(sheet)">-->
+                                    <!--{{vm.assignDisplayValue(sheet, 'name')}}-->
+                                <!--</td>-->
+                                <!--<td class="text-center" ng-click="vm.launchSheetEditor(sheet)">-->
+                                    <!--{{vm.assignDisplayValue(sheet, 'revisionNumber')}}-->
+                                <!--</td>-->
+                            <!--</tr>-->
+                            <!--</tbody>-->
+                        <!--</table>-->
                     </div>
                 </div>
             </div>

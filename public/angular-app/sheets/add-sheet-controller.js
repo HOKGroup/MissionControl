@@ -4,15 +4,43 @@
 
 angular.module('MissionControlApp').controller('AddSheetController', AddSheetController);
 
-function AddSheetController($uibModalInstance, UtilityService, models) {
+function AddSheetController($uibModalInstance, UtilityService, HealthRecordsFactory, models) {
     var vm = this;
 
     // (Konrad) We can exclude 'All' from the model list.
     vm.models = models.filter(function(item){
         return item.name !== 'All'
     });
-
     vm.selectedModel = vm.models[0];
+    vm.userNames = null;
+
+    var path = UtilityService.getHttpSafeFilePath(vm.selectedModel.centralPath);
+    getUserNames(path);
+
+    /**
+     * Retrieves all user names that ever opened the model.
+     * @param centralPath
+     */
+    function getUserNames(centralPath) {
+        HealthRecordsFactory.getUserNamesByCentralPath(centralPath)
+            .then(function (response) {
+                if(!response || response.status !== 200) return;
+
+                // (Konrad) We need all unique user names of people that ever opened the model.
+                // These will be used to populate dropdowns when assigning tasks. It will allow
+                // us to only assign tasks to people that actually work in the model.
+                var userNamesSet = new Set(response.data[0].openTimes.filter(function (item) {
+                    return item.user;
+                }).map(function (item) {
+                    return item.user;
+                }));
+
+                vm.userNames = Array.from(userNamesSet);
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
 
     vm.template = {
         count: 1,

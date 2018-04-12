@@ -21,7 +21,7 @@ function ModelStatsController($routeParams, UtilityService, DTColumnBuilder, DTO
          * By watching this variable we can detect when user selected to see this page.
          */
         $scope.$watch('vm.ModelData.show.value', function (newValue) {
-            if(newValue)reloadTable();
+            if(newValue) reloadTable();
         });
 
         /**
