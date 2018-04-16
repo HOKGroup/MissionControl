@@ -98,7 +98,22 @@
                                 <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.template.assignedTo"></span>
                                 <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.template.assignedTo"></span>
                             </label>
-                            <input type="text" name="recipient" id="recipient_name" class="form-control" value="{{vm.template.assignedTo}}" ng-model="vm.template.assignedTo" required>
+                            <div class="btn-group" style="width: 100%" id="recipient_name">
+                                <button class="btn btn-default dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    {{vm.template.assignedTo}}
+                                </button>
+                                <ul class="dropdown-menu scrollable-menu-centered">
+                                    <li ng-repeat="user in vm.userNames">
+                                        <a href="" class="no-padding-left" ng-click="vm.template.assignedTo = user">
+                                            {{user}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div ng-show="vm.userNames.length === 0">
+                                <div class="text-danger">(*) This model doesn't have  active users.</div>
+                            </div>
                         </div>
                     </div>
 
@@ -137,13 +152,13 @@
                                 <button ng-repeat="operator in vm.currentNumberOperators"
                                         ng-click="vm.setCurrentOperator(operator)"
                                         class="btn btn-default">
-                                <span ng-click=""
-                                      uib-popover-template="operator.templateUrl"
-                                      popover-placement="{{vm.popoverOptions.placement}}"
-                                      popover-trigger="vm.popoverOptions.triggers"
-                                      popover-class="popover">
-                                    {{vm.getButtonLabel(operator)}}
-                                </span>
+                                    <span ng-click=""
+                                          uib-popover-template="operator.templateUrl"
+                                          popover-placement="{{vm.popoverOptions.placement}}"
+                                          popover-trigger="vm.popoverOptions.triggers"
+                                          popover-class="popover">
+                                        {{vm.getButtonLabel(operator)}}
+                                    </span>
                                 </button>
                             </div>
                         </div>
@@ -168,10 +183,15 @@
                         <div class="form-group">
                             <label class="form-control-label">Sheet Name:</label>
                             <div>
-                                <button ng-repeat="operator in vm.currentNameOperators" ng-click="vm.setCurrentOperator(operator)" class="btn btn-default">
-                                <span ng-click="" uib-popover-template="operator.templateUrl" popover-placement="{{vm.popoverOptions.placement}}" popover-trigger="vm.popoverOptions.triggers">
-                                    {{vm.getButtonLabel(operator)}}
-                                </span>
+                                <button ng-repeat="operator in vm.currentNameOperators"
+                                        ng-click="vm.setCurrentOperator(operator)"
+                                        class="btn btn-default">
+                                    <span ng-click=""
+                                          uib-popover-template="operator.templateUrl"
+                                          popover-placement="{{vm.popoverOptions.placement}}"
+                                          popover-trigger="vm.popoverOptions.triggers">
+                                        {{vm.getButtonLabel(operator)}}
+                                    </span>
                                 </button>
                             </div>
                         </div>
@@ -195,8 +215,23 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-disabled="!vm.template.assignedTo || !vm.template.message" ng-click="vm.create()"><span class="glyphicon glyphicon-plus"></span> Create</button>
-        <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
-        <button type="button" class="btn btn-danger pull-left" ng-click="vm.clear()"><span class="glyphicon glyphicon-erase"></span> Clear</button>
+        <button type="button"
+                class="btn btn-primary"
+                ng-disabled="!vm.template.assignedTo || !vm.template.message"
+                ng-click="vm.create()">
+            <span class="glyphicon glyphicon-plus"></span>
+            Create
+        </button>
+        <button type="button"
+                class="btn btn-secondary"
+                ng-click="vm.cancel()">
+            Close
+        </button>
+        <button type="button"
+                class="btn btn-danger pull-left"
+                ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-erase"></span>
+            Clear
+        </button>
     </div>
 </div>

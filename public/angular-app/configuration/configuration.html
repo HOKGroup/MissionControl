@@ -15,7 +15,7 @@
             <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
                 <div class="list-group">
                     <a ng-repeat="config in vm.configurations" href="" class="list-group-item" ng-click="vm.getConfigurationById(config._id)"
-                       ng-class="{ 'active': selectedConfig._id === config._id }">{{ config.name }}</a>
+                       ng-class="{ 'active': vm.selectedConfig._id === config._id }">{{ config.name }}</a>
                 </div>
                 <a class="btn btn-large btn-default btn-block" href="#/configurations/add/{{ vm.selectedProject._id }}"><span class="glyphicon glyphicon-plus"></span> Add Configuration</a>
             </div>

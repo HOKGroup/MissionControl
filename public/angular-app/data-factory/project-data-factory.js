@@ -31,6 +31,10 @@ function ProjectFactory($http){
 
         deleteConfiguration: function deleteConfiguration(configId){
             return $http.delete('/api/v1/configurations/' + configId).then(complete).catch(failed);
+        },
+
+        populateSheets: function populateSheets(projectId) {
+            return $http.get('/api/v1/projects/populatesheets/' + projectId).then(complete).catch(failed);
         }
     };
 

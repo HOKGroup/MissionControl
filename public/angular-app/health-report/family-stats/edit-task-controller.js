@@ -3,12 +3,12 @@
  */
 angular.module('MissionControlApp').controller('EditFamilyTaskController', EditFamilyTaskController);
 
-function EditFamilyTaskController($uibModalInstance, FamiliesFactory, family, task, action) {
+function EditFamilyTaskController($uibModalInstance, FamiliesFactory, family, task, action, userNames) {
     var vm = this;
     vm.family = family; // parent family
     vm.task = task; // actual task will be null on add task
     vm.title = action;
-
+    vm.userNames = userNames; // names of user that ever opened the model
 
     // (Konrad) Resetting these values will clear the form for new task.
     if(action === 'Add Task'){
@@ -22,6 +22,9 @@ function EditFamilyTaskController($uibModalInstance, FamiliesFactory, family, ta
         }
     }
 
+    /**
+     * Submits the task to database and notifies user.
+     */
     vm.submit = function () {
         vm.task.isSelected = false; // never submit a task with selection on
         vm.task.submittedOn = Date.now();
@@ -52,6 +55,9 @@ function EditFamilyTaskController($uibModalInstance, FamiliesFactory, family, ta
         }
     };
 
+    /**
+     * If task was already marked as completed it resets its state.
+     */
     vm.reopen = function (){
         vm.task.isSelected = false;
         vm.task.submittedOn = Date.now();

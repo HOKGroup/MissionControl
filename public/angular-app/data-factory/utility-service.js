@@ -2,6 +2,10 @@ angular.module('MissionControlApp').factory('UtilityService', UtilityService);
 
 function UtilityService(){
     return {
+        /**
+         * Used for color formatting by all badge objects in health reports.
+         * @returns {{red: string, orange: string, green: string, grey: string}}
+         */
         color: function(){
             return {
                 red: 'badge progress-bar-danger',

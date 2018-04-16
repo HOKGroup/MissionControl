@@ -6,8 +6,14 @@ angular.module('MissionControlApp').controller('AllTasksController', AllTasksCon
 function AllTasksController($uibModalInstance, $uibModal, SheetsFactory, sheet) {
     var vm = this;
     vm.sheet = sheet;
-    vm.tasks = vm.sheet.tasks;
     vm.check = false;
+    vm.tasks = vm.sheet.tasks;
+
+    // (Konrad) We pass centralPath along to each sheet/task so that we can use it to retrieve
+    // user names from HealthRecords.
+    vm.tasks.forEach(function (item) {
+        item['centralPath'] = vm.sheet.centralPath;
+    });
 
     /**
      * Deletes all selected sheet tasks.
