@@ -20,6 +20,7 @@ angular.module('MissionControlApp').component('familyStats', {
     templateUrl: 'angular-app/health-report/family-stats/family-stats.html',
     controller: 'FamilyStatsController',
     controllerAs: 'vm',
+    resolve: FamilyStatsController.resolve,
     bindings: {
         processed: '='
     }
@@ -30,7 +31,8 @@ angular.module('MissionControlApp').component('modelStats', {
     controller: 'ModelStatsController',
     controllerAs: 'vm',
     bindings: {
-        processed: '='
+        processed: '=',
+        show: '='
     }
 });
 

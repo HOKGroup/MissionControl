@@ -1,43 +1,52 @@
 /**
  * Created by konrad.sobon on 2017-10-24.
  */
-angular.module('MissionControlApp')
-    .controller('SheetsController', SheetsController);
+angular.module('MissionControlApp').controller('SheetsController', SheetsController);
 
-function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibModal, UtilityService){
+function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFactory, ProjectFactory, UtilityService, DTOptionsBuilder, DTColumnBuilder){
     var vm = this;
+    var all = { name: "All", collectionId: '' };
+
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
-    vm.selectAll = false; // select all checkbox
-
-    vm.dtInstance = {};
-
-    vm.dtSheetsOptions = {
-        paginationType: 'simple_numbers',
-        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
-        stateSave: true,
-        deferRender: true,
-        order: [[ 2, 'asc' ]],
-        columnDefs: [{orderable: false, targets: [0]}]
-    };
-
-    vm.dtSheetsColumnDefs = [
-        DTColumnDefBuilder.newColumnDef(0).notSortable(), //checkbox
-        DTColumnDefBuilder.newColumnDef(1), //number
-        DTColumnDefBuilder.newColumnDef(2), //name
-        DTColumnDefBuilder.newColumnDef(3) //revisionNumber
-    ];
-
-    vm.selectedModel = "";
-    vm.availableModels = [
-        {
-            name: "All",
-            collectionId: ''
-        }
-    ];
+    vm.Data = [];
+    vm.selectedModel = all;
+    vm.availableModels = [all];
+    vm.selected = {};
+    vm.selectAll = false;
+    vm.headerCompiled = false;
 
     // (Konrad) Retrieves selected project from MongoDB.
     getSelectedProject(vm.projectId);
+
+    /**
+     * Checks all checkboxes in a datatable.
+     * @param selectAll
+     * @param selectedItems
+     */
+    vm.toggleAll = function (selectAll, selectedItems) {
+        for (var id in selectedItems) {
+            if (selectedItems.hasOwnProperty(id)) {
+                selectedItems[id] = selectAll;
+            }
+        }
+    };
+
+    /**
+     * Checks a single checkbox in a datatable.
+     * @param selectedItems
+     */
+    vm.toggleOne = function (selectedItems) {
+        for (var id in selectedItems) {
+            if (selectedItems.hasOwnProperty(id)) {
+                if (!selectedItems[id]) {
+                    vm.selectAll = false;
+                    return;
+                }
+            }
+        }
+        vm.selectAll = true;
+    };
 
     /**
      * Sets current model filter based on file name.
@@ -46,48 +55,51 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
      */
     vm.SetCurrentModelFilter = function (file) {
         vm.selectedModel = file;
-
-        //(Konrad) We need to re-render the table when Filter is updated.
-        vm.dtInstance.rerender();
-    };
-
-    /**
-     * Returns True if file name matches filter selected or filter selected is All.
-     * @param file
-     * @returns {boolean}
-     */
-    vm.filterFile = function (file) {
-        return file.fileName === vm.selectedModel.name || vm.selectedModel.name === "All";
-    };
-
-    /**
-     * Toggles all sheets isSelected to True.
-     */
-    vm.toggleAll = function () {
-        vm.allSheets.forEach(function (item) {
-            item.isSelected = vm.selectAll;
-        })
+        reloadTable();
     };
 
     /**
      * When user clicks on table row, this will reconsile which dialog should launch.
-     * @param sheet
+     * @param sheetId
      */
-    vm.launchSheetEditor = function(sheet){
-        var selected = vm.allSheets.filter(function(item){
-            return item.isSelected;
+    vm.launchSheetEditor = function(sheetId){
+        var sheet = vm.Data.find(function (item) {
+            return item._id === sheetId;
         });
 
-        if(selected.length === 1){
-            if(selected[0] === sheet){
-                sheet.tasks.length > 0 ? vm.showAllTasks('lg', sheet) : vm.editSheetTask('lg', sheet, 'Add Task')
-            } else {
-                vm.showAllTasks('lg', sheet);
-            }
-        } else if (selected.length === 0){
-            sheet.tasks.length > 0 ? vm.showAllTasks('lg', sheet) : vm.editSheetTask('lg', sheet, 'Add Task')
-        } else {
+        if (sheet.tasks.length > 0){
             vm.showAllTasks('lg', sheet);
+        } else {
+            vm.editSheetTask('lg', sheet, 'Add Task');
+        }
+    };
+
+    /**
+     * It's possible that change was approved and stored in DB, but user hasn't sycnhed
+     * to central yet, so actual sheet data was not updated with changes causing a mismatch.
+     * This will display an alert icon next to it to notify users of such occurrences.
+     * @return {boolean}
+     */
+    vm.propertiesMatch = function (sheetId) {
+        var sheet = vm.Data.find(function (item) {
+            return item._id === sheetId;
+        });
+        if (!sheet) return false;
+
+        if(sheet.tasks.length > 0){
+            var task = sheet.tasks[sheet.tasks.length - 1];
+            if(task.completedBy && task.isNewSheet && sheet.isNewSheet) return true;
+            if(task.completedBy){
+                var nameMatch = task.name === sheet.name;
+                var numberMatch = task.number === sheet.number;
+                var revMatch = task.revisionNumber === sheet.revisionNumber;
+                var deleted = task.isDeleted === sheet.isDeleted;
+                return !(nameMatch && numberMatch && revMatch && deleted);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     };
 
@@ -112,11 +124,11 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
                 // (Konrad) If action performed was deleting a new Sheet
                 // the response will be an _id of that sheet.
                 var updatedSheetId = request.response.data;
-                var index = vm.allSheets.findIndex(function (item) {
+                var index = vm.Data.findIndex(function (item) {
                     return item._id.toString() === updatedSheetId.toString();
                 });
 
-                if(index !== -1) vm.allSheets.splice(index, 1);
+                if(index !== -1) vm.Data.splice(index, 1);
             } else if(request.action === 'Delete Sheet Task'){
                 // (Konrad) If action performed was deleting a sheet task
                 // the response will be a list of all sheets and list of deleted ids.
@@ -127,26 +139,9 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
                     if(index !== -1) sheet.tasks.splice(index, 1);
                 });
             }
+            reloadTable();
         }).catch(function(){
             console.log("All Tasks Dialog dismissed...");
-        });
-    };
-
-    /**
-     * Launches help window for the Sheets.
-     * @param size
-     */
-    vm.launchHelpWindow = function (size) {
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'angular-app/sheets/help.html',
-            controller: 'SheetHelpController as vm',
-            size: size
-        }).result.then(function(request){
-            if(!request) return;
-
-        }).catch(function(){
-            //if modal dismissed
         });
     };
 
@@ -178,6 +173,7 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
                 return item._id.toString() === sheet._id.toString();
             });
             if(updatedSheet) sheet.tasks = updatedSheet.tasks;
+            reloadTable();
         }).catch(function(){
             //if modal dismissed
         });
@@ -212,9 +208,11 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
                             var newSheet = data.sheets.find(function (item) {
                                 return item._id.toString() === id.toString();
                             });
-                            if(newSheet) vm.allSheets.push(newSheet);
+                            if(newSheet) vm.Data.push(newSheet);
                         })
                     }
+
+                    reloadTable();
                 }, function (err) {
                     console.log('Unable to create Multiple Sheets: ' + err.message);
                 });
@@ -225,6 +223,123 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
     };
 
     /**
+     * Launches help window for the Sheets.
+     * @param size
+     */
+    vm.launchHelpWindow = function (size) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'angular-app/sheets/help.html',
+            controller: 'SheetHelpController as vm',
+            size: size
+        }).result.then(function(request){
+            //closed
+        }).catch(function(){
+            //if modal dismissed
+        });
+    };
+
+    //region Utilities
+
+    /**
+     * Creates options for the datatable.
+     */
+    function createTable() {
+        vm.dtInstance = {};
+        //noinspection JSUnusedLocalSymbols
+        vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
+            return getData()
+        }).withPaginationType('simple_numbers')
+            .withDisplayLength(10)
+            .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
+            // .withOption('aaSorting', [[3, 'desc']]) //TODO: Sorting only works when stateSave is disabled
+            .withOption('stateSave', true)
+            .withDataProp('data')
+            .withOption('createdRow', function(row, data, dataIndex) {
+                // (Konrad) Recompiling so we can bind Angular directive to the DT
+                $compile(angular.element(row).contents())($scope);
+            })
+            .withOption('rowCallback', function (row, data, index) {
+                row.className = row.className + ' ' + assignClass(data);
+            })
+            .withOption('headerCallback', function(header) {
+                if (!vm.headerCompiled) {
+                    // (Konrad) Use this headerCompiled field to only compile header once
+                    vm.headerCompiled = true;
+                    $compile(angular.element(header).contents())($scope);
+                }
+            })
+            .withOption('initComplete', function() {
+                // (Konrad) For some reason the sorting icon appears on first load. We can remove it.
+                $('#sheetsTable').find('> thead > tr > th:first').removeClass('sorting_asc');
+            });
+
+        var titleHtml = '<input type="checkbox" ng-model="vm.selectAll" ng-click="vm.toggleAll(vm.selectAll, vm.selected)">';
+
+        //noinspection JSUnusedLocalSymbols
+        vm.dtColumns = [
+            DTColumnBuilder.newColumn(null)
+                .withTitle(titleHtml)
+                .notSortable()
+                .withOption('width', '5%')
+                .renderWith(function (data, type, full, meta) {
+                    vm.selected[full._id] = false;
+                    return '<input type="checkbox" ng-model="vm.selected[\'' + data._id + '\']" ng-click="vm.toggleOne(vm.selected)">';
+                }),
+            DTColumnBuilder.newColumn('number')
+                .withTitle('Number')
+                .withOption('width', '35%')
+                .renderWith(function (data, type, full, meta) {
+                    var number = getDisplayValue(full, 'number');
+                    return '<div ng-click="vm.launchSheetEditor(\'' +
+                        full._id + '\')">' + number + ' ' +
+                        '<span class="fa fa-exclamation-circle" ng-if="vm.propertiesMatch(\'' +
+                        full._id + '\')" uib-tooltip="Possible that user has not synched approved changes." tooltip-placement="top" style="color: #d9534f"></span></div>';
+                }),
+            DTColumnBuilder.newColumn('name')
+                .withTitle('Name')
+                .withOption('width', '50%')
+                .renderWith(function (data, type, full, meta) {
+                    var name = getDisplayValue(full, 'name');
+                    return '<div ng-click="vm.launchSheetEditor(\'' + full._id + '\')">' + name +'</div>';
+                }),
+            DTColumnBuilder.newColumn('revisionNumber')
+                .withTitle('Revision')
+                .withClass('text-center')
+                .withOption('width', '10%')
+        ];
+    }
+
+    /**
+     * Promise call that retrieves data for the datatable.
+     * @returns {*}
+     */
+    function getData() {
+        return new Promise(function(resolve, reject){
+            var data = [];
+            vm.Data.forEach(function (item) {
+                if (item.fileName.toLowerCase() === vm.selectedModel.name.toLowerCase() ||
+                    vm.selectedModel.name === 'All'){
+                    data.push(item);
+                }
+            });
+
+            if (!data) reject();
+            else resolve(data);
+        });
+    }
+
+    /**
+     * Method to recalculate data table contents and reload it.
+     */
+    function reloadTable() {
+        if(vm.dtInstance){
+            vm.dtInstance.reloadData();
+            vm.dtInstance.rerender();
+        }
+    }
+
+    /**
      * Assigns proper row class to table.
      * Red if sheet was marked for deletion.
      * Orange if it was edited.
@@ -233,7 +348,7 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
      * @returns {string}
      * @constructor
      */
-    vm.assignClass = function (sheet) {
+    function assignClass(sheet) {
         if(sheet.tasks.length > 0){
             var task = sheet.tasks[sheet.tasks.length - 1]; // latest task is the last one
             if(task.completedBy) return 'table-info'; // task was completed no formatting
@@ -246,7 +361,7 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
         } else {
             return 'table-info'; // no changes
         }
-    };
+    }
 
     /**
      * If row/sheet has tasks it will assign proper values to name/number/revision.
@@ -255,7 +370,7 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
      * @returns {*}
      * @constructor
      */
-    vm.assignDisplayValue = function (sheet, propName) {
+    function getDisplayValue(sheet, propName) {
         if(sheet.tasks.length > 0){
             var task = sheet.tasks[sheet.tasks.length - 1]; // latest task is the last one
             if(!task.completedBy) return task[propName]; // only return task props when task is not completed
@@ -263,31 +378,7 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
         } else {
             return sheet[propName];
         }
-    };
-
-    /**
-     * It's possible that change was approved and stored in DB, but user hasn't sycnhed
-     * to central yet, so actual sheet data was not updated with changes causing a mismatch.
-     * This will display an alert icon next to it to notify users of such occurrences.
-     * @return {boolean}
-     */
-    vm.propertiesMatch = function (sheet) {
-        if(sheet.tasks.length > 0){
-            var task = sheet.tasks[sheet.tasks.length - 1];
-            if(task.completedBy && task.isNewSheet && sheet.isNewSheet) return true;
-            if(task.completedBy){
-                var nameMatch = task.name === sheet.name;
-                var numberMatch = task.number === sheet.number;
-                var revMatch = task.revisionNumber === sheet.revisionNumber;
-                var deleted = task.isDeleted === sheet.isDeleted;
-                return !(nameMatch && numberMatch && revMatch && deleted);
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    };
+    }
 
     /**
      * Used to retrieve the Project info.
@@ -295,41 +386,44 @@ function SheetsController($routeParams, SheetsFactory, DTColumnDefBuilder, $uibM
      * @param projectId
      */
     function getSelectedProject(projectId) {
-        SheetsFactory
-            .getProjectById(projectId)
+        ProjectFactory.getProjectById(projectId)
             .then(function(response){
-                if(!response) return;
+                if(!response || response.status !== 200) return {status: 500};
 
                 vm.selectedProject = response.data;
                 if(response.data.sheets.length > 0){
-                    SheetsFactory
-                        .populateSheets(projectId).then(function (sheetsResponse) {
-                            if(!sheetsResponse) return;
-
-                            vm.selectedProject = sheetsResponse.data;
-                            vm.allSheets = [];
-                            vm.selectedProject.sheets.forEach(function (item) {
-                                // (Konrad) Select all model names for filtering.
-                                vm.availableModels.push({
-                                    name: UtilityService.fileNameFromPath(item.centralPath),
-                                    collectionId: item._id,
-                                    centralPath: item.centralPath
-                                });
-                                // (Konrad) Assign CollectionId to all sheets.
-                                item.sheets.forEach(function (sheet) {
-                                    if(!sheet.isDeleted){
-                                        sheet['collectionId'] = item._id;
-                                        vm.allSheets.push(sheet);
-                                    }
-                                })
-                            });
-                            if(vm.availableModels.length > 0) vm.selectedModel = vm.availableModels[0];
-                        }, function (error) {
-                            console.log('Unable to load Sheets data ' + error.message);
-                        });
+                    return ProjectFactory.populateSheets(projectId);
+                } else {
+                    return {status: 500};
                 }
-            },function(error){
-                console.log('Unable to load project data: ' + error.message);
+            })
+            .then(function (response) {
+                if(!response || response.status !== 200) return;
+
+                vm.selectedProject = response.data;
+                vm.selectedProject.sheets.forEach(function (item) {
+                    // (Konrad) Select all model names for filtering.
+                    vm.availableModels.push({
+                        name: UtilityService.fileNameFromPath(item.centralPath),
+                        collectionId: item._id,
+                        centralPath: item.centralPath
+                    });
+                    // (Konrad) Assign CollectionId to all sheets.
+                    item.sheets.forEach(function (sheet) {
+                        if(!sheet.isDeleted){
+                            sheet['collectionId'] = item._id;
+                            sheet['centralPath'] = item.centralPath;
+                            vm.Data.push(sheet);
+                        }
+                    })
+                });
+                if(vm.availableModels.length > 0) vm.selectedModel = vm.availableModels[0];
+                createTable();
+            })
+            .catch(function (error) {
+                console.log(error);
             });
     }
+
+    //endregion
 }

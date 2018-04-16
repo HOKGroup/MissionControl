@@ -8,7 +8,10 @@
     <div class="modal-body">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title">{{vm.sheet.number}} - {{vm.sheet.name}}</h4>
+                <h4 class="panel-title">
+                    <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                    {{vm.sheet.number}} - {{vm.sheet.name}}
+                </h4>
             </div>
             <div class="panel-body">
                 <div class="form-group">
@@ -33,7 +36,22 @@
                                 <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.sheet.assignedTo"></span>
                                 <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.sheet.assignedTo"></span>
                             </label>
-                            <input type="text" name="recipient" id="recipient_name" class="form-control" value="{{vm.sheet.assignedTo}}" ng-model="vm.sheet.assignedTo" ng-disabled="vm.sheet.completedBy" required>
+                            <div class="btn-group" style="width: 100%" id="recipient_name">
+                                <button class="btn btn-default dropdown-toggle scrollable-menu-centered" data-toggle="dropdown" ng-disabled="vm.sheet.completedBy">
+                                    <span class="caret"></span>
+                                    {{vm.sheet.assignedTo}}
+                                </button>
+                                <ul class="dropdown-menu scrollable-menu-centered">
+                                    <li ng-repeat="user in vm.userNames">
+                                        <a href="" class="no-padding-left" ng-click="vm.sheet.assignedTo = user">
+                                            {{user}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div ng-show="vm.userNames.length === 0">
+                                <div class="text-danger">(*) This model doesn't have  active users.</div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -42,7 +60,7 @@
                             <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.sheet.message"></span>
                             <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.sheet.message"></span>
                         </label>
-                        <textarea id="message_text" class="form-control" ng-model="vm.sheet.message" ng-disabled="vm.sheet.completedBy" required></textarea>
+                        <textarea id="message_text" style="min-height: 100px" class="form-control" ng-model="vm.sheet.message" ng-disabled="vm.sheet.completedBy" required></textarea>
                     </div>
                 </div>
             </div>

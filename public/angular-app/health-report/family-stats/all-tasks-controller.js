@@ -3,12 +3,21 @@
  */
 angular.module('MissionControlApp').controller('AllFamilyTasksController', AllFamilyTasksController);
 
-function AllFamilyTasksController($uibModalInstance, $uibModal, FamiliesFactory, family) {
+function AllFamilyTasksController($uibModalInstance, $uibModal, FamiliesFactory, family, userNames) {
     var vm = this;
     vm.family = family;
     vm.check = false;
+    vm.userNames = userNames;
 
-    vm.editTask = function (size, family, task, action) {
+    /**
+     *
+     * @param size
+     * @param family
+     * @param task
+     * @param action
+     * @param userNames
+     */
+    vm.editTask = function (size, family, task, action, userNames) {
         $uibModalInstance.dismiss('cancel');
 
         $uibModal.open({
@@ -25,6 +34,9 @@ function AllFamilyTasksController($uibModalInstance, $uibModal, FamiliesFactory,
                 },
                 action: function(){
                     return action;
+                },
+                userNames: function () {
+                    return userNames;
                 }}
         }).result.then(function(request){
             if(!request) return;
@@ -42,43 +54,6 @@ function AllFamilyTasksController($uibModalInstance, $uibModal, FamiliesFactory,
             console.log("All Tasks Dialog dismissed...");
         });
     };
-
-    // vm.openEditModal = function (size, task) {
-    //     $uibModalInstance.close();
-    //
-    //     $uibModal.open({
-    //         animation: true,
-    //         templateUrl: 'angular-app/health-report/family-stats/edit-task.html',
-    //         controller: 'EditFamilyTaskController as vm',
-    //         size: size,
-    //         resolve: {
-    //             task: function (){
-    //                 return task;
-    //             }}
-    //     }).result.then(function(request){
-    //         if(!request) return;
-    //
-    //     }).catch(function(){
-    //         console.log("All Tasks Dialog dismissed...");
-    //     });
-    //
-    //     // var modalInstance = $uibModal.open({
-    //     //     animation: true,
-    //     //     templateUrl: 'editSingleTask',
-    //     //     controller: modalSingleTaskCtrl,
-    //     //     size: size,
-    //     //     resolve: {
-    //     //         task: function () {
-    //     //             return task;
-    //     //         },
-    //     //         family: function(){
-    //     //             return $scope.family
-    //     //         }
-    //     //     }
-    //     // });
-    //     //
-    //     // modalInstance.result.then(function () {}, function () {});
-    // };
 
     /**
      * Deletes selected tasks.

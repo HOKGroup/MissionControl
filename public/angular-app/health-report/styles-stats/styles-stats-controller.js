@@ -28,6 +28,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
 
         // set table options for dimension types
         vm.dtInstance1 = {};
+        //noinspection JSUnusedLocalSymbols
         vm.dtOptions2 = DTOptionsBuilder.newOptions()
             .withOption('data', vm.StylesData.styleStats.styleStats[0].dimStats)
             .withPaginationType('simple_numbers')
@@ -90,6 +91,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
 
         // set table options for dimension types
         vm.dtInstance2 = {};
+        //noinspection JSUnusedLocalSymbols
         vm.dtOptions3 = DTOptionsBuilder.newOptions()
             .withOption('data', vm.StylesData.styleStats.styleStats[0].textStats)
             .withPaginationType('simple_numbers')

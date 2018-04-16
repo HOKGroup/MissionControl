@@ -1,50 +1,22 @@
 var app = angular.module('MissionControlApp').controller('FamilyStatsController', FamilyStatsController);
 
-function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, UtilityService) {
+function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuilder, UtilityService) {
     var vm = this;
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
         vm.FamilyData = this.processed;
 
-        vm.AllFamilies = [];
-        vm.FamilyData.familyStats.families.forEach(function (item) {
-            if(!item.isDeleted && item.isFailingChecks){
-                item['collectionId'] = vm.FamilyData.familyStats._id;
-                vm.AllFamilies.push(item);
-            }
+        processData();
+
+        /**
+         * Since all health report components are initiated when data is finished loading
+         * none of them are yet visible. The DOM has not yet loaded the divs etc. This means
+         * that all divs have a width of 0 and table is initiated with that width as well.
+         * By watching this variable we can detect when user selected to see this page.
+         */
+        $scope.$watch('vm.FamilyData.show.value', function (newValue) {
+            if(newValue)reloadTable();
         });
-
-        vm.pcoordinatesData = [];
-        vm.AllFamilies.forEach(function(item){
-            vm.pcoordinatesData.push({
-                name: item.name,
-                "Size": item.sizeValue,
-                "Instances": item.instances,
-                "Parameters": item.parametersCount,
-                "Nested Families": item.nestedFamilyCount,
-                "Voids": item.voidCount,
-                "Ref. Planes": item.refPlaneCount,
-                "Arrays": item.arrayCount
-            })
-        });
-
-        vm.dtInstance = {};
-        vm.dtOptions = {
-            paginationType: 'simple_numbers',
-            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
-            stateSave: true,
-            deferRender: true
-        };
-
-        vm.dtColumnDefs = [
-            DTColumnDefBuilder.newColumnDef(0), //index
-            DTColumnDefBuilder.newColumnDef(1), //name
-            DTColumnDefBuilder.newColumnDef(2).withOption('orderData', '3'), //tasks
-            DTColumnDefBuilder.newColumnDef(3).notVisible(), //task count
-            DTColumnDefBuilder.newColumnDef(4), //instances
-            DTColumnDefBuilder.newColumnDef(5).withOption('orderData', '6'), //size
-            DTColumnDefBuilder.newColumnDef(6).notVisible() //sizeValue
-        ];
 
         /**
          * Applies selected filer and reloads DataTable.
@@ -171,12 +143,13 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, Util
         /**
          * Launches appropriate modal window.
          * @param family
+         * @param userNames
          */
-        vm.launchEditor = function (family) {
+        vm.launchEditor = function (family, userNames) {
             if(family.tasks.length > 0){
-                openAllTasks('lg', family);
+                openAllTasks('lg', family, userNames);
             } else {
-                openEditTask('lg', family, null, 'Add Task')
+                openEditTask('lg', family, null, 'Add Task', userNames)
             }
         };
 
@@ -184,8 +157,9 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, Util
          * Launches all tasks dialog.
          * @param size
          * @param family
+         * @param userNames
          */
-        var openAllTasks = function (size, family) {
+        var openAllTasks = function (size, family, userNames) {
             $uibModal.open({
                 animation: true,
                 templateUrl: 'angular-app/health-report/family-stats/all-tasks.html',
@@ -194,6 +168,9 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, Util
                 resolve: {
                     family: function (){
                         return family;
+                    },
+                    userNames: function(){
+                        return userNames;
                     }}
             }).result.then(function(request){
                 if(!request) return;
@@ -217,8 +194,9 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, Util
          * @param family
          * @param task
          * @param action
+         * @param userNames
          */
-        var openEditTask = function (size, family, task, action) {
+        var openEditTask = function (size, family, task, action, userNames) {
             $uibModal.open({
                 animation: true,
                 templateUrl: 'angular-app/health-report/family-stats/edit-task.html',
@@ -233,6 +211,9 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, Util
                     },
                     action: function(){
                         return action;
+                    },
+                    userNames: function(){
+                        return userNames;
                     }}
             }).result.then(function(request){
                 if(!request) return;
@@ -248,5 +229,68 @@ function FamilyStatsController($routeParams, $uibModal, DTColumnDefBuilder, Util
                 console.log("All Tasks Dialog dismissed...");
             });
         };
+
+        //region Utilities
+
+        /**
+         * Parses through all data before charts and tables can be rendered.
+         */
+        function processData() {
+            vm.AllFamilies = [];
+            vm.FamilyData.familyStats.families.forEach(function (item) {
+                if(!item.isDeleted && item.isFailingChecks){
+                    item['collectionId'] = vm.FamilyData.familyStats._id;
+                    vm.AllFamilies.push(item);
+                }
+            });
+
+            vm.pcoordinatesData = [];
+            vm.AllFamilies.forEach(function(item){
+                vm.pcoordinatesData.push({
+                    name: item.name,
+                    "Size": item.sizeValue,
+                    "Instances": item.instances,
+                    "Parameters": item.parametersCount,
+                    "Nested Families": item.nestedFamilyCount,
+                    "Voids": item.voidCount,
+                    "Ref. Planes": item.refPlaneCount,
+                    "Arrays": item.arrayCount
+                })
+            });
+            createTable();
+        }
+
+        /**
+         * Method to recalculate data table contents and reload it.
+         */
+        function reloadTable() {
+            if(vm.dtInstance) {vm.dtInstance.reloadData(false);}
+            if(vm.dtInstance) {vm.dtInstance.rerender();}
+        }
+
+        /**
+         * Creates options for the DataTables.
+         */
+        function createTable() {
+            vm.dtInstance = {};
+            vm.dtOptions = {
+                paginationType: 'simple_numbers',
+                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+                stateSave: true,
+                deferRender: true
+            };
+
+            vm.dtColumnDefs = [
+                DTColumnDefBuilder.newColumnDef(0), //index
+                DTColumnDefBuilder.newColumnDef(1), //name
+                DTColumnDefBuilder.newColumnDef(2).withOption('orderData', '3'), //tasks
+                DTColumnDefBuilder.newColumnDef(3).notVisible(), //task count
+                DTColumnDefBuilder.newColumnDef(4), //instances
+                DTColumnDefBuilder.newColumnDef(5).withOption('orderData', '6'), //size
+                DTColumnDefBuilder.newColumnDef(6).notVisible() //sizeValue
+            ];
+        }
+
+        //endregion
     };
 }
