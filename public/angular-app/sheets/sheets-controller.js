@@ -3,10 +3,9 @@
  */
 angular.module('MissionControlApp').controller('SheetsController', SheetsController);
 
-function SheetsController($routeParams, SheetsFactory, ProjectFactory, $scope, $compile, DTOptionsBuilder, DTColumnBuilder, $uibModal, UtilityService){
+function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFactory, ProjectFactory, UtilityService, DTOptionsBuilder, DTColumnBuilder){
     var vm = this;
     var all = { name: "All", collectionId: '' };
-    var titleHtml = '<input type="checkbox" ng-model="vm.selectAll" ng-click="vm.toggleAll(vm.selectAll, vm.selected)">';
 
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
@@ -17,133 +16,11 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, $scope, $
     vm.selectAll = false;
     vm.headerCompiled = false;
 
-    /**
-     * Assigns proper row class to table.
-     * Red if sheet was marked for deletion.
-     * Orange if it was edited.
-     * Green if it was added.
-     * @param sheet
-     * @returns {string}
-     * @constructor
-     */
-    function assignClass(sheet) {
-        if(sheet.tasks.length > 0){
-            var task = sheet.tasks[sheet.tasks.length - 1]; // latest task is the last one
-            if(task.completedBy) return 'table-info'; // task was completed no formatting
-            if(task.isNewSheet) return 'bg-success'; // new sheet (green)
-            if(task.isDeleted){
-                return 'bg-danger strike'; // sheet was deleted (red)
-            } else {
-                return 'bg-warning'; // sheet was changed (orange)
-            }
-        } else {
-            return 'table-info'; // no changes
-        }
-    }
-
-    function createTable() {
-        vm.dtInstance = {};
-        vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
-            return getData()
-        }).withPaginationType('simple_numbers')
-            .withDisplayLength(10)
-            .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
-            // .withOption('aaSorting', [[3, 'desc']]) //TODO: Sorting only works when stateSave is disabled
-            .withOption('stateSave', true)
-            .withDataProp('data')
-            .withOption('createdRow', function(row, data, dataIndex) {
-                // (Konrad) Recompiling so we can bind Angular directive to the DT
-                $compile(angular.element(row).contents())($scope);
-            })
-            .withOption('rowCallback', function (row, data, index) {
-                row.className = row.className + ' ' + assignClass(data);
-            })
-            .withOption('headerCallback', function(header) {
-                if (!vm.headerCompiled) {
-                    // (Konrad) Use this headerCompiled field to only compile header once
-                    vm.headerCompiled = true;
-                    $compile(angular.element(header).contents())($scope);
-                }
-            })
-            .withOption('initComplete', function() {
-                // (Konrad) For some reason the sorting icon appears on first load. We can remove it.
-                $('#sheetsTable').find('> thead > tr > th:first').removeClass('sorting_asc');
-            });
-
-        vm.dtColumns = [
-            DTColumnBuilder.newColumn(null)
-                .withTitle(titleHtml)
-                .notSortable()
-                .withOption('width', '5%')
-                .renderWith(function (data, type, full, meta) {
-                    vm.selected[full._id] = false;
-                    return '<input type="checkbox" ng-model="vm.selected[\'' + data._id + '\']" ng-click="vm.toggleOne(vm.selected)">';
-                }),
-            DTColumnBuilder.newColumn('number')
-                .withTitle('Number')
-                .withOption('width', '35%')
-                .renderWith(function (data, type, full, meta) {
-                    var number = getDisplayValue(full, 'number');
-                    return '<div ng-click="vm.launchSheetEditor(\'' +
-                        full._id + '\')">' + number + ' ' +
-                        '<span class="fa fa-exclamation-circle" ng-if="vm.propertiesMatch(\'' +
-                        full._id + '\')" uib-tooltip="Possible that user has not synched approved changes." tooltip-placement="top" style="color: #d9534f"></span></div>';
-                }),
-            DTColumnBuilder.newColumn('name')
-                .withTitle('Name')
-                .withOption('width', '50%')
-                .renderWith(function (data, type, full, meta) {
-                    var name = getDisplayValue(full, 'name');
-                    return '<div ng-click="vm.launchSheetEditor(\'' + full._id + '\')">' + name +'</div>';
-                }),
-            DTColumnBuilder.newColumn('revisionNumber')
-                .withTitle('Revision')
-                .withClass('text-center')
-                .withOption('width', '10%')
-        ];
-    }
-
-    /**
-     *
-     * @returns {*}
-     */
-    function getData() {
-        return new Promise(function(resolve, reject){
-            var data = [];
-            vm.Data.forEach(function (item) {
-                if (item.fileName.toLowerCase() === vm.selectedModel.name.toLowerCase() ||
-                    vm.selectedModel.name === 'All'){
-                    data.push(item);
-                }
-            });
-
-            if (!data) reject();
-            else resolve(data);
-        });
-    }
-
-    /**
-     * If row/sheet has tasks it will assign proper values to name/number/revision.
-     * @param sheet
-     * @param propName
-     * @returns {*}
-     * @constructor
-     */
-    function getDisplayValue(sheet, propName) {
-        if(sheet.tasks.length > 0){
-            var task = sheet.tasks[sheet.tasks.length - 1]; // latest task is the last one
-            if(!task.completedBy) return task[propName]; // only return task props when task is not completed
-            else return sheet[propName];
-        } else {
-            return sheet[propName];
-        }
-    }
-
     // (Konrad) Retrieves selected project from MongoDB.
     getSelectedProject(vm.projectId);
 
     /**
-     *
+     * Checks all checkboxes in a datatable.
      * @param selectAll
      * @param selectedItems
      */
@@ -156,7 +33,7 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, $scope, $
     };
 
     /**
-     *
+     * Checks a single checkbox in a datatable.
      * @param selectedItems
      */
     vm.toggleOne = function (selectedItems) {
@@ -180,16 +57,6 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, $scope, $
         vm.selectedModel = file;
         reloadTable();
     };
-
-    /**
-     * Method to recalculate data table contents and reload it.
-     */
-    function reloadTable() {
-        if(vm.dtInstance){
-            vm.dtInstance.reloadData();
-            vm.dtInstance.rerender();
-        }
-    }
 
     /**
      * When user clicks on table row, this will reconsile which dialog should launch.
@@ -279,24 +146,6 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, $scope, $
     };
 
     /**
-     * Launches help window for the Sheets.
-     * @param size
-     */
-    vm.launchHelpWindow = function (size) {
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'angular-app/sheets/help.html',
-            controller: 'SheetHelpController as vm',
-            size: size
-        }).result.then(function(request){
-            if(!request) return;
-
-        }).catch(function(){
-            //if modal dismissed
-        });
-    };
-
-    /**
      * Method called when single sheet is being edited.
      * @param size
      * @param sheet
@@ -373,7 +222,163 @@ function SheetsController($routeParams, SheetsFactory, ProjectFactory, $scope, $
         });
     };
 
+    /**
+     * Launches help window for the Sheets.
+     * @param size
+     */
+    vm.launchHelpWindow = function (size) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'angular-app/sheets/help.html',
+            controller: 'SheetHelpController as vm',
+            size: size
+        }).result.then(function(request){
+            //closed
+        }).catch(function(){
+            //if modal dismissed
+        });
+    };
+
     //region Utilities
+
+    /**
+     * Creates options for the datatable.
+     */
+    function createTable() {
+        vm.dtInstance = {};
+        //noinspection JSUnusedLocalSymbols
+        vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
+            return getData()
+        }).withPaginationType('simple_numbers')
+            .withDisplayLength(10)
+            .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
+            // .withOption('aaSorting', [[3, 'desc']]) //TODO: Sorting only works when stateSave is disabled
+            .withOption('stateSave', true)
+            .withDataProp('data')
+            .withOption('createdRow', function(row, data, dataIndex) {
+                // (Konrad) Recompiling so we can bind Angular directive to the DT
+                $compile(angular.element(row).contents())($scope);
+            })
+            .withOption('rowCallback', function (row, data, index) {
+                row.className = row.className + ' ' + assignClass(data);
+            })
+            .withOption('headerCallback', function(header) {
+                if (!vm.headerCompiled) {
+                    // (Konrad) Use this headerCompiled field to only compile header once
+                    vm.headerCompiled = true;
+                    $compile(angular.element(header).contents())($scope);
+                }
+            })
+            .withOption('initComplete', function() {
+                // (Konrad) For some reason the sorting icon appears on first load. We can remove it.
+                $('#sheetsTable').find('> thead > tr > th:first').removeClass('sorting_asc');
+            });
+
+        var titleHtml = '<input type="checkbox" ng-model="vm.selectAll" ng-click="vm.toggleAll(vm.selectAll, vm.selected)">';
+
+        //noinspection JSUnusedLocalSymbols
+        vm.dtColumns = [
+            DTColumnBuilder.newColumn(null)
+                .withTitle(titleHtml)
+                .notSortable()
+                .withOption('width', '5%')
+                .renderWith(function (data, type, full, meta) {
+                    vm.selected[full._id] = false;
+                    return '<input type="checkbox" ng-model="vm.selected[\'' + data._id + '\']" ng-click="vm.toggleOne(vm.selected)">';
+                }),
+            DTColumnBuilder.newColumn('number')
+                .withTitle('Number')
+                .withOption('width', '35%')
+                .renderWith(function (data, type, full, meta) {
+                    var number = getDisplayValue(full, 'number');
+                    return '<div ng-click="vm.launchSheetEditor(\'' +
+                        full._id + '\')">' + number + ' ' +
+                        '<span class="fa fa-exclamation-circle" ng-if="vm.propertiesMatch(\'' +
+                        full._id + '\')" uib-tooltip="Possible that user has not synched approved changes." tooltip-placement="top" style="color: #d9534f"></span></div>';
+                }),
+            DTColumnBuilder.newColumn('name')
+                .withTitle('Name')
+                .withOption('width', '50%')
+                .renderWith(function (data, type, full, meta) {
+                    var name = getDisplayValue(full, 'name');
+                    return '<div ng-click="vm.launchSheetEditor(\'' + full._id + '\')">' + name +'</div>';
+                }),
+            DTColumnBuilder.newColumn('revisionNumber')
+                .withTitle('Revision')
+                .withClass('text-center')
+                .withOption('width', '10%')
+        ];
+    }
+
+    /**
+     * Promise call that retrieves data for the datatable.
+     * @returns {*}
+     */
+    function getData() {
+        return new Promise(function(resolve, reject){
+            var data = [];
+            vm.Data.forEach(function (item) {
+                if (item.fileName.toLowerCase() === vm.selectedModel.name.toLowerCase() ||
+                    vm.selectedModel.name === 'All'){
+                    data.push(item);
+                }
+            });
+
+            if (!data) reject();
+            else resolve(data);
+        });
+    }
+
+    /**
+     * Method to recalculate data table contents and reload it.
+     */
+    function reloadTable() {
+        if(vm.dtInstance){
+            vm.dtInstance.reloadData();
+            vm.dtInstance.rerender();
+        }
+    }
+
+    /**
+     * Assigns proper row class to table.
+     * Red if sheet was marked for deletion.
+     * Orange if it was edited.
+     * Green if it was added.
+     * @param sheet
+     * @returns {string}
+     * @constructor
+     */
+    function assignClass(sheet) {
+        if(sheet.tasks.length > 0){
+            var task = sheet.tasks[sheet.tasks.length - 1]; // latest task is the last one
+            if(task.completedBy) return 'table-info'; // task was completed no formatting
+            if(task.isNewSheet) return 'bg-success'; // new sheet (green)
+            if(task.isDeleted){
+                return 'bg-danger strike'; // sheet was deleted (red)
+            } else {
+                return 'bg-warning'; // sheet was changed (orange)
+            }
+        } else {
+            return 'table-info'; // no changes
+        }
+    }
+
+    /**
+     * If row/sheet has tasks it will assign proper values to name/number/revision.
+     * @param sheet
+     * @param propName
+     * @returns {*}
+     * @constructor
+     */
+    function getDisplayValue(sheet, propName) {
+        if(sheet.tasks.length > 0){
+            var task = sheet.tasks[sheet.tasks.length - 1]; // latest task is the last one
+            if(!task.completedBy) return task[propName]; // only return task props when task is not completed
+            else return sheet[propName];
+        } else {
+            return sheet[propName];
+        }
+    }
 
     /**
      * Used to retrieve the Project info.
