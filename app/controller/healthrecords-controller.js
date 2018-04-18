@@ -58,7 +58,7 @@ module.exports.findByCentralPath = function (req, res) {
     // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
     // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.
     var rgx;
-    if(req.params.uri.includes('RSN:') || req.params.uri.includes('A360:')){
+    if(req.params.uri.includes('RSN:') || req.params.uri.includes('BIM 360:')){
         rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
     } else {
         rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
@@ -582,7 +582,7 @@ module.exports.getUserNamesByCentralPath = function (req, res) {
     // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
     // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.
     var rgx;
-    if(req.params.uri.includes('RSN:') || req.params.uri.includes('A360:')){
+    if(req.params.uri.includes('RSN:') || req.params.uri.includes('BIM 360:')){
         rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
     } else {
         rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
@@ -675,24 +675,30 @@ module.exports.getModelStats = function (req, res) {
         });
 };
 
+/**
+ *
+ * @param req
+ * @param res
+ */
 module.exports.addFamilies = function (req, res) {
     var healthRecordId = req.params.id;
     var familiesId = mongoose.Types.ObjectId(req.body.key);
     HealthRecords
         .update(
             { _id: healthRecordId},
-            { $set:{ familyStats: familiesId }},
-            function(err){
-                if(err) {
-                    console.log(err);
-                    res
-                        .status(201)
-                        .json(err);
-                } else {
-                    res
-                        .status(201)
-                        .json();
+            { $set:{ 'familyStats': familiesId }}, function (err, response){
+                var result = {
+                    status: 201,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
                 }
+                res.status(result.status).json(result.message);
             });
 };
 
