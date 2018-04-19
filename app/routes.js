@@ -9,13 +9,13 @@ var sheets = require('./models/sheets-model');
  module.exports = function(app) {
      var projects = require('./controller/projects');
      app.get('/api/v1/projects', projects.findAll);
-     app.get('/api/v1/projects/sort', projects.findAndSort);
+     app.get('/api/v1/projects/sort', projects.findAndSort); //OK
      app.get('/api/v1/projects/:id', projects.findById);
      app.get('/api/v1/projects/populate/:id', projects.populateById);
      // app.get('/api/v1/projects/populatehr/:id', projects.populateHealthRecords);
      app.get('/api/v1/projects/populatesheets/:id', projects.populateSheets);
-     app.get('/api/v1/projects/configid/:configid', projects.findByConfigurationId);
-     app.get('/api/v1/projects/office/:office', projects.findByOffice);
+     // app.get('/api/v1/projects/configid/:configid', projects.findByConfigurationId);
+     // app.get('/api/v1/projects/office/:office', projects.findByOffice);
      app.post('/api/v1/projects', projects.add);
      app.put('/api/v1/projects/:id', projects.update);
      app.put('/api/v1/projects/:id/addconfig/:configid', projects.addConfiguration);

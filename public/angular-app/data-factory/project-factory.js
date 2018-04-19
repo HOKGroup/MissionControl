@@ -1,3 +1,6 @@
+/**
+ * Created by konrad.sobon on 2018-04-19.
+ */
 angular.module('MissionControlApp').factory('ProjectFactory', ProjectFactory);
 
 function ProjectFactory($http){
@@ -10,13 +13,13 @@ function ProjectFactory($http){
             return $http.get('/api/v1/projects/' + id).then(complete).catch(failed);
         },
 
-        getByConfigId: function getByConfigId(id){
-            return $http.get('/api/v1/projects/configid/' + id).then(complete).catch(failed);
-        },
-
-        getByOffice: function getByOffice(office){
-            return $http.get('/api/v1/projects/office/' + office).then(complete).catch(failed);
-        },
+        // getByConfigId: function getByConfigId(id){
+        //     return $http.get('/api/v1/projects/configid/' + id).then(complete).catch(failed);
+        // },
+        //
+        // getByOffice: function getByOffice(office){
+        //     return $http.get('/api/v1/projects/office/' + office).then(complete).catch(failed);
+        // },
 
         addProject: function addProject(project){
             return $http.post('/api/v1/projects', project).then(complete).catch(failed);

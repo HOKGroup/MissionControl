@@ -1,60 +1,56 @@
+/**
+ * Created by konrad.sobon on 2018-04-19.
+ */
 angular.module('MissionControlApp').controller('ProjectController', ProjectController);
 
 function ProjectController(ProjectFactory, $location, DTColumnDefBuilder){
     var vm = this;
-    vm.status = "Success";
+    vm.projects = null;
 
     getProjects();
 
+    /**
+     * Navigates to project page.
+     * @param path
+     */
     vm.go = function(path){
         $location.path(path);
     };
 
-    vm.dtOptions2 = {
-        paginationType: 'simple_numbers',
-        lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'All']]
-    };
+    //region Utilities
 
-    vm.dtColumnDefs2 = [
-        DTColumnDefBuilder.newColumnDef(0), //number
-        DTColumnDefBuilder.newColumnDef(1), //name
-        DTColumnDefBuilder.newColumnDef(2), //office
-        DTColumnDefBuilder.newColumnDef(3) //address
-    ];
-
+    /**
+     * Retrieves projects from the DB.
+     */
     function getProjects() {
         ProjectFactory.getProjects()
             .then(function (response) {
+                if(!response || response.status !== 200) return;
+
                 vm.projects = response.data;
-            }).catch(function (error) {
-            vm.status = 'Unable to load project data: ' + error.message;
-        });
+                createTable();
+            })
+            .catch(function (err) {
+                console.log('Unable to load project data: ' + err.message);
+            });
     }
 
-    vm.getProjectById = function (id) {
-        ProjectFactory.getProjectById(id)
-            .then(function (response) {
-                vm.selectedProject = response.data;
-            }).catch(function (error) {
-            vm.status = 'Unable to get project by Id: ' + id + '  ' + error.message;
-        });
-    };
+    /**
+     * Initiates DataTables options.
+     */
+    function createTable() {
+        vm.dtOptions = {
+            paginationType: 'simple_numbers',
+            lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'All']]
+        };
 
-    vm.getByConfigId = function (id){
-        ProjectFactory.getByConfigId(id)
-            .then(function (response) {
-                vm.selectedProject = response.data;
-            }).catch(function (error){
-            vm.status = 'Unable to get project by configuration Id: ' + id + '  ' + error.message;
-        });
-    };
+        vm.dtColumnDefs = [
+            DTColumnDefBuilder.newColumnDef(0), //number
+            DTColumnDefBuilder.newColumnDef(1), //name
+            DTColumnDefBuilder.newColumnDef(2), //office
+            DTColumnDefBuilder.newColumnDef(3) //address
+        ];
+    }
 
-    vm.getByOffice = function (office){
-        ProjectFactory.getByOffice(office)
-            .then(function (response) {
-                vm.filteredProject = response.data;
-            }).catch(function (error){
-            vm.status = 'Unable to get project by office: ' + office + '  ' + error.message;
-        });
-    };
+    //endregion
 }

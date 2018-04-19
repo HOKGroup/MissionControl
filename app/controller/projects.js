@@ -7,38 +7,36 @@
 
 var mongoose = require('mongoose');
 var global = require('./socket/global');
-
 Project = mongoose.model('Project');
 
 ProjectService = {
+    findAndSort : function(req, res){
+        Project
+            .find({})
+            .sort({ number: 1 })
+            .exec(function (err, response){
+                var result = {
+                    status: 200,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
+    },
 
   findAll : function(req, res){
     Project.find({},function(err, results) {
       return res.send(results);
     });
   },
-	
-  findAndSort : function(req, res){
-      Project
-          .find({})
-          .sort({number:1})
-          .exec(function(err, doc) {
-              var response = {
-                  status: 200,
-                  message: doc
-              };
-              if(err){
-                  response.status = 500;
-                  response.message = err;
-              } else if(!doc){
-                  response.status = 404;
-                  response.message = {"message": "No Projects were found"};
-              }
-              res
-                  .status(response.status)
-                  .json(response.message);
-          });
-  },
+
+
     /**
      * Retrieves project by its id.
      * @param req
@@ -85,19 +83,19 @@ ProjectService = {
           });
   },
 
-   findByConfigurationId : function(req, res){
-    var id = req.params.configid;
-    Project.find({'configurations':id},function(err, result) {
-      return res.send(result);
-    });
-  },
-  
-  findByOffice : function(req, res){
-    var office_name = req.params.office;
-    Project.find({'office':office_name},function(err, result) {
-      return res.send(result);
-    });
-  },
+  //  findByConfigurationId : function(req, res){
+  //   var id = req.params.configid;
+  //   Project.find({'configurations':id},function(err, result) {
+  //     return res.send(result);
+  //   });
+  // },
+  //
+  // findByOffice : function(req, res){
+  //   var office_name = req.params.office;
+  //   Project.find({'office':office_name},function(err, result) {
+  //     return res.send(result);
+  //   });
+  // },
 
   add : function(req, res){
       Project
@@ -201,7 +199,7 @@ ProjectService = {
                     res.status(result.status).json(result.message);
                 });
     },
-  
+
   deleteConfiguration: function(req, res){
 	  var projectId = req.params.id;
 	  var configId=req.params.configid;

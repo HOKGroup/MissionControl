@@ -30,13 +30,15 @@ var projectSchema = new mongoose.Schema({
 	geoPolygon: geoSchema, //type MultiPolygon
 	configurations: [{
     	type: mongoose.Schema.Types.ObjectId,
-		ref: 'Configuration'}],
-	healthrecords: [{
-    	type: mongoose.Schema.Types.ObjectId }],
+		ref: 'Configuration' }],
     sheets: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Sheets'
-    }]
+        ref: 'Sheets' }],
+	modelStats: [{ type: mongoose.Schema.Types.ObjectId }],
+	linkStats: [{ type: mongoose.Schema.Types.ObjectId }],
+	styleStats: [{ type: mongoose.Schema.Types.ObjectId }],
+	familyStats: [{ type: mongoose.Schema.Types.ObjectId }],
+	worksetStats: [{ type: mongoose.Schema.Types.ObjectId }]
   },
   {
 	  timestamps: true
