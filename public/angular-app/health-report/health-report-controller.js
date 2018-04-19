@@ -58,7 +58,10 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
      */
     vm.fileNameFromPath = function (path){
         if(!path) return;
-        return path.replace(/^.*[\\\/]/, '').slice(0, -4);
+
+        // (Konrad) We retrieve a file name with extension,
+        // then remove the last 12 chars (_central.rvt)
+        return path.replace(/^.*[\\\/]/, '').slice(0, -12);
     };
 
     /**
@@ -102,11 +105,12 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
      * @constructor
      */
     vm.SetProject = function (link, reset){
+        vm.selectedFileName = vm.fileNameFromPath(link.centralPath);
+        vm.showMenu = true;
+
         if (reset) vm.AllData = [{
             show: {name: "main", value: true}
         }];
-
-        vm.showMenu = true;
 
         // (Konrad) By default we will take only last month worth of data.
         // Users can change that range in specific needs.
