@@ -67,11 +67,21 @@ module.exports.deleteMany = function (req, res) {
     var ids = req.body.map(function (id){
         return mongoose.Types.ObjectId(id);
     });
-    Configuration.remove(
-        {'_id': { $in: ids }}, function (err, result) {
-            if(err) res.status(501).json(err);
-            else res.status(201).json(result);
-    });
+    Configuration
+        .remove({'_id': { $in: ids }}, function (err, response){
+            var result = {
+                status: 201,
+                message: response
+            };
+            if (err){
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
+            }
+            res.status(result.status).json(result.message);
+        });
 };
 
 /**

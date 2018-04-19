@@ -1,3 +1,6 @@
+/**
+ * Created by konrad.sobon on 2018-04-19.
+ */
 angular.module('MissionControlApp').factory('ConfigFactory', ConfigFactory);
 
 function ConfigFactory($http){

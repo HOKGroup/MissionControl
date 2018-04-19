@@ -10,19 +10,19 @@ var sheets = require('./models/sheets-model');
      var projects = require('./controller/projects');
      app.get('/api/v1/projects', projects.findAll);
      app.get('/api/v1/projects/sort', projects.findAndSort); //OK
-     app.get('/api/v1/projects/:id', projects.findById);
+     app.get('/api/v1/projects/:id', projects.findById); //OK
      app.get('/api/v1/projects/populate/:id', projects.populateById);
      // app.get('/api/v1/projects/populatehr/:id', projects.populateHealthRecords);
      app.get('/api/v1/projects/populatesheets/:id', projects.populateSheets);
      // app.get('/api/v1/projects/configid/:configid', projects.findByConfigurationId);
      // app.get('/api/v1/projects/office/:office', projects.findByOffice);
      app.post('/api/v1/projects', projects.add); //OK
-     app.put('/api/v1/projects/:id', projects.update);
+     app.put('/api/v1/projects/:id', projects.update); //OK
      app.put('/api/v1/projects/:id/addconfig/:configid', projects.addConfiguration);
      app.put('/api/v1/projects/:id/addhealthrecord/:healthrecordid', projects.addHealthRecord);
      app.put('/api/v1/projects/:id/addsheets/:sheetsid', projects.addSheets);
      app.put('/api/v1/projects/:id/deleteconfig/:configid', projects.deleteConfiguration);
-     app.delete('/api/v1/projects/:id', projects.delete);
+     app.delete('/api/v1/projects/:id', projects.delete); //OK
 
      var config = require('./controller/configurations');
      app.get('/api/v1/configurations', config.findAll);
@@ -32,7 +32,7 @@ var sheets = require('./models/sheets-model');
      app.get('/api/v1/configurations/:id/updaterid/:updaterid', config.findByUpdaterId);
      app.post('/api/v1/configurations', config.add);
      app.delete('/api/v1/configurations/:id', config.delete);
-     app.post('/api/v1/configurations/deletemany', config.deleteMany);
+     app.post('/api/v1/configurations/deletemany', config.deleteMany); //OK
      app.put('/api/v1/configurations/:id/updatefilepath', config.updateFilePath);
 
      var triggerrecords = require('./controller/triggerrecords');

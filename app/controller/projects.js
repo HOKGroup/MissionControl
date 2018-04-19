@@ -58,35 +58,87 @@ ProjectService = {
             });
     },
 
+    /**
+     * Retrieves project by its Id.
+     * @param req
+     * @param res
+     */
+    findById: function(req, res){
+        var id = req.params.id;
+        Project
+            .findById(id)
+            .exec(function (err, response){
+                var result = {
+                    status: 200,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
+    },
+
+    /**
+     * Removes Project.
+     * @param req
+     * @param res
+     */
+    delete : function(req, res){
+        var id = req.params.id;
+        Project
+            .remove({ '_id': id }, function (err, response){
+                var result = {
+                    status: 201,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
+    },
+
+    /**
+     * Updates Project in a MongoDB.
+     * @param req
+     * @param res
+     */
+    update : function(req, res) {
+        var id = req.params.id;
+        Project
+            .update(
+                { "_id": id },
+                req.body,
+                { upsert: true }, function (err, response){
+                    var result = {
+                        status: 202,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+    },
+
   findAll : function(req, res){
     Project.find({},function(err, results) {
       return res.send(results);
     });
   },
-
-
-    /**
-     * Retrieves project by its id.
-     * @param req
-     * @param res
-     */
-    findById: function(req, res){
-      var id = req.params.id;
-      Project.findById(id)
-          .exec(function(err, doc){
-              var response = {
-                  status: 200,
-                  message: doc};
-              if(err){
-                  response.status = 500;
-                  response.message = err;
-              } else if(!doc) {
-                  response.status = 404;
-                  response.message = { "message": "Project Id not found " + id};
-              }
-              res.status(response.status).json(response.message);
-          });
-      },
 
     populateById : function (req, res) {
       var id = req.params.id;
@@ -146,16 +198,6 @@ ProjectService = {
                   .status(response.status)
                   .json(response.message);
           });
-  },
-
-  update : function(req, res) {
-    var id = req.params.id;
-    Project.update({"_id":id}, req.body, {upsert:true},
-      function (err, numberAffected) {
-        if (err) return console.log(err);
-		global.io.sockets.emit('update_project', req.body);
-        return res.sendStatus(202);
-    });
   },
 
    addConfiguration : function(req, res){
@@ -227,25 +269,7 @@ ProjectService = {
 			if(err) return console.log(err);
 			return res.sendStatus(202);
 	  });
-  },
-
-    /**
-     * Removes project.
-     * @param req
-     * @param res
-     */
-    delete : function(req, res){
-        var id = req.params.id;
-        Project
-            .remove(
-                {'_id':id}, function(err, result){
-                    if(err) {
-                        res.status(201).json(err);
-                    } else {
-                        res.status(201).json(result);
-                    }
-                });
-    }
+  }
   };
 
 module.exports = ProjectService;
