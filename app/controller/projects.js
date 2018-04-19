@@ -10,6 +10,11 @@ var global = require('./socket/global');
 Project = mongoose.model('Project');
 
 ProjectService = {
+    /**
+     * Retrieves all Projects from MongoDB and sorts by Project Number
+     * @param req
+     * @param res
+     */
     findAndSort : function(req, res){
         Project
             .find({})
@@ -17,6 +22,29 @@ ProjectService = {
             .exec(function (err, response){
                 var result = {
                     status: 200,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
+    },
+
+    /**
+     * Creates new Project in MongoDB.
+     * @param req
+     * @param res
+     */
+    add : function(req, res){
+        Project
+            .create(req.body, function (err, response){
+                var result = {
+                    status: 201,
                     message: response
                 };
                 if (err){
@@ -96,17 +124,6 @@ ProjectService = {
   //     return res.send(result);
   //   });
   // },
-
-  add : function(req, res){
-      Project
-          .create(req.body, function(err, project){
-              if(err) {
-                  res.status(400).json(err);
-              } else {
-                  res.status(201).json(project);
-              }
-          });
-  },
 
   populateSheets : function (req, res) {
       var id = req.params.id;

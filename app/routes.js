@@ -16,7 +16,7 @@ var sheets = require('./models/sheets-model');
      app.get('/api/v1/projects/populatesheets/:id', projects.populateSheets);
      // app.get('/api/v1/projects/configid/:configid', projects.findByConfigurationId);
      // app.get('/api/v1/projects/office/:office', projects.findByOffice);
-     app.post('/api/v1/projects', projects.add);
+     app.post('/api/v1/projects', projects.add); //OK
      app.put('/api/v1/projects/:id', projects.update);
      app.put('/api/v1/projects/:id/addconfig/:configid', projects.addConfiguration);
      app.put('/api/v1/projects/:id/addhealthrecord/:healthrecordid', projects.addHealthRecord);

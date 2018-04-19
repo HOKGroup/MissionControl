@@ -1,24 +1,28 @@
+/**
+ * Created by konrad.sobon on 2018-04-19.
+ */
 angular.module('MissionControlApp').controller('AddProjectController', AddProjectController);
 
 function AddProjectController(ProjectFactory, $window){
     var vm = this;
-    vm.status = "Success!";
+    vm.status = "";
     vm.newProject = {
         address: {},
         geoLocation: {},
         geoPolygon: {},
         name: '',
-        number: ''
+        number: '',
+        office: ''
     };
 
-    //warning messages
-    vm.warning_number = '';
-    vm.warning_name = '';
-
+    /**
+     * Adds a new Project to MongoDB.
+     */
     vm.addProject = function(){
         if( !vm.newProject.hasOwnProperty('number') ||
             !vm.newProject.hasOwnProperty('name') ||
             !vm.newProject.hasOwnProperty('office')){
+            vm.status = 'Name, Number and Office are required fields. Please fill them out.';
             return;
         }
 
@@ -26,7 +30,14 @@ function AddProjectController(ProjectFactory, $window){
             number: vm.newProject.number,
             name: vm.newProject.name,
             office: vm.newProject.office,
-            address: vm.newProject.address
+            address: vm.newProject.address,
+            configurations: [],
+            sheets: [],
+            modelStats: [],
+            linkStats: [],
+            styleStats: [],
+            familyStats: [],
+            worksetStats: []
         };
 
         if(vm.newProject.geoLocation.hasOwnProperty('type') && vm.newProject.geoLocation.hasOwnProperty('coordinates'))
@@ -37,17 +48,17 @@ function AddProjectController(ProjectFactory, $window){
         {
             project.geoPolygon = vm.newProject.geoPolygon;
         }
-        project.healthrecords = [];
-        project.configurations = [];
 
         ProjectFactory
-            .addProject(project).then(function(response){
+            .addProject(project)
+            .then(function(response){
                 if(!response || response.status !== 201) return;
 
                 $window.location.assign('#/configurations/add/' + response.data._id);
-            }).catch(function(error){
-                vm.status = 'Unable to add project: ' + error.message;
-                console.log(error)
+            })
+            .catch(function(err){
+                console.log(err);
+                vm.status = 'Unable to add project: ' + err.message;
             });
     };
 
