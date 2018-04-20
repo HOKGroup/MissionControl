@@ -13,7 +13,7 @@
         <div class="row row-offcanvas row-offcanvas-left">
             <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
                 <div class="list-group">
-                    <a ng-repeat="config in vm.configurations" href="" class="list-group-item" ng-click="vm.getConfigurationById(config._id)"
+                    <a ng-repeat="config in vm.configurations" href="" class="list-group-item" ng-click="vm.setSelectedConfig(config._id)"
                        ng-class="{ 'active': vm.selectedConfig._id === config._id }">{{ config.name }}</a>
                 </div>
                 <a class="btn btn-large btn-default btn-block" href="#/configurations/add/{{ vm.selectedProject._id }}"><span class="glyphicon glyphicon-plus"></span> Add Configuration</a>
@@ -293,8 +293,8 @@
                     </div>
                     <div class="panel-body">
                         <form>
-                            <div class="form-group row">
-                                <label class="control-label col-sm-8">Delete this configuration</label>
+                            <div class="form-group row" style="margin-bottom: 0">
+                                <label class="control-label col-sm-8" style="margin-top: 8px">Delete this configuration</label>
                                 <div class="col-sm-4">
                                     <button type="submit" class="btn btn-danger pull-right" ng-click="vm.deleteConfiguration(vm.selectedConfig._id)">Delete</button>
                                 </div>
@@ -302,7 +302,17 @@
                         </form>
                     </div>
                 </div>
-                <button type="submit" class="btn  btn-primary pull-right" ng-click="vm.updateConfiguration()"><span class="glyphicon glyphicon-ok"></span> Update</button>
+                <label style="padding-left: 0; margin-top:7px;"
+                       class="text-danger"
+                       for="configName">
+                    {{vm.status}}
+                </label>
+                <button type="submit"
+                        class="btn btn-primary pull-right"
+                        ng-click="vm.updateConfiguration()">
+                    <span class="glyphicon glyphicon-ok"></span>
+                    Update
+                </button>
             </div>
         </div>
     </div>

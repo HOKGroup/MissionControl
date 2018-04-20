@@ -63,7 +63,12 @@
 						</select>
 					</fieldset>
 					<fieldset class="form-group">
-						<div google-drawing-map address="vm.selectedProject.address" geo-location="vm.selectedProject.geoLocation" geo-polygon="vm.selectedProject.geoPolygon" initialized="vm.initialized"/>
+						<div google-drawing-map
+							 address="vm.selectedProject.address"
+							 geo-location="vm.selectedProject.geoLocation"
+							 geo-polygon="vm.selectedProject.geoPolygon"
+							 initialized="vm.initialized">
+						</div>
 					</fieldset>
 					<form class ="form-horizontal">
 						<fieldset class="form-group">
@@ -185,12 +190,22 @@
 					</form>
 				</div>
 			</div>
-			<label style="padding-left: 0; margin-top:7px;" class="text-danger">{{vm.status}}</label>
-			<button type="submit" class="btn btn-primary pull-right" ng-click="vm.updateProject()" style="margin:5px;" ng-disabled="vm.verifyForm()">
+			<label style="padding-left:0; margin-top:7px;"
+				   class="text-danger">
+				{{vm.status}}
+			</label>
+			<button type="submit"
+					class="btn btn-primary pull-right"
+					ng-click="vm.updateProject()"
+					ng-disabled="vm.verifyForm()">
 				<span class="glyphicon glyphicon-ok"></span>
 				Update
 			</button>
-			<button class="btn btn-secondary pull-right" ng-click="vm.cancel()" style="margin:5px;">Cancel</button>
+			<button class="btn btn-secondary pull-right"
+					ng-click="vm.cancel()"
+					style="margin-right: 10px">
+				Cancel
+			</button>
 		</form>
 	</div>
 </div>

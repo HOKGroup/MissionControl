@@ -12,16 +12,13 @@ var sheets = require('./models/sheets-model');
      app.get('/api/v1/projects/sort', projects.findAndSort); //OK
      app.get('/api/v1/projects/:id', projects.findById); //OK
      app.get('/api/v1/projects/populate/:id', projects.populateById);
-     // app.get('/api/v1/projects/populatehr/:id', projects.populateHealthRecords);
      app.get('/api/v1/projects/populatesheets/:id', projects.populateSheets);
-     // app.get('/api/v1/projects/configid/:configid', projects.findByConfigurationId);
-     // app.get('/api/v1/projects/office/:office', projects.findByOffice);
      app.post('/api/v1/projects', projects.add); //OK
      app.put('/api/v1/projects/:id', projects.update); //OK
-     app.put('/api/v1/projects/:id/addconfig/:configid', projects.addConfiguration);
+     app.put('/api/v1/projects/:id/addconfig/:configid', projects.addConfiguration); //OK
      app.put('/api/v1/projects/:id/addhealthrecord/:healthrecordid', projects.addHealthRecord);
      app.put('/api/v1/projects/:id/addsheets/:sheetsid', projects.addSheets);
-     app.put('/api/v1/projects/:id/deleteconfig/:configid', projects.deleteConfiguration);
+     app.put('/api/v1/projects/:id/deleteconfig/:configid', projects.deleteConfiguration); //OK
      app.delete('/api/v1/projects/:id', projects.delete); //OK
 
      var config = require('./controller/configurations');
@@ -29,10 +26,12 @@ var sheets = require('./models/sheets-model');
      app.get('/api/v1/configurations/:id', config.findById);
      app.put('/api/v1/configurations/:id', config.update);
      app.get('/api/v1/configurations/centralpath/:uri*', config.findByCentralPath);
-     app.get('/api/v1/configurations/:id/updaterid/:updaterid', config.findByUpdaterId);
-     app.post('/api/v1/configurations', config.add);
-     app.delete('/api/v1/configurations/:id', config.delete);
+     app.post('/api/v1/configurations', config.add); //OK
+     app.delete('/api/v1/configurations/:id', config.delete); //OK
      app.post('/api/v1/configurations/deletemany', config.deleteMany); //OK
+     app.post('/api/v1/configurations/:id/addfile', config.addFile); //OK
+     app.post('/api/v1/configurations/:id/deletefile', config.deleteFile); //OK
+     app.post('/api/v1/configurations/getmany', config.getMany); //OK
      app.put('/api/v1/configurations/:id/updatefilepath', config.updateFilePath);
 
      var triggerrecords = require('./controller/triggerrecords');

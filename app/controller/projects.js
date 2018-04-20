@@ -134,6 +134,60 @@ ProjectService = {
                 });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    deleteConfiguration: function(req, res){
+        var projectId = req.params.id;
+        var configId = req.params.configid;
+        Project
+            .update(
+                { '_id': projectId},
+                { $pull: { 'configurations': configId }},function (err, response){
+                    var result = {
+                        status: 204,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+    },
+
+    /**
+     * Adds configuration reference to Configurations Collection.
+     * @param req
+     * @param res
+     */
+    addConfiguration : function(req, res){
+        var projectId = req.params.id;
+        var configId = req.params.configid;
+        Project
+            .update(
+                { '_id': projectId},
+                { $push:{ 'configurations': configId }}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+    },
+
   findAll : function(req, res){
     Project.find({},function(err, results) {
       return res.send(results);
@@ -200,17 +254,7 @@ ProjectService = {
           });
   },
 
-   addConfiguration : function(req, res){
-        var projectId = req.params.id;
-        var configId = req.params.configid;
-        Project
-            .update(
-                { _id:projectId},
-                { $push:{configurations: configId }}, function(err, numberAffected){
-                    if(err) return console.log(err);
-                    return res.sendStatus(202);
-                });
-   },
+
     addHealthRecord : function(req, res){
        var projectId = req.params.id;
        var healthRecordId = req.params.healthrecordid;
@@ -257,19 +301,7 @@ ProjectService = {
                     }
                     res.status(result.status).json(result.message);
                 });
-    },
-
-  deleteConfiguration: function(req, res){
-	  var projectId = req.params.id;
-	  var configId=req.params.configid;
-	  Project.update(
-		{ _id:projectId},
-		{ $pull:{configurations: configId}},
-		function(err, data){
-			if(err) return console.log(err);
-			return res.sendStatus(202);
-	  });
-  }
+    }
   };
 
 module.exports = ProjectService;

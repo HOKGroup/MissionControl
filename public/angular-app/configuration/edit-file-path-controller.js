@@ -24,38 +24,38 @@ function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactor
         // (Konrad) Before allowing user to change file name, let's check they are not changing it to
         // name that might already exist in the DB.
         var uri = vm.filePath.replace(/\\/g, '|');
-        ConfigFactory
-            .getByCentralPath(uri).then(function(response){
-            if(!response || response.status !== 200) return;
+        ConfigFactory.getByCentralPath(uri)
+            .then(function(response){
+                if(!response || response.status !== 200) return;
 
-            var configFound = response.data;
-            var configNames = '';
-            var configMatched = false;
-            if(configFound.length > 0){
-                //find an exact match from text search result
-                for(var i = 0; i < configFound.length; i++) {
-                    var config = configFound[i];
-                    for(var j = 0; j < config.files.length; j++){
-                        var file = config.files[j];
-                        if(file.centralPath.toLowerCase() === vm.filePath.toLowerCase()){
-                            configMatched = true;
-                            configNames += ' [' + config.name + '] ';
-                            break;
+                var configFound = response.data;
+                var configNames = '';
+                var configMatched = false;
+                if(configFound.length > 0){
+                    //find an exact match from text search result
+                    for(var i = 0; i < configFound.length; i++) {
+                        var config = configFound[i];
+                        for(var j = 0; j < config.files.length; j++){
+                            var file = config.files[j];
+                            if(file.centralPath.toLowerCase() === vm.filePath.toLowerCase()){
+                                configMatched = true;
+                                configNames += ' [' + config.name + '] ';
+                                break;
+                            }
                         }
                     }
                 }
-            }
-            if(configMatched){
-                vm.warning = 'This file already exists in other configurations. Please try a different name, or remove this one first';
-            } else
-            {
-                // (Konrad) All checks passed, we can safely execute name update.
-                updateName();
-            }
-        }, function(error){
-            vm.warning = 'Unable to retrieve Configuration data from DB. Verify your connection to server.';
-            console.log(error);
-        });
+                if(configMatched){
+                    vm.warning = 'This file already exists in other configurations. Please try a different name, or remove this one first';
+                } else {
+                    // (Konrad) All checks passed, we can safely execute name update.
+                    updateName();
+                }
+            })
+            .catch(function (err) {
+                vm.warning = 'Unable to retrieve Configuration data from DB. Verify your connection to server.';
+                console.log(err.message);
+            });
     };
 
     /**
@@ -74,6 +74,8 @@ function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactor
         // distinguish from one model to another. We need to update all of those paths to
         // prevent data from getting disassociated.
         var data = { before: filePath.toLowerCase(), after: vm.filePath.toLowerCase() };
+
+        //TODO: This would need to be updated to account for all new Collections that we are about to create.
         ConfigFactory.updateFilePath(id, data)
             .then(function (response) {
                 if(!response) return;

@@ -25,12 +25,16 @@ function ProjectFactory($http){
             return $http.put('/api/v1/projects/' + project._id, project).then(complete).catch(failed);
         },
 
-        // deleteConfiguration: function deleteConfiguration(configId){
-        //     return $http.delete('/api/v1/configurations/' + configId).then(complete).catch(failed);
-        // },
-
         populateSheets: function populateSheets(projectId) {
             return $http.get('/api/v1/projects/populatesheets/' + projectId).then(complete).catch(failed);
+        },
+
+        addConfig: function addConfig(projectId, configId) {
+            return $http.put('/api/v1/projects/' + projectId + '/addconfig/' + configId).then(complete).catch(failed);
+        },
+
+        deleteConfig: function deleteConfig(projectId, configId) {
+            return $http.put('/api/v1/projects/' + projectId + '/deleteconfig/' + configId).then(complete).catch(failed);
         }
     };
 
