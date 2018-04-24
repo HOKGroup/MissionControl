@@ -97,34 +97,6 @@ module.exports.add = function(req, res){
         });
 };
 
-
-
-/**
- * Pushes View info into array.
- * @param req
- * @param res
- */
-module.exports.viewStats = function (req, res) {
-    var id = req.params.id;
-    HealthRecords.update(
-        {'_id': id},
-        {'$push': {'viewStats': req.body}},
-        function(err, response){
-            var result = {
-                status: 201,
-                message: response
-            };
-            if(err) {
-                result.status = 500;
-                result.message = err;
-            } else {
-                res.status(result.status).json(result.message);
-            }
-        });
-};
-
-
-
 /**
  * Pushes Workset info for Synch events into an array.
  * @param req
@@ -135,33 +107,6 @@ module.exports.onSynched = function (req, res) {
     HealthRecords.update(
         {'_id': id},
         {'$push': {'onSynched': req.body}},
-        function(err, response){
-            var result = {
-                status: 201,
-                message: response
-            };
-            if(err) {
-                result.status = 500;
-                result.message = err;
-            } else {
-                res.status(result.status).json(result.message);
-            }
-        });
-};
-
-
-
-
-/**
- * Pushes Link info into an array.
- * @param req
- * @param res
- */
-module.exports.postLinkStats = function (req, res) {
-    var id = req.params.id;
-    HealthRecords.update(
-        {'_id': id},
-        {'$push': {'linkStats': req.body}},
         function(err, response){
             var result = {
                 status: 201,
@@ -223,100 +168,6 @@ module.exports.postFamilyStats = function (req, res) {
                 res
                     .status(response.status)
                     .json(response.message);
-            }
-        });
-};
-
-/**
- * Posts model open times to Health Recors.
- * @param req
- * @param res
- */
-module.exports.postModelSize = function (req, res) {
-    var id = req.params.id;
-    HealthRecords
-        .findById(id)
-        .select('modelSizes')
-        .exec(function (err, doc){
-            var response = {
-                status: 200,
-                message: []
-            };
-            if (err){
-                response.status = 500;
-                response.message = err;
-            } else if(!doc){
-                response.status = 404;
-                response.message = {"message": "Workset Id not found."}
-            }
-            if(doc){
-                _addModelSizeTime(req, res, doc);
-            } else {
-                res.status(response.status).json(response.message);
-            }
-        });
-};
-
-var _addModelSizeTime = function (req, res, healthReportData){
-    healthReportData.modelSizes.push({
-        value: parseInt(req.body.value, 10),
-        user: req.body.user,
-        createdOn: Date.now()
-    });
-
-    healthReportData.save(function (err, dataUpdated) {
-        if(err){
-            res.status(500).json(err);
-        } else {
-            res.status(200).json(dataUpdated.modelSizes[dataUpdated.modelSizes.length - 1]);
-        }
-    });
-};
-
-/**
- * Posts model open times to Health Record.
- * @param req
- * @param res
- */
-module.exports.postModelOpenTime = function (req, res) {
-    var id = req.params.id;
-    HealthRecords.update(
-        {'_id': id},
-        {'$push': {'openTimes': req.body}},
-        function(err, response){
-            var result = {
-                status: 201,
-                message: response
-            };
-            if(err) {
-                result.status = 500;
-                result.message = err;
-            } else {
-                res.status(result.status).json(result.message);
-            }
-        });
-};
-
-/**
- * Posts model synch time to Health Report.
- * @param req
- * @param res
- */
-module.exports.postModelSynchTime = function (req, res) {
-    var id = req.params.id;
-    HealthRecords.update(
-        {'_id': id},
-        {'$push': {'synchTimes': req.body}},
-        function(err, response){
-            var result = {
-                status: 201,
-                message: response
-            };
-            if(err) {
-                result.status = 500;
-                result.message = err;
-            } else {
-                res.status(result.status).json(result.message);
             }
         });
 };
@@ -606,8 +457,6 @@ module.exports.getModelStats = function (req, res) {
             res.status(result.status).json(result.message);
         });
 };
-
-
 
 /**
  * Updates stored file path when Configuration is changed.

@@ -38,7 +38,8 @@ var projectSchema = new mongoose.Schema({
 	linkStats: [{ type: mongoose.Schema.Types.ObjectId }],
 	styleStats: [{ type: mongoose.Schema.Types.ObjectId }],
 	familyStats: [{ type: mongoose.Schema.Types.ObjectId }],
-	worksetStats: [{ type: mongoose.Schema.Types.ObjectId }]
+	worksetStats: [{ type: mongoose.Schema.Types.ObjectId }],
+	viewStats: [{ type: mongoose.Schema.Types.ObjectId }]
   },
   {
 	  timestamps: true

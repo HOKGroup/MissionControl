@@ -293,6 +293,87 @@ ProjectService = {
     },
 
     /**
+     *
+     * @param req
+     * @param res
+     */
+    addLink: function (req, res) {
+        var projectId = req.params.id;
+        var linksId = mongoose.Types.ObjectId(req.body['id']);
+        Project
+            .update(
+                { '_id': projectId},
+                { $push:{ 'linkStats': linksId }}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    addView: function (req, res) {
+        var projectId = req.params.id;
+        var linksId = mongoose.Types.ObjectId(req.body['id']);
+        Project
+            .update(
+                { '_id': projectId},
+                { $push:{ 'viewStats': linksId }}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    addModel: function (req, res) {
+        var projectId = req.params.id;
+        var modelsId = mongoose.Types.ObjectId(req.body['id']);
+        Project
+            .update(
+                { '_id': projectId},
+                { $push:{ 'modelStats': modelsId }}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+    },
+
+    /**
      * Adds Sheets id reference to Project.sheets collection.
      * @param req
      * @param res

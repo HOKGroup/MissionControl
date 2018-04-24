@@ -8,6 +8,8 @@ var sheets = require('./models/sheets-model');
 var worksets = require('./models/worksets-model');
 var styles = require('./models/styles-model');
 var links = require('./models/links-model');
+var models = require('./models/models-model');
+var views = require('./models/views-model');
 
  module.exports = function(app) {
      var projects = require('./controller/projects');
@@ -23,6 +25,9 @@ var links = require('./models/links-model');
      app.put('/api/v1/projects/:id/addworkset', projects.addWorkset); //OK
      app.put('/api/v1/projects/:id/addfamilies', projects.addFamilies); //OK
      app.put('/api/v1/projects/:id/addstyle', projects.addStyle); //OK
+     app.put('/api/v1/projects/:id/addmodel', projects.addModel); //OK
+     app.put('/api/v1/projects/:id/addlink', projects.addLink); //OK
+     app.put('/api/v1/projects/:id/addview', projects.addView); //OK
      app.put('/api/v1/projects/:id/addhealthrecord/:healthrecordid', projects.addHealthRecord);
      app.put('/api/v1/projects/:id/addsheets/:sheetsid', projects.addSheets); //OK
      app.put('/api/v1/projects/:id/deleteconfig/:configid', projects.deleteConfiguration); //OK
@@ -64,13 +69,8 @@ var links = require('./models/links-model');
      app.post('/api/v1/healthrecords/:id/onsynched', healthReport.onSynched);
      app.get('/api/v1/healthrecords/:id/stylestats', healthReport.getStyleStats);
      app.get('/api/v1/healthrecords/:id/viewstats', healthReport.getViewStats);
-     app.post('/api/v1/healthrecords/:id/viewstats', healthReport.viewStats);
      app.get('/api/v1/healthrecords/:id/linkstats', healthReport.getLinkStats);
-     app.post('/api/v1/healthrecords/:id/linkstats', healthReport.postLinkStats);
      app.get('/api/v1/healthrecords/:id/modelstats', healthReport.getModelStats);
-     app.post('/api/v1/healthrecords/:id/modelsize', healthReport.postModelSize);
-     app.post('/api/v1/healthrecords/:id/modelopentime', healthReport.postModelOpenTime);
-     app.post('/api/v1/healthrecords/:id/modelsynchtime', healthReport.postModelSynchTime);
      app.get('/api/v1/healthrecords/:id/worksetstats', healthReport.getWorksetStats);
      app.get('/api/v1/healthrecords/:id/familystats', healthReport.getFamilyStats);
      app.post('/api/v1/healthrecords/:id/familystats', healthReport.postFamilyStats);
@@ -121,4 +121,16 @@ var links = require('./models/links-model');
      app.get('/api/v1/links/centralpath/:uri*', links.findByCentralPath); //OK
      app.post('/api/v1/links', links.add); //OK
      app.post('/api/v1/links/:id/linkstats', links.linkStats); //OK
+
+     var models = require('./controller/models-controller');
+     app.get('/api/v1/models/centralpath/:uri*', models.findByCentralPath); //OK
+     app.post('/api/v1/models', models.add); //OK
+     app.post('/api/v1/models/:id/modelsize', models.postModelSize); //OK
+     app.post('/api/v1/models/:id/modelopentime', models.postModelOpenTime); //OK
+     app.post('/api/v1/models/:id/modelsynchtime', models.postModelSynchTime); //OK
+
+     var views = require('./controller/views-controller');
+     app.get('/api/v1/views/centralpath/:uri*', views.findByCentralPath); //OK
+     app.post('/api/v1/views', views.add); //OK
+     app.post('/api/v1/views/:id/viewstats', views.viewStats); //OK
   };
