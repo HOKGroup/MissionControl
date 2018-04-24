@@ -84,6 +84,29 @@ ProjectService = {
     },
 
     /**
+     * Retrieves Project by Configuration Id. Used by .NET side to check into MC.
+     * @param req
+     * @param res
+     */
+    findByConfigurationId : function(req, res){
+        var id = req.params.configid;
+        Project.find({ 'configurations': id },function (err, response){
+            var result = {
+                status: 200,
+                message: response
+            };
+            if (err){
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
+            }
+            res.status(result.status).json(result.message);
+        });
+    },
+
+    /**
      * Removes Project.
      * @param req
      * @param res
@@ -188,6 +211,60 @@ ProjectService = {
                 });
     },
 
+    /**
+     * Adds configuration reference to Configurations Collection.
+     * @param req
+     * @param res
+     */
+    addWorkset : function(req, res){
+        var projectId = req.params.id;
+        var worksetId = mongoose.Types.ObjectId(req.body['id']);
+        Project
+            .update(
+                { '_id': projectId},
+                { $push:{ 'worksetStats': worksetId }}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+    },
+
+    /**
+     * Adds Sheets id reference to Project.sheets collection.
+     * @param req
+     * @param res
+     */
+    addSheets : function(req, res){
+        var projectId = req.params.id;
+        var sheetsId = req.params.sheetsid;
+        Project
+            .update(
+                { _id: projectId},
+                { $push:{ 'sheets': sheetsId }}, function (err, response){
+                    var result = {
+                        status: 202,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+    },
+
   findAll : function(req, res){
     Project.find({},function(err, results) {
       return res.send(results);
@@ -217,12 +294,7 @@ ProjectService = {
           });
   },
 
-  //  findByConfigurationId : function(req, res){
-  //   var id = req.params.configid;
-  //   Project.find({'configurations':id},function(err, result) {
-  //     return res.send(result);
-  //   });
-  // },
+
   //
   // findByOffice : function(req, res){
   //   var office_name = req.params.office;
@@ -274,34 +346,7 @@ ProjectService = {
                            .json();
                    }
                });
-   },
-
-    /**
-     *
-     * @param req
-     * @param res
-     */
-    addSheets : function(req, res){
-        var projectId = req.params.id;
-        var sheetsId = req.params.sheetsid;
-        Project
-            .update(
-                { _id: projectId},
-                { $push:{ sheets: sheetsId }},function (err, response){
-                    var result = {
-                        status: 202,
-                        message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
-                    }
-                    res.status(result.status).json(result.message);
-                });
-    }
+   }
   };
 
 module.exports = ProjectService;

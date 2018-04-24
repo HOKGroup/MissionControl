@@ -5,19 +5,22 @@ var healthReport = require('./models/healthrecords-model');
 var addins = require('./models/addins-model');
 var families = require('./models/families-model');
 var sheets = require('./models/sheets-model');
+var worksets = require('./models/worksets-model');
 
  module.exports = function(app) {
      var projects = require('./controller/projects');
      app.get('/api/v1/projects', projects.findAll);
      app.get('/api/v1/projects/sort', projects.findAndSort); //OK
      app.get('/api/v1/projects/:id', projects.findById); //OK
+     app.get('/api/v1/projects/configid/:configid', projects.findByConfigurationId); //OK
      app.get('/api/v1/projects/populate/:id', projects.populateById);
      app.get('/api/v1/projects/populatesheets/:id', projects.populateSheets);
      app.post('/api/v1/projects', projects.add); //OK
      app.put('/api/v1/projects/:id', projects.update); //OK
      app.put('/api/v1/projects/:id/addconfig/:configid', projects.addConfiguration); //OK
+     app.put('/api/v1/projects/:id/addworkset', projects.addWorkset); //OK
      app.put('/api/v1/projects/:id/addhealthrecord/:healthrecordid', projects.addHealthRecord);
-     app.put('/api/v1/projects/:id/addsheets/:sheetsid', projects.addSheets);
+     app.put('/api/v1/projects/:id/addsheets/:sheetsid', projects.addSheets); //OK
      app.put('/api/v1/projects/:id/deleteconfig/:configid', projects.deleteConfiguration); //OK
      app.delete('/api/v1/projects/:id', projects.delete); //OK
 
@@ -56,7 +59,6 @@ var sheets = require('./models/sheets-model');
      app.post('/api/v1/healthrecords/names', healthReport.getNames); //it's a post b/c I need to feed [id]
      app.post('/api/v1/healthrecords/:id/onsynched', healthReport.onSynched);
      app.post('/api/v1/healthrecords/:id/onopened', healthReport.onOpened);
-     app.post('/api/v1/healthrecords/:id/itemcount', healthReport.postItemCount);
      app.get('/api/v1/healthrecords/:id/stylestats', healthReport.getStyleStats);
      app.post('/api/v1/healthrecords/:id/stylestats', healthReport.styleStats);
      app.get('/api/v1/healthrecords/:id/viewstats', healthReport.getViewStats);
@@ -93,8 +95,8 @@ var sheets = require('./models/sheets-model');
      var sheets = require('./controller/sheets-controller');
      app.get('/api/v1/sheets', sheets.findAll);
      app.post('/api/v1/sheets', sheets.add);
-     app.get('/api/v1/sheets/centralpath/:uri*', sheets.findByCentralPath);
-     app.post('/api/v1/sheets/:id', sheets.update);
+     app.get('/api/v1/sheets/centralpath/:uri*', sheets.findByCentralPath); //OK
+     app.post('/api/v1/sheets/:id', sheets.update); //OK
      app.post('/api/v1/sheets/:id/addsheettask', sheets.addSheetTask);
      app.post('/api/v1/sheets/:id/addsheets', sheets.addSheets);
      app.post('/api/v1/sheets/:id/approvenewsheet', sheets.approveNewSheets);
@@ -102,4 +104,9 @@ var sheets = require('./models/sheets-model');
      app.post('/api/v1/sheets/:id/deletetasks', sheets.deleteTasks);
      app.post('/api/v1/sheets/:id/updatetasks', sheets.updateSheetTask);
      app.put('/api/v1/sheets/:id/updatefilepath', sheets.updateFilePath);
+
+     var worksets = require('./controller/worksets-controller');
+     app.get('/api/v1/worksets/centralpath/:uri*', worksets.findByCentralPath); //OK
+     app.post('/api/v1/worksets', worksets.add); //OK
+     app.post('/api/v1/worksets/:id/itemcount', worksets.postItemCount); //OK
   };

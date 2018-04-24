@@ -195,30 +195,7 @@ module.exports.onSynched = function (req, res) {
 };
 
 
-/**
- * Pushes Workset Item counts into an array.
- * @param req
- * @param res
- */
-module.exports.postItemCount = function (req, res) {
-    var id = req.params.id;
-    HealthRecords.update(
-        {'_id': id},
-        {'$push': {'itemCount': req.body}},
-        function(err, response){
-            var result = {
-                status: 201,
-                message: response
-            };
-            if(err) {
-                result.status = 500;
-                result.message = err;
-            } else {
-                result.message._id = id;
-                res.status(result.status).json(result.message);
-            }
-        });
-};
+
 
 /**
  * Pushes Link info into an array.
