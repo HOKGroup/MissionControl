@@ -239,6 +239,60 @@ ProjectService = {
     },
 
     /**
+     *
+     * @param req
+     * @param res
+     */
+    addFamilies: function (req, res) {
+        var projectId = req.params.id;
+        var familiesId = mongoose.Types.ObjectId(req.body['id']);
+        Project
+            .update(
+                { '_id': projectId},
+                { $push:{ 'familyStats': familiesId }}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    addStyle: function (req, res) {
+        var projectId = req.params.id;
+        var stylesId = mongoose.Types.ObjectId(req.body['id']);
+        Project
+            .update(
+                { '_id': projectId},
+                { $push:{ 'styleStats': stylesId }}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+    },
+
+    /**
      * Adds Sheets id reference to Project.sheets collection.
      * @param req
      * @param res

@@ -6,6 +6,8 @@ var addins = require('./models/addins-model');
 var families = require('./models/families-model');
 var sheets = require('./models/sheets-model');
 var worksets = require('./models/worksets-model');
+var styles = require('./models/styles-model');
+var links = require('./models/links-model');
 
  module.exports = function(app) {
      var projects = require('./controller/projects');
@@ -19,6 +21,8 @@ var worksets = require('./models/worksets-model');
      app.put('/api/v1/projects/:id', projects.update); //OK
      app.put('/api/v1/projects/:id/addconfig/:configid', projects.addConfiguration); //OK
      app.put('/api/v1/projects/:id/addworkset', projects.addWorkset); //OK
+     app.put('/api/v1/projects/:id/addfamilies', projects.addFamilies); //OK
+     app.put('/api/v1/projects/:id/addstyle', projects.addStyle); //OK
      app.put('/api/v1/projects/:id/addhealthrecord/:healthrecordid', projects.addHealthRecord);
      app.put('/api/v1/projects/:id/addsheets/:sheetsid', projects.addSheets); //OK
      app.put('/api/v1/projects/:id/deleteconfig/:configid', projects.deleteConfiguration); //OK
@@ -58,9 +62,7 @@ var worksets = require('./models/worksets-model');
      app.post('/api/v1/healthrecords', healthReport.add);
      app.post('/api/v1/healthrecords/names', healthReport.getNames); //it's a post b/c I need to feed [id]
      app.post('/api/v1/healthrecords/:id/onsynched', healthReport.onSynched);
-     app.post('/api/v1/healthrecords/:id/onopened', healthReport.onOpened);
      app.get('/api/v1/healthrecords/:id/stylestats', healthReport.getStyleStats);
-     app.post('/api/v1/healthrecords/:id/stylestats', healthReport.styleStats);
      app.get('/api/v1/healthrecords/:id/viewstats', healthReport.getViewStats);
      app.post('/api/v1/healthrecords/:id/viewstats', healthReport.viewStats);
      app.get('/api/v1/healthrecords/:id/linkstats', healthReport.getLinkStats);
@@ -72,7 +74,6 @@ var worksets = require('./models/worksets-model');
      app.get('/api/v1/healthrecords/:id/worksetstats', healthReport.getWorksetStats);
      app.get('/api/v1/healthrecords/:id/familystats', healthReport.getFamilyStats);
      app.post('/api/v1/healthrecords/:id/familystats', healthReport.postFamilyStats);
-     app.put('/api/v1/healthrecords/:id/addfamilies', healthReport.addFamilies);
      app.put('/api/v1/healthrecords/:id/updatefilepath', healthReport.updateFilePath);
      app.get('/api/v1/healthrecords/usernames/:uri*', healthReport.getUserNamesByCentralPath);
 
@@ -85,7 +86,7 @@ var worksets = require('./models/worksets-model');
      app.get('/api/v1/families', families.findAll);
      app.post('/api/v1/families', families.add);
      app.get('/api/v1/families/:id', families.findById);
-     app.get('/api/v1/families/centralpath/:uri*', families.findByCentralPath);
+     app.get('/api/v1/families/centralpath/:uri*', families.findByCentralPath); //OK
      app.put('/api/v1/families/:id', families.update);
      app.post('/api/v1/families/:id/family/:name', families.addTask);
      app.post('/api/v1/families/:id/family/:name/updatetask/:taskid', families.updateTask);
@@ -109,4 +110,15 @@ var worksets = require('./models/worksets-model');
      app.get('/api/v1/worksets/centralpath/:uri*', worksets.findByCentralPath); //OK
      app.post('/api/v1/worksets', worksets.add); //OK
      app.post('/api/v1/worksets/:id/itemcount', worksets.postItemCount); //OK
+     app.post('/api/v1/worksets/:id/onopened', worksets.onOpened); //OK
+
+     var styles = require('./controller/styles-controller');
+     app.get('/api/v1/styles/centralpath/:uri*', styles.findByCentralPath); //OK
+     app.post('/api/v1/styles', styles.add); //OK
+     app.post('/api/v1/styles/:id/stylestats', styles.styleStats); //OK
+
+     var links = require('./controller/links-controller');
+     app.get('/api/v1/links/centralpath/:uri*', links.findByCentralPath); //OK
+     app.post('/api/v1/links', links.add); //OK
+     app.post('/api/v1/links/:id/linkstats', links.linkStats); //OK
   };

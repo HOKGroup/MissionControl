@@ -1,10 +1,10 @@
 /**
- * Created by konrad.sobon on 2018-04-23.
+ * Created by konrad.sobon on 2018-04-24.
  */
 var mongoose = require('mongoose');
-var Worksets = mongoose.model('Worksets');
+var Styles = mongoose.model('Styles');
 
-WorksetService = {
+StylesService = {
     /**
      * Finds Worksets collection by central path.
      * @param req
@@ -19,9 +19,9 @@ WorksetService = {
         } else {
             rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
         }
-        Worksets
+        Styles
             .find(
-                {"centralPath": rgx}, function (err, response){
+                { "centralPath": rgx }, function (err, response){
                     var result = {
                         status: 200,
                         message: response
@@ -43,7 +43,7 @@ WorksetService = {
      * @param res
      */
     add: function(req, res){
-        Worksets
+        Styles
             .create(req.body, function (err, response){
                 var result = {
                     status: 201,
@@ -61,42 +61,16 @@ WorksetService = {
     },
 
     /**
-     * Pushes Workset Item counts into an array.
+     * Pushes Style info into an array
      * @param req
      * @param res
      */
-    postItemCount: function (req, res) {
+    styleStats: function (req, res) {
         var id = req.params.id;
-        Worksets
+        Styles
             .update(
                 { '_id': id },
-                { '$push': { 'itemCount': req.body }}, function (err, response){
-                    var result = {
-                        status: 201,
-                        message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
-                    }
-                    res.status(result.status).json(result.message);
-                });
-    },
-
-    /**
-     * Pushes workset info for Open events into array.
-     * @param req
-     * @param res
-     */
-    onOpened: function (req, res) {
-        var id = req.params.id;
-        Worksets
-            .update(
-                { '_id': id },
-                { '$push': { 'onOpened': req.body }}, function (err, response){
+                { '$push': { 'styleStats': req.body}}, function (err, response){
                     var result = {
                         status: 201,
                         message: response
@@ -113,4 +87,4 @@ WorksetService = {
     }
 };
 
-module.exports = WorksetService;
+module.exports = StylesService;

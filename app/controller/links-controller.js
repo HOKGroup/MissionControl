@@ -1,12 +1,12 @@
 /**
- * Created by konrad.sobon on 2018-04-23.
+ * Created by konrad.sobon on 2018-04-24.
  */
 var mongoose = require('mongoose');
-var Worksets = mongoose.model('Worksets');
+var Links = mongoose.model('Links');
 
-WorksetService = {
+LinksService = {
     /**
-     * Finds Worksets collection by central path.
+     * Finds Links collection by central path.
      * @param req
      * @param res
      */
@@ -19,9 +19,9 @@ WorksetService = {
         } else {
             rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
         }
-        Worksets
+        Links
             .find(
-                {"centralPath": rgx}, function (err, response){
+                { "centralPath": rgx }, function (err, response){
                     var result = {
                         status: 200,
                         message: response
@@ -43,7 +43,7 @@ WorksetService = {
      * @param res
      */
     add: function(req, res){
-        Worksets
+        Links
             .create(req.body, function (err, response){
                 var result = {
                     status: 201,
@@ -61,42 +61,16 @@ WorksetService = {
     },
 
     /**
-     * Pushes Workset Item counts into an array.
+     * Pushes Links info into an array
      * @param req
      * @param res
      */
-    postItemCount: function (req, res) {
+    linkStats: function (req, res) {
         var id = req.params.id;
-        Worksets
+        Links
             .update(
                 { '_id': id },
-                { '$push': { 'itemCount': req.body }}, function (err, response){
-                    var result = {
-                        status: 201,
-                        message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
-                    }
-                    res.status(result.status).json(result.message);
-                });
-    },
-
-    /**
-     * Pushes workset info for Open events into array.
-     * @param req
-     * @param res
-     */
-    onOpened: function (req, res) {
-        var id = req.params.id;
-        Worksets
-            .update(
-                { '_id': id },
-                { '$push': { 'onOpened': req.body }}, function (err, response){
+                { '$push': { 'linkStats': req.body}}, function (err, response){
                     var result = {
                         status: 201,
                         message: response
@@ -113,4 +87,4 @@ WorksetService = {
     }
 };
 
-module.exports = WorksetService;
+module.exports = LinksService;

@@ -97,29 +97,7 @@ module.exports.add = function(req, res){
         });
 };
 
-/**
- * Pushes workset info for Open events into array.
- * @param req
- * @param res
- */
-module.exports.onOpened = function (req, res) {
-    var id = req.params.id;
-    HealthRecords.update(
-        {'_id': id},
-        {'$push': {'onOpened': req.body}},
-        function(err, response){
-            var result = {
-                status: 201,
-                message: response
-            };
-            if(err) {
-                result.status = 500;
-                result.message = err;
-            } else {
-                res.status(result.status).json(result.message);
-            }
-        });
-};
+
 
 /**
  * Pushes View info into array.
@@ -145,30 +123,7 @@ module.exports.viewStats = function (req, res) {
         });
 };
 
-/**
- * Pushes Style info into an array
- * @param req
- * @param res
- */
-module.exports.styleStats = function (req, res) {
-    var id = req.params.id;
-    HealthRecords.update(
-        {'_id': id},
-        {'$push': {'styleStats': req.body}},
-        function(err, response){
-            var result = {
-                status: 201,
-                message: response
-            };
-            if(err) {
-                result.status = 500;
-                result.message = err;
-            } else {
-                result.message._id = id;
-                res.status(result.status).json(result.message);
-            }
-        });
-};
+
 
 /**
  * Pushes Workset info for Synch events into an array.
@@ -652,32 +607,7 @@ module.exports.getModelStats = function (req, res) {
         });
 };
 
-/**
- *
- * @param req
- * @param res
- */
-module.exports.addFamilies = function (req, res) {
-    var healthRecordId = req.params.id;
-    var familiesId = mongoose.Types.ObjectId(req.body.key);
-    HealthRecords
-        .update(
-            { _id: healthRecordId},
-            { $set:{ 'familyStats': familiesId }}, function (err, response){
-                var result = {
-                    status: 201,
-                    message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
-                }
-                res.status(result.status).json(result.message);
-            });
-};
+
 
 /**
  * Updates stored file path when Configuration is changed.
