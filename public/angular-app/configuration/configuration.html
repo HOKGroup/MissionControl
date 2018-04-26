@@ -266,7 +266,11 @@
                                     </div>
                                 </div>
                                 <br>
-                                <table id="table1" datatable="ng" dt-options="vm.dtRecordsOptions" dt-column-defs="vm.dtRecordsColumnDefs" class="table table-hover table-condensed datatable">
+                                <table id="table1"
+                                       datatable="ng"
+                                       dt-options="vm.dtRecordsOptions"
+                                       dt-column-defs="vm.dtRecordsColumnDefs"
+                                       class="table table-hover table-condensed datatable">
                                     <thead>
                                     <th class="col-md-5">File Name</th>
                                     <th class="col-md-2 text-center">Category</th>
@@ -277,8 +281,8 @@
                                     <tr ng-repeat="record in vm.selectedRecords">
                                         <td>{{ record.centralPath | split | uppercase }}</td>
                                         <td class="text-center">{{ record.categoryName }}</td>
-                                        <td class="text-center">{{ record.edited | date:"MM/dd/yy h:mm" }}</td>
-                                        <td class="text-center">{{ record.editedBy }}</td>
+                                        <td class="text-center">{{ record.createdOn | date:"MM/dd/yy h:mm" }}</td>
+                                        <td class="text-center">{{ record.user }}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -293,10 +297,14 @@
                     </div>
                     <div class="panel-body">
                         <form>
-                            <div class="form-group row" style="margin-bottom: 0">
-                                <label class="control-label col-sm-8" style="margin-top: 8px">Delete this configuration</label>
+                            <div class="form-group row" style="margin-bottom:0">
+                                <label class="control-label col-sm-8" style="margin-top:8px">Delete this configuration</label>
                                 <div class="col-sm-4">
-                                    <button type="submit" class="btn btn-danger pull-right" ng-click="vm.deleteConfiguration(vm.selectedConfig._id)">Delete</button>
+                                    <button type="submit"
+                                            class="btn btn-danger pull-right"
+                                            ng-click="vm.deleteConfiguration(vm.selectedConfig._id)">
+                                        Delete
+                                    </button>
                                 </div>
                             </div>
                         </form>
@@ -316,7 +324,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 

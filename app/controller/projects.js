@@ -90,7 +90,7 @@ ProjectService = {
      */
     findByConfigurationId : function(req, res){
         var id = req.params.configid;
-        Project.find({ 'configurations': id },function (err, response){
+        Project.find({ 'configurations': id }, function (err, response){
             var result = {
                 status: 200,
                 message: response
@@ -378,15 +378,15 @@ ProjectService = {
      * @param req
      * @param res
      */
-    addSheets : function(req, res){
+    addSheet : function(req, res){
         var projectId = req.params.id;
-        var sheetsId = req.params.sheetsid;
+        var sheetsId = mongoose.Types.ObjectId(req.body['id']);
         Project
             .update(
-                { _id: projectId},
+                { '_id': projectId },
                 { $push:{ 'sheets': sheetsId }}, function (err, response){
                     var result = {
-                        status: 202,
+                        status: 201,
                         message: response
                     };
                     if (err){
@@ -400,45 +400,67 @@ ProjectService = {
                 });
     },
 
-  findAll : function(req, res){
+    /**
+     * Adds Trigger Records id reference to Project.triggerRecords collection.
+     * @param req
+     * @param res
+     */
+    addTriggerRecord : function(req, res){
+        var projectId = req.params.id;
+        var trId = mongoose.Types.ObjectId(req.body['id']);
+        Project
+            .update(
+                { '_id': projectId },
+                { $push:{ 'triggerRecords': trId }}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    findByIdPopulateConfigurations : function (req, res) {
+        var id = req.params.id;
+        Project
+            .findById(id)
+            .populate({ path: 'configurations'})
+            .exec(function (err, response){
+                var result = {
+                    status: 200,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
+    },
+
+    //TODO: Verify that we need these
+    findAll : function(req, res){
     Project.find({},function(err, results) {
       return res.send(results);
     });
   },
 
-    populateById : function (req, res) {
-      var id = req.params.id;
-      Project
-          .findById(id)
-          .populate({ path: 'configurations'})
-          .exec(function (err, doc) {
-              var response = {
-                  status: 200,
-                  message: doc
-              };
-              if(err){
-                  response.status = 500;
-                  response.message = err;
-              } else if(!doc){
-                  response.status = 404;
-                  response.message = { "message": "Project Id not found " + id};
-              }
-              res
-                  .status(response.status)
-                  .json(response.message);
-          });
-  },
-
-
-  //
-  // findByOffice : function(req, res){
-  //   var office_name = req.params.office;
-  //   Project.find({'office':office_name},function(err, result) {
-  //     return res.send(result);
-  //   });
-  // },
-
-  populateSheets : function (req, res) {
+    populateSheets : function (req, res) {
       var id = req.params.id;
       Project
           .findById(id)
@@ -459,29 +481,7 @@ ProjectService = {
                   .status(response.status)
                   .json(response.message);
           });
-  },
-
-
-    addHealthRecord : function(req, res){
-       var projectId = req.params.id;
-       var healthRecordId = req.params.healthrecordid;
-       Project
-           .update(
-               { _id: projectId},
-               { $push:{ healthrecords: healthRecordId }},
-               function(err, project){
-                   if(err) {
-                       console.log(err);
-                       res
-                           .status(201)
-                           .json(err);
-                   } else {
-                       res
-                           .status(201)
-                           .json();
-                   }
-               });
-   }
+  }
   };
 
 module.exports = ProjectService;

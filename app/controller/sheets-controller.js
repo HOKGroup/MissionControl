@@ -32,12 +32,19 @@ module.exports.findAll = function(req, res){
  */
 module.exports.add = function(req, res){
     Sheets
-        .create(req.body, function(err, sheetsData){
-            if(err) {
-                res.status(400).json(err);
-            } else {
-                res.status(201).json(sheetsData);
+        .create(req.body, function (err, response){
+            var result = {
+                status: 201,
+                message: response
+            };
+            if (err){
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
             }
+            res.status(result.status).json(result.message);
         });
 };
 
@@ -405,18 +412,18 @@ module.exports.updateFilePath = function (req, res) {
     Sheets
         .update(
             {'centralPath': before},
-            {'$set': {'centralPath' : after}}, function (err, result) {
-                var response = {
-                    status: 200,
-                    message: result
+            {'$set': {'centralPath' : after}}, function (err, response){
+                var result = {
+                    status: 201,
+                    message: response
                 };
-                if(err){
-                    response.status = 500;
-                    response.message = err;
-                } else if(!result){
-                    console.log("File Path wasn't found in any Configurations Collections");
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
                 }
-                res.status(response.status).json(response.message);
-            }
-        );
+                res.status(result.status).json(result.message);
+            });
 };

@@ -99,19 +99,34 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
         if(!vm.selectedConfig) return;
 
         vm.loading = true;
+        var centralPaths = [];
+        vm.selectedConfig.files.forEach(function (file) {
+            centralPaths.push(file.centralPath);
+        });
+
         var data = {
             from: vm.dtFrom,
             to: vm.dtTo,
-            configId: vm.selectedConfig._id
+            paths: centralPaths
         };
-        TriggerRecordsFactory.getByConfigIdDates(data)
+
+        TriggerRecordsFactory.getManyByCentralPathDates(data)
             .then(function (response) {
                 if(!response || response.status !== 200) return;
 
-                vm.selectedRecords = response.data;
+                var triggerRecords = [];
+                response.data.forEach(function (item) {
+                    item.triggerRecords.forEach(function (record) {
+                        record['centralPath'] = item.centralPath;
+                        triggerRecords.push(record);
+                    })
+                });
+
+                vm.selectedRecords = triggerRecords;
                 vm.loading = false;
             })
             .catch(function (err) {
+                vm.loading = false;
                 console.log(err);
             });
     };
@@ -144,6 +159,8 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
         vm.selectedConfig = vm.configurations.find(function (item) {
             return item._id === configId;
         });
+
+        vm.filterDate();
     };
 
     /**
@@ -313,24 +330,20 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
      * @param projectId
      */
     function getSelectedProjectConfiguration(projectId) {
-        ProjectFactory.getProjectById(projectId)
+        ProjectFactory.getProjectByIdPopulateConfigurations(projectId)
             .then(function(response){
                 if(!response || response.status !== 200) return;
 
-                vm.selectedProject = response.data;
-                return ConfigFactory.getMany(response.data.configurations);
-            })
-            .then(function (response) {
-                if (!response || response.status !== 200) return;
+                SetFilter();
 
-                vm.configurations = response.data;
+                vm.selectedProject = response.data;
+                vm.configurations = response.data.configurations;
                 if (vm.configurations.length > 0){
                     vm.selectedConfig = vm.configurations[0];
                     vm.PlaceholderSharedParameterLocation = GetSharedParamLocation(vm.selectedConfig);
 
                     vm.filterDate();
                 }
-                SetFilter();
             })
             .catch(function (err) {
                 console.log(err.message);

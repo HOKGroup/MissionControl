@@ -3,7 +3,9 @@
  */
 angular.module('MissionControlApp').controller('EditFilePathController', EditFilePathController);
 
-function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactory, HealthRecordsFactory, TriggerRecordsFactory, SheetsFactory, filePath, id) {
+function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactory, LinksFactory, ModelsFactory,
+                                SheetsFactory, StylesFactory, TriggerRecordsFactory, ViewsFactory, WorksetsFactory,
+                                filePath, id) {
     var vm = this;
     vm.filePath = filePath.toLowerCase();
     vm.warning = '';
@@ -70,12 +72,11 @@ function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactor
      */
     var updateName = function(){
         // (Konrad) Updating just the array stored in the configuration is not enough.
-        // Each collection (Familes, Sheets, Health Records etc.) uses Central Path to
+        // Each collection (Familes, Sheets, etc.) uses Central Path to
         // distinguish from one model to another. We need to update all of those paths to
         // prevent data from getting disassociated.
         var data = { before: filePath.toLowerCase(), after: vm.filePath.toLowerCase() };
 
-        //TODO: This would need to be updated to account for all new Collections that we are about to create.
         ConfigFactory.updateFilePath(id, data)
             .then(function (response) {
                 if(!response) return;
@@ -83,11 +84,11 @@ function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactor
             })
             .then(function (response) {
                 if(!response) return;
-                return HealthRecordsFactory.updateFilePath(id, data);
+                return LinksFactory.updateFilePath(id, data);
             })
             .then(function (response) {
                 if(!response) return;
-                return TriggerRecordsFactory.updateFilePath(id, data);
+                return ModelsFactory.updateFilePath(id, data);
             })
             .then(function (response) {
                 if(!response) return;
@@ -95,7 +96,23 @@ function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactor
             })
             .then(function (response) {
                 if(!response) return;
-                $uibModalInstance.close({response: data});
+                return StylesFactory.updateFilePath(id, data);
+            })
+            .then(function (response) {
+                if(!response) return;
+                return TriggerRecordsFactory.updateFilePath(id, data);
+            })
+            .then(function (response) {
+                if(!response) return;
+                return ViewsFactory.updateFilePath(id, data);
+            })
+            .then(function (response) {
+                if(!response) return;
+                return WorksetsFactory.updateFilePath(id, data);
+            })
+            .then(function (response) {
+                if(!response) return;
+                $uibModalInstance.close({ response: data });
             })
             .catch(function (err) {
                 console.log(err);

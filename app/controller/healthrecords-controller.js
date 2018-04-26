@@ -97,30 +97,6 @@ module.exports.add = function(req, res){
         });
 };
 
-/**
- * Pushes Workset info for Synch events into an array.
- * @param req
- * @param res
- */
-module.exports.onSynched = function (req, res) {
-    var id = req.params.id;
-    HealthRecords.update(
-        {'_id': id},
-        {'$push': {'onSynched': req.body}},
-        function(err, response){
-            var result = {
-                status: 201,
-                message: response
-            };
-            if(err) {
-                result.status = 500;
-                result.message = err;
-            } else {
-                res.status(result.status).json(result.message);
-            }
-        });
-};
-
 var _addFamilyStats = function (req, res, healthReportData){
     healthReportData.familyStats.push({
         suspectFamilies: req.body.suspectFamilies,

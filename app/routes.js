@@ -1,6 +1,6 @@
 var project = require('./models/project');
 var configuration = require('./models/configuration');
-var triggerrecord = require('./models/trigger_record');
+var triggerrecords = require('./models/trigger-records-model');
 var healthReport = require('./models/healthrecords-model');
 var addins = require('./models/addins-model');
 var families = require('./models/families-model');
@@ -17,7 +17,7 @@ var views = require('./models/views-model');
      app.get('/api/v1/projects/sort', projects.findAndSort); //OK
      app.get('/api/v1/projects/:id', projects.findById); //OK
      app.get('/api/v1/projects/configid/:configid', projects.findByConfigurationId); //OK
-     app.get('/api/v1/projects/populate/:id', projects.populateById);
+     app.get('/api/v1/projects/:id/populateconfigurations', projects.findByIdPopulateConfigurations); //OK
      app.get('/api/v1/projects/populatesheets/:id', projects.populateSheets);
      app.post('/api/v1/projects', projects.add); //OK
      app.put('/api/v1/projects/:id', projects.update); //OK
@@ -28,8 +28,8 @@ var views = require('./models/views-model');
      app.put('/api/v1/projects/:id/addmodel', projects.addModel); //OK
      app.put('/api/v1/projects/:id/addlink', projects.addLink); //OK
      app.put('/api/v1/projects/:id/addview', projects.addView); //OK
-     app.put('/api/v1/projects/:id/addhealthrecord/:healthrecordid', projects.addHealthRecord);
-     app.put('/api/v1/projects/:id/addsheets/:sheetsid', projects.addSheets); //OK
+     app.put('/api/v1/projects/:id/addsheet', projects.addSheet); //OK
+     app.put('/api/v1/projects/:id/addtriggerrecord', projects.addTriggerRecord); //OK
      app.put('/api/v1/projects/:id/deleteconfig/:configid', projects.deleteConfiguration); //OK
      app.delete('/api/v1/projects/:id', projects.delete); //OK
 
@@ -44,21 +44,23 @@ var views = require('./models/views-model');
      app.post('/api/v1/configurations/:id/addfile', config.addFile); //OK
      app.post('/api/v1/configurations/:id/deletefile', config.deleteFile); //OK
      app.post('/api/v1/configurations/getmany', config.getMany); //OK
-     app.put('/api/v1/configurations/:id/updatefilepath', config.updateFilePath);
+     app.put('/api/v1/configurations/:id/updatefilepath', config.updateFilePath); //OK
 
-     var triggerrecords = require('./controller/triggerrecords');
+     var triggerrecords = require('./controller/trigger-records-controller');
      app.get('/api/v1/triggerrecords', triggerrecords.findAll);
      app.get('/api/v1/triggerrecords/:id', triggerrecords.findById);
-     app.get('/api/v1/triggerrecords/centralpath/:centralpath*', triggerrecords.findByCentralPath);
+     app.post('/api/v1/triggerrecords/findmanybycentralpath', triggerrecords.findManyByCentralPathDates); //OK
+     app.get('/api/v1/triggerrecords/centralpath/:uri*', triggerrecords.findByCentralPath); //OK
      app.get('/api/v1/triggerrecords/updaterid/:updaterid', triggerrecords.findByUpdaterId);
      app.get('/api/v1/triggerrecords/uniqueid/:uniqueid', triggerrecords.findByUniqueId);
      app.get('/api/v1/triggerrecords/configid/:configid', triggerrecords.findByConfigId);
-     app.post('/api/v1/triggerrecords', triggerrecords.add);
+     app.post('/api/v1/triggerrecords', triggerrecords.add); //OK
+     app.post('/api/v1/triggerrecords/:id/add', triggerrecords.postTriggerRecord); //OK
      app.put('/api/v1/triggerrecords/:id', triggerrecords.update);
      app.delete('/api/v1/triggerrecords/:id', triggerrecords.delete);
      app.delete('/api/v1/triggerrecords/config/:configid', triggerrecords.deleteAllForConfig);
      app.delete('/api/v1/triggerrecords/centralpath/:centralpath', triggerrecords.deleteAllForFile);
-     app.put('/api/v1/triggerrecords/:id/updatefilepath', triggerrecords.updateFilePath);
+     app.put('/api/v1/triggerrecords/:id/updatefilepath', triggerrecords.updateFilePath); //OK
 
      var healthReport = require('./controller/healthrecords-controller');
      app.get('/api/v1/healthrecords', healthReport.findAll);
@@ -66,7 +68,6 @@ var views = require('./models/views-model');
      app.get('/api/v1/healthrecords/centralpath/:uri*', healthReport.findByCentralPath);
      app.post('/api/v1/healthrecords', healthReport.add);
      app.post('/api/v1/healthrecords/names', healthReport.getNames); //it's a post b/c I need to feed [id]
-     app.post('/api/v1/healthrecords/:id/onsynched', healthReport.onSynched);
      app.get('/api/v1/healthrecords/:id/stylestats', healthReport.getStyleStats);
      app.get('/api/v1/healthrecords/:id/viewstats', healthReport.getViewStats);
      app.get('/api/v1/healthrecords/:id/linkstats', healthReport.getLinkStats);
@@ -91,11 +92,11 @@ var views = require('./models/views-model');
      app.post('/api/v1/families/:id/family/:name', families.addTask);
      app.post('/api/v1/families/:id/family/:name/updatetask/:taskid', families.updateTask);
      app.post('/api/v1/families/:id/family/:name/deletemany', families.deleteMultipleTasks);
-     app.put('/api/v1/families/:id/updatefilepath', families.updateFilePath);
+     app.put('/api/v1/families/:id/updatefilepath', families.updateFilePath); //OK
 
      var sheets = require('./controller/sheets-controller');
      app.get('/api/v1/sheets', sheets.findAll);
-     app.post('/api/v1/sheets', sheets.add);
+     app.post('/api/v1/sheets', sheets.add); //OK
      app.get('/api/v1/sheets/centralpath/:uri*', sheets.findByCentralPath); //OK
      app.post('/api/v1/sheets/:id', sheets.update); //OK
      app.post('/api/v1/sheets/:id/addsheettask', sheets.addSheetTask);
@@ -104,23 +105,27 @@ var views = require('./models/views-model');
      app.post('/api/v1/sheets/:id/deletenewsheet', sheets.deleteNewSheet);
      app.post('/api/v1/sheets/:id/deletetasks', sheets.deleteTasks);
      app.post('/api/v1/sheets/:id/updatetasks', sheets.updateSheetTask);
-     app.put('/api/v1/sheets/:id/updatefilepath', sheets.updateFilePath);
+     app.put('/api/v1/sheets/:id/updatefilepath', sheets.updateFilePath); //OK
 
      var worksets = require('./controller/worksets-controller');
      app.get('/api/v1/worksets/centralpath/:uri*', worksets.findByCentralPath); //OK
      app.post('/api/v1/worksets', worksets.add); //OK
      app.post('/api/v1/worksets/:id/itemcount', worksets.postItemCount); //OK
      app.post('/api/v1/worksets/:id/onopened', worksets.onOpened); //OK
+     app.post('/api/v1/worksets/:id/onsynched', worksets.onSynched); //OK
+     app.put('/api/v1/worksets/:id/updatefilepath', worksets.updateFilePath); //OK
 
      var styles = require('./controller/styles-controller');
      app.get('/api/v1/styles/centralpath/:uri*', styles.findByCentralPath); //OK
      app.post('/api/v1/styles', styles.add); //OK
      app.post('/api/v1/styles/:id/stylestats', styles.styleStats); //OK
+     app.put('/api/v1/styles/:id/updatefilepath', styles.updateFilePath); //OK
 
      var links = require('./controller/links-controller');
      app.get('/api/v1/links/centralpath/:uri*', links.findByCentralPath); //OK
      app.post('/api/v1/links', links.add); //OK
      app.post('/api/v1/links/:id/linkstats', links.linkStats); //OK
+     app.put('/api/v1/links/:id/updatefilepath', links.updateFilePath); //OK
 
      var models = require('./controller/models-controller');
      app.get('/api/v1/models/centralpath/:uri*', models.findByCentralPath); //OK
@@ -128,9 +133,11 @@ var views = require('./models/views-model');
      app.post('/api/v1/models/:id/modelsize', models.postModelSize); //OK
      app.post('/api/v1/models/:id/modelopentime', models.postModelOpenTime); //OK
      app.post('/api/v1/models/:id/modelsynchtime', models.postModelSynchTime); //OK
+     app.put('/api/v1/models/:id/updatefilepath', models.updateFilePath); //OK
 
      var views = require('./controller/views-controller');
      app.get('/api/v1/views/centralpath/:uri*', views.findByCentralPath); //OK
      app.post('/api/v1/views', views.add); //OK
      app.post('/api/v1/views/:id/viewstats', views.viewStats); //OK
+     app.put('/api/v1/views/:id/updatefilepath', views.updateFilePath); //OK
   };

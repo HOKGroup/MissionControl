@@ -84,6 +84,33 @@ ViewsService = {
                     }
                     res.status(result.status).json(result.message);
                 });
+    },
+
+    /**
+     * Updates the centralPath value. Used by the Configurations tool.
+     * @param req
+     * @param res
+     */
+    updateFilePath: function (req, res) {
+        var before = req.body.before.replace(/\\/g, "\\").toLowerCase();
+        var after = req.body.after.replace(/\\/g, "\\").toLowerCase();
+        Views
+            .update(
+                { 'centralPath': before },
+                { '$set': { 'centralPath' : after }}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
     }
 };
 

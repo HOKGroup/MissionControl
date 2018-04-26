@@ -110,6 +110,59 @@ WorksetService = {
                     }
                     res.status(result.status).json(result.message);
                 });
+    },
+
+    /**
+     * Pushes Workset info for Synch events into an array.
+     * @param req
+     * @param res
+     */
+    onSynched: function (req, res) {
+        var id = req.params.id;
+        Worksets
+            .update(
+                { '_id': id },
+                { '$push': { 'onSynched': req.body}}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+    },
+
+    /**
+     * Updates the centralPath value. Used by the Configurations tool.
+     * @param req
+     * @param res
+     */
+    updateFilePath: function (req, res) {
+        var before = req.body.before.replace(/\\/g, "\\").toLowerCase();
+        var after = req.body.after.replace(/\\/g, "\\").toLowerCase();
+        Worksets
+            .update(
+                { 'centralPath': before },
+                { '$set': { 'centralPath' : after }}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
     }
 };
 

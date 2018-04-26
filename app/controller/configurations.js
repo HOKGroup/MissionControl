@@ -175,20 +175,20 @@ module.exports.updateFilePath = function (req, res) {
     Configuration
         .update(
             {'_id': id, 'files.centralPath': req.body.before.toLowerCase()},
-            {'$set': {'files.$.centralPath' : req.body.after.toLowerCase()}}, function (err, result) {
-                var response = {
-                    status: 200,
-                    message: result
+            {'$set': {'files.$.centralPath' : req.body.after.toLowerCase()}}, function (err, response){
+                var result = {
+                    status: 201,
+                    message: response
                 };
-                if(err){
-                    response.status = 500;
-                    response.message = err;
-                } else if(!result){
-                    console.log("File Path wasn't found in any Configurations Collections");
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
                 }
-                res.status(response.status).json(response.message);
-            }
-        )
+                res.status(result.status).json(result.message);
+            })
 };
 
 /**

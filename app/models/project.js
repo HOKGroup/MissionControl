@@ -31,6 +31,7 @@ var projectSchema = new mongoose.Schema({
 	configurations: [{
     	type: mongoose.Schema.Types.ObjectId,
 		ref: 'Configuration' }],
+    triggerRecords: [{ type: mongoose.Schema.Types.ObjectId }],
     sheets: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Sheets' }],

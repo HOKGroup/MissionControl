@@ -32,12 +32,14 @@ function AddProjectController(ProjectFactory, $window){
             office: vm.newProject.office,
             address: vm.newProject.address,
             configurations: [],
+            triggerRecords: [],
             sheets: [],
             modelStats: [],
             linkStats: [],
             styleStats: [],
             familyStats: [],
-            worksetStats: []
+            worksetStats: [],
+            viewStats: []
         };
 
         if(vm.newProject.geoLocation.hasOwnProperty('type') && vm.newProject.geoLocation.hasOwnProperty('coordinates'))

@@ -13,6 +13,10 @@ function ProjectFactory($http){
             return $http.get('/api/v1/projects/' + id).then(complete).catch(failed);
         },
 
+        getProjectByIdPopulateConfigurations: function getProjectByIdPopulateConfigurations(id){
+            return $http.get('/api/v1/projects/' + id + '/populateconfigurations').then(complete).catch(failed);
+        },
+
         addProject: function addProject(project){
             return $http.post('/api/v1/projects', project).then(complete).catch(failed);
         },
