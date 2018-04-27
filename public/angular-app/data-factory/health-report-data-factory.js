@@ -1,39 +1,36 @@
 angular.module('MissionControlApp').factory('HealthReportFactory', HealthReportFactory);
 
-function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory, FamiliesFactory){
+function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, StylesFactory, HealthRecordsFactory, FamiliesFactory){
     return {
         /**
          * This utility method processes information about Families and
          * returns a summary info used to populate the Health Report page.
-         * @param id
+         * @param data
          * @param callback
          */
-        processFamilyStats: function (id, callback){
-            var familyStatsId = null;
+        processFamilyStats: function (data, callback){
+            var familyStats = {};
             var userNames = [];
             var nameCheckValues = ['HOK_I', 'HOK_M'];
 
-            HealthRecordsFactory.getFamilyStats(id)
+            FamiliesFactory.getFamilyStats(data)
                 .then(function (response) {
                     if(!response || response.status !== 200) return null;
+
+                    familyStats = response.data[0];
 
                     // (Konrad) We need all unique user names of people that ever opened the model.
                     // These will be used to populate dropdowns when assigning tasks. It will allow
                     // us to only assign tasks to people that actually work in the model.
-                    var userNamesSet = new Set(response.data[0].openTimes.filter(function (item) {
+                    var userNamesSet = new Set(response.data[0].models.openTimes.filter(function (item) {
                         return item.user;
                     }).map(function (item) {
                         return item.user;
                     }));
                     userNames = Array.from(userNamesSet);
 
-                    familyStatsId = response.data[0].familyStats;
                     var centralPath = UtilityService.getHttpSafeFilePath(response.data[0].centralPath);
-                    if(familyStatsId && familyStatsId !== null && familyStatsId !== ''){
-                        return ConfigFactory.getByCentralPath(centralPath)
-                    }
-
-                    return null;
+                    return ConfigFactory.getByCentralPath(centralPath);
                 })
                 .then(function (response) {
                     if(!response || response.status !== 200) return;
@@ -44,19 +41,16 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                             return item.updaterId === '56603be6-aeb2-45d0-9ebc-2830fad6368b'; //health report updater
                         }).userOverrides.familyNameCheck.values;
                     }
-                    return FamiliesFactory.getById(familyStatsId);
-                })
-                .then(function (response) {
-                    if(!response || response.status !== 200) return;
 
-                    var data = response.data;
+                    // (Konrad) We can finish off processing data here since we should
+                    // have all we need by now...
                     var inPlaceFamiliesColor = UtilityService.color().red;
                     var unusedFamiliesColor = UtilityService.color().red;
                     var misnamed = 0;
                     var misnamedFamiliesColor = UtilityService.color().red;
                     var oversizedFamiliesColor = UtilityService.color().red;
 
-                    data.families.forEach(function(item){
+                    familyStats.families.forEach(function(item){
                         var result = nameCheckValues.some(function (x) {
                             return item.name.indexOf(x) !== -1;
                         });
@@ -64,10 +58,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                     });
 
                     var passingChecks = 0;
-                    if (data.oversizedFamilies <= 10){
+                    if (familyStats.oversizedFamilies <= 10){
                         passingChecks += 2;
                         oversizedFamiliesColor = UtilityService.color().green;
-                    } else if (data.oversizedFamilies > 10 && data.oversizedFamilies < 20){
+                    } else if (familyStats.oversizedFamilies > 10 && familyStats.oversizedFamilies < 20){
                         passingChecks += 1;
                         oversizedFamiliesColor = UtilityService.color().orange;
                     }
@@ -78,24 +72,24 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         passingChecks += 1;
                         misnamedFamiliesColor = UtilityService.color().orange;
                     }
-                    if (data.unusedFamilies <= 10){
+                    if (familyStats.unusedFamilies <= 10){
                         passingChecks += 2;
                         unusedFamiliesColor = UtilityService.color().green;
-                    } else if (data.unusedFamilies > 10 && data.unusedFamilies < 20){
+                    } else if (familyStats.unusedFamilies > 10 && familyStats.unusedFamilies < 20){
                         passingChecks += 1;
                         unusedFamiliesColor = UtilityService.color().orange;
                     }
-                    if (data.inPlaceFamilies <= 5){
+                    if (familyStats.inPlaceFamilies <= 5){
                         passingChecks += 2;
                         inPlaceFamiliesColor = UtilityService.color().green;
-                    } else if (data.inPlaceFamilies > 5 && data.inPlaceFamilies < 10) {
+                    } else if (familyStats.inPlaceFamilies > 5 && familyStats.inPlaceFamilies < 10) {
                         passingChecks += 1;
                         inPlaceFamiliesColor = UtilityService.color().orange;
                     }
 
                     var familyScoreData = {
                         passingChecks: passingChecks,
-                        count: data.totalFamilies,
+                        count: familyStats.totalFamilies,
                         label: "Families",
                         newMax: 8};
 
@@ -113,7 +107,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                             description: 'Families are integral part of Revit project. However, unused/unplaced Families ' +
                             'unnecessarily bloat file size and degrade performance. Less than 10 is green, more than ' +
                             '10 but less than 20 is orange while more than 20 is red.',
-                            bulletText: data.unusedFamilies,
+                            bulletText: familyStats.unusedFamilies,
                             bulletColor: unusedFamiliesColor
                         },
                         {
@@ -121,7 +115,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                             description: 'Usage of InPlace families should be limited to minimum possible. InPlace ' +
                             'Families cannot be scheduled, hence limited in traditional usage. They are also constrained ' +
                             'to given model, and cannot be reused on other projects.',
-                            bulletText: data.inPlaceFamilies,
+                            bulletText: familyStats.inPlaceFamilies,
                             bulletColor: inPlaceFamiliesColor
                         },
                         {
@@ -139,7 +133,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                             'indicator of mismodelled or families with imported CAD objects. Generally it\'s a good ' +
                             'idea to keep Family file size low. Less than 10 is green, more than 10 but less than 20 ' +
                             'is orange while more than 20 is red.',
-                            bulletText: data.oversizedFamilies,
+                            bulletText: familyStats.oversizedFamilies,
                             bulletColor: oversizedFamiliesColor
                         }
                     ];
@@ -157,7 +151,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
                         familyScore: familyScore,
                         description: desc,
                         name: "Families",
-                        familyStats: data,
+                        familyStats: familyStats,
                         bullets: bullets,
                         show: {name: "families", value: false},
                         color: color,
@@ -279,13 +273,14 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
 
         /**
          * Processes Styles Stats data returning data needed to create Health Score graphics.
-         * @param id
-         * @param dateRange
+         * @param data
          * @param callback
          */
-        processStyleStats: function(id, dateRange, callback){
-            HealthRecordsFactory.getStyleStats(id, dateRange)
+        processStyleStats: function(data, callback){
+            StylesFactory.getStyleStats(data)
                 .then(function (response) {
+                    console.log(response);
+
                     if (!response || response.status !== 200) return;
                     if (!response.data[0].styleStats || response.data[0].styleStats.length === 0) return;
 
@@ -549,16 +544,25 @@ function HealthReportFactory(UtilityService, ConfigFactory, HealthRecordsFactory
 
         /**
          * Processes Model Stats data returning data needed to create Health Score graphics.
-         * @param id
-         * @param dateRange
+         * @param data
          * @param callback
          */
-        processModelStats: function(id, dateRange, callback) {
-            HealthRecordsFactory.getModelStats(id, dateRange)
+        processModelStats: function(data, callback) {
+            ModelsFactory.getModelStats(data)
                 .then(function (response) {
                     if (!response || response.status !== 200) return;
 
-                    var data = response.data[0];
+                    // (Konrad) Due to how aggregation model works when data is retrieved
+                    // it comes in nested under an extra field. This simplifies it for later
+                    var data = {
+                        modelSizes: response.data[0].modelSizes,
+                        openTimes: response.data[0].openTimes,
+                        synchTimes: response.data[0].synchTimes,
+                        onOpened: response.data[0].worksets.onOpened,
+                        onSynched: response.data[0].worksets.onSynched,
+                        centralPath: response.data[0].centralPath
+                    };
+
                     // (Konrad) Since all these are displayed in a chart we need at least two (2) data points.
                     if(data.modelSizes.length <= 1) return;
                     if(data.openTimes.length <= 1) return;

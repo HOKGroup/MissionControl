@@ -148,21 +148,21 @@ module.exports.findByCentralPath  = function(req, res){
         rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
     }
 
-    Configuration.find(
-        {'files.centralPath': rgx}, function (err, result) {
-            var response = {
+    Configuration
+        .find({ 'files.centralPath': rgx }, function (err, response){
+            var result = {
                 status: 200,
-                message: result
+                message: response
             };
-            if(err){
-                response.status = 500;
-                response.message = err;
-            } else if(!result){
-                console.log("File Path wasn't found in any Configurations Collections");
+            if (err){
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
             }
-            res.status(response.status).json(response.message);
-        }
-    )
+            res.status(result.status).json(result.message);
+        });
 };
 
 /**

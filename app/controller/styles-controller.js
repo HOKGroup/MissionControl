@@ -111,6 +111,36 @@ StylesService = {
                     }
                     res.status(result.status).json(result.message);
                 });
+    },
+
+    /**
+     * Retrieves latest entry in the Link Stats array. Since 'slice' cannot
+     * be combined with select we have to exclude all other arrays.
+     * https://stackoverflow.com/questions/7670073/how-to-combine-both-slice-and-select-returned-keys-operation-in-function-update
+     * @param req
+     * @param res
+     */
+    getStyleStats: function (req, res) {
+        Styles
+            .aggregate([
+                { $match: { 'centralPath': req.body.centralPath }},
+                { $project: {
+                    'styleStats': { $slice: ['$styleStats', -1]}
+                }}]
+            ).exec(function (err, response){
+            var result = {
+                status: 200,
+                message: response
+            };
+            if (err){
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
+            }
+            res.status(result.status).json(result.message);
+        });
     }
 };
 

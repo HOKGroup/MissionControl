@@ -1,3 +1,6 @@
+/**
+ * Created by konrad.sobon on 2018-04-26.
+ */
 angular.module('MissionControlApp').controller('ModelStatsController', ModelStatsController);
 
 function ModelStatsController($routeParams, UtilityService, DTColumnBuilder, DTOptionsBuilder, $scope, $uibModal, HealthReportFactory){
@@ -40,7 +43,12 @@ function ModelStatsController($routeParams, UtilityService, DTColumnBuilder, DTO
          */
         vm.OnFilter = function (date) {
             vm.loading = true;
-            HealthReportFactory.processModelStats(vm.ModelData.modelStats._id, date, function (result) {
+            var data = {
+                from: date.from,
+                to: date.to,
+                centralPath: vm.ModelData.modelStats.centralPath
+            };
+            HealthReportFactory.processModelStats(data, function (result) {
                 vm.ModelData = result;
 
                 setDefaults();

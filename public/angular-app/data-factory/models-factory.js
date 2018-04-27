@@ -7,6 +7,10 @@ function ModelsFactory($http){
     return {
         updateFilePath: function updateFilePath(id, data){
             return $http.put('/api/v1/models/' + id + '/updatefilepath', data).then(complete).catch(failed);
+        },
+
+        getModelStats: function getModelStats(data) {
+            return $http.post('/api/v1/models/modelstats', data).then(complete).catch(failed);
         }
     };
 

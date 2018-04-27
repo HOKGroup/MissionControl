@@ -8,38 +8,75 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
     vm.AllData = [{
         show: {name: "main", value: true}
     }];
+    vm.files = [];
 
     getSelectedProject(vm.projectId);
 
-    // Retrieves project by project id
+    /**
+     * Retrieves project by project id.
+     * @param projectId
+     */
     function getSelectedProject(projectId) {
-        ProjectFactory.getProjectById(projectId)
+        ProjectFactory.getProjectByIdPopulateConfigurations(projectId)
             .then(function(response){
-                if(!response || response.status !== 200) return;
-
-                vm.selectedProject = response.data;
-                if(response.data.healthrecords.length > 0) {
-                    return HealthRecordsFactory.getNames(response.data.healthrecords);
-                } else {
-                    return {status: 500};
-                }
-            })
-            .then(function (response) {
-                if(!response || response.status !== 200) {
+                if(!response || response.status !== 200){
                     vm.showMenu = false;
                     return;
                 }
 
-                vm.HealthRecords = response.data;
-                var selected = response.data.sort(dynamicSort('centralPath'))[0];
-                vm.selectedFileName = vm.fileNameFromPath(selected.centralPath);
+                vm.selectedProject = response.data;
+                vm.selectedProject.configurations.forEach(function (config) {
+                    config.files.forEach(function (file) {
+                        file['name'] = fileNameFromPath(file.centralPath);
+                        vm.files.push(file);
+                    })
+                });
 
+                var selected = vm.files.sort(dynamicSort('centralPath'))[0];
                 vm.SetProject(selected, false);
+
+                vm.showMenu = true;
             })
             .catch(function(err){
                 console.log('Unable to load Health Records data: ' + err.message);
             });
     }
+
+    //region Utilities
+
+    /**
+     * Returns file name from full file path.
+     * @param path
+     */
+    function fileNameFromPath(path){
+        if(!path) return;
+
+        // (Konrad) We retrieve a file name with extension,
+        // then remove the last 12 chars (_central.rvt)
+        return path.replace(/^.*[\\\/]/, '').slice(0, -12);
+    }
+
+    /**
+     * Returns a sort order for objects by a given property on that object.
+     * Credit: https://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value-in-javascript
+     * @param property
+     * @returns {Function}
+     */
+    function dynamicSort(property) {
+        var sortOrder = 1;
+        if(property[0] === "-") {
+            sortOrder = -1;
+            property = property.substr(1);
+        }
+        return function (a,b) {
+            var prop1 = fileNameFromPath(a[property]);
+            var prop2 = fileNameFromPath(b[property]);
+            var result = (prop1 < prop2) ? -1 : (prop1 > prop2) ? 1 : 0;
+            return result * sortOrder;
+        }
+    }
+
+    //endregion
 
     /**
      * Handles changing of stat type.
@@ -52,25 +89,13 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
         });
     };
 
-    /**
-     * Returns file name from full file path.
-     * @param path
-     */
-    vm.fileNameFromPath = function (path){
-        if(!path) return;
-
-        // (Konrad) We retrieve a file name with extension,
-        // then remove the last 12 chars (_central.rvt)
-        return path.replace(/^.*[\\\/]/, '').slice(0, -12);
-    };
-
-    /**
-     * Custom sort function to show files sorted by file name.
-     * @param file
-     */
-    vm.sortFiles = function (file) {
-        return vm.fileNameFromPath(file.centralPath);
-    };
+    // /**
+    //  * Custom sort function to show files sorted by file name.
+    //  * @param file
+    //  */
+    // vm.sortFiles = function (file) {
+    //     return vm.fileNameFromPath(file.centralPath);
+    // };
 
     /**
      * Checks if data was loaded for given asset and returns true/false.
@@ -105,8 +130,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
      * @constructor
      */
     vm.SetProject = function (link, reset){
-        vm.selectedFileName = vm.fileNameFromPath(link.centralPath);
-        vm.showMenu = true;
+        vm.selectedFileName = link.name;
 
         if (reset) vm.AllData = [{
             show: {name: "main", value: true}
@@ -116,12 +140,13 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
         // Users can change that range in specific needs.
         var dtFrom = new Date();
         dtFrom.setMonth(dtFrom.getMonth() - 1);
-        var dateRange = {
+        var data = {
             from: dtFrom,
-            to: new Date()
+            to: new Date(),
+            centralPath: link.centralPath
         };
 
-        HealthReportFactory.processModelStats(link._id, dateRange, function (result) {
+        HealthReportFactory.processModelStats(data, function (result) {
             if(result){
                 vm.ModelData = result;
                 vm.AllData.splice(0, 0, result);
@@ -129,7 +154,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
             vm.SelectionChanged('main');
         });
 
-        HealthReportFactory.processFamilyStats(link._id, function (result) {
+        HealthReportFactory.processFamilyStats(data, function (result) {
             if(result){
                 vm.FamilyData = result;
                 vm.AllData.splice(0, 0, result);
@@ -137,7 +162,7 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
             vm.SelectionChanged('main');
         });
 
-        HealthReportFactory.processStyleStats(link._id, dateRange, function (result) {
+        HealthReportFactory.processStyleStats(data, function (result) {
             if(result){
                 vm.StyleData = result;
                 vm.AllData.splice(0, 0, result);
@@ -145,48 +170,28 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
             vm.SelectionChanged('main');
         });
 
-        HealthReportFactory.processLinkStats(link._id, dateRange, function (result) {
-            if(result){
-                vm.LinkData = result;
-                vm.AllData.splice(0, 0, result);
-            }
-            vm.SelectionChanged('main');
-        });
-
-        HealthReportFactory.processViewStats(link._id, dateRange, function (result) {
-            if(result){
-                vm.ViewData = result;
-                vm.AllData.splice(0, 0, result);
-            }
-            vm.SelectionChanged('main');
-        });
-
-        HealthReportFactory.processWorksetStats(link._id, dateRange, function (result) {
-            if(result) {
-                vm.WorksetData = result;
-                vm.AllData.splice(0, 0, result);
-            }
-            vm.SelectionChanged('main');
-        });
+        // HealthReportFactory.processLinkStats(link._id, dateRange, function (result) {
+        //     if(result){
+        //         vm.LinkData = result;
+        //         vm.AllData.splice(0, 0, result);
+        //     }
+        //     vm.SelectionChanged('main');
+        // });
+        //
+        // HealthReportFactory.processViewStats(link._id, dateRange, function (result) {
+        //     if(result){
+        //         vm.ViewData = result;
+        //         vm.AllData.splice(0, 0, result);
+        //     }
+        //     vm.SelectionChanged('main');
+        // });
+        //
+        // HealthReportFactory.processWorksetStats(link._id, dateRange, function (result) {
+        //     if(result) {
+        //         vm.WorksetData = result;
+        //         vm.AllData.splice(0, 0, result);
+        //     }
+        //     vm.SelectionChanged('main');
+        // });
     };
-
-    /**
-     * Returns a sort order for objects by a given property on that object.
-     * Credit: https://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value-in-javascript
-     * @param property
-     * @returns {Function}
-     */
-    function dynamicSort(property) {
-        var sortOrder = 1;
-        if(property[0] === "-") {
-            sortOrder = -1;
-            property = property.substr(1);
-        }
-        return function (a,b) {
-            var prop1 = vm.fileNameFromPath(a[property]);
-            var prop2 = vm.fileNameFromPath(b[property]);
-            var result = (prop1 < prop2) ? -1 : (prop1 > prop2) ? 1 : 0;
-            return result * sortOrder;
-        }
-    }
 }

@@ -233,38 +233,7 @@ module.exports.getViewStats = function (req, res) {
         });
 };
 
-/**
- * Retrieves latest entry in the Link Stats array. Since 'slice' cannot
- * be combined with select we have to exclude all other arrays.
- * https://stackoverflow.com/questions/7670073/how-to-combine-both-slice-and-select-returned-keys-operation-in-function-update
- * @param req
- * @param res
- */
-module.exports.getStyleStats = function (req, res) {
-    var id = mongoose.Types.ObjectId(req.params.id);
-    // var from = new Date(req.query.from);
-    // var to = new Date(req.query.to);
-    HealthRecords
-        .aggregate([
-            { $match: { _id: id }},
-            { $project: {
-                'styleStats': { $slice: ['$styleStats', -1]}
-            }}]
-        ).exec(function (err, response){
-            var result = {
-                status: 200,
-                message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
-            }
-            res.status(result.status).json(result.message);
-        });
-};
+
 
 /**
  * Retrieves latest entry in the Link Stats array.
@@ -304,32 +273,7 @@ module.exports.getLinkStats = function (req, res) {
         });
 };
 
-/**
- * Returns Family Stats Id, and Central Path.
- * @param req
- * @param res
- */
-module.exports.getFamilyStats = function (req, res) {
-    var id = req.params.id;
-    HealthRecords
-        .find(
-            { '_id': id },
-            {'familyStats': 1, 'centralPath': 1, 'openTimes.user': 1}
-        ).exec(function (err, response){
-            var result = {
-                status: 200,
-                message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
-            }
-            res.status(result.status).json(result.message);
-        });
-};
+
 
 /**
  * Retrieves all user names from openTimes data.
@@ -364,75 +308,7 @@ module.exports.getUserNamesByCentralPath = function (req, res) {
         )
 };
 
-/**
- *
- * @param req
- * @param res
- */
-module.exports.getModelStats = function (req, res) {
-    var id = mongoose.Types.ObjectId(req.params.id);
-    var from = new Date(req.query.from);
-    var to = new Date(req.query.to);
-    HealthRecords
-        .aggregate([
-            { $match: { _id: id }},
-            { $project: {
-                'modelSizes': { $filter: {
-                    input: '$modelSizes',
-                    as: 'item',
-                    cond: { $and: [
-                        { $gte: ['$$item.createdOn', from]},
-                        { $lte: ['$$item.createdOn', to]}
-                    ]}
-                }},
-                'openTimes': { $filter: {
-                    input: '$openTimes',
-                    as: 'item',
-                    cond: { $and: [
-                        { $gte: ['$$item.createdOn', from]},
-                        { $lte: ['$$item.createdOn', to]}
-                    ]}
-                }},
-                'synchTimes': { $filter: {
-                    input: '$synchTimes',
-                    as: 'item',
-                    cond: { $and: [
-                        { $gte: ['$$item.createdOn', from]},
-                        { $lte: ['$$item.createdOn', to]}
-                    ]}
-                }},
-                'onOpened': { $filter: {
-                    input: '$onOpened',
-                    as: 'item',
-                    cond: { $and: [
-                        { $gte: ['$$item.createdOn', from]},
-                        { $lte: ['$$item.createdOn', to]}
-                    ]}
-                }},
-                'onSynched': { $filter: {
-                    input: '$onSynched',
-                    as: 'item',
-                    cond: { $and: [
-                        { $gte: ['$$item.createdOn', from]},
-                        { $lte: ['$$item.createdOn', to]}
-                    ]}
-                }}
-            }}]
-        ).exec(function (err, response){
-            var result = {
-                status: 200,
-                message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
-            }
-            res.status(result.status).json(result.message);
-        });
-};
+
 
 /**
  * Updates stored file path when Configuration is changed.
@@ -459,32 +335,4 @@ module.exports.updateFilePath = function (req, res) {
                 res.status(response.status).json(response.message);
             }
         );
-};
-
-/**
- * Retrieves central path names of all matching records.
- * @param req
- * @param res
- */
-module.exports.getNames = function (req, res) {
-    var ids = [];
-    req.body.forEach(function (item) {
-        ids.push(mongoose.Types.ObjectId(item))
-    });
-    HealthRecords
-        .find({'_id': {'$in': ids}})
-        .select('centralPath')
-        .exec(function (err, result) {
-            var response = {
-                status: 200,
-                message: result
-            };
-            if(err){
-                response.status = 500;
-                response.message = err;
-            } else if(!result){
-                console.log("");
-            }
-            res.status(response.status).json(response.message);
-        });
 };

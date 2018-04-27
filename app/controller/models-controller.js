@@ -163,6 +163,85 @@ ModelsService = {
                     }
                     res.status(result.status).json(result.message);
                 });
+    },
+
+    /**
+     * Retrieves model stats data by central path.
+     * It also aggregates data from worksets and
+     * filters by provided date range.
+     * @param req
+     * @param res
+     */
+    getModelStats: function (req, res) {
+        var from = new Date(req.body.from);
+        var to = new Date(req.body.to);
+        Models
+            .aggregate([
+                { $match: { 'centralPath': req.body.centralPath }},
+                { $lookup: {
+                    from: 'worksets',
+                    localField: 'centralPath',
+                    foreignField: 'centralPath',
+                    as: 'worksets'
+                }},
+                { $unwind: '$worksets'},
+                { $project: {
+                    'modelSizes': { $filter: {
+                        input: '$modelSizes',
+                        as: 'item',
+                        cond: { $and: [
+                            { $gte: ['$$item.createdOn', from]},
+                            { $lte: ['$$item.createdOn', to]}
+                        ]}
+                    }},
+                    'openTimes': { $filter: {
+                        input: '$openTimes',
+                        as: 'item',
+                        cond: { $and: [
+                            { $gte: ['$$item.createdOn', from]},
+                            { $lte: ['$$item.createdOn', to]}
+                        ]}
+                    }},
+                    'synchTimes': { $filter: {
+                        input: '$synchTimes',
+                        as: 'item',
+                        cond: { $and: [
+                            { $gte: ['$$item.createdOn', from]},
+                            { $lte: ['$$item.createdOn', to]}
+                        ]}
+                    }},
+                    'worksets.onOpened': { $filter: {
+                        input: '$worksets.onOpened',
+                        as: 'item',
+                        cond: { $and: [
+                            { $gte: ['$$item.createdOn', from]},
+                            { $lte: ['$$item.createdOn', to]}
+                        ]}
+                    }},
+                    'worksets.onSynched': { $filter: {
+                        input: '$worksets.onSynched',
+                        as: 'item',
+                        cond: { $and: [
+                            { $gte: ['$$item.createdOn', from]},
+                            { $lte: ['$$item.createdOn', to]}
+                        ]}
+                    }},
+                    'centralPath': 1
+                }}]
+            ).exec(function (err, response){
+                var result = {
+                    status: 200,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
     }
 };
 

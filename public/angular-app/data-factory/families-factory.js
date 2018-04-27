@@ -23,6 +23,10 @@ function FamiliesFactory($http){
 
         updateFilePath: function updateFilePath(id, data){
             return $http.put('/api/v1/families/' + id + '/updatefilepath', data).then(complete).catch(failed);
+        },
+
+        getFamilyStats: function getFamilyStats(data) {
+            return $http.post('/api/v1/families/familystats', data).then(complete).catch(failed);
         }
     };
 

@@ -7,6 +7,10 @@ function StylesFactory($http){
     return {
         updateFilePath: function updateFilePath(id, data){
             return $http.put('/api/v1/styles/' + id + '/updatefilepath', data).then(complete).catch(failed);
+        },
+
+        getStyleStats: function getStyleStats(data) {
+            return $http.post('/api/v1/styles/stylestats', data).then(complete).catch(failed);
         }
     };
 
