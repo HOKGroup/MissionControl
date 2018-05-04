@@ -4,7 +4,7 @@
 //implemented as a node.js
 //REST API driven mongoDB web server.
 //
-//Copyright 2017 by Jinsol Kim, Konrad K Sobon, HOK
+//Copyright 2018 by Jinsol Kim, Konrad K Sobon, HOK
 
 var pkg = require('./package.json');
 var cool = require('cool-ascii-faces');

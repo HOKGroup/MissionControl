@@ -1,7 +1,6 @@
 /**
  * Created by konrad.sobon on 2017-11-02.
  */
-
 angular.module('MissionControlApp').controller('AddSheetController', AddSheetController);
 
 function AddSheetController($uibModalInstance, UtilityService, ModelsFactory, models) {

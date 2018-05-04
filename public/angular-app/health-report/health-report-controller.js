@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').controller('HealthReportController', HealthReportController);
 
-function HealthReportController($routeParams, HealthRecordsFactory, ProjectFactory, HealthReportFactory){
+function HealthReportController($routeParams, ProjectFactory, HealthReportFactory){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.FamilyCollection = null;

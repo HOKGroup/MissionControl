@@ -3,7 +3,8 @@
  */
 angular.module('MissionControlApp').controller('SheetsController', SheetsController);
 
-function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFactory, ProjectFactory, UtilityService, DTOptionsBuilder, DTColumnBuilder){
+function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFactory, ProjectFactory, UtilityService,
+                          DTOptionsBuilder, DTColumnBuilder){
     var vm = this;
     var all = { name: "All", collectionId: '' };
 
@@ -195,8 +196,7 @@ function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFacto
             }}
         }).result.then(function(request){
             if(!request) return;
-            SheetsFactory
-                .addSheets(request.collectionId, request.sheets)
+            SheetsFactory.addSheets(request.collectionId, request.sheets)
                 .then(function (sheetResponse) {
                     if(!sheetResponse) return;
 

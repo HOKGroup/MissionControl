@@ -58,8 +58,8 @@ function EditSheetController($uibModalInstance, SheetsFactory, ModelsFactory, Ut
         vm.sheet.submittedOn = Date.now();
         vm.sheet.isSelected = false; // never submit the sheet with selection on
         if(action === 'Add Task'){
-            SheetsFactory
-                .addSheetTask(vm.sheet.collectionId, vm.sheet).then(function(sheetResponse){
+            SheetsFactory.addSheetTask(vm.sheet.collectionId, vm.sheet)
+                .then(function(sheetResponse){
                     if(!sheetResponse) return;
 
                     $uibModalInstance.close({response: sheetResponse});
@@ -67,8 +67,8 @@ function EditSheetController($uibModalInstance, SheetsFactory, ModelsFactory, Ut
                     console.log('Unable to add Sheet Task: ' + err.message)
                 });
         } else {
-            SheetsFactory
-                .updateTasks(vm.sheet.collectionId, vm.sheet).then(function(sheetResponse){
+            SheetsFactory.updateTasks(vm.sheet.collectionId, vm.sheet)
+                .then(function(sheetResponse){
                     if(!sheetResponse) return;
 
                     $uibModalInstance.close({response: sheetResponse});
@@ -88,8 +88,8 @@ function EditSheetController($uibModalInstance, SheetsFactory, ModelsFactory, Ut
         vm.sheet.submittedOn = Date.now();
         vm.sheet.isSelected = false;
 
-        SheetsFactory
-            .updateTasks(vm.sheet.collectionId, vm.sheet).then(function(sheetResponse){
+        SheetsFactory.updateTasks(vm.sheet.collectionId, vm.sheet)
+            .then(function(sheetResponse){
                 if(!sheetResponse) return;
 
                 $uibModalInstance.close({response: sheetResponse});
@@ -106,8 +106,8 @@ function EditSheetController($uibModalInstance, SheetsFactory, ModelsFactory, Ut
         vm.sheet.submittedOn = Date.now();
         vm.sheet.isSelected = false; // never submit the sheet with selection on
         if(action === 'Add Task'){
-            SheetsFactory
-                .addSheetTask(vm.sheet.collectionId, vm.sheet).then(function(sheetResponse){
+            SheetsFactory.addSheetTask(vm.sheet.collectionId, vm.sheet)
+                .then(function(sheetResponse){
                     if(!sheetResponse) return;
 
                     $uibModalInstance.close({response: sheetResponse});
@@ -115,8 +115,8 @@ function EditSheetController($uibModalInstance, SheetsFactory, ModelsFactory, Ut
                     console.log('Unable to add Sheet Task: ' + err.message)
                 });
         } else {
-            SheetsFactory
-                .updateTasks(vm.sheet.collectionId, vm.sheet).then(function(sheetResponse){
+            SheetsFactory.updateTasks(vm.sheet.collectionId, vm.sheet)
+                .then(function(sheetResponse){
                     if(!sheetResponse) return;
 
                     $uibModalInstance.close({response: sheetResponse});

@@ -45,7 +45,7 @@ var projectSchema = new mongoose.Schema({
   {
 	  timestamps: true
   });
+
 projectSchema.index({ geoLocation: '2dsphere'});
 projectSchema.index({ geoPolygon: '2dsphere'});
-
 var Project = mongoose.model( 'Project', projectSchema );

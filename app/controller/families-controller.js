@@ -39,19 +39,8 @@ FamiliesService = {
             )
     },
 
-    add: function(req, res){
-        Families
-            .create(req.body, function(err, familyData){
-                if(err) {
-                    res.status(400).json(err);
-                } else {
-                    res.status(201).json(familyData);
-                }
-            });
-    },
-
     /**
-     *
+     * Updates Families document with new info.
      * @param req
      * @param res
      */
@@ -75,64 +64,40 @@ FamiliesService = {
     },
 
     /**
-     * Returns family collection by id.
+     * Updates stored file path value when Configuration is changed.
      * @param req
      * @param res
      */
-    findById: function(req, res){
-        var id = req.params.id;
+    updateFilePath: function(req, res){
+        var before = req.body.before.replace(/\\/g, "\\").toLowerCase();
+        var after = req.body.after.replace(/\\/g, "\\").toLowerCase();
         Families
-            .findOne({ '_id': id },function(err, result) {
-                if(err) {
-                    res.status(400).json(err);
-                } else {
-                    res.status(200).json(result);
-                }
-            });
-    },
-
-    findAll: function(req, res){
-        Families
-            .find()
-            .exec(function(err, data){
-                if(err){
-                    res.status(500).json(err);
-                } else {
-                    res.status(200).json(data)
-                }
-            });
+            .update(
+                { 'centralPath': before },
+                { '$set': { 'centralPath' : after }}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
     },
 
     /**
-     * Retrieves model stats data by central path.
-     * It also aggregates data from worksets and
-     * filters by provided date range.
+     * Creates new Families Document.
      * @param req
      * @param res
      */
-    getFamilyStats: function (req, res) {
+    add: function(req, res){
         Families
-            .aggregate([
-                { $match: { 'centralPath': req.body.centralPath }},
-                { $lookup: {
-                    from: 'models',
-                    localField: 'centralPath',
-                    foreignField: 'centralPath',
-                    as: 'models'
-                }},
-                { $unwind: '$models'},
-                { $project: {
-                    'models.openTimes.user': 1,
-                    '_id': 1,
-                    'centralPath': 1,
-                    'totalFamilies': 1,
-                    'unusedFamilies': 1,
-                    'oversizedFamilies': 1,
-                    'inPlaceFamilies': 1,
-                    'families': 1
-                }}
-                ]
-            ).exec(function (err, response){
+            .create(req.body, function (err, response){
                 var result = {
                     status: 201,
                     message: response
@@ -257,59 +222,49 @@ FamiliesService = {
             )
     },
 
-    updateMultipleFamilies1: function (req, res) {
-        var id = req.params.id;
-        var bulkOps = [];
-
-        for(var key in req.body) {
-            if(req.body.hasOwnProperty(key)){
-                bulkOps = req.body[key].map(function(item){
-                    return {
-                        'updateOne': {
-                            'filter': {'_id': id, 'families._id': mongoose.Types.ObjectId(item.Id)},
-                            'update': {'$set': {'families.$.name': item.name}}
-                        }
-                    }
-                })
-            }
-        }
-
-        Families.collection
-            .bulkWrite(
-                bulkOps, function(err, result){
-                    if(err) {
-                        res.status(400).json(err);
-                    } else {
-                        res.status(202).json(result);
-                    }
-                })
-    },
-
     /**
-     * Updates stored file path value when Configuration is changed.
+     * Retrieves model stats data by central path.
+     * It also aggregates data from worksets and
+     * filters by provided date range.
      * @param req
      * @param res
      */
-    updateFilePath: function(req, res){
-        var before = req.body.before.replace(/\\/g, "\\").toLowerCase();
-        var after = req.body.after.replace(/\\/g, "\\").toLowerCase();
+    getFamilyStats: function (req, res) {
         Families
-            .update(
-                { 'centralPath': before },
-                { '$set': { 'centralPath' : after }}, function (err, response){
-                    var result = {
-                        status: 201,
-                        message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
-                    }
-                    res.status(result.status).json(result.message);
-                });
+            .aggregate([
+                { $match: { 'centralPath': req.body.centralPath }},
+                { $lookup: {
+                    from: 'models',
+                    localField: 'centralPath',
+                    foreignField: 'centralPath',
+                    as: 'models'
+                }},
+                { $unwind: '$models'},
+                { $project: {
+                    'models.openTimes.user': 1,
+                    '_id': 1,
+                    'centralPath': 1,
+                    'totalFamilies': 1,
+                    'unusedFamilies': 1,
+                    'oversizedFamilies': 1,
+                    'inPlaceFamilies': 1,
+                    'families': 1
+                }}
+                ]
+            ).exec(function (err, response){
+                var result = {
+                    status: 201,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
     }
 };
 

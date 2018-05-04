@@ -51,36 +51,33 @@ var views = require('./models/views-model');
      app.post('/api/v1/triggerrecords/:id/add', triggerrecords.postTriggerRecord);
      app.post('/api/v1/triggerrecords/deletemany', triggerrecords.deleteMany);
 
-     //TODO: Refactor and cleanup Addins Page.
+     //TODO: Refactor and cleanup Addins API
      var addins = require('./controller/addins-controller');
      app.get('/api/v1/addins', addins.findAll);
      app.post('/api/v1/addins', addins.add);
      app.post('/api/v1/addins/:id/addlog', addins.addLog);
 
      var families = require('./controller/families-controller');
-     app.get('/api/v1/families', families.findAll);
+     app.get('/api/v1/families/centralpath/:uri*', families.findByCentralPath);
+     app.put('/api/v1/families/:id', families.update);
+     app.put('/api/v1/families/:id/updatefilepath', families.updateFilePath);
      app.post('/api/v1/families', families.add);
-     app.get('/api/v1/families/:id', families.findById);
-     app.get('/api/v1/families/centralpath/:uri*', families.findByCentralPath); //OK
-     app.put('/api/v1/families/:id', families.update); //OK
-     app.post('/api/v1/families/:id/family/:name', families.addTask); //OK
-     app.post('/api/v1/families/:id/family/:name/updatetask/:taskid', families.updateTask); //OK
-     app.post('/api/v1/families/:id/family/:name/deletemany', families.deleteMultipleTasks); //OK
-     app.put('/api/v1/families/:id/updatefilepath', families.updateFilePath); //OK
-     app.post('/api/v1/families/familystats', families.getFamilyStats); //OK
+     app.post('/api/v1/families/:id/family/:name', families.addTask);
+     app.post('/api/v1/families/:id/family/:name/updatetask/:taskid', families.updateTask);
+     app.post('/api/v1/families/:id/family/:name/deletemany', families.deleteMultipleTasks);
+     app.post('/api/v1/families/familystats', families.getFamilyStats);
 
      var sheets = require('./controller/sheets-controller');
-     app.get('/api/v1/sheets', sheets.findAll);
-     app.post('/api/v1/sheets', sheets.add); //OK
-     app.get('/api/v1/sheets/centralpath/:uri*', sheets.findByCentralPath); //OK
-     app.post('/api/v1/sheets/:id', sheets.update); //OK
+     app.get('/api/v1/sheets/centralpath/:uri*', sheets.findByCentralPath);
+     app.put('/api/v1/sheets/:id/updatefilepath', sheets.updateFilePath);
+     app.post('/api/v1/sheets', sheets.add);
+     app.post('/api/v1/sheets/:id', sheets.update);
      app.post('/api/v1/sheets/:id/addsheettask', sheets.addSheetTask);
      app.post('/api/v1/sheets/:id/addsheets', sheets.addSheets);
-     app.post('/api/v1/sheets/:id/approvenewsheet', sheets.approveNewSheets); //OK
+     app.post('/api/v1/sheets/:id/approvenewsheet', sheets.approveNewSheets);
      app.post('/api/v1/sheets/:id/deletenewsheet', sheets.deleteNewSheet);
      app.post('/api/v1/sheets/:id/deletetasks', sheets.deleteTasks);
-     app.post('/api/v1/sheets/:id/updatetasks', sheets.updateSheetTask); //OK
-     app.put('/api/v1/sheets/:id/updatefilepath', sheets.updateFilePath); //OK
+     app.post('/api/v1/sheets/:id/updatetasks', sheets.updateSheetTask);
 
      var worksets = require('./controller/worksets-controller');
      app.post('/api/v1/worksets', worksets.add);
