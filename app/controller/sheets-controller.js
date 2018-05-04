@@ -91,7 +91,7 @@ module.exports.approveNewSheets = function (req, res) {
         .select('sheets')
         .exec(function (err, doc){
             var response = {
-                status: 200,
+                status: 201,
                 message: []
             };
             if (err){
@@ -121,8 +121,7 @@ var approveCreateNewSheet = function (req, res, doc) {
     });
     if(taskIndex !== -1) {
         sheet.tasks[taskIndex] = req.body.Task; // update task
-        var tasks = sheet.tasks; // pull out tasks
-        req.body.Element.tasks = tasks; // pull all tasks into new object
+        req.body.Element.tasks = sheet.tasks; // pull all tasks into new object
         doc.sheets[sheetIndex] = req.body.Element; // update the doc with new sheet/tasks
     }
 
@@ -132,9 +131,11 @@ var approveCreateNewSheet = function (req, res, doc) {
         } else {
             global.io.sockets.emit('sheetTask_updated', {
                 'body': sheetsUpdated,
-                'identifier': req.body.Element.identifier,
-                '_id': req.body.Task._id.toString()});
-            res.status(200).json(sheetsUpdated);
+                'sheetId': req.body.Element._id.toString(),
+                'taskId': req.body.Task._id.toString(),
+                'collectionId': req.params.id
+            });
+            res.status(201).json(sheetsUpdated);
         }
     });
 };
@@ -246,7 +247,7 @@ module.exports.updateSheetTask = function (req, res) {
         .select('sheets')
         .exec(function (err, doc){
             var response = {
-                status: 200,
+                status: 201,
                 message: []
             };
             if (err){
@@ -283,7 +284,7 @@ var updateSheetTask = function (req, res, doc) {
                 'taskId': req.body._id.toString(),
                 'collectionId': req.params.id
             });
-            res.status(200).json(sheetsUpdated);
+            res.status(201).json(sheetsUpdated);
         }
     });
 };

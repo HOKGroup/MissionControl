@@ -386,17 +386,7 @@ function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFacto
      * @param projectId
      */
     function getSelectedProject(projectId) {
-        ProjectFactory.getProjectById(projectId)
-            .then(function(response){
-                if(!response || response.status !== 200) return {status: 500};
-
-                vm.selectedProject = response.data;
-                if(response.data.sheets.length > 0){
-                    return ProjectFactory.populateSheets(projectId);
-                } else {
-                    return {status: 500};
-                }
-            })
+        ProjectFactory.populateSheets(projectId)
             .then(function (response) {
                 if(!response || response.status !== 200) return;
 

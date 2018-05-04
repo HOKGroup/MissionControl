@@ -170,28 +170,28 @@ function HealthReportController($routeParams, HealthRecordsFactory, ProjectFacto
             vm.SelectionChanged('main');
         });
 
-        // HealthReportFactory.processLinkStats(link._id, dateRange, function (result) {
-        //     if(result){
-        //         vm.LinkData = result;
-        //         vm.AllData.splice(0, 0, result);
-        //     }
-        //     vm.SelectionChanged('main');
-        // });
-        //
-        // HealthReportFactory.processViewStats(link._id, dateRange, function (result) {
-        //     if(result){
-        //         vm.ViewData = result;
-        //         vm.AllData.splice(0, 0, result);
-        //     }
-        //     vm.SelectionChanged('main');
-        // });
-        //
-        // HealthReportFactory.processWorksetStats(link._id, dateRange, function (result) {
-        //     if(result) {
-        //         vm.WorksetData = result;
-        //         vm.AllData.splice(0, 0, result);
-        //     }
-        //     vm.SelectionChanged('main');
-        // });
+        HealthReportFactory.processLinkStats(data, function (result) {
+            if(result){
+                vm.LinkData = result;
+                vm.AllData.splice(0, 0, result);
+            }
+            vm.SelectionChanged('main');
+        });
+
+        HealthReportFactory.processViewStats(data, function (result) {
+            if(result){
+                vm.ViewData = result;
+                vm.AllData.splice(0, 0, result);
+            }
+            vm.SelectionChanged('main');
+        });
+
+        HealthReportFactory.processWorksetStats(data, function (result) {
+            if(result) {
+                vm.WorksetData = result;
+                vm.AllData.splice(0, 0, result);
+            }
+            vm.SelectionChanged('main');
+        });
     };
 }

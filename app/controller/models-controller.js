@@ -5,37 +5,37 @@ var mongoose = require('mongoose');
 var Models = mongoose.model('Models');
 
 ModelsService = {
-    /**
-     * Finds Worksets collection by central path.
-     * @param req
-     * @param res
-     */
-    findByCentralPath: function(req, res){
-        // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
-        // (Konrad) RSN and BIM 360 paths will have forward slashes instead of back slashes.
-        var rgx;
-        if(req.params.uri.includes('RSN:') || req.params.uri.includes('BIM 360:')){
-            rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
-        } else {
-            rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
-        }
-        Models
-            .find(
-                { "centralPath": rgx }, function (err, response){
-                    var result = {
-                        status: 200,
-                        message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
-                    }
-                    res.status(result.status).json(result.message);
-                })
-    },
+    // /**
+    //  * Finds Worksets collection by central path.
+    //  * @param req
+    //  * @param res
+    //  */
+    // findByCentralPath: function(req, res){
+    //     // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
+    //     // (Konrad) RSN and BIM 360 paths will have forward slashes instead of back slashes.
+    //     var rgx;
+    //     if(req.params.uri.includes('RSN:') || req.params.uri.includes('BIM 360:')){
+    //         rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
+    //     } else {
+    //         rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
+    //     }
+    //     Models
+    //         .find(
+    //             { "centralPath": rgx }, function (err, response){
+    //                 var result = {
+    //                     status: 200,
+    //                     message: response
+    //                 };
+    //                 if (err){
+    //                     result.status = 500;
+    //                     result.message = err;
+    //                 } else if (!response){
+    //                     result.status = 404;
+    //                     result.message = err;
+    //                 }
+    //                 res.status(result.status).json(result.message);
+    //             })
+    // },
 
     /**
      *
@@ -230,18 +230,53 @@ ModelsService = {
                 }}]
             ).exec(function (err, response){
                 var result = {
-                    status: 200,
-                    message: response
+                    status: 201,
+                    message: response[0]
                 };
                 if (err){
                     result.status = 500;
                     result.message = err;
-                } else if (!response){
+                } else if (!response[0]){
                     result.status = 404;
                     result.message = err;
                 }
                 res.status(result.status).json(result.message);
             });
+    },
+
+    /**
+     * Retrieves user names from openTimes collection. It is used by Sheets Tools
+     * to get a list of all users that work on the given model.
+     * @param req
+     * @param res
+     */
+    getUserNamesByCentralPath: function (req, res) {
+        // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
+        // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.
+        var rgx;
+        if(req.params.uri.includes('RSN:') || req.params.uri.includes('BIM 360:')){
+            rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
+        } else {
+            rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
+        }
+        Models
+            .find(
+                { 'centralPath': rgx},
+                { 'openTimes.user': 1 }, function (err, response){
+                    var result = {
+                        status: 200,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                }
+            )
     }
 };
 

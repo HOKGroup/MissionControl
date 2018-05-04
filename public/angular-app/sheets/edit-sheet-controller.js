@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('EditSheetController', EditSheetController);
 
-function EditSheetController($uibModalInstance, SheetsFactory, HealthRecordsFactory, UtilityService, sheet, action) {
+function EditSheetController($uibModalInstance, SheetsFactory, ModelsFactory, UtilityService, sheet, action) {
     var vm = this;
     vm.sheet = sheet; // parent sheet.
     vm.title = action;
@@ -17,7 +17,7 @@ function EditSheetController($uibModalInstance, SheetsFactory, HealthRecordsFact
      * @param centralPath
      */
     function getUserNames(centralPath) {
-        HealthRecordsFactory.getUserNamesByCentralPath(centralPath)
+        ModelsFactory.getUserNamesByCentralPath(centralPath)
             .then(function (response) {
                 if(!response || response.status !== 200) return;
 

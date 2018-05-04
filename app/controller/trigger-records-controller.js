@@ -3,7 +3,9 @@ TriggerRecord = mongoose.model('TriggerRecord');
 
 TriggerRecordService = {
     /**
-     * Finds Trigger Record Document by central path.
+     * Finds Trigger Record Document by central path. This is used pretty much just to get the _id
+     * since it will be used on the .NET side to post new Trigger Record. No need to retrieve entire
+     * document.
      * @param req
      * @param res
      */
@@ -17,21 +19,22 @@ TriggerRecordService = {
             rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
         }
         TriggerRecord
-            .find(
-                { "centralPath": rgx }, function (err, response){
-                    var result = {
-                        status: 200,
-                        message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
-                    }
-                    res.status(result.status).json(result.message);
-                })
+            .find({ "centralPath": rgx })
+            .select('_id centralPath')
+            .exec(function (err, response){
+                var result = {
+                    status: 200,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            })
     },
 
     /**

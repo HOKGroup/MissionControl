@@ -17,7 +17,15 @@ function LinkStatsController($routeParams, DTColumnDefBuilder, HealthReportFacto
          */
         vm.OnFilter = function (date) {
             vm.loading = true;
-            HealthReportFactory.processLinkStats(vm.LinkData.linkStats._id, date, function (result) {
+            var data = {
+                from: date.from,
+                to: date.to,
+                centralPath: vm.LinkData.linkStats.centralPath
+            };
+            HealthReportFactory.processLinkStats(data, function (result) {
+                if (!result){
+                    console.log("Given date range contains no data.")
+                }
                 vm.LinkData = result;
                 vm.loading = false;
             });

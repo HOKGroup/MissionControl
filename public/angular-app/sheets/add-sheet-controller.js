@@ -4,7 +4,7 @@
 
 angular.module('MissionControlApp').controller('AddSheetController', AddSheetController);
 
-function AddSheetController($uibModalInstance, UtilityService, HealthRecordsFactory, models) {
+function AddSheetController($uibModalInstance, UtilityService, ModelsFactory, models) {
     var vm = this;
 
     // (Konrad) We can exclude 'All' from the model list.
@@ -22,7 +22,7 @@ function AddSheetController($uibModalInstance, UtilityService, HealthRecordsFact
      * @param centralPath
      */
     function getUserNames(centralPath) {
-        HealthRecordsFactory.getUserNamesByCentralPath(centralPath)
+        ModelsFactory.getUserNamesByCentralPath(centralPath)
             .then(function (response) {
                 if(!response || response.status !== 200) return;
 

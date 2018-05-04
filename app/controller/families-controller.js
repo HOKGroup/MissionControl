@@ -50,16 +50,27 @@ FamiliesService = {
             });
     },
 
+    /**
+     *
+     * @param req
+     * @param res
+     */
     update: function(req, res) {
         var id = req.params.id;
-
         Families
-            .update({_id: id}, req.body, {upsert: true}, function (err, result){
-                if(err) {
-                    res.status(400).json(err);
-                } else {
-                    res.status(202).json(result);
+            .update({ '_id': id }, req.body, { upsert: true }, function (err, response){
+                var result = {
+                    status: 201,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
                 }
+                res.status(result.status).json(result.message);
             });
     },
 
@@ -123,7 +134,7 @@ FamiliesService = {
                 ]
             ).exec(function (err, response){
                 var result = {
-                    status: 200,
+                    status: 201,
                     message: response
                 };
                 if (err){
@@ -190,7 +201,7 @@ FamiliesService = {
             .select('families')
             .exec(function (err, doc){
                 var response = {
-                    status: 200,
+                    status: 201,
                     message: []
                 };
                 if (err){
@@ -224,17 +235,24 @@ FamiliesService = {
         }
         Families
             .update(
-                { _id: id, 'families.name': famName},
-                { $pull: {'families.$.tasks': { _id: { $in: taskIds}}}}, function(err, result){
-                    if(err) {
-                        res.status(400).json(err);
-                    } else {
-                        global.io.sockets.emit('task_deleted', {
-                            'deletedIds': req.body,
-                            'familyName': req.params.name,
-                            'collectionId': req.params.id});
-                        res.status(202).json(result);
+                { '_id': id, 'families.name': famName},
+                { $pull: { 'families.$.tasks': { '_id': { $in: taskIds }}}}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
                     }
+                    global.io.sockets.emit('task_deleted', {
+                        'deletedIds': req.body,
+                        'familyName': req.params.name,
+                        'collectionId': req.params.id });
+                    res.status(result.status).json(result.message);
                 }
             )
     },
@@ -298,14 +316,12 @@ FamiliesService = {
 //region Utilities
 
 /**
- *
+ * Method for updating Tasks. Used to Accept task or change assignee.
  * @param req
  * @param res
  * @param doc
  */
 var updateFamiliesTask = function (req, res, doc) {
-    //TODO: Using family name to identify families is not a great idea
-    //TODO: Replace with _id.
     var family = doc.families.find(function(item){
         return item.name === req.params.name;
     });
@@ -330,8 +346,7 @@ var updateFamiliesTask = function (req, res, doc) {
                 'task': task,
                 'collectionId': req.params.id // used to match the Revit model
             });
-
-            res.status(200).json(task);
+            res.status(201).json(task);
         }
     });
 };

@@ -11,6 +11,10 @@ function ModelsFactory($http){
 
         getModelStats: function getModelStats(data) {
             return $http.post('/api/v1/models/modelstats', data).then(complete).catch(failed);
+        },
+
+        getUserNamesByCentralPath: function getUserNamesByCentralPath(centralPath) {
+            return $http.get('/api/v1/models/usernames/' + centralPath).then(complete).catch(failed);
         }
     };
 

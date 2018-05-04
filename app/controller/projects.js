@@ -1,12 +1,8 @@
 /**
- * @param {{healthrecordid:string}} HTTP request param for health record id.
- */
-/**
  * @param {{configid:string}} HTTP request param for configuration id.
  */
 
 var mongoose = require('mongoose');
-var global = require('./socket/global');
 Project = mongoose.model('Project');
 
 ProjectService = {
@@ -158,7 +154,7 @@ ProjectService = {
     },
 
     /**
-     *
+     * Removes Configuration Id reference from project.Configurations collection.
      * @param req
      * @param res
      */
@@ -212,7 +208,7 @@ ProjectService = {
     },
 
     /**
-     * Adds configuration reference to Configurations Collection.
+     * Adds Workset id reference to Project.worksetStats collection.
      * @param req
      * @param res
      */
@@ -239,7 +235,7 @@ ProjectService = {
     },
 
     /**
-     *
+     * Adds Family id reference to Project.familyStats collection.
      * @param req
      * @param res
      */
@@ -266,7 +262,7 @@ ProjectService = {
     },
 
     /**
-     *
+     * Adds Style id reference to Project.styleStats collection.
      * @param req
      * @param res
      */
@@ -293,7 +289,7 @@ ProjectService = {
     },
 
     /**
-     *
+     * Adds Link id reference to Project.linkStats collection.
      * @param req
      * @param res
      */
@@ -320,7 +316,7 @@ ProjectService = {
     },
 
     /**
-     *
+     * Adds View id reference to Project.viewStats collection.
      * @param req
      * @param res
      */
@@ -347,7 +343,7 @@ ProjectService = {
     },
 
     /**
-     *
+     * Adds Model id reference to Project.modelStats collection.
      * @param req
      * @param res
      */
@@ -428,7 +424,7 @@ ProjectService = {
     },
 
     /**
-     *
+     * Retrieves a project matching id and populates Configurations collection.
      * @param req
      * @param res
      */
@@ -453,35 +449,31 @@ ProjectService = {
             });
     },
 
-    //TODO: Verify that we need these
-    findAll : function(req, res){
-    Project.find({},function(err, results) {
-      return res.send(results);
-    });
-  },
-
+    /**
+     * Retrieves a project matching id and populates Sheets collection.
+     * @param req
+     * @param res
+     */
     populateSheets : function (req, res) {
-      var id = req.params.id;
-      Project
-          .findById(id)
-          .populate({ path: 'sheets'})
-          .exec(function (err, doc) {
-              var response = {
-                  status: 200,
-                  message: doc
-              };
-              if(err){
-                  response.status = 500;
-                  response.message = err;
-              } else if(!doc){
-                  response.status = 404;
-                  response.message = { "message": "Project Id not found " + id};
-              }
-              res
-                  .status(response.status)
-                  .json(response.message);
-          });
-  }
-  };
+        var id = req.params.id;
+        Project
+            .findById(id)
+            .populate({ path: 'sheets'})
+            .exec(function (err, response){
+                var result = {
+                    status: 200,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
+    }
+};
 
 module.exports = ProjectService;
