@@ -5,40 +5,8 @@ var mongoose = require('mongoose');
 var Styles = mongoose.model('Styles');
 
 StylesService = {
-    // /**
-    //  * Finds Worksets collection by central path.
-    //  * @param req
-    //  * @param res
-    //  */
-    // findByCentralPath: function(req, res){
-    //     // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
-    //     // (Konrad) RSN and BIM 360 paths will have forward slashes instead of back slashes.
-    //     var rgx;
-    //     if(req.params.uri.includes('RSN:') || req.params.uri.includes('BIM 360:')){
-    //         rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
-    //     } else {
-    //         rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
-    //     }
-    //     Styles
-    //         .find(
-    //             { "centralPath": rgx }, function (err, response){
-    //                 var result = {
-    //                     status: 200,
-    //                     message: response
-    //                 };
-    //                 if (err){
-    //                     result.status = 500;
-    //                     result.message = err;
-    //                 } else if (!response){
-    //                     result.status = 404;
-    //                     result.message = err;
-    //                 }
-    //                 res.status(result.status).json(result.message);
-    //             })
-    // },
-
     /**
-     *
+     * Creates Styles Dcoument.
      * @param req
      * @param res
      */

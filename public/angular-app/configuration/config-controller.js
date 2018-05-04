@@ -11,7 +11,7 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
     vm.selectedConfig = {};
     vm.configurations = [];
     vm.PlaceholderSharedParameterLocation = '';
-    vm.selectedRecords = {};
+    vm.selectedRecords = [];
     vm.newFile = '';
     vm.fileWarningMsg = '';
 
@@ -114,6 +114,7 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
             .then(function (response) {
                 if(!response || response.status !== 200) return;
 
+                vm.triggerRecords = response.data;
                 var triggerRecords = [];
                 response.data.forEach(function (item) {
                     item.triggerRecords.forEach(function (record) {
@@ -295,27 +296,31 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
     };
 
     /**
-     * Removes Configuration from Project, and Configurations collection.
+     * Removes Configuration document, reference to Configuration from Project, and
+     * also removes Trigger Record documents that were used by this Configuration.
      * @param id
      */
     vm.deleteConfiguration = function(id){
+        var ids = vm.triggerRecords.map(function (record) {
+            return record._id;
+        });
+
         ConfigFactory.deleteConfiguration(id)
             .then(function(response) {
                 if(!response || response.status !== 204) return;
-
-                for (var i = 0; i < vm.configurations.length; i++) {
-                    var config = vm.configurations[i];
-                    if (config._id === id) {
-                        vm.configurations.splice(i, 1);
-                        return ProjectFactory.deleteConfig(vm.projectId, id);
-                    }
-                }
-                $window.location.reload();
+                return ProjectFactory.deleteConfig(vm.projectId, id);
             })
             .then(function (response) {
-                if(!response || response.status !== 204) return;
-
-                vm.status = 'Successfully delete Configuration.';
+                if(!response || response.status !== 201) return;
+                return TriggerRecordsFactory.deleteMany(ids);
+            })
+            .then(function (response) {
+                if(!response || response.status !== 201) return;
+                return ProjectFactory.deleteTriggerRecords(vm.projectId, ids);
+            })
+            .then(function (response) {
+                if(!response || response.status !== 201) return;
+                $window.location.reload();
             })
             .catch(function (err) {
                 console.log(err.message);

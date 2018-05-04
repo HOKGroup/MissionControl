@@ -38,7 +38,7 @@ ViewsService = {
     },
 
     /**
-     *
+     * Creates Views Document.
      * @param req
      * @param res
      */
@@ -61,7 +61,7 @@ ViewsService = {
     },
 
     /**
-     * Pushes View info into array.
+     * Posts Views stats.
      * @param req
      * @param res
      */
@@ -114,7 +114,7 @@ ViewsService = {
     },
 
     /**
-     *
+     * Retrieves views stats by central path.
      * @param req
      * @param res
      */

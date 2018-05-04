@@ -39,6 +39,10 @@ function ProjectFactory($http){
 
         deleteConfig: function deleteConfig(projectId, configId) {
             return $http.put('/api/v1/projects/' + projectId + '/deleteconfig/' + configId).then(complete).catch(failed);
+        },
+
+        deleteTriggerRecords: function deleteTriggerRecords(projectId, ids) {
+            return $http.post('/api/v1/projects/' + projectId + '/deletetriggerrecords', ids).then(complete).catch(failed);
         }
     };
 

@@ -13,8 +13,8 @@ function TriggerRecordsFactory($http){
             return $http.post('/api/v1/triggerrecords/findmanybycentralpath', data).then(complete).catch(failed);
         },
 
-        getByConfigIdDates: function getByConfigIdDates(data){
-        	return $http.get('/api/v1/triggerrecords/configid/' + data.configId, {params: {from: data.from, to: data.to}});
+        deleteMany: function deleteMany(ids){
+            return $http.post('/api/v1/triggerrecords/deletemany', ids).then(complete).catch(failed);
         }
     };
 

@@ -5,40 +5,8 @@ var mongoose = require('mongoose');
 var Worksets = mongoose.model('Worksets');
 
 WorksetService = {
-    // /**
-    //  * Finds Worksets collection by central path.
-    //  * @param req
-    //  * @param res
-    //  */
-    // findByCentralPath: function(req, res){
-    //     // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
-    //     // (Konrad) RSN and BIM 360 paths will have forward slashes instead of back slashes.
-    //     var rgx;
-    //     if(req.params.uri.includes('RSN:') || req.params.uri.includes('BIM 360:')){
-    //         rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
-    //     } else {
-    //         rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
-    //     }
-    //     Worksets
-    //         .find(
-    //             {"centralPath": rgx}, function (err, response){
-    //                 var result = {
-    //                     status: 200,
-    //                     message: response
-    //                 };
-    //                 if (err){
-    //                     result.status = 500;
-    //                     result.message = err;
-    //                 } else if (!response){
-    //                     result.status = 404;
-    //                     result.message = err;
-    //                 }
-    //                 res.status(result.status).json(result.message);
-    //             })
-    // },
-
     /**
-     *
+     * Creates new Worksets Document.
      * @param req
      * @param res
      */
@@ -166,7 +134,8 @@ WorksetService = {
     },
 
     /**
-     *
+     * Retrieves worksets stats needed to create Health Reports. Data on opened and synch
+     * events is filterd by date range while for item counts last entry is retrieved.
      * @param req
      * @param res
      */

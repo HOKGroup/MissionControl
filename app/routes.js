@@ -12,55 +12,46 @@ var views = require('./models/views-model');
 
  module.exports = function(app) {
      var projects = require('./controller/projects');
-     // app.get('/api/v1/projects', projects.findAll);
-     app.get('/api/v1/projects/sort', projects.findAndSort); //OK
-     app.get('/api/v1/projects/:id', projects.findById); //OK
-     app.get('/api/v1/projects/configid/:configid', projects.findByConfigurationId); //OK
-     app.get('/api/v1/projects/:id/populateconfigurations', projects.findByIdPopulateConfigurations); //OK
-     app.get('/api/v1/projects/populatesheets/:id', projects.populateSheets); //OK
-     app.post('/api/v1/projects', projects.add); //OK
-     app.put('/api/v1/projects/:id', projects.update); //OK
-     app.put('/api/v1/projects/:id/addconfig/:configid', projects.addConfiguration); //OK
-     app.put('/api/v1/projects/:id/addworkset', projects.addWorkset); //OK
-     app.put('/api/v1/projects/:id/addfamilies', projects.addFamilies); //OK
-     app.put('/api/v1/projects/:id/addstyle', projects.addStyle); //OK
-     app.put('/api/v1/projects/:id/addmodel', projects.addModel); //OK
-     app.put('/api/v1/projects/:id/addlink', projects.addLink); //OK
-     app.put('/api/v1/projects/:id/addview', projects.addView); //OK
-     app.put('/api/v1/projects/:id/addsheet', projects.addSheet); //OK
-     app.put('/api/v1/projects/:id/addtriggerrecord', projects.addTriggerRecord); //OK
-     app.put('/api/v1/projects/:id/deleteconfig/:configid', projects.deleteConfiguration); //OK
-     app.delete('/api/v1/projects/:id', projects.delete); //OK
+     app.get('/api/v1/projects/sort', projects.findAndSort);
+     app.get('/api/v1/projects/:id', projects.findById);
+     app.get('/api/v1/projects/configid/:configid', projects.findByConfigurationId);
+     app.get('/api/v1/projects/:id/populateconfigurations', projects.findByIdPopulateConfigurations);
+     app.get('/api/v1/projects/populatesheets/:id', projects.populateSheets);
+     app.post('/api/v1/projects', projects.add);
+     app.put('/api/v1/projects/:id', projects.update);
+     app.put('/api/v1/projects/:id/addconfig/:configid', projects.addConfiguration);
+     app.put('/api/v1/projects/:id/addworkset', projects.addWorkset);
+     app.put('/api/v1/projects/:id/addfamilies', projects.addFamilies);
+     app.put('/api/v1/projects/:id/addstyle', projects.addStyle);
+     app.put('/api/v1/projects/:id/addmodel', projects.addModel);
+     app.put('/api/v1/projects/:id/addlink', projects.addLink);
+     app.put('/api/v1/projects/:id/addview', projects.addView);
+     app.put('/api/v1/projects/:id/addsheet', projects.addSheet);
+     app.put('/api/v1/projects/:id/addtriggerrecord', projects.addTriggerRecord);
+     app.put('/api/v1/projects/:id/deleteconfig/:configid', projects.deleteConfiguration);
+     app.post('/api/v1/projects/:id/deletetriggerrecords', projects.deleteTriggerRecords);
+     app.delete('/api/v1/projects/:id', projects.delete);
 
      var config = require('./controller/configurations');
-     app.get('/api/v1/configurations', config.findAll);
-     app.get('/api/v1/configurations/:id', config.findById);
+     app.get('/api/v1/configurations/centralpath/:uri*', config.findByCentralPath);
      app.put('/api/v1/configurations/:id', config.update);
-     app.get('/api/v1/configurations/centralpath/:uri*', config.findByCentralPath); //OK
-     app.post('/api/v1/configurations', config.add); //OK
-     app.delete('/api/v1/configurations/:id', config.delete); //OK
-     app.post('/api/v1/configurations/deletemany', config.deleteMany); //OK
-     app.post('/api/v1/configurations/:id/addfile', config.addFile); //OK
-     app.post('/api/v1/configurations/:id/deletefile', config.deleteFile); //OK
-     app.post('/api/v1/configurations/getmany', config.getMany); //OK
-     app.put('/api/v1/configurations/:id/updatefilepath', config.updateFilePath); //OK
+     app.put('/api/v1/configurations/:id/updatefilepath', config.updateFilePath);
+     app.post('/api/v1/configurations', config.add);
+     app.post('/api/v1/configurations/deletemany', config.deleteMany);
+     app.post('/api/v1/configurations/:id/addfile', config.addFile);
+     app.post('/api/v1/configurations/:id/deletefile', config.deleteFile);
+     app.post('/api/v1/configurations/getmany', config.getMany);
+     app.delete('/api/v1/configurations/:id', config.delete);
 
      var triggerrecords = require('./controller/trigger-records-controller');
-     app.get('/api/v1/triggerrecords', triggerrecords.findAll);
-     app.get('/api/v1/triggerrecords/:id', triggerrecords.findById);
-     app.post('/api/v1/triggerrecords/findmanybycentralpath', triggerrecords.findManyByCentralPathDates); //OK
-     app.get('/api/v1/triggerrecords/centralpath/:uri*', triggerrecords.findByCentralPath); //OK
-     app.get('/api/v1/triggerrecords/updaterid/:updaterid', triggerrecords.findByUpdaterId);
-     app.get('/api/v1/triggerrecords/uniqueid/:uniqueid', triggerrecords.findByUniqueId);
-     app.get('/api/v1/triggerrecords/configid/:configid', triggerrecords.findByConfigId);
-     app.post('/api/v1/triggerrecords', triggerrecords.add); //OK
-     app.post('/api/v1/triggerrecords/:id/add', triggerrecords.postTriggerRecord); //OK
-     app.put('/api/v1/triggerrecords/:id', triggerrecords.update);
-     app.delete('/api/v1/triggerrecords/:id', triggerrecords.delete);
-     app.delete('/api/v1/triggerrecords/config/:configid', triggerrecords.deleteAllForConfig);
-     app.delete('/api/v1/triggerrecords/centralpath/:centralpath', triggerrecords.deleteAllForFile);
-     app.put('/api/v1/triggerrecords/:id/updatefilepath', triggerrecords.updateFilePath); //OK
+     app.get('/api/v1/triggerrecords/centralpath/:uri*', triggerrecords.findByCentralPath);
+     app.put('/api/v1/triggerrecords/:id/updatefilepath', triggerrecords.updateFilePath);
+     app.post('/api/v1/triggerrecords/findmanybycentralpath', triggerrecords.findManyByCentralPathDates);
+     app.post('/api/v1/triggerrecords', triggerrecords.add);
+     app.post('/api/v1/triggerrecords/:id/add', triggerrecords.postTriggerRecord);
+     app.post('/api/v1/triggerrecords/deletemany', triggerrecords.deleteMany);
 
+     //TODO: Refactor and cleanup Addins Page.
      var addins = require('./controller/addins-controller');
      app.get('/api/v1/addins', addins.findAll);
      app.post('/api/v1/addins', addins.add);
@@ -92,42 +83,38 @@ var views = require('./models/views-model');
      app.put('/api/v1/sheets/:id/updatefilepath', sheets.updateFilePath); //OK
 
      var worksets = require('./controller/worksets-controller');
-     // app.get('/api/v1/worksets/centralpath/:uri*', worksets.findByCentralPath); //OK
-     app.post('/api/v1/worksets', worksets.add); //OK
-     app.post('/api/v1/worksets/:id/itemcount', worksets.postItemCount); //OK
-     app.post('/api/v1/worksets/:id/onopened', worksets.onOpened); //OK
-     app.post('/api/v1/worksets/:id/onsynched', worksets.onSynched); //OK
-     app.put('/api/v1/worksets/:id/updatefilepath', worksets.updateFilePath); //OK
-     app.post('/api/v1/worksets/worksetstats', worksets.getWorksetStats); //OK
+     app.post('/api/v1/worksets', worksets.add);
+     app.post('/api/v1/worksets/:id/itemcount', worksets.postItemCount);
+     app.post('/api/v1/worksets/:id/onopened', worksets.onOpened);
+     app.post('/api/v1/worksets/:id/onsynched', worksets.onSynched);
+     app.put('/api/v1/worksets/:id/updatefilepath', worksets.updateFilePath);
+     app.post('/api/v1/worksets/worksetstats', worksets.getWorksetStats);
 
      var styles = require('./controller/styles-controller');
-     // app.get('/api/v1/styles/centralpath/:uri*', styles.findByCentralPath); //OK
-     app.post('/api/v1/styles', styles.add); //OK
-     app.post('/api/v1/styles/:id/stylestats', styles.styleStats); //OK
-     app.put('/api/v1/styles/:id/updatefilepath', styles.updateFilePath); //OK
-     app.post('/api/v1/styles/stylestats', styles.getStyleStats); //OK
+     app.post('/api/v1/styles', styles.add);
+     app.post('/api/v1/styles/:id/stylestats', styles.styleStats);
+     app.put('/api/v1/styles/:id/updatefilepath', styles.updateFilePath);
+     app.post('/api/v1/styles/stylestats', styles.getStyleStats);
 
      var links = require('./controller/links-controller');
-     // app.get('/api/v1/links/centralpath/:uri*', links.findByCentralPath); //OK
-     app.post('/api/v1/links', links.add); //OK
-     app.post('/api/v1/links/:id/linkstats', links.linkStats); //OK
-     app.put('/api/v1/links/:id/updatefilepath', links.updateFilePath); //OK
-     app.post('/api/v1/links/linkstats', links.getLinkStats); //OK
+     app.post('/api/v1/links', links.add);
+     app.post('/api/v1/links/:id/linkstats', links.linkStats);
+     app.put('/api/v1/links/:id/updatefilepath', links.updateFilePath);
+     app.post('/api/v1/links/linkstats', links.getLinkStats);
 
      var models = require('./controller/models-controller');
-     // app.get('/api/v1/models/centralpath/:uri*', models.findByCentralPath); //OK
-     app.post('/api/v1/models', models.add); //OK
-     app.post('/api/v1/models/:id/modelsize', models.postModelSize); //OK
-     app.post('/api/v1/models/:id/modelopentime', models.postModelOpenTime); //OK
-     app.post('/api/v1/models/:id/modelsynchtime', models.postModelSynchTime); //OK
-     app.put('/api/v1/models/:id/updatefilepath', models.updateFilePath); //OK
-     app.post('/api/v1/models/modelstats', models.getModelStats); //OK
-     app.get('/api/v1/models/usernames/:uri*', models.getUserNamesByCentralPath); //OK
+     app.post('/api/v1/models', models.add);
+     app.post('/api/v1/models/:id/modelsize', models.postModelSize);
+     app.post('/api/v1/models/:id/modelopentime', models.postModelOpenTime);
+     app.post('/api/v1/models/:id/modelsynchtime', models.postModelSynchTime);
+     app.put('/api/v1/models/:id/updatefilepath', models.updateFilePath);
+     app.post('/api/v1/models/modelstats', models.getModelStats);
+     app.get('/api/v1/models/usernames/:uri*', models.getUserNamesByCentralPath);
 
      var views = require('./controller/views-controller');
-     app.get('/api/v1/views/centralpath/:uri*', views.findByCentralPath); //OK
-     app.post('/api/v1/views', views.add); //OK
-     app.post('/api/v1/views/:id/viewstats', views.viewStats); //OK
-     app.put('/api/v1/views/:id/updatefilepath', views.updateFilePath); //OK
-     app.post('/api/v1/views/viewstats', views.getViewStats); //OK
+     app.get('/api/v1/views/centralpath/:uri*', views.findByCentralPath);
+     app.post('/api/v1/views', views.add);
+     app.post('/api/v1/views/:id/viewstats', views.viewStats);
+     app.put('/api/v1/views/:id/updatefilepath', views.updateFilePath);
+     app.post('/api/v1/views/viewstats', views.getViewStats);
   };

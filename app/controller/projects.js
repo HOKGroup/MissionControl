@@ -166,7 +166,7 @@ ProjectService = {
                 { '_id': projectId},
                 { $pull: { 'configurations': configId }},function (err, response){
                     var result = {
-                        status: 204,
+                        status: 201,
                         message: response
                     };
                     if (err){
@@ -178,6 +178,35 @@ ProjectService = {
                     }
                     res.status(result.status).json(result.message);
                 });
+    },
+
+    /**
+     * Removes trigger record references when trigger records are deleted.
+     * @param req
+     * @param res
+     */
+    deleteTriggerRecords: function (req, res) {
+        var projectId = req.params.id;
+        var ids = req.body.map(function (item) {
+            return mongoose.Types.ObjectId(item);
+        });
+        Project
+            .update(
+                { '_id': projectId },
+                { $pull: { 'triggerRecords': { $in: ids }}}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                })
     },
 
     /**
