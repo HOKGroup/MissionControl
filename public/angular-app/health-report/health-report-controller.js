@@ -53,7 +53,15 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
 
         // (Konrad) We retrieve a file name with extension,
         // then remove the last 12 chars (_central.rvt)
-        return path.replace(/^.*[\\\/]/, '').slice(0, -12);
+        var fileName = path.replace(/^.*[\\\/]/, '');
+        var hasCentral = fileName.match(/-central/i);
+        if(hasCentral){
+            // let's slice -central.rvt
+            return fileName.slice(0, -12);
+        } else {
+            // let's only slice the .rvt
+            return fileName.slice(0, -4);
+        }
     }
 
     /**
@@ -89,14 +97,6 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         });
     };
 
-    // /**
-    //  * Custom sort function to show files sorted by file name.
-    //  * @param file
-    //  */
-    // vm.sortFiles = function (file) {
-    //     return vm.fileNameFromPath(file.centralPath);
-    // };
-
     /**
      * Checks if data was loaded for given asset and returns true/false.
      * @param name
@@ -131,6 +131,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
      */
     vm.SetProject = function (link, reset){
         vm.selectedFileName = link.name;
+        vm.noData = true;
 
         if (reset) vm.AllData = [{
             show: {name: "main", value: true}
@@ -147,7 +148,13 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         };
 
         HealthReportFactory.processModelStats(data, function (result) {
-            if(result){
+            if( result &&
+                result.modelStats.modelSizes.length > 0 &&
+                result.modelStats.openTimes.lenght > 0 &&
+                result.modelStats.synchTimes.length > 0 &&
+                result.modelStats.worksets.onOpened.length > 0 &&
+                result.modelStats.worksets.onSynched.length > 0){
+                vm.noData = false;
                 vm.ModelData = result;
                 vm.AllData.splice(0, 0, result);
             }
@@ -156,6 +163,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
 
         HealthReportFactory.processFamilyStats(data, function (result) {
             if(result){
+                vm.noData = false;
                 vm.FamilyData = result;
                 vm.AllData.splice(0, 0, result);
             }
@@ -163,7 +171,8 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         });
 
         HealthReportFactory.processStyleStats(data, function (result) {
-            if(result){
+            if(result && result.styleStats.length > 0){
+                vm.noData = false;
                 vm.StyleData = result;
                 vm.AllData.splice(0, 0, result);
             }
@@ -171,7 +180,8 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         });
 
         HealthReportFactory.processLinkStats(data, function (result) {
-            if(result){
+            if(result && result.linkStats.linkStats.length > 0){
+                vm.noData = false;
                 vm.LinkData = result;
                 vm.AllData.splice(0, 0, result);
             }
@@ -179,7 +189,8 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         });
 
         HealthReportFactory.processViewStats(data, function (result) {
-            if(result){
+            if(result && result.viewStats.viewStats.length > 0){
+                vm.noData = false;
                 vm.ViewData = result;
                 vm.AllData.splice(0, 0, result);
             }
@@ -187,9 +198,13 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         });
 
         HealthReportFactory.processWorksetStats(data, function (result) {
-            if(result) {
-                vm.WorksetData = result;
-                vm.AllData.splice(0, 0, result);
+            if( result &&
+                result.worksetStats.onOpened.length > 0 &&
+                result.worksetStats.onSynched.length > 0 &&
+                result.worksetStats.itemCount.length > 0) {
+                    vm.noData = false;
+                    vm.WorksetData = result;
+                    vm.AllData.splice(0, 0, result);
             }
             vm.SelectionChanged('main');
         });

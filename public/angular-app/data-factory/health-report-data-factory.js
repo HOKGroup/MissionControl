@@ -16,7 +16,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
 
             FamiliesFactory.getFamilyStats(data)
                 .then(function (response) {
-                    if(!response || !response.data[0] || response.status !== 201) return null;
+                    if(!response || !response.data[0] || response.status !== 201){
+                        callback(null);
+                        return;
+                    }
 
                     familyStats = response.data[0];
 
@@ -172,7 +175,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
         processLinkStats: function (data, callback) {
             LinksFactory.getLinkStats(data)
                 .then(function (response) {
-                    if( !response || response.status !== 201) return null;
+                    if( !response || response.status !== 201){
+                        callback(null);
+                        return;
+                    }
                     if( !response.data ||
                         !response.data.linkStats ||
                         response.data.linkStats.length === 0){
@@ -286,7 +292,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
         processStyleStats: function(data, callback){
             StylesFactory.getStyleStats(data)
                 .then(function (response) {
-                    if (!response || response.status !== 201) return null;
+                    if (!response || response.status !== 201){
+                        callback(null);
+                        return;
+                    }
                     if (!response.data ||
                         !response.data.styleStats ||
                         response.data.styleStats.length === 0){
@@ -428,7 +437,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
         processViewStats: function(data, callback) {
             ViewsFactory.getViewStats(data)
                 .then(function (response) {
-                    if( !response || response.status !== 201) return null;
+                    if( !response || response.status !== 201){
+                        callback(null);
+                        return;
+                    }
                     if( !response.data ||
                         !response.data.viewStats ||
                         response.data.viewStats.length < 1){
@@ -568,82 +580,97 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
         processModelStats: function(data, callback) {
             ModelsFactory.getModelStats(data)
                 .then(function (response) {
-                    if(!response || !response.data || response.status !== 201) return null;
+                    if( !response || !response.data || response.status !== 201){
+                        callback(null);
+                        return;
+                    }
+                    if( response.data.modelSizes.length === 0 ||
+                        response.data.openTimes.length === 0 ||
+                        response.data.synchTimes.length === 0 ||
+                        response.data.worksets.onOpened === 0 ||
+                        response.data.worksets.onSynched === 0) {
+                        // (Konrad) In case that the specified date range contains no data
+                        // we can return the response object only. It has the centralPath
+                        // property needed to re-call this filter without crashing.
+                        callback({
+                            modelStats: response.data
+                        });
+                    } else {
+                        // (Konrad) Due to how aggregation model works when data is retrieved
+                        // it comes in nested under an extra field. This simplifies it for later
+                        var data = {
+                            modelSizes: response.data.modelSizes,
+                            openTimes: response.data.openTimes,
+                            synchTimes: response.data.synchTimes,
+                            onOpened: response.data.worksets.onOpened,
+                            onSynched: response.data.worksets.onSynched,
+                            centralPath: response.data.centralPath
+                        };
 
-                    // (Konrad) Due to how aggregation model works when data is retrieved
-                    // it comes in nested under an extra field. This simplifies it for later
-                    var data = {
-                        modelSizes: response.data.modelSizes,
-                        openTimes: response.data.openTimes,
-                        synchTimes: response.data.synchTimes,
-                        onOpened: response.data.worksets.onOpened,
-                        onSynched: response.data.worksets.onSynched,
-                        centralPath: response.data.centralPath
-                    };
+                        // (Konrad) Since all these are displayed in a chart we need at least two (2) data points.
+                        if(data.modelSizes.length <= 1) return;
+                        if(data.openTimes.length <= 1) return;
+                        if(data.synchTimes.length <= 1) return;
 
-                    // (Konrad) Since all these are displayed in a chart we need at least two (2) data points.
-                    if(data.modelSizes.length <= 1) return;
-                    if(data.openTimes.length <= 1) return;
-                    if(data.synchTimes.length <= 1) return;
+                        var modelSize = UtilityService.formatNumber(data.modelSizes[data.modelSizes.length-1].value);
+                        var avgOpenTime = UtilityService.formatDuration(SumProperty(data.openTimes, "value") / data.openTimes.length);
+                        var avgSynchTime = UtilityService.formatDuration(SumProperty(data.synchTimes, "value") / data.openTimes.length);
 
-                    var modelSize = UtilityService.formatNumber(data.modelSizes[data.modelSizes.length-1].value);
-                    var avgOpenTime = UtilityService.formatDuration(SumProperty(data.openTimes, "value") / data.openTimes.length);
-                    var avgSynchTime = UtilityService.formatDuration(SumProperty(data.synchTimes, "value") / data.openTimes.length);
+                        var modelScoreData = {
+                            passingChecks: 7,
+                            count: modelSize,
+                            label: "Model Size",
+                            newMax: 6
+                        };
 
-                    var modelScoreData = {
-                        passingChecks: 7,
-                        count: modelSize,
-                        label: "Model Size",
-                        newMax: 6
-                    };
+                        var desc = 'There are a few simple measurements that we can use to judge model speed and responsiveness. ' +
+                            'The good rule of thumb is to keep the model size smaller than 200Mb and that will help increase both ' +
+                            'open and synch times. Model size is also a good early indicator that something bad has happened to ' +
+                            'the model - it\'s size can increase significantly if we link and/or explode DWG/STL content.';
 
-                    var desc = 'There are a few simple measurements that we can use to judge model speed and responsiveness. ' +
-                        'The good rule of thumb is to keep the model size smaller than 200Mb and that will help increase both ' +
-                        'open and synch times. Model size is also a good early indicator that something bad has happened to ' +
-                        'the model - it\'s size can increase significantly if we link and/or explode DWG/STL content.';
+                        var bullets = [
+                            {
+                                title: 'Model Size',
+                                description: 'It\'s best practice to keep the model size under 200MB. It helps preserve your ' +
+                                'hardware resources, and potentially increse model open and synch times. Model Size is often a ' +
+                                'good indicator of potential modeling issues. Use of imported objects like DWG or STL often bloats ' +
+                                'model size giving Model Managers clues about potential issues.',
+                                bulletText: modelSize,
+                                bulletColor: UtilityService.color().grey
+                            },
+                            {
+                                title: 'Average Open Time',
+                                description: 'This is not a measure of model health, but rather a glance at potential user ' +
+                                '"discomfort". Users tend to get frustrated at time lost, while waiting for the model to open. ' +
+                                'If we can minimize that time, they will be able to spend it doing more meaningful things, ' +
+                                'than waiting for Revit to open. Potential ways to speed up the model opening time, is to ' +
+                                'minimize amount of plug-ins that are being loaded at startup.',
+                                bulletText: avgOpenTime,
+                                bulletColor: UtilityService.color().grey
+                            },
+                            {
+                                title: 'Average Synch Time',
+                                description: 'This is not a measure of model health, but rather a glance at potential user ' +
+                                '"discomfort". Users tend to get frustrated at time lost, while waiting for the model to synch. ' +
+                                'Synch time can be decresed by reducing number of warnings in the model, model size, number ' +
+                                'of links etc. All of these things contribute to time that is being needed by Revit to reconsile ' +
+                                'all of the changes. Another quick way to minimize synch time, is to Reload Latest before Synchronizing.',
+                                bulletText: avgSynchTime,
+                                bulletColor: UtilityService.color().grey
+                            }
+                        ];
 
-                    var bullets = [
-                        {
-                            title: 'Model Size',
-                            description: 'It\'s best practice to keep the model size under 200MB. It helps preserve your ' +
-                            'hardware resources, and potentially increse model open and synch times. Model Size is often a ' +
-                            'good indicator of potential modeling issues. Use of imported objects like DWG or STL often bloats ' +
-                            'model size giving Model Managers clues about potential issues.',
-                            bulletText: modelSize,
-                            bulletColor: UtilityService.color().grey
-                        },
-                        {
-                            title: 'Average Open Time',
-                            description: 'This is not a measure of model health, but rather a glance at potential user ' +
-                            '"discomfort". Users tend to get frustrated at time lost, while waiting for the model to open. ' +
-                            'If we can minimize that time, they will be able to spend it doing more meaningful things, ' +
-                            'than waiting for Revit to open. Potential ways to speed up the model opening time, is to ' +
-                            'minimize amount of plug-ins that are being loaded at startup.',
-                            bulletText: avgOpenTime,
-                            bulletColor: UtilityService.color().grey
-                        },
-                        {
-                            title: 'Average Synch Time',
-                            description: 'This is not a measure of model health, but rather a glance at potential user ' +
-                            '"discomfort". Users tend to get frustrated at time lost, while waiting for the model to synch. ' +
-                            'Synch time can be decresed by reducing number of warnings in the model, model size, number ' +
-                            'of links etc. All of these things contribute to time that is being needed by Revit to reconsile ' +
-                            'all of the changes. Another quick way to minimize synch time, is to Reload Latest before Synchronizing.',
-                            bulletText: avgSynchTime,
-                            bulletColor: UtilityService.color().grey
-                        }
-                    ];
-
-                    callback({
-                        scoreData: modelScoreData,
-                        modelScore: 7,
-                        description: desc,
-                        name: "Model",
-                        modelStats: data,
-                        bullets: bullets,
-                        show: {name: "models", value: false},
-                        color: UtilityService.color().grey
-                    });
+                        callback({
+                            scoreData: modelScoreData,
+                            modelScore: 7,
+                            description: desc,
+                            name: "Model",
+                            modelStats: data,
+                            bullets: bullets,
+                            show: {name: "models", value: false},
+                            color: UtilityService.color().grey
+                        });
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -658,7 +685,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
         processWorksetStats: function(data, callback) {
             WorksetsFactory.getWorksetStats(data)
                 .then(function (response) {
-                    if( !response || response.status !== 201) return null;
+                    if( !response || response.status !== 201){
+                        callback(null);
+                        return;
+                    }
                     if( !response.data ||
                         !response.data.onOpened ||
                         response.data.onOpened.length < 1 ||

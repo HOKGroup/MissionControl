@@ -41,7 +41,8 @@ function ProjectController(ProjectFactory, $location, DTColumnDefBuilder){
     function createTable() {
         vm.dtOptions = {
             paginationType: 'simple_numbers',
-            lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'All']]
+            lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'All']],
+            order: [[0, 'desc']]
         };
 
         vm.dtColumnDefs = [

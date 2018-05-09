@@ -51,6 +51,10 @@
                 </div>
             </div>
             <div>
+                <div class="col-xs-12 col-sm-9" ng-if="vm.noData">
+                    <h2>No data available. Please select a different model. It is also possible that there was
+                    no activity in this model for more than a month. Only most recent data is displayed.</h2>
+                </div>
                 <div class="col-xs-12 col-sm-9">
                     <workset-stats processed="vm.WorksetData"
                                    ng-if="vm.LoadPage('worksets')"

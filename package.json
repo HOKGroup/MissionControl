@@ -16,6 +16,7 @@
     "mongodb": "^2.2.2",
     "mongoose": "^4.5.5",
     "mongoose-geojson-schema": "^2.1.1",
+    "nodemon": "^1.17.4",
     "socket.io": "^1.4.6"
   },
   "engines": {
