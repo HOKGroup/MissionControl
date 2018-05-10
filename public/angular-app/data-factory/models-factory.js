@@ -6,15 +6,15 @@ angular.module('MissionControlApp').factory('ModelsFactory', ModelsFactory);
 function ModelsFactory($http){
     return {
         updateFilePath: function updateFilePath(id, data){
-            return $http.put('/api/v1/models/' + id + '/updatefilepath', data).then(complete).catch(failed);
+            return $http.put('/api/v2/models/' + id + '/updatefilepath', data).then(complete).catch(failed);
         },
 
         getModelStats: function getModelStats(data) {
-            return $http.post('/api/v1/models/modelstats', data).then(complete).catch(failed);
+            return $http.post('/api/v2/models/modelstats', data).then(complete).catch(failed);
         },
 
         getUserNamesByCentralPath: function getUserNamesByCentralPath(centralPath) {
-            return $http.get('/api/v1/models/usernames/' + centralPath).then(complete).catch(failed);
+            return $http.get('/api/v2/models/usernames/' + centralPath).then(complete).catch(failed);
         }
     };
 

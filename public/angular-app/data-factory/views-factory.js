@@ -6,11 +6,11 @@ angular.module('MissionControlApp').factory('ViewsFactory', ViewsFactory);
 function ViewsFactory($http){
     return {
         updateFilePath: function updateFilePath(id, data){
-            return $http.put('/api/v1/views/' + id + '/updatefilepath', data).then(complete).catch(failed);
+            return $http.put('/api/v2/views/' + id + '/updatefilepath', data).then(complete).catch(failed);
         },
 
         getViewStats: function getViewStats(data) {
-            return $http.post('/api/v1/views/viewstats', data).then(complete).catch(failed);
+            return $http.post('/api/v2/views/viewstats', data).then(complete).catch(failed);
         }
     };
 

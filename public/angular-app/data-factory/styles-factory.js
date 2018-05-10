@@ -6,11 +6,11 @@ angular.module('MissionControlApp').factory('StylesFactory', StylesFactory);
 function StylesFactory($http){
     return {
         updateFilePath: function updateFilePath(id, data){
-            return $http.put('/api/v1/styles/' + id + '/updatefilepath', data).then(complete).catch(failed);
+            return $http.put('/api/v2/styles/' + id + '/updatefilepath', data).then(complete).catch(failed);
         },
 
         getStyleStats: function getStyleStats(data) {
-            return $http.post('/api/v1/styles/stylestats', data).then(complete).catch(failed);
+            return $http.post('/api/v2/styles/stylestats', data).then(complete).catch(failed);
         }
     };
 

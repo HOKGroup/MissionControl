@@ -6,11 +6,11 @@ angular.module('MissionControlApp').factory('WorksetsFactory', WorksetsFactory);
 function WorksetsFactory($http){
     return {
         updateFilePath: function updateFilePath(id, data){
-            return $http.put('/api/v1/worksets/' + id + '/updatefilepath', data).then(complete).catch(failed);
+            return $http.put('/api/v2/worksets/' + id + '/updatefilepath', data).then(complete).catch(failed);
         },
 
         getWorksetStats: function getWorksetStats(data) {
-            return $http.post('/api/v1/worksets/worksetstats', data).then(complete).catch(failed);
+            return $http.post('/api/v2/worksets/worksetstats', data).then(complete).catch(failed);
         }
     };
 

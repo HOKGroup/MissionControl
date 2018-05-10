@@ -6,15 +6,15 @@ angular.module('MissionControlApp').factory('TriggerRecordsFactory', TriggerReco
 function TriggerRecordsFactory($http){
     return {
         updateFilePath: function updateFilePath(id, data) {
-            return $http.put('/api/v1/triggerrecords/' + id + '/updatefilepath', data).then(complete).catch(failed);
+            return $http.put('/api/v2/triggerrecords/' + id + '/updatefilepath', data).then(complete).catch(failed);
         },
 
         getManyByCentralPathDates: function getManyByCentralPathDates(data){
-            return $http.post('/api/v1/triggerrecords/findmanybycentralpath', data).then(complete).catch(failed);
+            return $http.post('/api/v2/triggerrecords/findmanybycentralpath', data).then(complete).catch(failed);
         },
 
         deleteMany: function deleteMany(ids){
-            return $http.post('/api/v1/triggerrecords/deletemany', ids).then(complete).catch(failed);
+            return $http.post('/api/v2/triggerrecords/deletemany', ids).then(complete).catch(failed);
         }
     };
 

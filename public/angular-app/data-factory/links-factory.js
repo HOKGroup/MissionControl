@@ -6,11 +6,11 @@ angular.module('MissionControlApp').factory('LinksFactory', LinksFactory);
 function LinksFactory($http){
     return {
         updateFilePath: function updateFilePath(id, data){
-            return $http.put('/api/v1/links/' + id + '/updatefilepath', data).then(complete).catch(failed);
+            return $http.put('/api/v2/links/' + id + '/updatefilepath', data).then(complete).catch(failed);
         },
 
         getLinkStats: function getLinkStats(data) {
-            return $http.post('/api/v1/links/linkstats', data).then(complete).catch(failed);
+            return $http.post('/api/v2/links/linkstats', data).then(complete).catch(failed);
         }
     };
 
