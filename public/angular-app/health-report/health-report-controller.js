@@ -27,9 +27,9 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
                 vm.selectedProject = response.data;
                 vm.selectedProject.configurations.forEach(function (config) {
                     config.files.forEach(function (file) {
-                        file['name'] = fileNameFromPath(file.centralPath);
+                        file.name = fileNameFromPath(file.centralPath);
                         vm.files.push(file);
-                    })
+                    });
                 });
 
                 var selected = vm.files.sort(dynamicSort('centralPath'))[0];
@@ -150,7 +150,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         HealthReportFactory.processModelStats(data, function (result) {
             if( result &&
                 result.modelStats.modelSizes.length > 0 &&
-                result.modelStats.openTimes.lenght > 0 &&
+                result.modelStats.openTimes.length > 0 &&
                 result.modelStats.synchTimes.length > 0 &&
                 result.modelStats.worksets.onOpened.length > 0 &&
                 result.modelStats.worksets.onSynched.length > 0){
