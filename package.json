@@ -6,7 +6,8 @@
   "main": "server.js",
   "license": "MIT",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "serve": "nodemon server.js"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
