@@ -6,7 +6,7 @@ var Styles = mongoose.model('Styles');
 
 StylesService = {
     /**
-     * Creates Styles Dcoument.
+     * Creates Styles Document.
      * @param req
      * @param res
      */

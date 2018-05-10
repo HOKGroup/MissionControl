@@ -593,7 +593,14 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         // we can return the response object only. It has the centralPath
                         // property needed to re-call this filter without crashing.
                         callback({
-                            modelStats: response.data
+                            modelStats: {
+                                modelSizes: response.data.modelSizes,
+                                openTimes: response.data.openTimes,
+                                synchTimes: response.data.synchTimes,
+                                onOpened: response.data.worksets.onOpened,
+                                onSynched: response.data.worksets.onSynched,
+                                centralPath: response.data.centralPath
+                            }
                         });
                     } else {
                         // (Konrad) Due to how aggregation model works when data is retrieved

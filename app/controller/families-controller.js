@@ -15,12 +15,15 @@ FamiliesService = {
     findByCentralPath: function(req, res){
         // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
         // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.
+        var isRevitServer = req.params.uri.match(/rsn:/i);
+        var isBim360 = req.params.uri.match(/bim 360:/i);
         var rgx;
-        if(req.params.uri.includes('RSN:') || req.params.uri.includes('BIM 360:')){
+        if(isRevitServer || isBim360){
             rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
         } else {
             rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
         }
+
         Families
             .find(
                 {"centralPath": rgx}, function (err, result) {
@@ -135,7 +138,7 @@ FamiliesService = {
                 if(err){
                     res.status(500).json(err);
                 } else {
-                    // (Konrad) We can prefilter on server side and minimize payload.
+                    // (Konrad) We can pre-filter on server side and minimize payload.
                     var task = data.families.find(function (item) {
                         return item.name === req.params.name;
                     }).tasks.find(function(item){

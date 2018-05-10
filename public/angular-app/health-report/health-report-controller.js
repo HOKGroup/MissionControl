@@ -1,6 +1,6 @@
 angular.module('MissionControlApp').controller('HealthReportController', HealthReportController);
 
-function HealthReportController($routeParams, ProjectFactory, HealthReportFactory){
+function HealthReportController($routeParams, ProjectFactory, HealthReportFactory, UtilityService){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.FamilyCollection = null;
@@ -27,7 +27,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
                 vm.selectedProject = response.data;
                 vm.selectedProject.configurations.forEach(function (config) {
                     config.files.forEach(function (file) {
-                        file.name = fileNameFromPath(file.centralPath);
+                        file.name = UtilityService.fileNameFromPath(file.centralPath);
                         vm.files.push(file);
                     });
                 });
@@ -45,26 +45,6 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
     //region Utilities
 
     /**
-     * Returns file name from full file path.
-     * @param path
-     */
-    function fileNameFromPath(path){
-        if(!path) return;
-
-        // (Konrad) We retrieve a file name with extension,
-        // then remove the last 12 chars (_central.rvt)
-        var fileName = path.replace(/^.*[\\\/]/, '');
-        var hasCentral = fileName.match(/-central/i);
-        if(hasCentral){
-            // let's slice -central.rvt
-            return fileName.slice(0, -12);
-        } else {
-            // let's only slice the .rvt
-            return fileName.slice(0, -4);
-        }
-    }
-
-    /**
      * Returns a sort order for objects by a given property on that object.
      * Credit: https://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value-in-javascript
      * @param property
@@ -77,8 +57,8 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
             property = property.substr(1);
         }
         return function (a,b) {
-            var prop1 = fileNameFromPath(a[property]);
-            var prop2 = fileNameFromPath(b[property]);
+            var prop1 = UtilityService.fileNameFromPath(a[property]);
+            var prop2 = UtilityService.fileNameFromPath(b[property]);
             var result = (prop1 < prop2) ? -1 : (prop1 > prop2) ? 1 : 0;
             return result * sortOrder;
         }
@@ -148,12 +128,12 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         };
 
         HealthReportFactory.processModelStats(data, function (result) {
-            if( result &&
+            if( result && result.modelStats &&
                 result.modelStats.modelSizes.length > 0 &&
                 result.modelStats.openTimes.length > 0 &&
                 result.modelStats.synchTimes.length > 0 &&
-                result.modelStats.worksets.onOpened.length > 0 &&
-                result.modelStats.worksets.onSynched.length > 0){
+                result.modelStats.onOpened.length > 0 &&
+                result.modelStats.onSynched.length > 0){
                 vm.noData = false;
                 vm.ModelData = result;
                 vm.AllData.splice(0, 0, result);
@@ -162,7 +142,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         });
 
         HealthReportFactory.processFamilyStats(data, function (result) {
-            if(result){
+            if(result && result.familyStats.families.length > 0){
                 vm.noData = false;
                 vm.FamilyData = result;
                 vm.AllData.splice(0, 0, result);
@@ -171,7 +151,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         });
 
         HealthReportFactory.processStyleStats(data, function (result) {
-            if(result && result.styleStats.length > 0){
+            if(result && result.styleStats.styleStats.length > 0){
                 vm.noData = false;
                 vm.StyleData = result;
                 vm.AllData.splice(0, 0, result);
