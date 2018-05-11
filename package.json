@@ -6,7 +6,8 @@
   "main": "server.js",
   "license": "MIT",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "serve": "nodemon server.js"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
@@ -16,6 +17,7 @@
     "mongodb": "^2.2.2",
     "mongoose": "^4.5.5",
     "mongoose-geojson-schema": "^2.1.1",
+    "nodemon": "^1.17.4",
     "socket.io": "^1.4.6"
   },
   "engines": {
@@ -28,5 +30,8 @@
   "keywords": [
     "node",
     "mongose"
-  ]
+  ],
+  "devDependencies": {
+    "eslint": "^4.19.1"
+  }
 }

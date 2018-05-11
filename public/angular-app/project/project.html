@@ -5,7 +5,10 @@
         </div>
     </div>
     <div class="row" ng-if="vm.projects.length > 0">
-        <table datatable="ng" dt-options="vm.dtOptions2" dt-column-defs="vm.dtColumnDefs2" class="table table-hover table-condensed datatable">
+        <table datatable="ng"
+               dt-options="vm.dtOptions"
+               dt-column-defs="vm.dtColumnDefs"
+               class="table table-hover table-condensed datatable">
             <thead>
             <tr>
                 <th class="col-md-2">Project Number</th>

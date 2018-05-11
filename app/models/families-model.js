@@ -37,5 +37,4 @@ var familiesSchema = new mongoose.Schema({
 
 familiesSchema.index({"centralPath": "text"});
 familiesSchema.index({'families.tasks.assignedTo': 'text'});
-
 mongoose.model('Families', familiesSchema);

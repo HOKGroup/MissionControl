@@ -1,31 +1,196 @@
+/**
+ * Created by konrad.sobon on 2018-04-19.
+ */
 angular.module('MissionControlApp').controller('AddConfigController', AddConfigController);
 
-function AddConfigController($routeParams, ConfigFactory, $window){
+function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $window){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = {};
     vm.newConfig = {};
-    vm.newFile;
+    vm.newFile = '';
     vm.fileWarningMsg = '';
     vm.HasFiles = false;
     vm.status = " ";
 
-    // (Konrad) Could be useful to allow image upload for a project directory etc.
-    // vm.files = [];
-    // $scope.$watchCollection('vm.files', function(newCol, oldCol, scope) {
-    //     console.log(vm.files);
-    // });
-
     getSelectedProject(vm.projectId);
     setDefaultConfig();
 
-    function getSelectedProject(projectId) {
-        ConfigFactory
-            .getProjectById(projectId)
+    /**
+     * Adds new file to the Configuration, but first it verifies that it doesn't
+     * exists in any other Configuration.
+     */
+    vm.addFile = function(){
+        // (Konrad) All file paths are stored as lower case in DB.
+        // This makes the search and comparison case insensitive.
+        var filePath = vm.newFile.toLowerCase();
+        vm.fileWarningMsg = '';
+
+        // (Konrad) Let's make sure we are not adding the same file twice.
+        var matchingFiles = vm.newConfig.files.find(function (item) {
+            return item.centralPath === filePath;
+        });
+        if(matchingFiles !== undefined){
+            vm.fileWarningMsg = 'Warning! File already added to current configuration.';
+            return;
+        }
+
+        // (Konrad) Let's make sure we have a valid, non empty name
+        if(!filePath || !filePath.length || !filePath.includes('.rvt')){
+            vm.fileWarningMsg = 'Warning! File name is not valid. Must be non-empty and include *.rvt';
+            return;
+        }
+
+        // (Konrad) Let's make sure file is not already in other configurations
+        var centralPath = filePath.replace(/\\/g, '|');
+        ConfigFactory.getByCentralPath(centralPath)
             .then(function(response){
+                if(!response || response.status !== 200) return;
+
+                var configFound = response.data;
+                var configNames = '';
+                var configMatched = false;
+
+                if(configFound.length > 0){
+                    for(var i = 0; i < configFound.length; i++) {
+                        var config = configFound[i];
+                        for(var j = 0; j < config.files.length; j++){
+                            var file = config.files[j];
+                            if(file.centralPath === filePath){
+                                configMatched = true;
+                                configNames += ' [' + config.name + '] ';
+                                break;
+                            }
+                        }
+                    }
+                }
+                if(configMatched) {
+                    vm.fileWarningMsg = 'Warning! File already exists in other configurations.\n' + configNames;
+                } else{
+                    var file1 = { centralPath: filePath };
+                    vm.newConfig.files.push(file1);
+                    vm.HasFiles = true;
+                    vm.newFile = '';
+                }
+            }, function(error){
+                vm.status = 'Unable to get configuration data: ' + error.message;
+            });
+    };
+
+    /**
+     * Removes file from files array.
+     * @param filePath
+     */
+    vm.deleteFile = function(filePath){
+        for (var i = 0; i < vm.newConfig.files.length; i++) {
+            var file =  vm.newConfig.files[i];
+            if (file.centralPath.toLowerCase() === filePath.toLowerCase()) {
+                vm.newConfig.files.splice(i, 1);
+                if(vm.newConfig.files.length === 0) vm.HasFiles = false;
+                break;
+            }
+        }
+    };
+
+    /**
+     * Adds new Configuration to Project.
+     */
+    vm.addConfiguration = function(){
+        if(vm.newConfig.files.length > 0)
+        {
+            ConfigFactory.addConfiguration(vm.newConfig)
+                .then(function(response){
+                    if(!response || response.status !== 201) return;
+
+                    var configId = response.data._id;
+                    return ProjectFactory.addConfig(vm.projectId, configId);
+                })
+                .then(function (response) {
+                    if(!response || response.status !== 201) return;
+
+                    $window.location.href = '#/projects/configurations/' + vm.projectId;
+                })
+                .catch(function (err) {
+                    console.log(err.message);
+                    vm.status = 'Unable to create Configuration: ' + err.message;
+                });
+        }
+        else vm.HasFiles = false;
+
+        if(!vm.HasFiles || vm.newConfig.name.length === 0) vm.status = "Please fill out all required fields."
+    };
+
+    //region Family Name Overrides
+
+    vm.familyNameCheckTag = null;
+    vm.dimensionValueCheckTag = null;
+
+    /**
+     * Add tag to family name overrides.
+     * @param arr
+     * @constructor
+     */
+    vm.AddFamilyTag = function (arr) {
+        if(vm.familyNameCheckTag === null) return;
+
+        arr.push(vm.familyNameCheckTag);
+        vm.familyNameCheckTag = null;
+    };
+
+    vm.AddDimensionTag = function (arr) {
+        if(vm.dimensionValueCheckTag === null) return;
+
+        arr.push(vm.dimensionValueCheckTag);
+        vm.dimensionValueCheckTag = null;
+    };
+
+    /**
+     *
+     * @param event
+     * @param arr
+     * @param action
+     */
+    vm.onEnter = function (event, arr, action) {
+        if(event.which !== 13) return;
+
+        switch (action){
+            case 'FamilyNameCheck':
+                vm.AddFamilyTag(arr);
+                break;
+            case 'DimensionValueCheck':
+                vm.AddDimensionTag(arr);
+                break;
+        }
+    };
+
+    /**
+     * Removes a string from arry by index.
+     * @param arr
+     * @param index
+     * @constructor
+     */
+    vm.RemoveTag = function (arr, index) {
+        arr.splice(index, 1);
+    };
+
+    //endregion
+
+    //region Utilities
+
+    /**
+     * Retrieves Project from MongoDB.
+     * @param projectId
+     */
+    function getSelectedProject(projectId) {
+        ProjectFactory.getProjectById(projectId)
+            .then(function(response){
+                if(!response || response.status !== 200) return;
+
                 vm.selectedProject = response.data;
-            },function(error){
-                vm.status = 'Unable to load configuration data: ' + error.message;
+            })
+            .catch(function (err) {
+                console.log(err.message);
+                vm.status = 'Unable to load configuration data: ' + err.message;
             });
     }
 
@@ -101,12 +266,6 @@ function AddConfigController($routeParams, ConfigFactory, $window){
                 addInName: 'Sheet Data Manager',
                 isUpdaterOn: false,
                 categoryTriggers:[
-                    // {
-                    //     categoryName: "Revisions",
-                    //     description: "",
-                    //     isEnabled: false,
-                    //     locked: false
-                    // },
                     {
                         categoryName: "Sheets",
                         description: "",
@@ -165,149 +324,5 @@ function AddConfigController($routeParams, ConfigFactory, $window){
         };
     }
 
-    vm.addFile = function(){
-        // (Konrad) All file paths are stored as lower case in DB.
-        // This makes the search and comparison case insensitive.
-        var filePath = vm.newFile.toLowerCase();
-        vm.fileWarningMsg = '';
-
-        // (Konrad) Let's make sure we are not adding the same file twice.
-        var matchingFiles = vm.newConfig.files.find(function (item) {
-            return item.centralPath === filePath;
-        });
-        if(matchingFiles !== undefined){
-            vm.fileWarningMsg = 'Warning! File already added to current configuration.';
-            return;
-        }
-
-        // (Konrad) Let's make sure we have a valid, non empty name
-        if(!filePath || !filePath.length || !filePath.includes('.rvt')){
-            vm.fileWarningMsg = 'Warning! File name is not valid. Must be non-empty and include *.rvt';
-            return;
-        }
-
-        // (Konrad) Let's make sure file is not already in other configurations
-        var centralPath = filePath.replace(/\\/g, '|');
-        ConfigFactory
-            .getByCentralPath(centralPath).then(function(response){
-                if(!response || response.status !== 200) return;
-
-                var configFound = response.data;
-                var configNames = '';
-                var configMatched = false;
-
-                if(configFound.length > 0){
-                    for(var i = 0; i < configFound.length; i++) {
-                        var config = configFound[i];
-                        for(var j = 0; j < config.files.length; j++){
-                            var file = config.files[j];
-                            if(file.centralPath === filePath){
-                                configMatched = true;
-                                configNames += ' [' + config.name + '] ';
-                                break;
-                            }
-                        }
-                    }
-                }
-                if(configMatched) {
-                    vm.fileWarningMsg = 'Warning! File already exists in other configurations.\n' + configNames;
-                } else{
-                    var file1 = { centralPath: filePath };
-                    vm.newConfig.files.push(file1);
-                    vm.HasFiles = true;
-                    vm.newFile = '';
-                }
-            }, function(error){
-                vm.status = 'Unable to get configuration data: ' + error.message;
-            });
-    };
-
-    vm.deleteFile = function(filePath){
-        for (var i = 0; i < vm.newConfig.files.length; i++) {
-            var file =  vm.newConfig.files[i];
-            if (file.centralPath.toLowerCase() === filePath.toLowerCase()) {
-                vm.newConfig.files.splice(i, 1);
-                if(vm.newConfig.files.length === 0) vm.HasFiles = false;
-                break;
-            }
-        }
-    };
-
-    vm.addConfiguration = function(){
-        if(vm.newConfig.files.length > 0)
-        {
-            ConfigFactory
-                .addConfiguration(vm.newConfig).then(function(configResponse){
-                    if(!configResponse) return;
-
-                    var configId = configResponse.data._id;
-                    ConfigFactory.addConfigToProject(vm.projectId, configId).then(function(projectResponse){
-                        if(!projectResponse) return;
-
-                        $window.location.href = '#/projects/configurations/' + vm.projectId;
-                        }, function(error){
-                            vm.status = 'Unable to add Configuration to project: ' + error.message;
-                        });
-                }, function(error){
-                    vm.status = 'Unable to create Configuration: ' + error.message;
-                });
-        }
-        else{
-            vm.HasFiles = false;
-        }
-        if(!vm.HasFiles || vm.newConfig.name.length === 0) vm.status = "Please fill out all required fields."
-    };
-
-    //region Family Name Overrides
-    vm.familyNameCheckTag = null;
-    vm.dimensionValueCheckTag = null;
-
-    /**
-     * Add tag to family name overrides.
-     * @param arr
-     * @constructor
-     */
-    vm.AddFamilyTag = function (arr) {
-        if(vm.familyNameCheckTag === null) return;
-
-        arr.push(vm.familyNameCheckTag);
-        vm.familyNameCheckTag = null;
-    };
-
-    vm.AddDimensionTag = function (arr) {
-        if(vm.dimensionValueCheckTag === null) return;
-
-        arr.push(vm.dimensionValueCheckTag);
-        vm.dimensionValueCheckTag = null;
-    };
-
-    /**
-     *
-     * @param event
-     * @param arr
-     * @param action
-     */
-    vm.onEnter = function (event, arr, action) {
-        if(event.which !== 13) return;
-
-        switch (action){
-            case 'FamilyNameCheck':
-                vm.AddFamilyTag(arr);
-                break;
-            case 'DimensionValueCheck':
-                vm.AddDimensionTag(arr);
-                break;
-        }
-    };
-
-    /**
-     * Removes a string from arry by index.
-     * @param arr
-     * @param index
-     * @constructor
-     */
-    vm.RemoveTag = function (arr, index) {
-        arr.splice(index, 1);
-    };
     //endregion
 }

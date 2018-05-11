@@ -19,15 +19,15 @@
         <div class="row row-offcanvas row-offcanvas-left">
             <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
                 <div class="list-group">
-                    <div class="btn-group" style="width: 100%" ng-if="vm.showMenu">
+                    <div class="btn-group" style="width:100%" ng-if="vm.showMenu">
                         <button class="btn btn-default dropdown-toggle dropdown-menu-centered" data-toggle="dropdown">
                             <span class="caret"></span>
                             {{vm.selectedFileName | uppercase}}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-centered">
-                            <li ng-repeat="link in vm.HealthRecords | orderBy: vm.sortFiles">
-                                <a href="" ng-click="vm.SetProject(link, true)" class="no-padding-left">
-                                    {{vm.fileNameFromPath(link.centralPath) | uppercase}}
+                            <li ng-repeat="file in vm.files">
+                                <a href="" ng-click="vm.SetProject(file, true)" class="no-padding-left">
+                                    {{file.name | uppercase}}
                                 </a>
                             </li>
                         </ul>
@@ -51,6 +51,11 @@
                 </div>
             </div>
             <div>
+                <div class="col-xs-12 col-sm-9" ng-if="vm.noData">
+                    <h2 style="margin-top: 0">No data available.</h2>
+                    <h4 style="margin-top: 0; color: grey">Please select a different model. It is also possible that there was
+                        no activity in this model for more than a month. Only most recent data is displayed.</h4>
+                </div>
                 <div class="col-xs-12 col-sm-9">
                     <workset-stats processed="vm.WorksetData"
                                    ng-if="vm.LoadPage('worksets')"

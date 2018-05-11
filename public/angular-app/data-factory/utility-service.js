@@ -70,8 +70,19 @@ function UtilityService(){
          * @param path
          */
         fileNameFromPath: function (path) {
-            if (!path) return;
-            return path.replace(/^.*[\\\/]/, '').slice(0, -4); //removed file extension
+            if(!path) return;
+
+            // (Konrad) We retrieve a file name with extension,
+            // then remove the last 12 chars (_central.rvt)
+            var fileName = path.replace(/^.*[\\\/]/, '');
+            var hasCentral = fileName.match(/central/i);
+            if(hasCentral){
+                // let's slice -central.rvt
+                return fileName.slice(0, -12);
+            } else {
+                // let's only slice the .rvt
+                return fileName.slice(0, -4);
+            }
         },
 
         range: function (start, step, count) {
@@ -120,8 +131,10 @@ function UtilityService(){
          * @returns {*}
          */
         getHttpSafeFilePath : function (centralPath){
+            var isRevitServer = centralPath.match(/rsn:/i);
+            var isBim360 = centralPath.match(/bim 360:/i);
             var rgx;
-            if(centralPath.includes('RSN:') || centralPath.includes('BIM 360:')){
+            if(isRevitServer || isBim360){
                 rgx = centralPath.replace(/\//g, "|").toLowerCase();
             } else {
                 rgx = centralPath.replace(/\\/g, "|").toLowerCase();

@@ -15,7 +15,15 @@ function ViewStatsController($routeParams, HealthReportFactory){
          */
         vm.OnFilter = function (date) {
             vm.loading = true;
-            HealthReportFactory.processViewStats(vm.ViewData.viewStats._id, date, function (result) {
+            var data = {
+                from: date.from,
+                to: date.to,
+                centralPath: vm.ViewData.viewStats.centralPath
+            };
+            HealthReportFactory.processViewStats(data, function (result) {
+                if (!result){
+                    console.log("Given date range contains no data.")
+                }
                 vm.ViewData = result;
                 vm.loading = false;
             });

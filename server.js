@@ -4,7 +4,7 @@
 //implemented as a node.js
 //REST API driven mongoDB web server.
 //
-//Copyright 2017 by Jinsol Kim, Konrad K Sobon, HOK
+//Copyright 2018 by Jinsol Kim, Konrad K Sobon, HOK
 
 var pkg = require('./package.json');
 var cool = require('cool-ascii-faces');
@@ -17,11 +17,12 @@ var global = require('./app/controller/socket/global');
 
 var app = express();
 var localMongo = true;
+var mongo_uri;
 
 if(localMongo){
-	var mongo_uri = 'mongodb://localhost:27017/missioncontrol';
+	mongo_uri = 'mongodb://localhost:27017/missioncontrol';
 } else{
-	var mongo_uri='mongodb://admin:admin@ds011495.mlab.com:11495/missioncontrol';
+	mongo_uri='mongodb://admin:admin@ds011495.mlab.com:11495/missioncontrol';
 }
 
 mongoose.connect(mongo_uri);

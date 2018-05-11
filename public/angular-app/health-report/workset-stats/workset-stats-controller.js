@@ -17,7 +17,12 @@ function WorksetsController($routeParams, UtilityService, HealthReportFactory){
          */
         vm.OnFilter = function (date) {
             vm.loading = true;
-            HealthReportFactory.processWorksetStats(vm.WorksetData.worksetStats._id, date, function (result) {
+            var data = {
+                from: date.from,
+                to: date.to,
+                centralPath: vm.WorksetData.worksetStats.centralPath
+            };
+            HealthReportFactory.processWorksetStats(data, function (result) {
                 vm.WorksetData = result;
                 vm.loading = false;
 
