@@ -1,7 +1,7 @@
 angular.module('MissionControlApp').factory('HealthReportFactory', HealthReportFactory);
 
 function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, StylesFactory, LinksFactory, ViewsFactory,
-                             WorksetsFactory, FamiliesFactory){
+                             WorksetsFactory, FamiliesFactory, GroupsFactory){
     return {
         /**
          * This utility method processes information about Families and
@@ -857,6 +857,132 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+
+        /**
+         *
+         * @param data
+         * @param callback
+         */
+        processGroupStats: function(data, callback){
+            GroupsFactory.getGroupStats(data)
+                .then(function (response) {
+                    if( !response || !response.data || response.status !== 201){
+                        callback(null);
+                        return;
+                    }
+                    if( response.data.groupStats.length === 0) {
+                        callback({
+                            modelStats: {
+                                groupStats: response.data.groupStats,
+                                centralPath: response.data.centralPath
+                            }
+                        });
+                    }
+                    else {
+                        // (Konrad) Due to how aggregation model works when data is retrieved
+                        // it comes in nested under an extra field. This simplifies it for later
+                        var data = {
+                            groupStats: response.data.groupStats[0],
+                            centralPath: response.data.centralPath
+                        };
+
+                        var unused = data.groupStats.groups.some(function (item) {
+                            return item.instances.length === 0;
+                        });
+                        var unusedColor = UtilityService.color().red;
+
+                        var modelGroups = 0;
+                        var modelGroupsColor = UtilityService.color().red;
+                        var detailGroups = 0;
+                        var detailGroupsColor = UtilityService.color().red;
+                        data.groupStats.groups.forEach(function (item) {
+                            if (item.type === 'Model Group') modelGroups++;
+                            else detailGroups++;
+                        });
+
+                        var passingChecks = 0;
+                        if (!unused){
+                            passingChecks += 2;
+                            unusedColor = UtilityService.color().green;
+                        }
+
+                        if (modelGroups <= 10){
+                            passingChecks += 2;
+                            modelGroupsColor = UtilityService.color().green;
+                        } else if (modelGroups > 10 && modelGroups <= 20){
+                            passingChecks += 1;
+                            modelGroupsColor = UtilityService.color().orange;
+                        }
+
+                        if (detailGroups <= 10){
+                            passingChecks += 2;
+                            detailGroupsColor = UtilityService.color().green;
+                        } else if (detailGroups > 10 && detailGroups <= 20){
+                            passingChecks += 1;
+                            detailGroupsColor = UtilityService.color().orange;
+                        }
+
+                        var groupScoreData = {
+                            passingChecks: passingChecks,
+                            count: data.groupStats.groups.length,
+                            label: "Groups",
+                            newMax: 6
+                        };
+
+                        var desc = 'It is a good practice to try and avoid use of Groups. They tend to slow down Revit ' +
+                            'models quite significantly. Best practice is to convert Model Groups into Families, while ' +
+                            'if possible converting Detail Groups into Detail Item Families.';
+
+                        var bullets = [
+                            {
+                                title: 'Unused Groups',
+                                description: 'It\'s not a great idea to have unused model/detail groups in the model' +
+                                'they can very much bloat the model. Please purge them when possible.',
+                                bulletText: unused ? 'Yes' : 'No',
+                                bulletColor: unusedColor
+                            },
+                            {
+                                title: 'Model Groups',
+                                description: 'It\'s not a great idea to have an extensive amount of Model Groups in ' +
+                                'the model. They consume a significant amount resources and time when regenerating so ' +
+                                'can cause severe model slow-downs and even corruption.',
+                                bulletText: modelGroups,
+                                bulletColor: modelGroupsColor
+                            },
+                            {
+                                title: 'Detail Groups',
+                                description: 'It\'s not a great idea to have an extensive amount of Detail Groups in ' +
+                                'the model. They can be easily substituted for with Detail Items not to mention that ' +
+                                'Revit was meant to be a "modelling" software, not a drafting software. Please use less ' +
+                                'Detail Lines and more modeling tools.',
+                                bulletText: detailGroups,
+                                bulletColor: detailGroupsColor
+                            }
+                        ];
+
+                        var color  = UtilityService.color().red;
+                        if (passingChecks >= 5){
+                            color  = UtilityService.color().green;
+                        } else if (passingChecks >= 3 && passingChecks <= 4){
+                            color  = UtilityService.color().orange;
+                        }
+
+                        callback({
+                            scoreData: groupScoreData,
+                            modelScore: passingChecks,
+                            description: desc,
+                            name: "Groups",
+                            groupStats: data,
+                            bullets: bullets,
+                            show: {name: "groups", value: false},
+                            color: color
+                        });
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
         },
 
         /**

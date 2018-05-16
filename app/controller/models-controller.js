@@ -197,7 +197,6 @@ ModelsService = {
                     'centralPath': 1
                 }}]
             ).exec(function (err, response){
-                console.log(response);
                 var result = {
                     status: 201,
                     message: response[0]

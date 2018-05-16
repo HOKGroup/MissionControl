@@ -9,6 +9,7 @@ var styles = require('./models/styles-model');
 var links = require('./models/links-model');
 var models = require('./models/models-model');
 var views = require('./models/views-model');
+var groups = require('./models/groups-model');
 
  module.exports = function(app) {
      var projects = require('./controller/projects');
@@ -27,6 +28,7 @@ var views = require('./models/views-model');
      app.put('/api/v2/projects/:id/addlink', projects.addLink);
      app.put('/api/v2/projects/:id/addview', projects.addView);
      app.put('/api/v2/projects/:id/addsheet', projects.addSheet);
+     app.put('/api/v2/projects/:id/addgroup', projects.addGroup);
      app.put('/api/v2/projects/:id/addtriggerrecord', projects.addTriggerRecord);
      app.put('/api/v2/projects/:id/deleteconfig/:configid', projects.deleteConfiguration);
      app.post('/api/v2/projects/:id/deletetriggerrecords', projects.deleteTriggerRecords);
@@ -114,4 +116,10 @@ var views = require('./models/views-model');
      app.post('/api/v2/views/:id/viewstats', views.viewStats);
      app.put('/api/v2/views/:id/updatefilepath', views.updateFilePath);
      app.post('/api/v2/views/viewstats', views.getViewStats);
+
+     var groups = require('./controller/groups-controller');
+     app.post('/api/v2/groups', groups.add);
+     app.post('/api/v2/groups/:id/groupstats', groups.groupStats);
+     app.put('/api/v2/groups/:id/updatefilepath', groups.updateFilePath);
+     app.post('/api/v2/groups/groupstats', groups.getGroupStats);
   };
