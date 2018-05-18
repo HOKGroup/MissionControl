@@ -53,3 +53,12 @@ angular.module('MissionControlApp').component('styleStats', {
         processed: '='
     }
 });
+
+angular.module('MissionControlApp').component('groupStats', {
+    templateUrl: 'angular-app/health-report/group-stats/group-stats.html',
+    controller: 'GroupStatsController',
+    controllerAs: 'vm',
+    bindings: {
+        processed: '='
+    }
+});

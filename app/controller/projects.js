@@ -425,6 +425,33 @@ ProjectService = {
     },
 
     /**
+     * Adds Sheets id reference to Project.sheets collection.
+     * @param req
+     * @param res
+     */
+    addGroup : function(req, res){
+        var projectId = req.params.id;
+        var groupsId = mongoose.Types.ObjectId(req.body['id']);
+        Project
+            .update(
+                { '_id': projectId },
+                { $push:{ 'groupStats': groupsId }}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+    },
+
+    /**
      * Adds Trigger Records id reference to Project.triggerRecords collection.
      * @param req
      * @param res

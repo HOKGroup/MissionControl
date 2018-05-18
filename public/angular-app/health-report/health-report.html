@@ -93,6 +93,12 @@
                                   ng-hide="!vm.ShowPage('families')">
                     </family-stats>
                 </div>
+                <div class="col-xs-12 col-sm-9">
+                    <group-stats processed="vm.GroupData"
+                                  ng-if="vm.LoadPage('groups')"
+                                  ng-hide="!vm.ShowPage('groups')">
+                    </group-stats>
+                </div>
                 <div class="col-xs-12 col-sm-9" ng-if="vm.ShowPage('main')">
                     <div class="row" ng-repeat="d in vm.AllData" ng-if="d.show.name != 'main'">
                         <div class="panel-group">
