@@ -3,13 +3,23 @@
  */
 angular.module('MissionControlApp').controller('GroupStatsController', GroupStatsController);
 
-function GroupStatsController(DTOptionsBuilder, DTColumnBuilder){
+function GroupStatsController($scope, DTOptionsBuilder, DTColumnBuilder){
     var vm = this;
     this.$onInit = function () {
         vm.GroupData = this.processed;
         vm.showTimeSettings = false;
         vm.loading = false;
         setSankeyData();
+
+        /**
+         * Since all health report components are initiated when data is finished loading
+         * none of them are yet visible. The DOM has not yet loaded the divs etc. This means
+         * that all divs have a width of 0 and table is initiated with that width as well.
+         * By watching this variable we can detect when user selected to see this page.
+         */
+        $scope.$watch('vm.GroupData.show.value', function (newValue) {
+            if(newValue) reloadTable();
+        });
 
         //region Table
 
@@ -46,7 +56,7 @@ function GroupStatsController(DTOptionsBuilder, DTColumnBuilder){
         ];
 
         /**
-         *
+         * Row styling for groups based on count.
          * @param item
          * @returns {*}
          */
@@ -65,7 +75,7 @@ function GroupStatsController(DTOptionsBuilder, DTColumnBuilder){
         }
 
         /**
-         *
+         * Replaces instance count with "-" for group that don't have any.
          * @param value
          * @returns {*}
          */
@@ -87,6 +97,14 @@ function GroupStatsController(DTOptionsBuilder, DTColumnBuilder){
                 if (!data) reject();
                 else resolve(data);
             });
+        }
+
+        /**
+         * Method to recalculate data table contents and reload it.
+         */
+        function reloadTable() {
+            if(vm.dtInstance) {vm.dtInstance.reloadData(false);}
+            if(vm.dtInstance) {vm.dtInstance.rerender();}
         }
 
         //endregion
