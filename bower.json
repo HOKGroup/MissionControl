@@ -12,7 +12,9 @@
     "angular-ui-bootstrap": "2.0.0",
     "angular-bootstrap": "2.0.0",
     "components-font-awesome": "^4.7.0",
-    "angular-datatables": "0.6.2"
+    "angular-datatables": "0.6.2",
+    "d3-sankey": "*",
+    "d3": "4.13.0"
   },
   "resolutions": {
     "angular-datatables": "0.4.1"

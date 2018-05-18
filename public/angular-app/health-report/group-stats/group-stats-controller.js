@@ -9,7 +9,9 @@ function GroupStatsController(DTOptionsBuilder, DTColumnBuilder){
         vm.GroupData = this.processed;
         vm.showTimeSettings = false;
         vm.loading = false;
+        setSankeyData();
 
+        //region Table
 
         // set table options for dimension types
         vm.dtInstance = {};
@@ -43,6 +45,11 @@ function GroupStatsController(DTOptionsBuilder, DTColumnBuilder){
                 .renderWith(memberCountFromValue)
         ];
 
+        /**
+         *
+         * @param item
+         * @returns {*}
+         */
         function evaluateGroup(item){
             if(item.instances.length <= 1) return ' bg-danger';
             else if (item.instances.length > 1 && item.instances.length <= 5) return ' bg-warning';
@@ -81,5 +88,66 @@ function GroupStatsController(DTOptionsBuilder, DTColumnBuilder){
                 else resolve(data);
             });
         }
+
+        //endregion
+
+        //region Utilities
+
+        /**
+         * Processes Group data into format needed by a sankey diagram.
+         */
+        function setSankeyData(){
+            var nodes = [];
+            var links = [];
+            var linkIndexes = {}; // { key: createdBy, index: index in nodes }
+
+            vm.GroupData.groupStats.groupStats.groups.forEach(function (g) {
+                if (g.instances.length === 0) return;
+
+                nodes.push({ name: g.name }); //assumes that all group names are unique
+                var targetIndex = nodes.length - 1;
+
+                var tempLinks = {}; // { key: createdBy, source: userIndex, target: groupIndex, value: count }
+                g.instances.forEach(function (i) {
+
+                    // figure out source indices
+                    var sourceIndex = -1;
+                    if(linkIndexes.hasOwnProperty(i.createdBy)){
+                        sourceIndex = linkIndexes[i.createdBy].index;
+                    } else {
+                        nodes.push({ name: i.createdBy });
+                        sourceIndex = nodes.length - 1;
+                        linkIndexes[i.createdBy] = {
+                            index: sourceIndex
+                        }
+                    }
+
+                    // increment the value
+                    if (tempLinks.hasOwnProperty(i.createdBy)){
+                        tempLinks[i.createdBy].value = tempLinks[i.createdBy].value + 1;
+                    } else {
+                        tempLinks[i.createdBy] = {
+                            source: sourceIndex,
+                            target: targetIndex,
+                            value: 1
+                        }
+                    }
+                });
+
+                for (var key in tempLinks){
+                    if (tempLinks.hasOwnProperty(key)){
+                        links.push(tempLinks[key])
+                    }
+                }
+            });
+
+            vm.sankeyData = {
+                nodes: nodes,
+                links: links
+            };
+            console.log(vm.sankeyData);
+        }
+
+        //endregion
     }
 }
