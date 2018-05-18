@@ -27,4 +27,26 @@
             </div>
         </div>
     </div>
+    <div class="row" id="tableRow">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <p class="pull-right textAlignMiddle"><span class="fa fa-square" style="color: #F0AD4E"></span> Instances <5</p>
+                    <p class="pull-right textAlignMiddle"><span class="fa fa-square" style="color: #D9534F"></span> Instances <1</p>
+                    <h4 class="panel-title" style="padding-top: 5px;">Groups</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <table id="groupStatsTable"
+                               datatable=""
+                               dt-options="vm.dtOptions"
+                               dt-columns="vm.dtColumns"
+                               dt-instance="vm.dtInstance"
+                               class="table table-hover table-condensed datatable">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

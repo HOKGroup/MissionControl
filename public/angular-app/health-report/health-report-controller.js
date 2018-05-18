@@ -190,7 +190,6 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         });
 
         HealthReportFactory.processGroupStats(data, function (result) {
-            console.log(result);
             if(result && result.groupStats.groupStats.groups.length > 0){
                 vm.noData = false;
                 vm.GroupData = result;

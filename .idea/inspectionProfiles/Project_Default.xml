@@ -4,7 +4,7 @@
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
-          <list size="12">
+          <list size="18">
             <item index="0" class="java.lang.String" itemvalue="processed" />
             <item index="1" class="java.lang.String" itemvalue="show" />
             <item index="2" class="java.lang.String" itemvalue="data" />
@@ -17,6 +17,12 @@
             <item index="9" class="java.lang.String" itemvalue="on-filter" />
             <item index="10" class="java.lang.String" itemvalue="ng-attr-data-target" />
             <item index="11" class="java.lang.String" itemvalue="ng-attr-id" />
+            <item index="12" class="java.lang.String" itemvalue="dt-instance" />
+            <item index="13" class="java.lang.String" itemvalue="dt-columns" />
+            <item index="14" class="java.lang.String" itemvalue="dt-options" />
+            <item index="15" class="java.lang.String" itemvalue="dt-column-defs" />
+            <item index="16" class="java.lang.String" itemvalue="format-value" />
+            <item index="17" class="java.lang.String" itemvalue="d3-on-brush" />
           </list>
         </value>
       </option>

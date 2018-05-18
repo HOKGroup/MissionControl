@@ -13,8 +13,6 @@ function HealthScoreSummaryController(){
         vm.showDetails = this.details;
         vm.name = this.name;
 
-        console.log(vm.data);
-
         if (vm.showDetails){
             vm.descriptionClass = 'col-md-5';
         } else {
