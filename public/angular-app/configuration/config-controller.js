@@ -285,13 +285,14 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
     vm.updateConfiguration = function(){
         ConfigFactory.updateConfiguration(vm.selectedConfig)
             .then(function(response){
-                if (response && response.status === 202){
+                if (response && response.status === 201){
                     $window.location.reload();
                 } else {
                     vm.status = 'Configuration update failed.';
                 }
-            }, function(error){
-                vm.status = 'Unabl to update configuration: ' + error.message;
+            })
+            .catch(function (error) {
+                vm.status = 'Configuration update failed: ' + error.message;
             });
     };
 
