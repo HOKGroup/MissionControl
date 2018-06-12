@@ -219,9 +219,23 @@
 					</form>
 				</div>
 			</div>
-			<label style="padding-left: 0px; margin-top:7px;" class="text-danger" for="configName">{{vm.status}}</label>
-			<button type="submit" class="btn  btn-primary pull-right" ng-click="vm.addConfiguration()" style="margin:5px;"><span class="glyphicon glyphicon-plus"></span> Add Configuration</button>
-			<a href="#/projects/configurations/{{ vm.projectId }}" class="btn btn-primary pull-right" role="button" style="margin:5px;">Cancel</a>
+			<label style="padding-left: 0; margin-top:7px;"
+				   class="text-danger"
+				   for="configName">
+				{{vm.status}}
+			</label>
+			<button type="submit"
+					class="btn btn-primary pull-right"
+					ng-click="vm.addConfiguration()">
+				<span class="glyphicon glyphicon-plus"></span>
+				Add Configuration
+			</button>
+			<a href="#/projects/configurations/{{ vm.projectId }}"
+			   class="btn btn-primary pull-right"
+			   role="button"
+			   style="margin-right: 10px">
+				Cancel
+			</a>
 		</form>
 	</div>
 </div>

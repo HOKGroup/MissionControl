@@ -66,14 +66,19 @@ function AllFamilyTasksController($uibModalInstance, $uibModal, FamiliesFactory,
                 selectedIds.push(item._id);
             }
         });
-        FamiliesFactory
-            .deleteMultipleTasks(vm.family.collectionId, vm.family.name, selectedIds).then(function (response) {
-                if(!response) return;
+        FamiliesFactory.deleteMultipleTasks(vm.family.collectionId, vm.family.name, selectedIds)
+            .then(function (response) {
+                if(!response || response.status !== 201) return;
 
-                $uibModalInstance.close({'response': response, 'action': 'Delete Family Task', 'deletedIds': selectedIds});
-        }, function(err){
-            console.log('Unable to delete task: ' + err)
-        });
+                $uibModalInstance.close({
+                    'response': response,
+                    'action': 'Delete Family Task',
+                    'deletedIds': selectedIds
+                });
+            })
+            .catch(function (err) {
+                console.log('Unable to delete task: ' + err);
+            });
     };
 
     /**

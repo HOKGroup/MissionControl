@@ -17,23 +17,39 @@
 						<fieldset class="form-group">
 							<label for="formProjectNumber">
 								Project Number
-								<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.newProject.number"></span>
-								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.newProject.number"></span>
+								<span class="fa fa-check" style="color: green;" ng-if="vm.newProject.number"></span>
+								<span class="fa fa-asterisk" style="color: red;" ng-if="!vm.newProject.number"></span>
 							</label>
-							<input type="text" name="pNumber" class="form-control" id="formProjectNumber" placeholder="00.00000.00" ng-model="vm.newProject.number" required>
+							<input type="text"
+                                   name="pNumber"
+                                   class="form-control"
+                                   id="formProjectNumber"
+                                   placeholder="00.00000.00"
+                                   ng-model="vm.newProject.number" required>
 							<div ng-show="form.$submitted || form.pNumber.$touched">
-								<div ng-show="form.pNumber.$error.required" class="text-danger">(*) Project Number is required.</div>
+								<div ng-show="form.pNumber.$error.required"
+                                     class="text-danger">
+                                    (*) Project Number is required.
+                                </div>
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
 							<label for="formProjectName">
 								Project Name
-								<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.newProject.name"></span>
-								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.newProject.name"></span>
+								<span class="fa fa-check" style="color: green;" ng-if="vm.newProject.name"></span>
+								<span class="fa fa-asterisk" style="color: red;" ng-if="!vm.newProject.name"></span>
 							</label>
-							<input type="text" name="pName" class="form-control" id="formProjectName" placeholder="Project Name" ng-model="vm.newProject.name" required>
+							<input type="text"
+                                   name="pName"
+                                   class="form-control"
+                                   id="formProjectName"
+                                   placeholder="Project Name"
+                                   ng-model="vm.newProject.name" required>
 							<div ng-show="form.$submitted || form.pName.$touched">
-								<div ng-show="form.pName.$error.required" class="text-danger">(*) Project Name is required.</div>
+								<div ng-show="form.pName.$error.required"
+                                     class="text-danger">
+                                    (*) Project Name is required.
+                                </div>
 							</div>
 							<div ng-show="vm.newProject.name.length > 35">
 								<div class="text-danger">(*) Project Name is too long.</div>
@@ -42,12 +58,13 @@
 						<fieldset class="form-group">
 							<label for="formOfficeSelect">
 								Office
-								<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.newProject.office"></span>
-								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.newProject.office"></span>
+								<span class="fa fa-check" style="color: green;" ng-if="vm.newProject.office"></span>
+								<span class="fa fa-asterisk" style="color: red;" ng-if="!vm.newProject.office"></span>
 							</label>
 							<select class="form-control" id="formOfficeSelect" ng-model="vm.newProject.office">
 								<option value="ATL">Atlanta</option>
 								<option value="CHI">Chicago</option>
+								<option value="DUB">Dubai</option>
 								<option value="HK">Hong Kong</option>
 								<option value="HOU">Houston</option>
 								<option value="KC">Kansas City</option>
@@ -61,29 +78,44 @@
 							</select>
 						</fieldset>
 						<fieldset class="form-group">
-							<div google-drawing-map address="vm.newProject.address" geo-location="vm.newProject.geoLocation" geo-polygon="vm.newProject.geoPolygon"/>
+							<div google-drawing-map
+                                 address="vm.newProject.address"
+                                 geo-location="vm.newProject.geoLocation"
+                                 geo-polygon="vm.newProject.geoPolygon">
+                            </div>
 						</fieldset>
 						<form class ="form-horizontal">
 							<fieldset class="form-group">
-								<label class="control-label col-sm-3 text-right" for="formStreet">Street Address</label>
+								<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formStreet">Street Address</label>
 								<div class="col-sm-9 no-padding-right">
-									<input type="text" class="form-control" id="formStreet" placeholder="Street address, P.O. box, company name" ng-model="vm.newProject.address.street1">
+									<input type="text"
+                                           class="form-control"
+                                           id="formStreet"
+                                           placeholder="Street address, P.O. box, company name"
+                                           ng-model="vm.newProject.address.street1">
 								</div>
 							</fieldset>
 							<fieldset class="form-group">
-								<label class="control-label col-sm-3 text-right" for="formStreet2">Street Address2</label>
+								<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formStreet2">Street Address2</label>
 								<div class="col-sm-9 no-padding-right">
-									<input type="text" class="form-control" id="formStreet2" placeholder="Apartment, suite, unit, building, floor, etc." ng-model="vm.newProject.address.street2">
+									<input type="text"
+                                           class="form-control"
+                                           id="formStreet2"
+                                           placeholder="Apartment, suite, unit, building, floor, etc."
+                                           ng-model="vm.newProject.address.street2">
 								</div>
 							</fieldset>
 							<fieldset class="form-group">
-								<label class="control-label col-sm-3 text-right" for="formCity">City</label>
+								<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formCity">City</label>
 								<div class="col-sm-9 no-padding-right">
-									<input type="text" class="form-control" id="formCity" ng-model="vm.newProject.address.city">
+									<input type="text"
+                                           class="form-control"
+                                           id="formCity"
+                                           ng-model="vm.newProject.address.city">
 								</div>
 							</fieldset>
 							<fieldset class="form-group">
-								<label class="control-label col-sm-3 text-right" for="formState">State</label>
+								<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formState">State</label>
 								<div class="col-sm-9 no-padding-right">
 									<select class="form-control" id="formState" ng-model="vm.newProject.address.state">
 										<option value="AL">Alabama</option>
@@ -141,23 +173,23 @@
 								</div>
 							</fieldset>
 							<fieldset class="form-group">
-								<label class="control-label col-sm-3 text-right" for="formZip">Zip Code</label>
+								<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formZip">Zip Code</label>
 								<div class="col-sm-9 no-padding-right">
 									<input type="text" class="form-control" id="formZip" ng-model="vm.newProject.address.zipCode">
 								</div>
 							</fieldset>
 							<fieldset class="form-group">
-								<label class="control-label col-sm-3 text-right" for="formContury">Contury</label>
+								<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formContury">Contury</label>
 								<div class="col-sm-9 no-padding-right">
 									<input type="text" class="form-control" id="formContury" ng-model="vm.newProject.address.country">
 								</div>
 							</fieldset>
 							<fieldset class="form-group">
-								<label class="control-label col-sm-3 text-right" for="formLatitude">Latitude</label>
+								<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formLatitude">Latitude</label>
 								<div class="col-sm-3 no-padding-right">
 									<input type="text" class="form-control" id="formLatitude" ng-model="vm.newProject.geoLocation.coordinates[1]">
 								</div>
-								<label class="control-label col-sm-3 text-right" for="formLongitude">Longitude</label>
+								<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formLongitude">Longitude</label>
 								<div class="col-sm-3 no-padding-right">
 									<input type="text" class="form-control" id="formLongitude" ng-model="vm.newProject.geoLocation.coordinates[0]">
 								</div>
@@ -165,11 +197,25 @@
 						</form>
 				</div>
 			</div>
-			<button type="submit" class="btn btn-primary pull-right" ng-click="vm.addProject()" style="margin:5px;" ng-disabled="vm.verifyForm()">
+			 <label style="padding-left: 0; margin-top:7px;"
+                    class="text-danger"
+                    for="submitButton">
+                 {{vm.status}}
+             </label>
+			 <button id="submitButton"
+                     type="submit"
+                     class="btn btn-primary pull-right"
+                     ng-click="vm.addProject()"
+                     style="margin:5px;"
+                     ng-disabled="vm.verifyForm()">
 				<span class="glyphicon glyphicon-plus"></span>
 				Add Project
-			</button>
-			 <button class="btn btn-secondary pull-right" ng-click="vm.cancel()" style="margin:5px;">Cancel</button>
+			 </button>
+			 <button class="btn btn-secondary pull-right"
+                     ng-click="vm.cancel()"
+                     style="margin:5px;">
+                 Cancel
+             </button>
 		</form>
 	</div>
 </div>

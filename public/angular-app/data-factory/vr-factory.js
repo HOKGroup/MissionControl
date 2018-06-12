@@ -310,7 +310,7 @@ function VrFactory($http, $base64){
      */
     function authorize() {
         var auth = 'Basic ' + $base64.encode(client_id + ':' + client_secret).toString('base64');
-        var postData = 'username=' + username + '&password=' + password + '&grant_type=client_credentials&clientDomain=trimble.com&scope=openid';
+        var postData = 'username=' + username + '&password=' + password + '&grant_type=password&clientDomain=trimble.com&scope=openid';
         return $http({
             method: 'POST',
             url: 'https://identity-stg.trimble.com/token',

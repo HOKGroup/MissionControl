@@ -114,20 +114,21 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
                             }
 
                             vm.trimbleProject = response.data;
-                            return VrFactory.addUser(vm.trimbleProject.id);
-                        })
-                        .then(function (response) {
-                            if(!response || response.status !== 200){
-                                vm.status = {
-                                    code: 'danger',
-                                    message: 'Failed to add user to Project. Try reloading the page.'
-                                };
-                                return;
-                            }
-                            // (Konrad) Project was created and user was added.
-                            // Since this is a new project we need to also add the images folder.
+                            // return VrFactory.addUser(vm.trimbleProject.id);
                             return VrFactory.createFolder({name: "Images", rootId: vm.trimbleProject.rootId});
                         })
+                        // .then(function (response) {
+                        //     if(!response || response.status !== 200){
+                        //         vm.status = {
+                        //             code: 'danger',
+                        //             message: 'Failed to add user to Project. Try reloading the page.'
+                        //         };
+                        //         return;
+                        //     }
+                        //     // (Konrad) Project was created and user was added.
+                        //     // Since this is a new project we need to also add the images folder.
+                        //     return VrFactory.createFolder({name: "Images", rootId: vm.trimbleProject.rootId});
+                        // })
                         .then(function(response){
                             if(!response || response.status !== 201){
                                 vm.status = {
