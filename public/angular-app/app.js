@@ -1,4 +1,4 @@
-angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'datatables', 'datatables.buttons']).config(config);
+angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'datatables', 'datatables.buttons', 'mgcrea.bootstrap.affix', 'base64', 'ngclipboard', angularDragula(angular)]).config(config);
 
 // ngRoute - used for routing below
 // ui.bootstrap - used by modal dialog
@@ -69,6 +69,11 @@ function config($routeProvider, $locationProvider){
         .when('/projects/sheets/:projectId', {
             templateUrl: 'angular-app/sheets/sheets.html',
             controller: 'SheetsController',
+            controllerAs: 'vm'
+        })// VR page
+        .when('/projects/vr/:projectId', {
+            templateUrl: 'angular-app/vr/vr.html',
+            controller: 'VrController',
             controllerAs: 'vm'
         })
 }

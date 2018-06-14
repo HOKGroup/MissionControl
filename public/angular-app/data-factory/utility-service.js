@@ -107,6 +107,74 @@ function UtilityService(){
             array.splice(to, 0, array.splice(from, 1)[0]);
         },
 
+        guid: function () {
+            function gen(count) {
+                var out = "";
+                for (var i=0; i<count; i++) {
+                    out += (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+                }
+                return out;
+            }
+
+            return [gen(2), gen(1), gen(1), gen(1), gen(3)].join("-");
+        },
+
+        removeDuplicates: function (arr, key) {
+            var values = {};
+            return arr.filter(function(item){
+                var val = item[key];
+                var exists = values[val];
+                values[val] = true;
+                return !exists;
+            });
+        },
+
+        /**
+         * Converts binary array buffer to base64 encoded string.
+         * @param buffer
+         * @returns {string}
+         */
+        arrayBufferToBase64: function arrayBufferToBase64(buffer) {
+            var binary = '';
+            var bytes = new Uint8Array(buffer);
+            var len = bytes.byteLength;
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return window.btoa(binary);
+        },
+
+        validateEmail: function validateEmail(email) {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        },
+
+        compareValues: function compareValues(key, order) {
+            if (!order) order = 'asc';
+            return function (a, b) {
+                if (!a.hasOwnProperty(key) ||
+                    !b.hasOwnProperty(key)) {
+                    return 0;
+                }
+
+                const varA = (typeof a[key] === 'string') ?
+                    a[key].toUpperCase() : a[key];
+                const varB = (typeof b[key] === 'string') ?
+                    b[key].toUpperCase() : b[key];
+
+                var comparison = 0;
+                if (varA > varB) {
+                    comparison = 1;
+                } else if (varA < varB) {
+                    comparison = -1;
+                }
+                return (
+                    (order === 'desc') ?
+                        (comparison * -1) : comparison
+                );
+            };
+        },
+
         componentToHex: function (c) {
             var hex = c.toString(16);
             return hex.length === 1 ? "0" + hex : hex;

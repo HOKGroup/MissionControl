@@ -1,0 +1,20 @@
+{
+  "name": "angular-jquery",
+  "version": "0.2.1",
+  "dependencies": {},
+  "devDependencies": {
+    "angular": "latest",
+    "angular-mocks": "latest",
+    "jquery": "latest"
+  },
+  "homepage": "https://github.com/mgcrea/angular-jquery",
+  "_release": "0.2.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.1",
+    "commit": "4bc3c0dd977484cb6c16c4dd873ae0a9a3d88e95"
+  },
+  "_source": "https://github.com/mgcrea/angular-jquery.git",
+  "_target": "~0.2.1",
+  "_originalSource": "angular-jquery"
+}

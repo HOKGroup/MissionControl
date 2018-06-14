@@ -2,14 +2,14 @@ var mongoose = require( 'mongoose' );
 var Configuration = require('./configuration');
 
 var geoSchema = new mongoose.Schema({
-	type:{
-		type: String,
-		required: true,
-		enum: ['Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon']
-	}, 
-	coordinates:{
-		type: Array
-	}
+    type:{
+        type: String,
+        required: true,
+        enum: ['Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon']
+    },
+    coordinates:{
+        type: Array
+    }
 },{_id: false});
 
 var projectSchema = new mongoose.Schema({

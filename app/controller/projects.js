@@ -1,5 +1,6 @@
 /**
  * @param {{configid:string}} HTTP request param for configuration id.
+ * @param {{id:string}} HTTP request param for configuration id.
  */
 var mongoose = require('mongoose');
 Project = mongoose.model('Project');

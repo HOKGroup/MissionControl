@@ -69,6 +69,9 @@ var groups = require('./models/groups-model');
      app.post('/api/v2/families/:id/family/:name/deletemany', families.deleteMultipleTasks);
      app.post('/api/v2/families/familystats', families.getFamilyStats);
 
+     var email = require('./controller/emails-controller');
+     app.post('/api/v1/email', email.sendEmail);
+
      var sheets = require('./controller/sheets-controller');
      app.get('/api/v2/sheets/centralpath/:uri*', sheets.findByCentralPath);
      app.put('/api/v2/sheets/:id/updatefilepath', sheets.updateFilePath);
