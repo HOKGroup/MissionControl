@@ -345,5 +345,6 @@ function VrFactory($http, $base64){
 
     function failed(error) {
         console.log(error.statusText);
+        return error;
     }
 }

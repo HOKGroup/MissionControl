@@ -12,17 +12,25 @@
             </div>
             <div class="panel-collapse">
                 <ul class="list-group" id="contact-list">
-                    <li ng-repeat="email in vm.emails" class="list-group-item">
-                        <div class="col-xs-9 col-sm-9">
-                            <p style="margin: 0; padding-top: 5px">
+                    <li ng-repeat="item in vm.emails" class="list-group-item">
+                        <div class="col-xs-10 col-sm-10 no-padding">
+                            <p style="margin: 0; padding: 0">
                                 <i class="fa fa-envelope-o"></i>
-                                {{email}}
+                                {{item.email}}<br>
+                                <i class="fa fa-link"></i>
+                                {{item.sharableLink}}
                             </p>
                         </div>
-                        <div class="col-xs-3 col-sm-3">
-                            <button ng-click="vm.removeEmail(email)" class="btn btn-danger btn-sm pull-right">
-                                Remove
-                                <i class="fa fa-trash-o"></i>
+                        <div class="col-xs-2 col-sm-2 no-padding">
+                            <button ng-click="vm.sendOneEmail(item)"
+                                    class="btn btn-primary btn-sm pull-right"
+                                    style="margin-left: 10px; margin-top: 5px">
+                                <i class="fa fa-envelope-o" style="margin: 0"></i>
+                            </button>
+                            <button ng-click="vm.removeEmail(item)"
+                                    class="btn btn-danger btn-sm pull-right"
+                                    style="margin-left: 10px; margin-top: 5px">
+                                <i class="fa fa-trash-o" style="margin: 0"></i>
                             </button>
                         </div>
                         <div class="clearfix"></div>
@@ -42,7 +50,7 @@
                     <label class="form-control-label">Share:</label>
                     <div class="input-group">
                         <button class="btn btn-default btn-sm" type="button" ng-click="vm.sendEmail()" ng-disabled="vm.emails.length <= 0">
-                            Send Email
+                            Send To All
                             <i class="fa fa-envelope-o"></i>
                         </button>
                     </div>

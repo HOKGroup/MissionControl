@@ -442,7 +442,6 @@ a {
   text-overflow: ellipsis;
 }
 
-<<<<<<< HEAD
 /*Hides contents.*/
 .none{
   display: none;
@@ -457,10 +456,10 @@ to front while pushing background just behind it.*/
 
 .modal-backdrop {
   z-index: 98999 !important;
-=======
+}
+
 .pointer {
   cursor: pointer;
->>>>>>> master
 }
 
 .animate-show-hide.ng-hide {
@@ -470,4 +469,10 @@ to front while pushing background just behind it.*/
 .animate-show-hide.ng-hide-add,
 .animate-show-hide.ng-hide-remove {
   transition: all linear 0.5s;
+}
+
+.equal {
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
 }

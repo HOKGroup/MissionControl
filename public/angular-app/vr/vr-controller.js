@@ -968,6 +968,13 @@ function VrController($routeParams, VrFactory, ProjectFactory, dragulaService, $
     function renameFolder(data){
         VrFactory.renameFolder(data)
             .then(function (response) {
+                if(response && response.status === 409){
+                    changeStatus({
+                        code: 'warning',
+                        message: 'Specified name matches current name.'
+                    });
+                    return;
+                }
                 if(!response || response.status !== 200){
                     changeStatus({
                         code: 'danger',
