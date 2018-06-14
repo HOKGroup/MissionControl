@@ -39,9 +39,9 @@ function UtilityService(){
             seconds = (seconds % 60).toFixed(0);
 
             var output = "";
-            if (hours !== "0") output = hours + ":";
-            if (minutes !== "0") output = output + minutes + ":";
-            if (seconds !== "0") output = output + seconds;
+            if (hours !== "0") output = hours + "h:";
+            if (minutes !== "0") output = output + minutes + "m:";
+            if (seconds !== "0") output = output + seconds + "s";
 
             return output;
         },

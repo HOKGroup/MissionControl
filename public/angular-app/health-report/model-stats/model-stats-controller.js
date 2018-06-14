@@ -150,6 +150,7 @@ function ModelStatsController($routeParams, UtilityService, DTColumnBuilder, DTO
                 .withTitle('Duration')
                 .withOption('className', 'text-center')
                 .withOption('width', '15%')
+                .withOption('orderData', 3)
                 .renderWith(durationFromValue),
             DTColumnBuilder.newColumn('value')
                 .withTitle('Hidden')
@@ -157,6 +158,7 @@ function ModelStatsController($routeParams, UtilityService, DTColumnBuilder, DTO
             DTColumnBuilder.newColumn('worksets')
                 .withTitle('Size')
                 .withOption('className', 'text-center')
+                .withOption('orderData', 5)
                 .withOption('width', '10%'),
             DTColumnBuilder.newColumn('worksetPercentage')
                 .withTitle('Hidden')
