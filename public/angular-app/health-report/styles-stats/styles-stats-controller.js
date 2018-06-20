@@ -21,9 +21,8 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
         vm.dtColumnDefs = [
             DTColumnDefBuilder.newColumnDef(0), //value
             DTColumnDefBuilder.newColumnDef(1), //value override
-            DTColumnDefBuilder.newColumnDef(2), //is locked
-            DTColumnDefBuilder.newColumnDef(3), //view type
-            DTColumnDefBuilder.newColumnDef(4) //view id
+            DTColumnDefBuilder.newColumnDef(2), //view type
+            DTColumnDefBuilder.newColumnDef(3) //view id
         ];
 
         // set table options for dimension types
