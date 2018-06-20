@@ -45,7 +45,6 @@ var stylesSchema = new mongoose.Schema(
                 value: Number,
                 valueString: String,
                 valueOverride: String,
-                isLocked: Boolean,
                 ownerViewId: Number,
                 ownerViewType: String
             }]
