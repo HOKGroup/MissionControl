@@ -1,0 +1,47 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title pull-left">Help</h5>
+        <button type="button" class="close pull-right" ng-click="vm.cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div id="menu">
+            <div class="panel list-group">
+                <a href="" class="list-group-item" data-toggle="collapse" data-target="#filtering" data-parent="#menu">
+                    File Paths
+                </a>
+                <div id="filtering" class="sublinks collapse in">
+                    <div class="list-group-item small">
+                        <ul class="list-group list-group-flush" style="margin-top: 15px">
+                            <li class="list-group-item" style="color: black">
+                                <b>Local:</b> <span style="color: red;">\\GROUP\HOK\LON\PROJECTS\2018\18.33032.00 KPMG\E-DESIGN\E6-MODELS\REVIT\KPMGWR-HOK-ID-CENTRAL.RVT</span>
+                                <p><br>Notes:
+                                    <br> - must use DFS(Distributed File System) path. <b>\\GROUP\</b> instead of letter drives.
+                                    <br> - must have .RVT file extension
+                                </p>
+                            </li>
+                            <li class="list-group-item" style="color: black">
+                                <b>Revit Server:</b> <span style="color: red;">RSN://NY-28SVR/13.07051.00 LAGUARDIA TERMINAL B/AR/A12801375-3D-CACOR_CENTRAL.RVT</span>
+                                <p><br>Notes:
+                                    <br> - must start with <b>RSN://</b>
+                                    <br> - must have .RVT file extension
+                                </p>
+                            </li>
+                            <li class="list-group-item" style="color: black">
+                                <b>BIM 360:</b> <span style="color: red;">BIM 360://SLCTRP - SLCNCP PROJECT HUB/_TEST-HOST-AUTOLINK.RVT</span>
+                                <p><br>Notes:
+                                    <br> - must start with <b>BIM 360://</b>
+                                    <br> - must have .RVT file extension
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
+    </div>
+</div>

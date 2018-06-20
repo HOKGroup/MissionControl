@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('AddConfigController', AddConfigController);
 
-function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $window){
+function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $window, $uibModal){
     var vm = this;
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = {};
@@ -25,6 +25,17 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $windo
         // This makes the search and comparison case insensitive.
         var filePath = vm.newFile.toLowerCase();
         vm.fileWarningMsg = '';
+
+        // (Konrad) Everything is lower case to make matching easier.
+        // Checks if file path is one of the three (3) approved types.
+        var isLocal = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
+        var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
+        var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
+
+        if(!isLocal || !isBim360 || !isRevitServer){
+            vm.fileWarningMsg = 'File Path must be either Local, BIM 360 or Revit Server.';
+            return;
+        }
 
         // (Konrad) Let's make sure we are not adding the same file twice.
         var matchingFiles = vm.newConfig.files.find(function (item) {
@@ -118,6 +129,24 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $windo
         else vm.HasFiles = false;
 
         if(!vm.HasFiles || vm.newConfig.name.length === 0) vm.status = "Please fill out all required fields."
+    };
+
+    /**
+     * Launches help window for the File Path.
+     * @param size
+     */
+    vm.launchHelpWindow = function (size) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'angular-app/configuration/file-path-help.html',
+            controller: 'FilePathHelpController as vm',
+            size: size
+        }).result.then(function(request){
+            //model closed
+
+        }).catch(function(){
+            //if modal dismissed
+        });
     };
 
     //region Family Name Overrides

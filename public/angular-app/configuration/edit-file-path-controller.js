@@ -14,12 +14,23 @@ function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactor
      * Submits edits to existing file path.
      */
     vm.submit = function () {
-        if(!vm.filePath){
+        var filePath = vm.filePath.toLowerCase();
+        if(!filePath){
             vm.warning = 'Please enter valid file path.';
             return;
-        } else if (vm.filePath.length < 4 || !vm.filePath.includes('.rvt'))
-        {
+        } else if (filePath.length < 4 || !filePath.includes('.rvt')) {
             vm.warning = 'Please make sure that file path includes ".rvt" extension.';
+            return;
+        }
+
+        // (Konrad) Everything is lower case to make matching easier.
+        // Checks if file path is one of the three (3) approved types
+        var isLocal = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
+        var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
+        var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
+
+        if(!isLocal || !isBim360 || !isRevitServer){
+            vm.warning = 'File Path must be either Local, BIM 360 or Revit Server.';
             return;
         }
 
