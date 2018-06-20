@@ -208,7 +208,24 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
         // (Konrad) All file paths are stored in MongoDB with lower case.
         // This allows for case insensitive searches and use of indexes.
         var filePath = vm.newFile.toLowerCase();
-        vm.fileWarningMsg='';
+        vm.fileWarningMsg = '';
+
+        // (Konrad) Everything is lower case to make matching easier.
+        // Checks if file path is one of the three (3) approved types.
+        var isLocal = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
+        var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
+        var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
+
+        if(!isLocal || !isBim360 || !isRevitServer){
+            vm.fileWarningMsg = 'File Path must be either Local, BIM 360 or Revit Server.';
+            return;
+        }
+
+        // (Konrad) Let's make sure we have a valid, non empty name
+        if(!filePath || !filePath.length || !filePath.includes('.rvt')){
+            vm.fileWarningMsg = 'File name is not valid. Must be non-empty and include *.rvt';
+            return;
+        }
 
         var uri = filePath.replace(/\\/g, '|');
         ConfigFactory.getByCentralPath(uri)
@@ -327,6 +344,24 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
                 console.log(err.message);
                 vm.status = 'Unable to delete Configuration:' + err.message;
             });
+    };
+
+    /**
+     * Launches help window for the File Path.
+     * @param size
+     */
+    vm.launchHelpWindow = function (size) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'angular-app/configuration/file-path-help.html',
+            controller: 'FilePathHelpController as vm',
+            size: size
+        }).result.then(function(request){
+            //model closed
+
+        }).catch(function(){
+            //if modal dismissed
+        });
     };
 
     //region Utilities

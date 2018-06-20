@@ -68,12 +68,15 @@
                             <thead></thead>
                             <tbody>
                             <tr>
-                                <td class="col-md-2 text-right" style="padding-top: 15px">
+                                <td class="col-md-3 text-left" style="padding-top: 15px">
                                     <b>Add Revit File:</b>
-                                    <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.selectedConfig.files.length"></span>
-                                    <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.selectedConfig.files.length"></span>
+                                    <i class="fa fa-asterisk" style="color: red;" ng-if="!vm.selectedConfig.files.length"></i>
+                                    <i class="fa fa-check" style="color: green;" ng-if="vm.selectedConfig.files.length"></i>
+                                    <a href="">
+                                        <i class="fa fa-info-circle text-primary" ng-click="vm.launchHelpWindow('lg')"></i>
+                                    </a>
                                 </td>
-                                <td class="col-md-8">
+                                <td class="col-md-7">
                                     <input type="text" class="form-control" id="formNewFile" placeholder="Enter a central file path for Revit project. (.rvt)" ng-model="vm.newFile">
                                     <p class="text-warning">{{ vm.fileWarningMsg }}</p>
                                 </td>
