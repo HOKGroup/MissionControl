@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('ConfigController', ConfigController);
 
-function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRecordsFactory, DTColumnDefBuilder, $window, $uibModal){
+function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRecordsFactory, DTColumnDefBuilder, UtilityService, $window, $uibModal){
     var vm = this;
     vm.status = '';
     vm.projectId = $routeParams.projectId;
@@ -216,7 +216,7 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
         var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
         var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
 
-        if(!isLocal || !isBim360 || !isRevitServer){
+        if(!isLocal && !isBim360 && !isRevitServer){
             vm.fileWarningMsg = 'File Path must be either Local, BIM 360 or Revit Server.';
             return;
         }
@@ -227,7 +227,7 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
             return;
         }
 
-        var uri = filePath.replace(/\\/g, '|');
+        var uri = UtilityService.getHttpSafeFilePath(filePath);
         ConfigFactory.getByCentralPath(uri)
             .then(function(response){
                 if(!response || response.status !== 200) return;
@@ -251,14 +251,12 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
                 }
                 if(configMatched){
                     vm.fileWarningMsg = 'Warning! File already exists in other configurations.\n' + configNames;
-                } else if(filePath.length > 0 && filePath.includes('.rvt')){
+                } else {
                     var file1 = { centralPath: filePath };
                     vm.selectedConfig.files.push(file1);
                     vm.newFile = '';
 
                     return ConfigFactory.addFile(vm.selectedConfig._id, file1);
-                } else {
-                    vm.fileWarningMsg = 'Warning! Please enter a valid file.';
                 }
             })
             .then(function (response) {

@@ -29,7 +29,7 @@ function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactor
         var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
         var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
 
-        if(!isLocal || !isBim360 || !isRevitServer){
+        if(!isLocal && !isBim360 && !isRevitServer){
             vm.warning = 'File Path must be either Local, BIM 360 or Revit Server.';
             return;
         }
@@ -83,7 +83,7 @@ function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactor
      */
     var updateName = function(){
         // (Konrad) Updating just the array stored in the configuration is not enough.
-        // Each collection (Familes, Sheets, etc.) uses Central Path to
+        // Each collection (Families, Sheets, etc.) uses Central Path to
         // distinguish from one model to another. We need to update all of those paths to
         // prevent data from getting disassociated.
         var data = { before: filePath.toLowerCase(), after: vm.filePath.toLowerCase() };
