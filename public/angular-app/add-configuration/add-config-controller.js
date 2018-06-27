@@ -32,7 +32,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $windo
         var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
         var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
 
-        if(!isLocal || !isBim360 || !isRevitServer){
+        if(!isLocal && !isBim360 && !isRevitServer){
             vm.fileWarningMsg = 'File Path must be either Local, BIM 360 or Revit Server.';
             return;
         }
