@@ -10,6 +10,7 @@ var links = require('./models/links-model');
 var models = require('./models/models-model');
 var views = require('./models/views-model');
 var groups = require('./models/groups-model');
+var zombieLogs = require('./models/zombie-logs-model');
 
  module.exports = function(app) {
      var projects = require('./controller/projects');
@@ -122,4 +123,7 @@ var groups = require('./models/groups-model');
      app.post('/api/v2/groups/:id/groupstats', groups.groupStats);
      app.put('/api/v2/groups/:id/updatefilepath', groups.updateFilePath);
      app.post('/api/v2/groups/groupstats', groups.getGroupStats);
+
+     var zombieLogs = require('./controller/zombie-logs-controller');
+     app.post('/api/v2/zombielogs', zombieLogs.add);
   };
