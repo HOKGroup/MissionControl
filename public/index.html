@@ -29,14 +29,19 @@
 			</div>
 			<div class="collapse navbar-collapse navbarCollapse">
 				<ul class="nav navbar-nav">
-					<li class="active">
+					<li class="nav-item active">
 						<a href="#/home">Home</a>
 					</li>
-					<li>
+					<li class="nav-item">
 						<a href="#/projects">Projects</a>
 					</li>
-					<li>
-						  <a href="#/addins">Addins</a>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Addins <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#/addins">Revit Addins</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="#/zombie-logs">Zombie Logs</a></li>
+						</ul>
 					</li>
 				</ul>
 			   <ul class="nav navbar-nav navbar-right">
@@ -109,6 +114,7 @@
 
 	<!--Addins Controllers-->
 	<script src="angular-app/addins/addins-controller.js"></script>
+	<script src="angular-app/zombie-logs/zombie-logs-controller.js"></script>
 
 	<!--Filters-->
 	<script src="angular-app/filters/filters.js"></script>
@@ -124,6 +130,7 @@
     <script src="angular-app/data-factory/config-factory.js"></script>
 	<script src="angular-app/data-factory/health-report-data-factory.js"></script>
 	<script src="angular-app/data-factory/addins-factory.js"></script>
+	<script src="angular-app/data-factory/zombie-logs-factory.js"></script>
 	<script src="angular-app/data-factory/families-factory.js"></script>
 	<script src="angular-app/data-factory/links-factory.js"></script>
 	<script src="angular-app/data-factory/models-factory.js"></script>

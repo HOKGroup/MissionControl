@@ -125,5 +125,6 @@ var zombieLogs = require('./models/zombie-logs-model');
      app.post('/api/v2/groups/groupstats', groups.getGroupStats);
 
      var zombieLogs = require('./controller/zombie-logs-controller');
+     app.get('/api/v2/zombielogs', zombieLogs.get);
      app.post('/api/v2/zombielogs', zombieLogs.add);
   };

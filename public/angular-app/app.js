@@ -32,6 +32,13 @@ function config($routeProvider, $locationProvider){
             controllerAs: 'vm'
         })
 
+        // zombie logs page
+        .when('/zombie-logs', {
+            templateUrl: 'angular-app/zombie-logs/zombie-logs.html',
+            controller: 'ZombieLogsController',
+            controllerAs: 'vm'
+        })
+
         // add project
         .when('/projects/add', {
             templateUrl: 'angular-app/add-project/add-project.html',

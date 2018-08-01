@@ -11,11 +11,30 @@ ZombieLogsService = {
      * @param res
      */
     add: function(req, res){
-        console.log(req.body);
         ZombieLogs
             .create(req.body, function (err, response){
                 var result = {
                     status: 201,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
+    },
+
+    get : function(req, res){
+        ZombieLogs
+            .find({})
+            .limit(500)
+            .exec(function (err, response){
+                var result = {
+                    status: 200,
                     message: response
                 };
                 if (err){

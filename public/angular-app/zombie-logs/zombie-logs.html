@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1>Zombie Logs</h1>
+        </div>
+    </div>
+    <div class="row">
+        <table datatable="ng"
+               dt-options="vm.dtOptions"
+               dt-column-defs="vm.dtColumnDefs"
+               class="table table-hover table-condensed datatable">
+            <thead>
+            <tr>
+                <th class="col-md-2">Date</th>
+                <th class="col-md-1 text-center">Location</th>
+                <th class="col-md-1 text-center">Machine</th>
+                <th class="col-md-1 text-center">Level</th>
+                <th class="col-md-7">Message</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="x in vm.logs" ng-class="vm.getClass(x)">
+                <td>{{ vm.getDateTime(x.createdAt) }}</td>
+                <td class="text-center">{{ vm.getLocation(x.machine) }}</td>
+                <td class="text-center">{{ vm.getMachine(x.machine) }}</td>
+                <td class="text-center">{{ x.level }}</td>
+                <td>{{ x.message }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
