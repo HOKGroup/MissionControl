@@ -31,7 +31,8 @@ ZombieLogsService = {
     get : function(req, res){
         ZombieLogs
             .find({})
-            .limit(500)
+            .sort('-createdAt')
+            .limit(200)
             .exec(function (err, response){
                 var result = {
                     status: 200,

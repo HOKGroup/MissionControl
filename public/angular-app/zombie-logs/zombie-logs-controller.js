@@ -7,7 +7,125 @@ function ZombieLogsController(ZombieLogsFactory, DTColumnDefBuilder){
     var vm = this;
     vm.logs = null;
 
+    vm.officeFilters = [
+        {name: "All", code: "All"},
+        {name: "Atlanta", code: ["ATL"]},
+        {name: "Beijing", code: ["BEI"]},
+        {name: "St. Louis", code: ["BJC"]},
+        {name: "Calgary", code: ["CAL"]},
+        {name: "Chicago", code: ["CHI"]},
+        {name: "Columbus", code: ["COL"]},
+        {name: "Dallas", code: ["DAL"]},
+        {name: "Doha", code: ["DOH"]},
+        {name: "Dubai", code: ["DUB"]},
+        {name: "Hong Kong", code: ["HK"]},
+        {name: "Houston", code: ["HOU"]},
+        {name: "Kansas City", code: ["KC"]},
+        {name: "Los Angeles", code: ["LA"]},
+        {name: "London", code: ["LON"]},
+        {name: "New York", code: ["NY"]},
+        {name: "Ottawa", code: ["OTT"]},
+        {name: "Philadephia", code: ["PHI"]},
+        {name: "Seattle", code: ["SEA"]},
+        {name: "San Francisco", code: ["SF"]},
+        {name: "Shanghai", code: ["SH"]},
+        {name: "St. Louis", code: ["STL"]},
+        {name: "Toronto", code: ["TOR"]},
+        {name: "Tampa", code: ["TPA"]},
+        {name: "Washington DC", code: ["WDC"]},
+        {name: "Undefined", code: ["EMC", "SDC", "OSS", "LD", "LDC", ""]}
+    ];
+
+    vm.selectedOffice = "All";
+
+    //region Date Filtering
+
+    vm.dtFrom = new Date();
+    vm.dtTo = null;
+    vm.loading = false;
+    vm.format = 'dd-MMMM-yyyy';
+    vm.dateOptions = {
+        formatYear: 'yy',
+        maxDate: new Date(2020, 5, 22),
+        minDate: new Date(2015, 5, 22),
+        startingDay: 1
+    };
+    vm.popup1 = { opened: false };
+    vm.popup2 = { opened: false };
+
+    /**
+     * Opens pop-up date pickers.
+     * @param popup
+     */
+    vm.openDatePicket = function(popup) {
+        popup === 'from' ? vm.popup1.opened = true : vm.popup2.opened = true;
+    };
+
+    /**
+     * Filters Editing Records based on selected date range.
+     */
+    vm.filterDate = function () {
+        if(!vm.selectedConfig) return;
+
+        vm.loading = true;
+        var data = {
+            from: vm.dtFrom,
+            to: vm.dtTo,
+            office: vm.selectedOffice
+        };
+
+        // TriggerRecordsFactory.getManyByCentralPathDates(data)
+        //     .then(function (response) {
+        //         if(!response || response.status !== 200) return;
+        //
+        //         vm.triggerRecords = response.data;
+        //         var triggerRecords = [];
+        //         response.data.forEach(function (item) {
+        //             item.triggerRecords.forEach(function (record) {
+        //                 record['centralPath'] = item.centralPath;
+        //                 triggerRecords.push(record);
+        //             })
+        //         });
+        //
+        //         vm.selectedRecords = triggerRecords;
+        //         vm.loading = false;
+        //     })
+        //     .catch(function (err) {
+        //         vm.loading = false;
+        //         console.log(err);
+        //     });
+    };
+
+    vm.SetOfficeFilter = function (office) {
+        vm.selectedOffice = office.name;
+    };
+
+    //endregion
+
     getLogs();
+
+    /**
+     * Callback method for Date Time Range selection.
+     * @param date
+     * @constructor
+     */
+    vm.OnFilter = function (date) {
+        vm.loading = true;
+        var data = {
+            from: date.from,
+            to: date.to,
+            centralPath: vm.WorksetData.worksetStats.centralPath
+        };
+
+        // do stuff
+    };
+
+    /**
+     * Toggles Date Time picker div on/off.
+     */
+    vm.toggleTimeSettings = function() {
+        vm.showTimeSettings = !vm.showTimeSettings;
+    };
 
     /**
      *
@@ -47,7 +165,8 @@ function ZombieLogsController(ZombieLogsFactory, DTColumnDefBuilder){
         if(!machine) return 'N/A';
 
         var parts = machine.split('-');
-        return parts[1] + '-' + parts[2];
+        if(parts.length > 2) return parts[1] + '-' + parts[2];
+        else return parts[1];
     };
 
     /**
