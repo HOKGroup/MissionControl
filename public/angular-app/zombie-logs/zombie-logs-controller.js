@@ -3,45 +3,43 @@
  */
 angular.module('MissionControlApp').controller('ZombieLogsController', ZombieLogsController);
 
-function ZombieLogsController(ZombieLogsFactory, DTColumnDefBuilder){
+function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuilder){
     var vm = this;
-    vm.logs = null;
 
+    //region Properties
+
+    vm.logs = [];
+    vm.selectedOffice = { name: "All", code: "All" };
     vm.officeFilters = [
-        {name: "All", code: "All"},
-        {name: "Atlanta", code: ["ATL"]},
-        {name: "Beijing", code: ["BEI"]},
-        {name: "St. Louis", code: ["BJC"]},
-        {name: "Calgary", code: ["CAL"]},
-        {name: "Chicago", code: ["CHI"]},
-        {name: "Columbus", code: ["COL"]},
-        {name: "Dallas", code: ["DAL"]},
-        {name: "Doha", code: ["DOH"]},
-        {name: "Dubai", code: ["DUB"]},
-        {name: "Hong Kong", code: ["HK"]},
-        {name: "Houston", code: ["HOU"]},
-        {name: "Kansas City", code: ["KC"]},
-        {name: "Los Angeles", code: ["LA"]},
-        {name: "London", code: ["LON"]},
-        {name: "New York", code: ["NY"]},
-        {name: "Ottawa", code: ["OTT"]},
-        {name: "Philadephia", code: ["PHI"]},
-        {name: "Seattle", code: ["SEA"]},
-        {name: "San Francisco", code: ["SF"]},
-        {name: "Shanghai", code: ["SH"]},
-        {name: "St. Louis", code: ["STL"]},
-        {name: "Toronto", code: ["TOR"]},
-        {name: "Tampa", code: ["TPA"]},
-        {name: "Washington DC", code: ["WDC"]},
-        {name: "Undefined", code: ["EMC", "SDC", "OSS", "LD", "LDC", ""]}
+        { name: "All", code: "All" },
+        { name: "Atlanta", code: ["ATL"] },
+        { name: "Beijing", code: ["BEI"] },
+        { name: "St. Louis", code: ["BJC"] },
+        { name: "Calgary", code: ["CAL"] },
+        { name: "Chicago", code: ["CHI"] },
+        { name: "Columbus", code: ["COL"] },
+        { name: "Dallas", code: ["DAL"] },
+        { name: "Doha", code: ["DOH"] },
+        { name: "Dubai", code: ["DUB"] },
+        { name: "Hong Kong", code: ["HK"] },
+        { name: "Houston", code: ["HOU"] },
+        { name: "Kansas City", code: ["KC"] },
+        { name: "Los Angeles", code: ["LA"] },
+        { name: "London", code: ["LON"] },
+        { name: "New York", code: ["NY"] },
+        { name: "Ottawa", code: ["OTT"] },
+        { name: "Philadephia", code: ["PHI"] },
+        { name: "Seattle", code: ["SEA"] },
+        { name: "San Francisco", code: ["SF"] },
+        { name: "Shanghai", code: ["SH"] },
+        { name: "St. Louis", code: ["STL"] },
+        { name: "Toronto", code: ["TOR"] },
+        { name: "Tampa", code: ["TPA"] },
+        { name: "Washington DC", code: ["WDC"] },
+        { name: "Undefined", code: ["EMC", "SDC", "OSS", "LD", "LDC", ""] }
     ];
-
-    vm.selectedOffice = "All";
-
-    //region Date Filtering
-
-    vm.dtFrom = new Date();
-    vm.dtTo = null;
+    vm.dtFrom = null;
+    vm.dtTo = new Date();
     vm.loading = false;
     vm.format = 'dd-MMMM-yyyy';
     vm.dateOptions = {
@@ -53,11 +51,15 @@ function ZombieLogsController(ZombieLogsFactory, DTColumnDefBuilder){
     vm.popup1 = { opened: false };
     vm.popup2 = { opened: false };
 
+    //endregion
+
+    //region Date Filtering
+
     /**
      * Opens pop-up date pickers.
      * @param popup
      */
-    vm.openDatePicket = function(popup) {
+    vm.openDatePicker = function(popup) {
         popup === 'from' ? vm.popup1.opened = true : vm.popup2.opened = true;
     };
 
@@ -65,8 +67,6 @@ function ZombieLogsController(ZombieLogsFactory, DTColumnDefBuilder){
      * Filters Editing Records based on selected date range.
      */
     vm.filterDate = function () {
-        if(!vm.selectedConfig) return;
-
         vm.loading = true;
         var data = {
             from: vm.dtFrom,
@@ -74,107 +74,121 @@ function ZombieLogsController(ZombieLogsFactory, DTColumnDefBuilder){
             office: vm.selectedOffice
         };
 
-        // TriggerRecordsFactory.getManyByCentralPathDates(data)
-        //     .then(function (response) {
-        //         if(!response || response.status !== 200) return;
-        //
-        //         vm.triggerRecords = response.data;
-        //         var triggerRecords = [];
-        //         response.data.forEach(function (item) {
-        //             item.triggerRecords.forEach(function (record) {
-        //                 record['centralPath'] = item.centralPath;
-        //                 triggerRecords.push(record);
-        //             })
-        //         });
-        //
-        //         vm.selectedRecords = triggerRecords;
-        //         vm.loading = false;
-        //     })
-        //     .catch(function (err) {
-        //         vm.loading = false;
-        //         console.log(err);
-        //     });
+        vm.dtInstance.changeData(function () {
+            return ZombieLogsFactory.getFiltered(data)
+                .then(function (response) {
+                    if(!response || response.status !== 201) return;
+
+                    vm.loading = false;
+                    return response.data;
+                })
+                .catch(function (err) {
+                    vm.loading = false;
+                    console.log(err);
+                });
+        })
+        // TODO: Setup a chart that can display NYC > users > version installed in a pie chart.
+        // TODO: Setup a little streaming side bar notification list that has users with fatal errors. This would just be a running list of 10 users, that Zombie crashed out for.
     };
 
     vm.SetOfficeFilter = function (office) {
-        vm.selectedOffice = office.name;
+        vm.selectedOffice = office;
     };
 
     //endregion
 
-    getLogs();
+    //region Table
+
+    // set table options for dimension types
+    vm.dtInstance = {};
+    vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
+        return ZombieLogsFactory.get()
+            .then(function (response) {
+                if(!response || response.status !== 200) return;
+
+                return response.data;
+            })
+            .catch(function (err) {
+                console.log('Unable to load project data: ' + err.message);
+            })
+    }).withPaginationType('simple_numbers')
+        .withDisplayLength(15)
+        .withOption('order', [0, 'desc'])
+        .withOption('lengthMenu', [[15, 25, 50, 100, -1],[15, 25, 50, 100, 'All']])
+        .withOption('rowCallback', function (row, data, index) {
+            console.log(data.level);
+            switch(data.level){
+                case 'Info':
+                    row.className = row.className + ' table-info';
+                    break;
+                case 'Error':
+                    row.className = row.className + ' bg-warning';
+                    break;
+                case 'Fatal':
+                    row.className = row.className + ' bg-danger';
+                    break;
+                default:
+                    row.className = row.className + ' table-info';
+                    break;
+            }
+        });
+
+    vm.dtColumns = [
+        DTColumnBuilder.newColumn('createdAt')
+            .withTitle('Date/Time')
+            .withOption('width', '15%')
+            // .withOption('orderData', 0)
+            .renderWith(parseDateTime),
+        DTColumnBuilder.newColumn('machine')
+            .withTitle('Location')
+            .withOption('width', '10%')
+            .withOption('className', 'text-center')
+            .renderWith(parseLocation),
+        DTColumnBuilder.newColumn('machine')
+            .withTitle('Machine')
+            .withOption('className', 'text-center')
+            .withOption('width', '10%')
+            .renderWith(parseMachine),
+        DTColumnBuilder.newColumn('level')
+            .withTitle('Level')
+            .withOption('className', 'text-center')
+            .withOption('width', '10%'),
+        DTColumnBuilder.newColumn('message')
+            .withTitle('Message')
+            .withOption('width', '55%')
+    ];
 
     /**
-     * Callback method for Date Time Range selection.
-     * @param date
-     * @constructor
-     */
-    vm.OnFilter = function (date) {
-        vm.loading = true;
-        var data = {
-            from: date.from,
-            to: date.to,
-            centralPath: vm.WorksetData.worksetStats.centralPath
-        };
-
-        // do stuff
-    };
-
-    /**
-     * Toggles Date Time picker div on/off.
-     */
-    vm.toggleTimeSettings = function() {
-        vm.showTimeSettings = !vm.showTimeSettings;
-    };
-
-    /**
-     *
-     * @param x
+     * Extracts machine number from full machine name.
+     * @param machine
      * @returns {*}
      */
-    vm.getClass = function (x) {
-        switch(x.level){
-            case 'Info':
-                return 'table-info';
-            case 'Error':
-                return 'bg-warning';
-            case 'Fatal':
-                return 'bg-danger';
-            default:
-                return 'table-info';
-        }
-    };
-
-    /**
-     *
-     * @param machine
-     */
-    vm.getLocation = function (machine) {
-        if(!machine) return 'N/A';
-
-        var parts = machine.split('-');
-        return parts[0];
-    };
-
-    /**
-     *
-     * @param machine
-     * @returns {string}
-     */
-    vm.getMachine = function (machine) {
+    function parseMachine(machine) {
         if(!machine) return 'N/A';
 
         var parts = machine.split('-');
         if(parts.length > 2) return parts[1] + '-' + parts[2];
         else return parts[1];
-    };
+    }
 
     /**
-     *
+     * Extracts location from machine name.
+     * @param machine
+     * @returns {string}
+     */
+    function parseLocation(machine) {
+        if(!machine) return 'N/A';
+
+        var parts = machine.split('-');
+        return parts[0];
+    }
+
+    /**
+     * Parses UTC Date into local date.
      * @param value
      * @returns {string}
      */
-    vm.getDateTime = function (value) {
+    function parseDateTime(value) {
         return new Date(value).toLocaleString('en-US', {
             year: '2-digit',
             month: '2-digit',
@@ -182,40 +196,7 @@ function ZombieLogsController(ZombieLogsFactory, DTColumnDefBuilder){
             hour: '2-digit',
             minute: '2-digit'
         });
-    };
-
-    /**
-     *
-     */
-    function getLogs() {
-        ZombieLogsFactory.get()
-            .then(function (response) {
-                if(!response || response.status !== 200) return;
-
-                vm.logs = response.data;
-                createTable();
-            })
-            .catch(function (err) {
-                console.log('Unable to load project data: ' + err.message);
-            });
     }
 
-    /**
-     *
-     */
-    function createTable() {
-        vm.dtOptions = {
-            paginationType: 'simple_numbers',
-            lengthMenu: [[25, 50, 100, -1], [25, 50, 100, 'All']],
-            order: [[0, 'desc']]
-        };
-
-        vm.dtColumnDefs = [
-            DTColumnDefBuilder.newColumnDef(0), //created at
-            DTColumnDefBuilder.newColumnDef(1), //location
-            DTColumnDefBuilder.newColumnDef(2), //machine
-            DTColumnDefBuilder.newColumnDef(3), //level
-            DTColumnDefBuilder.newColumnDef(4) //message
-        ];
-    }
+    //endregion
 }

@@ -8,33 +8,8 @@
         <div class="panel-group" id="p1">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <!--<div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">-->
-                        <!--&lt;!&ndash;<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #d9534f"></span> >50%</p>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<button type="button" class="btn btn-primary" ng-click="vm.editMultipleSheets('large', vm.selectedItems)" ng-if="vm.selectedItems.length > 1">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-pencil"></span>&ndash;&gt;-->
-                        <!--&lt;!&ndash;Multi-Edit&ndash;&gt;-->
-                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<button type="button" class="btn btn-primary" ng-click="vm.editSheet('large', vm.selectedItems[0])" ng-if="vm.selectedItems.length === 1">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<span class="glyphicon glyphicon-pencil"></span>&ndash;&gt;-->
-                        <!--&lt;!&ndash;Single-Edit&ndash;&gt;-->
-                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
-                        <!--<button type="button" class="btn btn-primary" ng-click="vm.addSheet('lg')">-->
-                            <!--<span class="glyphicon glyphicon-plus"></span>-->
-                            <!--Add Sheet-->
-                        <!--</button>-->
-                        <!--<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">-->
-                            <!--{{vm.selectedModel.name | uppercase}}-->
-                            <!--<span class="caret"></span>-->
-                        <!--</button>-->
-                        <!--<ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 100px">-->
-                            <!--<li ng-repeat="file in vm.availableModels">-->
-                                <!--<a href="" ng-click="vm.SetCurrentModelFilter(file)">{{file.name | uppercase}}</a>-->
-                            <!--</li>-->
-                        <!--</ul>-->
-                    <!--</div>-->
                     <h4 class="panel-title" style="padding-top: 5px;">Logs</h4>
                 </div>
-                <!--ZOMBIE LOGS TABLE-->
                 <div class="panel-collapse">
                     <div class="panel-body">
                         <div class="row panel-body" style="padding-top: 0">
@@ -53,7 +28,7 @@
                                                close-text="Close"
                                                show-button-bar="false"/>
                                         <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default btn-sm" ng-click="vm.openDatePicket('from')">
+                                                <button type="button" class="btn btn-default btn-sm" ng-click="vm.openDatePicker('from')">
                                                     <span class="glyphicon glyphicon-calendar"></span>
                                                 </button>
                                             </span>
@@ -75,7 +50,7 @@
                                                show-button-bar="false"
                                                close-text="Close"/>
                                         <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default btn-sm" ng-click="vm.openDatePicket('to')">
+                                                <button type="button" class="btn btn-default btn-sm" ng-click="vm.openDatePicker('to')">
                                                     <span class="glyphicon glyphicon-calendar"></span>
                                                 </button>
                                             </span>
@@ -85,7 +60,7 @@
                             <div class="col-md-2">
                                 <div class="btn-group btn-group-sm pull-left" role="group" aria-hidden="true">
                                     <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true" style="width: 160px">
-                                        {{vm.selectedOffice}}
+                                        {{vm.selectedOffice.name}}
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu scrollable-menu">
@@ -103,28 +78,12 @@
                             </div>
                         </div>
                         <br>
-                        <table datatable="ng"
+                        <table id="zombieLogsTable"
+                               datatable=""
                                dt-options="vm.dtOptions"
-                               dt-column-defs="vm.dtColumnDefs"
+                               dt-columns="vm.dtColumns"
+                               dt-instance="vm.dtInstance"
                                class="table table-hover table-condensed datatable">
-                            <thead>
-                            <tr>
-                                <th class="col-md-2">Date</th>
-                                <th class="col-md-1 text-center">Location</th>
-                                <th class="col-md-1 text-center">Machine</th>
-                                <th class="col-md-1 text-center">Level</th>
-                                <th class="col-md-7">Message</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="x in vm.logs" ng-class="vm.getClass(x)">
-                                <td>{{ vm.getDateTime(x.createdAt) }}</td>
-                                <td class="text-center">{{ vm.getLocation(x.machine) }}</td>
-                                <td class="text-center">{{ vm.getMachine(x.machine) }}</td>
-                                <td class="text-center">{{ x.level }}</td>
-                                <td>{{ x.message }}</td>
-                            </tr>
-                            </tbody>
                         </table>
                     </div>
                 </div>

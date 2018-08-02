@@ -47,6 +47,56 @@ ZombieLogsService = {
                 }
                 res.status(result.status).json(result.message);
             });
+    },
+
+    getByDate : function(req, res){
+        var from = new Date(req.body.from);
+        var to = new Date(req.body.to);
+        var office = req.body.office;
+        if (office.name === 'All'){
+            ZombieLogs
+                .find(
+                    {'createdAt': {'$gte': from, '$lte': to}}
+                )
+                .exec(function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+        } else {
+            var regex = [];
+            office.code.forEach(function (item) {
+                var ex = new RegExp('^' + item, 'i');
+                regex.push(ex);
+            });
+            ZombieLogs
+                .find(
+                    {'createdAt': {'$gte': from, '$lte': to}, 'machine': {'$in': regex}}
+                )
+                .exec(function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                });
+        }
     }
 };
 
