@@ -11,11 +11,14 @@
 	<link rel="stylesheet" href="libs/components-font-awesome/css/font-awesome.min.css"> <!-- font awesome icons -->
 	<link rel="stylesheet" href="libs/datatables.net-bs/css/dataTables.bootstrap.min.css">
 	<link rel="stylesheet" href="libs/font-awesome-animation/dist/font-awesome-animation.min.css">
+	<link rel="stylesheet" href="libs/ngToast/dist/ngToast.min.css">
+	<link rel="stylesheet" href="libs/ngToast/dist/ngToast-animations.min.css">
 	<!--Polyfills-->
 	<script src="angular-app/data-factory/polyfills.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
+	<toast style="margin-top: 80px;"></toast>
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 		<div class="container">
 			<div class="navbar-header row">
@@ -72,6 +75,8 @@
     <script src="libs/angular-route/angular-route.js"></script>
     <script src="libs/angular-animate/angular-animate.min.js"></script>
     <script src="libs/fme/FMEServer.js"></script>
+	<script src="libs/angular-sanitize/angular-sanitize.min.js"></script>
+	<script src="libs/ngToast/dist/ngToast.min.js"></script>
 
 	<!--DataTable requirements-->
 	<script src="libs/angular-datatables/dist/angular-datatables.min.js"></script>

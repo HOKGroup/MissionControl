@@ -3,11 +3,12 @@
  */
 angular.module('MissionControlApp').controller('ZombieLogsController', ZombieLogsController);
 
-function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuilder){
+function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuilder, ngToast, $scope){
     var vm = this;
 
     //region Properties
 
+    var toasts = [];
     vm.logs = [];
     vm.selectedOffice = { name: "All", code: "All" };
     vm.officeFilters = [
@@ -38,7 +39,7 @@ function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuild
         { name: "Washington DC", code: ["WDC"] },
         { name: "Undefined", code: ["EMC", "SDC", "OSS", "LD", "LDC", ""] }
     ];
-    vm.dtFrom = null;
+    vm.dtFrom = new Date();
     vm.dtTo = new Date();
     vm.loading = false;
     vm.format = 'dd-MMMM-yyyy';
@@ -50,6 +51,46 @@ function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuild
     };
     vm.popup1 = { opened: false };
     vm.popup2 = { opened: false };
+
+    //endregion
+
+    //region Toasts
+
+    getDirtyDozen();
+
+    /**
+     * Retrieves dozen Fatal warnings and shows them as a toast notification.
+     */
+    function getDirtyDozen() {
+        ZombieLogsFactory.getDirtyDozen()
+            .then(function (response) {
+                if(!response || response.status !== 200) return;
+
+                response.data.forEach(function (item) {
+                    toasts.push(ngToast.danger({
+                        dismissButton: true,
+                        dismissOnTimeout: false,
+                        newestOnTop: true,
+                        content: '<strong>Fatal: </strong>' + parseDateTime(item.createdAt) + ' ' + item.machine
+                    }))
+                });
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    }
+
+    /**
+     * Makes sure that the toasts get dismissed.
+     */
+    $scope.$on('$locationChangeStart', function( event ) {
+        vm.dismissAll();
+        toasts = [];
+    });
+
+    vm.dismissAll = function () {
+        ngToast.dismiss();
+    };
 
     //endregion
 

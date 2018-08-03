@@ -11,6 +11,10 @@ function ZombieLogsFactory($http){
 
         getFiltered: function getFiltered(data) {
             return $http.post('/api/v2/zombielogs/filter', data).then(complete).catch(failed);
+        },
+
+        getDirtyDozen: function getDirtyDozen() {
+            return $http.get('/api/v2/zombielogs/dirtydozen').then(complete).catch(failed);
         }
     };
 

@@ -127,5 +127,6 @@ var zombieLogs = require('./models/zombie-logs-model');
      var zombieLogs = require('./controller/zombie-logs-controller');
      app.get('/api/v2/zombielogs', zombieLogs.get);
      app.post('/api/v2/zombielogs', zombieLogs.add);
-     app.post('/api/v2/zombielogs/filter', zombieLogs.getByDate)
+     app.post('/api/v2/zombielogs/filter', zombieLogs.getByDate);
+     app.get('/api/v2/zombielogs/dirtydozen', zombieLogs.getDirtyDozen);
   };
