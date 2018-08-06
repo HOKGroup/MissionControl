@@ -1,5 +1,6 @@
 
 var Global = {
-    io : { }
+    io : {},
+    zombieLogs: {}
 };    
 module.exports = Global;

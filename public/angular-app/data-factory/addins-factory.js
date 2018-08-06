@@ -13,5 +13,6 @@ function AddinsFactory($http){
 
     function failed(error) {
         console.log(error.statusText);
+        return error;
     }
 }

@@ -6,6 +6,36 @@ angular.module('MissionControlApp').controller('ZombieLogsController', ZombieLog
 function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuilder, ngToast, $scope){
     var vm = this;
 
+    var socket = io.connect();
+
+    socket.on('connect', function () {
+        socket.emit('room', 'zombie_logs');
+    });
+
+    socket.on('log_added', function (data) {
+        console.log(data);
+        vm.logs.push(data);
+        vm.dtInstance.changeData(function () {
+            return ZombieLogsFactory.get()
+                .then(function (response) {
+                    if(!response || response.status !== 200) return;
+
+                    console.log(response);
+                    return response.data;
+                })
+                .catch(function (err) {
+                    console.log('Unable to load project data: ' + err.message);
+                })
+        });
+        toasts.push(ngToast.warning({
+            dismissButton: true,
+            dismissOnTimeout: true,
+            timeout: 4000,
+            newestOnTop: true,
+            content: '<strong>Added: </strong>' + parseDateTime(data.createdAt) + ' ' + data.machine
+        }))
+    });
+
     //region Properties
 
     var toasts = [];

@@ -2,6 +2,7 @@
  * Created by konrad.sobon on 2018-07-27.
  */
 var mongoose = require('mongoose');
+var global = require('./socket/global');
 var ZombieLogs = mongoose.model('ZombieLogs');
 
 ZombieLogsService = {
@@ -24,6 +25,8 @@ ZombieLogsService = {
                     result.status = 404;
                     result.message = err;
                 }
+                global.io.sockets.in('zombie_logs').emit('log_added', req.body);
+                console.log('Emmitted socket msg!');
                 res.status(result.status).json(result.message);
             });
     },
@@ -36,7 +39,7 @@ ZombieLogsService = {
     get : function(req, res){
         ZombieLogs
             .find({})
-            .sort('-createdAt')
+            .sort({'_id': -1})
             .limit(200)
             .exec(function (err, response){
                 var result = {

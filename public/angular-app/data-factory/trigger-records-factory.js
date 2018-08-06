@@ -24,6 +24,7 @@ function TriggerRecordsFactory($http){
 
     function failed(error) {
         console.log(error.statusText);
+        return error;
     }
 }
 
