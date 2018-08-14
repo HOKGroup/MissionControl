@@ -6,6 +6,8 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
         vm.projectId = $routeParams.projectId;
         vm.FamilyData = this.processed;
 
+        console.log(vm.FamilyData);
+
         processData();
 
         /**
@@ -240,6 +242,7 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
             vm.FamilyData.familyStats.families.forEach(function (item) {
                 if(!item.isDeleted && item.isFailingChecks){
                     item['collectionId'] = vm.FamilyData.familyStats._id;
+                    item['centralPath'] = vm.FamilyData.familyStats.centralPath;
                     vm.AllFamilies.push(item);
                 }
             });

@@ -173,10 +173,9 @@ SheetsServices = {
                 if(err){
                     res.status(500).json(err);
                 } else {
-                    global.io.sockets.emit('sheetTask_sheetsAdded', {
+                    global.io.sockets.in(req.body[0].centralPath).emit('sheetTask_sheetsAdded', {
                         'body': data,
-                        'sheetIds': ids,
-                        'collectionId': req.params.id
+                        'sheetIds': ids
                     });
                     res.status(201).json({ 'data': data, 'newSheetIds': ids })
                 }
@@ -225,8 +224,7 @@ SheetsServices = {
                     if(err) {
                         res.status(201).json(err);
                     } else {
-                        global.io.sockets.emit('sheetTask_sheetDeleted', {
-                            'collectionId': req.params.id,
+                        global.io.sockets.in(req.body.centralPath).emit('sheetTask_sheetDeleted', {
                             'sheetId': req.body.sheetId.toString(),
                             'deletedIds': req.body.deletedIds});
                         res.status(201).json(req.body.sheetId.toString());
@@ -315,11 +313,10 @@ var approveCreateNewSheet = function (req, res, doc) {
         if(err){
             res.status(500).json(err);
         } else {
-            global.io.sockets.emit('sheetTask_updated', {
+            global.io.sockets.in(req.body.Element.centralPath).emit('sheetTask_updated', {
                 'body': sheetsUpdated,
                 'sheetId': req.body.Element._id.toString(),
-                'taskId': req.body.Task._id.toString(),
-                'collectionId': req.params.id
+                'taskId': req.body.Task._id.toString()
             });
             res.status(201).json(sheetsUpdated);
         }
@@ -353,11 +350,10 @@ var addSheetTask = function(req, res, doc){
         if(err){
             res.status(500).json(err);
         } else {
-            global.io.sockets.emit('sheetTask_added', {
+            global.io.sockets.in(req.body.centralPath).emit('sheetTask_added', {
                 'body': sheetsUpdated,
                 'sheetId': req.body.sheetId.toString(),
-                'taskId': newId.toString(),
-                'collectionId': req.params.id
+                'taskId': newId.toString()
             });
             res.status(201).json(sheetsUpdated);
         }
@@ -384,8 +380,7 @@ var deleteSheetTask = function (req, res, doc) {
         if(err){
             res.status(500).json(err);
         } else {
-            global.io.sockets.emit('sheetTask_deleted', {
-                'collectionId': req.params.id,
+            global.io.sockets.in(req.body.centralPath).emit('sheetTask_deleted', {
                 'sheetId': req.body.sheetId.toString(),
                 "deletedIds": deleted });
             res.status(201).json(sheetsUpdated);
@@ -406,11 +401,10 @@ var updateSheetTask = function (req, res, doc) {
         if(err){
             res.status(500).json(err);
         } else {
-            global.io.sockets.emit('sheetTask_updated', {
+            global.io.sockets.in(req.body.centralPath).emit('sheetTask_updated', {
                 'body': sheetsUpdated,
                 'sheetId': req.body.sheetId.toString(),
-                'taskId': req.body._id.toString(),
-                'collectionId': req.params.id
+                'taskId': req.body._id.toString()
             });
             res.status(201).json(sheetsUpdated);
         }

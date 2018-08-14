@@ -26,7 +26,6 @@ ZombieLogsService = {
                     result.message = err;
                 }
                 global.io.sockets.in('zombie_logs').emit('log_added', req.body);
-                console.log('Emmitted socket msg!');
                 res.status(result.status).json(result.message);
             });
     },

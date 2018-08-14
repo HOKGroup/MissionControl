@@ -23,7 +23,6 @@ function AddSheetController($uibModalInstance, UtilityService, ModelsFactory, mo
     function getUserNames(centralPath) {
         ModelsFactory.getUserNamesByCentralPath(centralPath)
             .then(function (response) {
-                console.log(response);
                 if(!response || response.status !== 200) return;
 
                 // (Konrad) We need all unique user names of people that ever opened the model.

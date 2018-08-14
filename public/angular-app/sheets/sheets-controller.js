@@ -6,7 +6,7 @@ angular.module('MissionControlApp').controller('SheetsController', SheetsControl
 function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFactory, ProjectFactory, UtilityService,
                           DTOptionsBuilder, DTColumnBuilder){
     var vm = this;
-    var all = { name: "All", collectionId: '' };
+    var all = { name: "All", collectionId: '', centralPath: '' };
 
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
@@ -142,7 +142,7 @@ function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFacto
             }
             reloadTable();
         }).catch(function(){
-            console.log("All Tasks Dialog dismissed...");
+            //if modal dismissed
         });
     };
 
@@ -208,6 +208,7 @@ function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFacto
                             var newSheet = data.sheets.find(function (item) {
                                 return item._id.toString() === id.toString();
                             });
+                            newSheet['centralPath'] = request.sheets[0].centralPath;
                             if(newSheet) vm.Data.push(newSheet);
                         })
                     }
@@ -318,8 +319,7 @@ function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFacto
         return new Promise(function(resolve, reject){
             var data = [];
             vm.Data.forEach(function (item) {
-                if (item.fileName.toLowerCase() === vm.selectedModel.name.toLowerCase() ||
-                    vm.selectedModel.name === 'All'){
+                if (vm.selectedModel.name === 'All' || item.centralPath === vm.selectedModel.centralPath){
                     data.push(item);
                 }
             });

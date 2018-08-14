@@ -28,6 +28,7 @@ function EditFamilyTaskController($uibModalInstance, FamiliesFactory, family, ta
     vm.submit = function () {
         vm.task.isSelected = false; // never submit a task with selection on
         vm.task.submittedOn = Date.now();
+        vm.task['centralPath'] = vm.family.centralPath;
         if(action === 'Add Task'){
             FamiliesFactory
                 .addTask(vm.family.collectionId, vm.family.name, vm.task).then(function (response) {

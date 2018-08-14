@@ -3,42 +3,63 @@
  */
 angular.module('MissionControlApp').controller('ZombieLogsController', ZombieLogsController);
 
-function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuilder, ngToast, $scope){
+function ZombieLogsController($timeout, ZombieLogsFactory, DTOptionsBuilder, DTColumnBuilder, ngToast, $scope){
     var vm = this;
-
-    var socket = io.connect();
-
-    socket.on('connect', function () {
-        socket.emit('room', 'zombie_logs');
-    });
-
-    socket.on('log_added', function (data) {
-        console.log(data);
-        vm.logs.push(data);
-        vm.dtInstance.changeData(function () {
-            return ZombieLogsFactory.get()
-                .then(function (response) {
-                    if(!response || response.status !== 200) return;
-
-                    console.log(response);
-                    return response.data;
-                })
-                .catch(function (err) {
-                    console.log('Unable to load project data: ' + err.message);
-                })
-        });
-        toasts.push(ngToast.warning({
-            dismissButton: true,
-            dismissOnTimeout: true,
-            timeout: 4000,
-            newestOnTop: true,
-            content: '<strong>Added: </strong>' + parseDateTime(data.createdAt) + ' ' + data.machine
-        }))
-    });
-
-    //region Properties
-
     var toasts = [];
+
+    //region Sockets
+
+    var app = {
+        socket: null,
+        connect: function() {
+            var self = this;
+            if( self.socket ) {
+                self.socket.destroy();
+                delete self.socket;
+                self.socket = null;
+            }
+            this.socket = io.connect({transports: ['websocket']});
+            this.socket.reconnection = true;
+            this.socket.reconnectionDelay = 1000;
+            this.socket.reconnectionDelayMax = 5000;
+            this.socket.reconnectionAttempts = Infinity;
+
+            this.socket.on('connect', function () {
+                self.socket.emit('room', 'zombie_logs');
+            });
+            this.socket.on( 'disconnect', function () {
+                $timeout( app.connect, 5000 );
+            });
+            this.socket.on('log_added', function (data) {
+                vm.logs.push(data);
+                vm.dtInstance.changeData(function () {
+                    return ZombieLogsFactory.get()
+                        .then(function (response) {
+                            if(!response || response.status !== 200) return;
+
+                            return response.data;
+                        })
+                        .catch(function (err) {
+                            console.log('Unable to load project data: ' + err.message);
+                        })
+                });
+                toasts.push(ngToast.success({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: '<strong>Added: </strong>' + parseDateTime(data.createdAt) + ' ' + data.machine
+                }))
+            });
+        }
+    };
+
+    app.connect();
+
+    //endregion
+
+    //region Public Properties
+
     vm.logs = [];
     vm.selectedOffice = { name: "All", code: "All" };
     vm.officeFilters = [
@@ -81,90 +102,6 @@ function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuild
     };
     vm.popup1 = { opened: false };
     vm.popup2 = { opened: false };
-
-    //endregion
-
-    //region Toasts
-
-    getDirtyDozen();
-
-    /**
-     * Retrieves dozen Fatal warnings and shows them as a toast notification.
-     */
-    function getDirtyDozen() {
-        ZombieLogsFactory.getDirtyDozen()
-            .then(function (response) {
-                if(!response || response.status !== 200) return;
-
-                response.data.forEach(function (item) {
-                    toasts.push(ngToast.danger({
-                        dismissButton: true,
-                        dismissOnTimeout: false,
-                        newestOnTop: true,
-                        content: '<strong>Fatal: </strong>' + parseDateTime(item.createdAt) + ' ' + item.machine
-                    }))
-                });
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
-    }
-
-    /**
-     * Makes sure that the toasts get dismissed.
-     */
-    $scope.$on('$locationChangeStart', function( event ) {
-        vm.dismissAll();
-        toasts = [];
-    });
-
-    vm.dismissAll = function () {
-        ngToast.dismiss();
-    };
-
-    //endregion
-
-    //region Date Filtering
-
-    /**
-     * Opens pop-up date pickers.
-     * @param popup
-     */
-    vm.openDatePicker = function(popup) {
-        popup === 'from' ? vm.popup1.opened = true : vm.popup2.opened = true;
-    };
-
-    /**
-     * Filters Editing Records based on selected date range.
-     */
-    vm.filterDate = function () {
-        vm.loading = true;
-        var data = {
-            from: vm.dtFrom,
-            to: vm.dtTo,
-            office: vm.selectedOffice
-        };
-
-        vm.dtInstance.changeData(function () {
-            return ZombieLogsFactory.getFiltered(data)
-                .then(function (response) {
-                    if(!response || response.status !== 201) return;
-
-                    vm.loading = false;
-                    return response.data;
-                })
-                .catch(function (err) {
-                    vm.loading = false;
-                    console.log(err);
-                });
-        })
-        // TODO: Setup a chart that can display NYC > users > version installed in a pie chart.
-        // TODO: Setup a little streaming side bar notification list that has users with fatal errors. This would just be a running list of 10 users, that Zombie crashed out for.
-    };
-
-    vm.SetOfficeFilter = function (office) {
-        vm.selectedOffice = office;
-    };
 
     //endregion
 
@@ -268,6 +205,88 @@ function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuild
             minute: '2-digit'
         });
     }
+
+    //endregion
+
+    //region Toasts
+
+    getDirtyDozen();
+
+    /**
+     * Retrieves dozen Fatal warnings and shows them as a toast notification.
+     */
+    function getDirtyDozen() {
+        ZombieLogsFactory.getDirtyDozen()
+            .then(function (response) {
+                if(!response || response.status !== 200) return;
+
+                response.data.forEach(function (item) {
+                    toasts.push(ngToast.danger({
+                        dismissButton: true,
+                        dismissOnTimeout: false,
+                        newestOnTop: true,
+                        content: '<strong>Fatal: </strong>' + parseDateTime(item.createdAt) + ' ' + item.machine
+                    }))
+                });
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    }
+
+    /**
+     * Makes sure that the toasts get dismissed.
+     */
+    $scope.$on('$locationChangeStart', function( event ) {
+        vm.dismissAll();
+    });
+
+    vm.dismissAll = function () {
+        ngToast.dismiss();
+        toasts = [];
+    };
+
+    //endregion
+
+    //region Date Filtering
+
+    /**
+     * Opens pop-up date pickers.
+     * @param popup
+     */
+    vm.openDatePicker = function(popup) {
+        popup === 'from' ? vm.popup1.opened = true : vm.popup2.opened = true;
+    };
+
+    /**
+     * Filters Editing Records based on selected date range.
+     */
+    vm.filterDate = function () {
+        vm.loading = true;
+        var data = {
+            from: vm.dtFrom,
+            to: vm.dtTo,
+            office: vm.selectedOffice
+        };
+
+        vm.dtInstance.changeData(function () {
+            return ZombieLogsFactory.getFiltered(data)
+                .then(function (response) {
+                    if(!response || response.status !== 201) return;
+
+                    vm.loading = false;
+                    return response.data;
+                })
+                .catch(function (err) {
+                    vm.loading = false;
+                    console.log(err);
+                });
+        })
+    };
+
+    vm.SetOfficeFilter = function (office) {
+        vm.selectedOffice = office;
+    };
 
     //endregion
 }

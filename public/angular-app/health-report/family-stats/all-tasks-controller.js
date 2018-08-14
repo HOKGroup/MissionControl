@@ -65,7 +65,12 @@ function AllFamilyTasksController($uibModalInstance, $uibModal, FamiliesFactory,
                 selectedIds.push(item._id);
             }
         });
-        FamiliesFactory.deleteMultipleTasks(vm.family.collectionId, vm.family.name, selectedIds)
+        var data = {
+            ids: selectedIds,
+            centralPath: vm.family.centralPath
+        };
+        console.log(data);
+        FamiliesFactory.deleteMultipleTasks(vm.family.collectionId, vm.family.name, data)
             .then(function (response) {
                 if(!response || response.status !== 201) return;
 
