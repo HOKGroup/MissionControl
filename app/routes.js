@@ -54,11 +54,10 @@ var zombieLogs = require('./models/zombie-logs-model');
      app.post('/api/v2/triggerrecords/:id/add', triggerrecords.postTriggerRecord);
      app.post('/api/v2/triggerrecords/deletemany', triggerrecords.deleteMany);
 
-     //TODO: Refactor and cleanup Addins API
      var addins = require('./controller/addins-controller');
      app.get('/api/v2/addins', addins.findAll);
+     app.get('/api/v2/addins/:year', addins.getByYear);
      app.post('/api/v2/addins', addins.add);
-     app.post('/api/v2/addins/:id/addlog', addins.addLog);
 
      var families = require('./controller/families-controller');
      app.get('/api/v2/families/centralpath/:uri*', families.findByCentralPath);
