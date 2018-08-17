@@ -11,7 +11,6 @@ ZombieLogsService = {
      * @param res
      */
     add: function(req, res){
-        console.log(req.body);
         ZombieLogs
             .create(req.body, function (err, response){
                 var result = {
