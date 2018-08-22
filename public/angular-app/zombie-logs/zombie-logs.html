@@ -95,5 +95,41 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-4 no-padding-left">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">Office: {{vm.selectedOffice.name}}</h4>
+                    </div>
+                    <div class="panel-collapse">
+                        <div class="panel-body">
+                            <d3-donut-chart data="vm.donutData" latest="vm.latestVersion" d3-on-click="vm.OnClick(item)"></d3-donut-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 no-padding">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">Machines</h4>
+                    </div>
+                    <div class="panel-collapse">
+                        <div class="panel-body">
+                            <table id="machinesTable"
+                                   datatable=""
+                                   dt-options="vm.dtOptions1"
+                                   dt-columns="vm.dtColumns1"
+                                   dt-instance="vm.dtInstance1"
+                                   class="table table-hover table-condensed datatable">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
