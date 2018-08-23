@@ -60,10 +60,10 @@ function ZombieLogsController($timeout, ZombieLogsFactory, DTOptionsBuilder, DTC
 
     //region Public Properties
 
-    vm.logs = [];
-    vm.donutData = [];
-    vm.selectedMachines = [];
-    vm.latestVersion = "0.0.0.0";
+    vm.logs = []; // logs shown in main table
+    vm.donutData = []; // data filtered for the donut chart
+    vm.selectedMachines = []; // data filtered for second table
+    vm.latestVersion = "0.0.0.0"; // latest version of the plugin (used to color chart)
     vm.selectedOffice = { name: "All", code: "All" };
     vm.officeFilters = [
         { name: "All", code: "All" },
@@ -95,6 +95,7 @@ function ZombieLogsController($timeout, ZombieLogsFactory, DTOptionsBuilder, DTC
     ];
     vm.dtFrom = new Date();
     vm.dtTo = new Date();
+    vm.dtTo.setDate(vm.dtTo.getDate() + 1);
     vm.loading = false;
     vm.format = 'dd-MMMM-yyyy';
     vm.dateOptions = {
