@@ -129,5 +129,8 @@ var zombieLogs = require('./models/zombie-logs-model');
      app.post('/api/v2/groups/groupstats', groups.getGroupStats);
 
      var warnings = require('./controller/warnings');
-     app.post('/api/v2/warnings', warnings.add);
+     app.post('/api/v2/warnings/update', warnings.update);
+     app.post('/api/v2/warnings/add', warnings.add);
+     app.get('/api/v2/warnings/centralpath/:uri*', warnings.getByCentralPath);
+     app.post('/api/v2/warnings/daterange', warnings.getWarningStats);
   };

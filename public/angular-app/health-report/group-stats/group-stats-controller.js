@@ -163,7 +163,6 @@ function GroupStatsController($scope, DTOptionsBuilder, DTColumnBuilder){
                 nodes: nodes,
                 links: links
             };
-            console.log(vm.sankeyData);
         }
 
         //endregion

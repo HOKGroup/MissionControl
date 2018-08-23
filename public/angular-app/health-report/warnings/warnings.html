@@ -1,0 +1,62 @@
+<div class="container-fluid">
+    <div class="row animate-show-hide ng-hide" ng-show="vm.showTimeSettings" >
+        <time-range-selection loading="vm.loading" on-hide="vm.toggleTimeSettings()" on-filter="vm.OnFilter(date)"></time-range-selection>
+    </div>
+    <div class="row">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Views Health Score:
+                        <a href="" class="faa-parent faa-slow animated-hover">
+                            <i class="fa fa-gear faa-spin text-primary" ng-click="vm.showTimeSettings = !vm.showTimeSettings"></i>
+                        </a>
+                    </h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <health-report-summary data="vm.WarningData.scoreData"
+                                               description="vm.WarningData.description"
+                                               bullets="vm.WarningData.bullets"
+                                               details="true"
+                                               name="'Secondary'"
+                                               title="vm.WarningData.name">
+                        </health-report-summary>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="row" ng-if="vm.ViewData.viewStats.viewStats.length >= 2">-->
+        <!--<div class="panel-group" id="p1">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p1" data-target="#collapseP1">-->
+                    <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #FD8D3C"></span> Views on Sheet</p>-->
+                    <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #3182BD"></span> Total Views</p>-->
+                    <!--<h4 class="panel-title">Views / Views on Sheet</h4>-->
+                <!--</div>-->
+                <!--<div id="collapseP1" class="panel-collapse collapse in">-->
+                    <!--<div class="panel-body no-padding">-->
+                        <!--<d3-multi-series-line-brushed data="vm.ViewData.viewStats.viewStats" keys="vm.ViewKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div class="row" ng-if="vm.ViewData.viewStats.viewStats.length >= 2">-->
+        <!--<div class="panel-group" id="p2">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p2" data-target="#collapseP2">-->
+                    <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #FD8D3C"></span> Schedules on Sheet</p>-->
+                    <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #3182BD"></span> Total Schedules</p>-->
+                    <!--<h4 class="panel-title">Schedules / Schedules on Sheet</h4>-->
+                <!--</div>-->
+                <!--<div id="collapseP2" class="panel-collapse collapse in">-->
+                    <!--<div class="panel-body no-padding">-->
+                        <!--<d3-multi-series-line-brushed data="vm.ViewData.viewStats.viewStats" keys="vm.ScheduleKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+</div>
