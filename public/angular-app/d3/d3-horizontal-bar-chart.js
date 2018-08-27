@@ -123,6 +123,16 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', '$c
                     .attr("dy", ".35em")
                     .attr("dx", -5)
                     .text(function(d){return d.name;})
+                    .on("mouseover", function(d){
+                        tooltip.style("opacity", "1");
+                        var matrix = this.getScreenCTM().translate(+ this.getAttribute("x"), + this.getAttribute("y"));
+                        tooltip
+                            .style("left", (window.pageXOffset + matrix.e + x(d.count) + 45) + "px")
+                            .style("top", (window.pageYOffset + matrix.f - (y.bandwidth() / 2) - 3) + "px")
+                            .style("display", "inline-block")
+                            .html(d.name);
+                    })
+                    .on("mouseout", function(){ tooltip.style("opacity", "0");})
                     .each(trim);
 
                 svg.append("g")

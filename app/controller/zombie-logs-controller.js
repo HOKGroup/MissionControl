@@ -109,45 +109,6 @@ ZombieLogsService = {
                     res.status(result.status).json(result.message);
                 });
         }
-    },
-
-    /**
-     *
-     * @param req
-     * @param res
-     */
-    getDirtyDozen : function(req, res){
-        ZombieLogs
-            .aggregate([
-                { $match: { "level": "Fatal" }},
-                { $sort: { "createdAt": -1 }},
-                { $group: {
-                    "_id": "$machine",
-                    "level": { $first: "$level" },
-                    "createdAt": { $first: "$createdAt" }
-                }},
-                { $limit: 10 },
-                { $project: {
-                    "machine": "$_id",
-                    "level": 1,
-                    "_id": 0,
-                    "createdAt": 1
-                }}
-            ])
-            .exec(function (err, response){
-                var result = {
-                    status: 200,
-                    message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
-                }
-                res.status(result.status).json(result.message);
-            });
     }
 };
 

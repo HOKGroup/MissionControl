@@ -62,3 +62,12 @@ angular.module('MissionControlApp').component('groupStats', {
         processed: '='
     }
 });
+
+angular.module('MissionControlApp').component('warnings', {
+    templateUrl: 'angular-app/health-report/warnings/warnings.html',
+    controller: 'WarningsController',
+    controllerAs: 'vm',
+    bindings: {
+        processed: '='
+    }
+});
