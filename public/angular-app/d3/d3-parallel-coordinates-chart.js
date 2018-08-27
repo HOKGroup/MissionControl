@@ -33,7 +33,7 @@ angular.module('MissionControlApp').directive('d3ParallelCoordinates', ['d3', fu
 
                 svg.selectAll("*").remove();
 
-                var margin = {top: 20, right: 10, bottom: 10, left: 30},
+                var margin = {top: 20, right: 17, bottom: 10, left: 30},
                     width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right,
                     height = 400 - margin.top - margin.bottom;
 

@@ -1,7 +1,7 @@
 angular.module('MissionControlApp').factory('HealthReportFactory', HealthReportFactory);
 
 function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, StylesFactory, LinksFactory, ViewsFactory,
-                             WorksetsFactory, FamiliesFactory, GroupsFactory){
+                             WorksetsFactory, FamiliesFactory, GroupsFactory, WarningsFactory){
     return {
         /**
          * This utility method processes information about Families and
@@ -97,10 +97,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         label: "Families",
                         newMax: 8};
 
-                    // (Konrad) This score needs to be remaped to 0-6 range
+                    // (Konrad) This score needs to be remapped to 0-6 range
                     var familyScore = Math.round((passingChecks * 6)/8);
 
-                    var desc = "Families are integral part of Revit functionality. It is however, importatnt to remember," +
+                    var desc = "Families are integral part of Revit functionality. It is however, important to remember," +
                         "that oversized (>1MB) families can be a sign of trouble (poorly modeled, imported DWGs etc.). That's " +
                         "why it's imperative to follow HOK's best practices in modeling and naming Revit Families. InPlace families " +
                         "should be limited in use as they do not allow full functionality of the regular Families.";
@@ -124,7 +124,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         },
                         {
                             title: 'Misnamed Families',
-                            description: 'It\'s considered good practive to use HOK created and curated families. ' +
+                            description: 'It\'s considered good practice to use HOK created and curated families. ' +
                             'These families will typically have a name containing "_HOK" in it. Family naming has no ' +
                             'performance impact, but is good practice that should be followed. Less than 10 is green, more ' +
                             'than 10 but less than 20 is orange while more than 20 is red.',
@@ -134,7 +134,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         {
                             title: 'Oversized Families',
                             description: 'Anything over 1MB will be considered oversized. Large families can be a good ' +
-                            'indicator of mismodelled or families with imported CAD objects. Generally it\'s a good ' +
+                            'indicator of mis-modelled or families with imported CAD objects. Generally it\'s a good ' +
                             'idea to keep Family file size low. Less than 10 is green, more than 10 but less than 20 ' +
                             'is orange while more than 20 is red.',
                             bulletText: familyStats.oversizedFamilies,
@@ -237,7 +237,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                                 title: 'Imported External Content',
                                 description: 'Importing of any DWG/STL/SKP content is considered bad practice. All external ' +
                                 'content if necessary should be linked in. Importing content can cause decreased model ' +
-                                'performance due to excessive number of Object Styles or decrese accuracy, and cause graphic ' +
+                                'performance due to excessive number of Object Styles or decrease accuracy, and cause graphic ' +
                                 'artifacts due to large XYZ Coordinates.',
                                 bulletText: importCount,
                                 bulletColor: importCountColor
@@ -354,18 +354,18 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             label: "Unused Styles",
                             newMax: 8};
 
-                        // (Konrad) This score needs to be remaped to 0-6 range
+                        // (Konrad) This score needs to be remapped to 0-6 range
                         var styleScore = Math.round((passingChecks * 6)/8);
 
                         var desc = 'Revit allows users to easily create new Types/Styles. However, too many Types available causes ' +
-                            'confusion as to which one to use. Standards desintegrate quickly, and chaos takes reign. Here ' +
+                            'confusion as to which one to use. Standards disintegrate quickly, and chaos takes reign. Here ' +
                             'we are looking to make sure that there are no excess Types created that are not being used. Also ' +
-                            'we are looking at Dimensions and making sure they are not being overriden. That is a bad practice ' +
+                            'we are looking at Dimensions and making sure they are not being overridden. That is a bad practice ' +
                             'and should be avoided.';
 
                         var bullets = [
                             {
-                                title: 'Overriden Dimensions',
+                                title: 'Overridden Dimensions',
                                 description: 'Overriding actual dimension values can be considered bad practice in certain ' +
                                 'conditions. If we are overriding a dimension to indicate that values are all Equal "EQ" or ' +
                                 'defining given dimension is someone else\'s scope than it\'s acceptable. Not acceptable is overriding ' +
@@ -503,7 +503,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             label: "Views",
                             newMax: 8};
 
-                        // (Konrad) This score needs to be remaped to 0-6 range
+                        // (Konrad) This score needs to be remapped to 0-6 range
                         var viewScore = Math.round((passingChecks * 6)/8);
 
                         var desc = 'Revit allows for the quick creation of views within the model. An excessive number of views, ' +
@@ -639,7 +639,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             {
                                 title: 'Model Size',
                                 description: 'It\'s best practice to keep the model size under 200MB. It helps preserve your ' +
-                                'hardware resources, and potentially increse model open and synch times. Model Size is often a ' +
+                                'hardware resources, and potentially increase model open and synch times. Model Size is often a ' +
                                 'good indicator of potential modeling issues. Use of imported objects like DWG or STL often bloats ' +
                                 'model size giving Model Managers clues about potential issues.',
                                 bulletText: modelSize,
@@ -659,8 +659,8 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                                 title: 'Average Synch Time',
                                 description: 'This is not a measure of model health, but rather a glance at potential user ' +
                                 '"discomfort". Users tend to get frustrated at time lost, while waiting for the model to synch. ' +
-                                'Synch time can be decresed by reducing number of warnings in the model, model size, number ' +
-                                'of links etc. All of these things contribute to time that is being needed by Revit to reconsile ' +
+                                'Synch time can be decreased by reducing number of warnings in the model, model size, number ' +
+                                'of links etc. All of these things contribute to time that is being needed by Revit to reconcile ' +
                                 'all of the changes. Another quick way to minimize synch time, is to Reload Latest before Synchronizing.',
                                 bulletText: avgSynchTime,
                                 bulletColor: UtilityService.color().grey
@@ -857,6 +857,114 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                 .catch(function (error) {
                     console.log(error);
                 });
+        },
+
+        /**
+         *
+         * @param data
+         * @param callback
+         */
+        processWarningStats: function(data, callback){
+            if(data.from !== null && data.to !== null){
+                WarningsFactory.getByDateRange(data)
+                    .then(function (response) {
+                        if( !response || !response.data || response.status !== 201){
+                            callback(null);
+                            return;
+                        }
+                        if(response.data.length === 0){
+                            callback({
+                                warningStats: response.data,
+                                centralPath: data.centralPath
+                            });
+                        } else {
+                            callback(process(response.data))
+                        }
+                    })
+            } else {
+                var uri = UtilityService.getHttpSafeFilePath(data.centralPath);
+                WarningsFactory.getByCentralPath(uri)
+                    .then(function (response) {
+                        if(!response || response.status !== 200){
+                            callback(null);
+                            return;
+                        }
+                        if(response.data.length === 0){
+                            callback({
+                                warningStats: response.data,
+                                centralPath: data.centralPath
+                            });
+                        } else {
+                            callback(process(response.data))
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+            }
+
+            /**
+             *
+             * @param data
+             * @returns {{scoreData: {passingChecks: number, count, label: string, newMax: number}, modelScore: number, description: string, name: string, warningStats: *, bullets: [*], show: {name: string, value: boolean}, color: (boolean|Array|string|number|*)}}
+             */
+            function process(data) {
+                var passingChecks = 0;
+
+                var openWarnings = data.filter(function (item) {
+                    return item.isOpen;
+                }).length;
+                var warningsColor = UtilityService.color().red;
+
+                if (openWarnings <= 15){
+                    passingChecks += 2;
+                    warningsColor = UtilityService.color().green;
+                } else if (openWarnings > 15 && openWarnings <= 30){
+                    passingChecks += 1;
+                    warningsColor = UtilityService.color().orange;
+                }
+
+                var warningScoreData = {
+                    passingChecks: passingChecks,
+                    count: openWarnings,
+                    label: "Warnings",
+                    newMax: 2
+                };
+
+                var desc = 'It is a good practice to try and minimize the amount of Warnings present in the model ' +
+                    'Some of these warnings might be more of a nuisance than a really harmful thing, but at the ' +
+                    'end of the day, they are all objects stored in Revit\'s database, and they all add to time it ' +
+                    'takes Revit to Synch, refresh views, print etc. Let\'s make sure that Warnings are kept to minimum.';
+
+                var bullets = [
+                    {
+                        title: 'Warnings',
+                        description: 'This is a total number of Warnings in the model. It\'s a good price to keep that ' +
+                        'number to a minimum. Green means number of warnings is less than 15, orange is 15<x<30 while ' +
+                        'anything above 30 is red.',
+                        bulletText: openWarnings,
+                        bulletColor: warningsColor
+                    }
+                ];
+
+                var color  = UtilityService.color().red;
+                if (passingChecks >= 2){
+                    color  = UtilityService.color().green;
+                } else if (passingChecks >= 1){
+                    color  = UtilityService.color().orange;
+                }
+
+                return {
+                    scoreData: warningScoreData,
+                    modelScore: passingChecks,
+                    description: desc,
+                    name: "Warnings",
+                    warningStats: data,
+                    bullets: bullets,
+                    show: {name: "warnings", value: false},
+                    color: color
+                };
+            }
         },
 
         /**

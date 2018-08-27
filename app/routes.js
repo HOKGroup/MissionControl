@@ -10,6 +10,7 @@ var links = require('./models/links-model');
 var models = require('./models/models-model');
 var views = require('./models/views-model');
 var groups = require('./models/groups-model');
+var warnings = require('./models/warnings');
 var zombieLogs = require('./models/zombie-logs-model');
 
  module.exports = function(app) {
@@ -54,11 +55,15 @@ var zombieLogs = require('./models/zombie-logs-model');
      app.post('/api/v2/triggerrecords/:id/add', triggerrecords.postTriggerRecord);
      app.post('/api/v2/triggerrecords/deletemany', triggerrecords.deleteMany);
 
-     //TODO: Refactor and cleanup Addins API
      var addins = require('./controller/addins-controller');
      app.get('/api/v2/addins', addins.findAll);
+     app.get('/api/v2/addins/:year', addins.getByYear);
      app.post('/api/v2/addins', addins.add);
-     app.post('/api/v2/addins/:id/addlog', addins.addLog);
+
+     var zombieLogs = require('./controller/zombie-logs-controller');
+     app.get('/api/v2/zombielogs', zombieLogs.get);
+     app.post('/api/v2/zombielogs', zombieLogs.add);
+     app.post('/api/v2/zombielogs/filter', zombieLogs.getByDate);
 
      var families = require('./controller/families-controller');
      app.get('/api/v2/families/centralpath/:uri*', families.findByCentralPath);
@@ -124,9 +129,9 @@ var zombieLogs = require('./models/zombie-logs-model');
      app.put('/api/v2/groups/:id/updatefilepath', groups.updateFilePath);
      app.post('/api/v2/groups/groupstats', groups.getGroupStats);
 
-     var zombieLogs = require('./controller/zombie-logs-controller');
-     app.get('/api/v2/zombielogs', zombieLogs.get);
-     app.post('/api/v2/zombielogs', zombieLogs.add);
-     app.post('/api/v2/zombielogs/filter', zombieLogs.getByDate);
-     // app.get('/api/v2/zombielogs/dirtydozen', zombieLogs.getDirtyDozen);
+     var warnings = require('./controller/warnings');
+     app.post('/api/v2/warnings/update', warnings.update);
+     app.post('/api/v2/warnings/add', warnings.add);
+     app.get('/api/v2/warnings/centralpath/:uri*', warnings.getByCentralPath);
+     app.post('/api/v2/warnings/daterange', warnings.getWarningStats);
   };

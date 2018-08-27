@@ -197,5 +197,14 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
             }
             vm.SelectionChanged('main');
         });
+
+        HealthReportFactory.processWarningStats({from: null, to: null, centralPath: data.centralPath}, function (result) {
+            if(result && result.warningStats.length > 0){
+                vm.noData = false;
+                vm.WarningData = result;
+                vm.AllData.splice(0, 0, result);
+            }
+            vm.SelectionChanged('main');
+        });
     };
 }

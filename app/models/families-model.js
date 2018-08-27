@@ -19,6 +19,7 @@ var familiesSchema = new mongoose.Schema({
         voidCount: {type: Number, default: 0},
         nestedFamilyCount: {type: Number, default: 0},
         parametersCount: {type: Number, default: 0},
+        imageCount: {type: Number, default: 0},
         isFailingChecks: Boolean,
         isDeleted: Boolean,
         tasks: [{

@@ -257,7 +257,8 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
                     "Nested Families": item.nestedFamilyCount,
                     "Voids": item.voidCount,
                     "Ref. Planes": item.refPlaneCount,
-                    "Arrays": item.arrayCount
+                    "Arrays": item.arrayCount,
+                    "Images": !item.imageCount ? 0 : item.imageCount
                 })
             });
             createTable();
