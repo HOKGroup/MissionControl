@@ -865,59 +865,106 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
          * @param callback
          */
         processWarningStats: function(data, callback){
-            var uri = UtilityService.getHttpSafeFilePath(data.centralPath);
-            WarningsFactory.getByCentralPath(uri)
-                .then(function (response) {
-                    if(!response || response.status !== 200){
-                        callback(null);
-                        return;
+            if(data.from !== null && data.to !== null){
+                WarningsFactory.getByDateRange(data)
+                    .then(function (response) {
+                        if( !response || !response.data || response.status !== 201){
+                            callback(null);
+                            return;
+                        }
+                        if(response.data.length === 0){
+                            callback({
+                                warningStats: response.data,
+                                centralPath: data.centralPath
+                            });
+                        } else {
+                            callback(process(response.data))
+                        }
+                    })
+            } else {
+                var uri = UtilityService.getHttpSafeFilePath(data.centralPath);
+                WarningsFactory.getByCentralPath(uri)
+                    .then(function (response) {
+                        if(!response || response.status !== 200){
+                            callback(null);
+                            return;
+                        }
+                        if(response.data.length === 0){
+                            callback({
+                                warningStats: response.data,
+                                centralPath: data.centralPath
+                            });
+                        } else {
+                            callback(process(response.data))
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+            }
+
+            /**
+             *
+             * @param data
+             * @returns {{scoreData: {passingChecks: number, count, label: string, newMax: number}, modelScore: number, description: string, name: string, warningStats: *, bullets: [*], show: {name: string, value: boolean}, color: (boolean|Array|string|number|*)}}
+             */
+            function process(data) {
+                var passingChecks = 0;
+
+                var openWarnings = data.filter(function (item) {
+                    return item.isOpen;
+                }).length;
+                var warningsColor = UtilityService.color().red;
+
+                if (openWarnings <= 15){
+                    passingChecks += 2;
+                    warningsColor = UtilityService.color().green;
+                } else if (openWarnings > 15 && openWarnings <= 30){
+                    passingChecks += 1;
+                    warningsColor = UtilityService.color().orange;
+                }
+
+                var warningScoreData = {
+                    passingChecks: passingChecks,
+                    count: openWarnings,
+                    label: "Warnings",
+                    newMax: 2
+                };
+
+                var desc = 'It is a good practice to try and minimize the amount of Warnings present in the model ' +
+                    'Some of these warnings might be more of a nuisance than a really harmful thing, but at the ' +
+                    'end of the day, they are all objects stored in Revit\'s database, and they all add to time it ' +
+                    'takes Revit to Synch, refresh views, print etc. Let\'s make sure that Warnings are kept to minimum.';
+
+                var bullets = [
+                    {
+                        title: 'Warnings',
+                        description: 'This is a total number of Warnings in the model. It\'s a good price to keep that ' +
+                        'number to a minimum. Green means number of warnings is less than 15, orange is 15<x<30 while ' +
+                        'anything above 30 is red.',
+                        bulletText: openWarnings,
+                        bulletColor: warningsColor
                     }
-                    if(response.data.length === 0){
-                        callback({
-                            warningStats: response.data,
-                            centralPath: data.centralPath
-                        });
-                    } else {
-                        var passingChecks = 0;
+                ];
 
-                        var warningScoreData = {
-                            passingChecks: 0,
-                            count: response.data.length,
-                            label: "Warnings",
-                            newMax: 6
-                        };
+                var color  = UtilityService.color().red;
+                if (passingChecks >= 2){
+                    color  = UtilityService.color().green;
+                } else if (passingChecks >= 1){
+                    color  = UtilityService.color().orange;
+                }
 
-                        var desc = 'It is a good practice to try and minimize the amount of Warnings present in the model ' +
-                            'Some of these warnings might be more of a nuisance than a really harmful thing, but at the ' +
-                            'end of the day, they are all objects stored in Revit\'s database, and they all add to time it ' +
-                            'takes Revit to Synch, refresh views, print etc. Let\'s make sure that Warnings are kept to minimum.';
-
-                        var bullets = [
-                            {
-                                title: 'Warnings',
-                                description: 'This is a total number of Warnings in the model.',
-                                bulletText: 'Yes',
-                                bulletColor: UtilityService.color().red
-                            }
-                        ];
-
-                        var color  = UtilityService.color().red;
-
-                        callback({
-                            scoreData: warningScoreData,
-                            modelScore: passingChecks,
-                            description: desc,
-                            name: "Warnings",
-                            warningStats: response.data,
-                            bullets: bullets,
-                            show: {name: "warnings", value: false},
-                            color: color
-                        });
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
+                return {
+                    scoreData: warningScoreData,
+                    modelScore: passingChecks,
+                    description: desc,
+                    name: "Warnings",
+                    warningStats: data,
+                    bullets: bullets,
+                    show: {name: "warnings", value: false},
+                    color: color
+                };
+            }
         },
 
         /**

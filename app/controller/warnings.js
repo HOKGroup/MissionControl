@@ -120,44 +120,22 @@ WarningsService = {
         var from = new Date(req.body.from);
         var to = new Date(req.body.to);
         Warnings
-            .aggregate([
-                { $match: { 'centralPath': req.body.centralPath }},
-                { $project: {
-                    'onOpened': { $filter: {
-                        input: '$onOpened',
-                        as: 'item',
-                        cond: { $and: [
-                            { $gte: ['$$item.createdOn', from]},
-                            { $lte: ['$$item.createdOn', to]}
-                        ]}
-                    }},
-                    'onSynched': { $filter: {
-                        input: '$onSynched',
-                        as: 'item',
-                        cond: { $and: [
-                            { $gte: ['$$item.createdOn', from]},
-                            { $lte: ['$$item.createdOn', to]}
-                        ]}
-                    }},
-                    'itemCount': { $slice: ['$itemCount', -1]},
-                    '_id': 1,
-                    'centralPath': 1
-                }}
-            ])
-            .exec(function (err, response){
-                var result = {
-                    status: 201,
-                    message: response[0]
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response[0]){
-                    result.status = 404;
-                    result.message = err;
+            .find(
+                {'centralPath': req.body.centralPath, 'createdAt': {$gte: from, $lte: to}}, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
                 }
-                res.status(result.status).json(result.message);
-        });
+            )
     }
 };
 

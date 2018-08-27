@@ -39,17 +39,21 @@ function WarningsController($routeParams, HealthReportFactory){
          * @constructor
          */
         vm.OnFilter = function (date) {
+            if(vm.WarningData.warningStats.length === 0) return;
+
             vm.loading = true;
             var data = {
                 from: date.from,
                 to: date.to,
-                centralPath: vm.ViewData.viewStats.centralPath
+                centralPath: vm.WarningData.warningStats[0].centralPath
             };
-            HealthReportFactory.processViewStats(data, function (result) {
+            HealthReportFactory.processWarningStats(data, function (result) {
                 if (!result){
                     console.log("Given date range contains no data.")
                 }
-                vm.ViewData = result;
+                console.log(result);
+                vm.WarningData = result;
+                setChartData();
                 vm.loading = false;
             });
         };

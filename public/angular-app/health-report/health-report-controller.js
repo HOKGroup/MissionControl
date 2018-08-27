@@ -198,7 +198,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
             vm.SelectionChanged('main');
         });
 
-        HealthReportFactory.processWarningStats(data, function (result) {
+        HealthReportFactory.processWarningStats({from: null, to: null, centralPath: data.centralPath}, function (result) {
             if(result && result.warningStats.length > 0){
                 vm.noData = false;
                 vm.WarningData = result;

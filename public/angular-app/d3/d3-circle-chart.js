@@ -42,7 +42,6 @@ angular.module('MissionControlApp').directive('d3Circle', ['d3', function(d3) {
                 // set the height based on the calculations above
                 svg.attr('height', height);
 
-                // var color = d3.scale.linear()
                 var color = d3.scaleLinear()
                     .domain([0, 1, 2, 3, 4, 5, 6, 7])
                     .range(["#d9534f", "#d9534f", "#d9534f", "#f0ad4e", "#f0ad4e", "#5cb85c", "#5cb85c", "#777777"]);

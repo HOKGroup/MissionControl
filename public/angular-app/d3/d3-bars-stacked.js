@@ -38,7 +38,7 @@ angular.module('MissionControlApp').directive('d3BarsStacked', ['d3', function(d
                 svg.selectAll("*").remove();
 
                 // setup variables
-                var margin = {top: 15, right: 20, bottom: 0, left: 40},
+                var margin = {top: 15, right: 20, bottom: 5, left: 40},
                     width = d3.select($ele[0])._groups[0][0].offsetWidth,
                     height = 500;
 
