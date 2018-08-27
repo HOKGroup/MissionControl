@@ -1,14 +1,19 @@
+/**
+ * Created by konrad.sobon on 2018-08-13.
+ */
 angular.module('MissionControlApp').controller('AddinsController', AddinsController);
 
 function AddinsController(AddinsFactory) {
     var vm = this;
-    vm.SelectedYear = '2018';
+
+    //region Properties
+
+    vm.SelectedYear = '2019';
     vm.SelectedPlugin = "";
     vm.UserDetails = [];
     vm.YearsAggregate = [];
     vm.MainChartColor = "steelblue";
     vm.UserChartColor = "#d9534f";
-
     vm.officeFilters = [
         {name: "All", code: "All"},
         {name: "Atlanta", code: ["ATL"]},
@@ -37,53 +42,36 @@ function AddinsController(AddinsFactory) {
         {name: "Washington DC", code: ["WDC"]},
         {name: "Undefined", code: ["EMC", "SDC", "OSS", "LD", "LDC", ""]}
     ];
-
     vm.SelectedOffice = "All";
 
-    getAddinsData();
+    //endregion
 
-    function getAddinsData() {
-        AddinsFactory
-            .getAllLogs()
-            .then(function(response){
-                if(!response) return;
-                if(!response.data[0]) return;
-                vm.AddinLogs = response.data[0].usageLogs;
-
-                vm.ProcessData('2018');
-
-            },function(error){
-                console.log("Error retrieving Usage Logs: ", error)
-            });
-    }
+    // region Methods
 
     vm.ProcessData = function (year){
-        var output = vm.AddinLogs.reduce(function(sums,entry){
-            if(entry.revitVersion === year){
-                sums[entry.pluginName] = (sums[entry.pluginName] || 0) + 1;
-            }
-            return sums;
-        },{});
+        AddinsFactory
+            .getByYear(year).then(function(response){
+                if(!response || response.status !== 200) return;
 
-        var list = getTotals(output);
-        list.sort(function(a,b){
-            return a.count - b.count;
-        }).reverse(); // sorted by count
+                vm.AddinLogs = response.data;
+                var output = vm.AddinLogs.reduce(function(sums,entry){
+                    sums[entry.pluginName] = (sums[entry.pluginName] || 0) + 1;
+                    return sums;
+                },{});
 
-        vm.d3HorizontalData = list;
-        vm.SelectedYear = year;
-        vm.UserDetails = [];
-        vm.SelectedPlugin = "";
+                var list = getTotals(output);
+                list.sort(function(a,b){
+                    return a.count - b.count;
+                }).reverse(); // sorted by count
+
+                vm.d3HorizontalData = list;
+                vm.SelectedYear = year;
+                vm.UserDetails = [];
+                vm.SelectedPlugin = "";
+            }).catch(function (error) {
+                console.log("Error retrieving Usage Logs: ", error)
+            });
     };
-
-    function isOfficeMatch(office, filter){
-        if(filter === "All") return true;
-        if(filter.constructor === Array){
-            return filter.indexOf(office) > -1
-        }else {
-            return office === filter;
-        }
-    }
 
     vm.SetOfficeFilter = function (office) {
         vm.SelectedOffice = office.name;
@@ -189,7 +177,15 @@ function AddinsController(AddinsFactory) {
         vm.SelectedPlugin = item.name;
     };
 
-    // Utility used to convert data totals to proper format
+    //endregion
+
+    //region Utilities
+
+    /**
+     * Utility used to convert data totals to proper format
+     * @param data
+     * @returns {Array}
+     */
     function getTotals(data){
         var list = [];
         for (var k in data){
@@ -199,4 +195,24 @@ function AddinsController(AddinsFactory) {
         }
         return list;
     }
+
+    /**
+     *
+     * @param office
+     * @param filter
+     * @returns {boolean}
+     */
+    function isOfficeMatch(office, filter){
+        if(filter === "All") return true;
+        if(filter.constructor === Array){
+            return filter.indexOf(office) > -1
+        }else {
+            return office === filter;
+        }
+    }
+
+    //endregion
+
+    // (Konrad) Get initial data for current year.
+    vm.ProcessData(vm.SelectedYear);
 }

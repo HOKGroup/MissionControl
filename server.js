@@ -58,26 +58,22 @@ var server = app.listen(
                 + ' listening at port '
                 + server.address().port + ' with '
                 + 'hosted mongo db.');
-
-      global.io = io(server);
-
-      global.io.on('connection', function(client){
-          console.log('Client connected to the socket.');
-
-          // client.once('sheetTask_approved',function(event){
-          //     console.log('Received message from Revit client.',event);
-          // });
-
-          // client.once('disconnect',function(){
-          //     console.log('Revit client disconnected.');
-          // });
-
-      });
+        global.io = io(server);
+        global.io.on('connection', function (socket) {
+            socket.on('room', function (room) {
+                socket.join(room);
+                console.log('Client has joined the room!');
+            });
+            socket.once('disconnect', function (client) {
+                console.log('Client has left the room!');
+            });
+        });
+        global.io.on('disconnect', function (socket) {
+            console.log('Server socket disconnected!');
+        });
 
       global.io.on('error', function (err) {
           console.log(err);
       });
   }
 );
-
-

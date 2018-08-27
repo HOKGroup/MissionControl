@@ -12,7 +12,7 @@ var sheetItemSchema = new mongoose.Schema({
     isPlaceholder: Boolean,
     isDeleted: Boolean,
     collectionId: String, // id of the MongoDB collection for quicker retrieval
-    fileName: String, // file name of the central model for filtering UI
+    centralPath: String,
     isNewSheet: Boolean,
     tasks: [{
         name: String,
@@ -23,7 +23,7 @@ var sheetItemSchema = new mongoose.Schema({
         isPlaceholder: Boolean,
         isDeleted: Boolean,
         collectionId: String, // id of the MongoDB collection for quicker retrieval
-        fileName: String, // file name of the central model for filtering UI
+        centralPath: String,
         isNewSheet: Boolean,
         assignedTo: String,
         message: String,

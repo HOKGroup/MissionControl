@@ -27,7 +27,8 @@ function AllTasksController($uibModalInstance, $uibModal, SheetsFactory, sheet) 
         });
         var data = {
             'sheetId': vm.sheet._id,
-            'deletedIds': selectedIds
+            'deletedIds': selectedIds,
+            'centralPath': vm.sheet.centralPath
         };
         if(selectedIds.length > 0){
             // (Konrad) When user deletes all tasks for new sheet

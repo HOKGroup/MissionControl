@@ -1,0 +1,60 @@
+{
+  "name": "angularjs-toast",
+  "version": "1.0.16",
+  "description": "A Simple toast notification service for AngularJS pages",
+  "scripts": {
+    "build": "grunt build",
+    "start": "grunt serve",
+    "test": "npm run lint",
+    "develop": "grunt develop",
+    "lint": "grunt lint",
+    "postbuild": "sh ./scripts/postbuild.sh",
+    "prebuild": "sh ./scripts/prebuild.sh",
+    "precommit": "npm run test",
+    "prepublishOnly": "node ./scripts/prepublish.js",
+    "prerelease": "npm run build",
+    "release": "sh ./scripts/release.sh"
+  },
+  "keywords": [
+    "angularjs-notify",
+    "notification",
+    "angularjs",
+    "notify",
+    "angularjs-toast",
+    "toast-notification"
+  ],
+  "author": "Sibiraj-S",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sibiraj-S/angularjs-toast.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Sibiraj-S/angularjs-toast/issues"
+  },
+  "homepage": "https://github.com/Sibiraj-S/angularjs-toast#readme",
+  "devDependencies": {
+    "angular": "^1.7.2",
+    "angular-animate": "^1.7.2",
+    "angular-sanitize": "^1.7.2",
+    "chalk": "^2.4.1",
+    "grunt": "^1.0.3",
+    "grunt-coffeelintr": "^1.1.0",
+    "grunt-contrib-coffee": "^2.0.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-connect": "^1.0.2",
+    "grunt-contrib-cssmin": "^2.2.1",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-uglify": "^3.3.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-eslint": "^21.0.0",
+    "grunt-ng-annotate": "^3.0.0",
+    "husky": "^0.14.3",
+    "load-grunt-tasks": "^4.0.0"
+  },
+  "peerDependencies": {
+    "angular": ">=1.6.0",
+    "angular-animate": ">=1.6.0",
+    "angular-sanitize": ">=1.6.0"
+  }
+}

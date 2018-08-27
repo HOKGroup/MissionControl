@@ -146,10 +146,9 @@ FamiliesService = {
                     });
 
                     if(task !== null){
-                        global.io.sockets.emit('familyTask_added', {
+                        global.io.sockets.in(req.body.centralPath).emit('familyTask_added', {
                             'familyName': req.params.name,
-                            'task': task,
-                            'collectionId': req.params.id //used to match Revit models
+                            'task': task
                         });
                     }
 
@@ -196,7 +195,7 @@ FamiliesService = {
         var id = req.params.id;
         var famName = req.params.name;
         var taskIds = [];
-        for(var key in req.body) {
+        for(var key in req.body.ids) {
             if(req.body.hasOwnProperty(key)){
                 taskIds.push(mongoose.Types.ObjectId(req.body[key]));
             }
@@ -216,10 +215,9 @@ FamiliesService = {
                         result.status = 404;
                         result.message = err;
                     }
-                    global.io.sockets.emit('task_deleted', {
-                        'deletedIds': req.body,
-                        'familyName': req.params.name,
-                        'collectionId': req.params.id });
+                    global.io.sockets.in(req.body.centralPath).emit('task_deleted', {
+                        'deletedIds': req.body.ids,
+                        'familyName': req.params.name });
                     res.status(result.status).json(result.message);
                 }
             )
@@ -299,10 +297,9 @@ var updateFamiliesTask = function (req, res, doc) {
                 return task._id.toString() === req.params.taskid.toString();
             });
 
-            global.io.sockets.emit('familyTask_updated', {
+            global.io.sockets.in(req.body.centralPath).emit('familyTask_updated', {
                 'familyName': req.params.name,
-                'task': task,
-                'collectionId': req.params.id // used to match the Revit model
+                'task': task
             });
             res.status(201).json(task);
         }

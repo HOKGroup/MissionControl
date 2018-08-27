@@ -1,0 +1,77 @@
+.toast-alert {
+    @import "_alert";
+}
+
+.angularjs-toast {
+    @extend .toast-alert;
+
+    z-index: 10000;
+    width: 100%;
+    top: 0;
+
+    &.position-fixed {
+        position: fixed;
+    }
+
+    &.position-relative {
+        position: relative;
+    }
+
+    ul {
+        &.toast-container {
+            padding: 0;
+            list-style: none;
+            position: absolute;
+            top: 20px;
+
+            li {
+                transition: 1s ease;
+
+                .alert {
+                    display: inline-block;
+                } // animate while element enters or leaves
+                &.ng-enter {
+                    opacity: 0;
+                    transition: 0.5s ease-in;
+
+                    &.ng-enter-active {
+                        opacity: 1;
+                    }
+                }
+
+                &.ng-leave {
+                    opacity: 1;
+                    transition: 0.2s ease-in;
+
+                    &.ng-leave-active {
+                        opacity: 0;
+                    }
+                }
+            }
+
+            &.right {
+                right: 0;
+                margin-right: 20px;
+
+                li {
+                    text-align: right;
+                }
+            }
+
+            &.center {
+                left: 0;
+                left: 50%;
+                transform: translate(-50%, 0);
+            }
+
+            &.left {
+                left: 0;
+                margin-left: 20px;
+
+                li {
+                    text-align: left;
+                }
+            }
+        }
+    }
+}
