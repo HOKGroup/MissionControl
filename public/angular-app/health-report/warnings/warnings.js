@@ -8,8 +8,30 @@ function WarningsController($routeParams, HealthReportFactory){
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
         vm.WarningData = this.processed;
-        vm.showTimeSettings = true;
+        vm.showTimeSettings = false;
         vm.loading = false;
+        vm.chartsData = [];
+
+        setChartData();
+
+        //region Utilities
+
+        /**
+         *
+         */
+        function setChartData(){
+            var data = vm.WarningData.warningStats.reduce(function (data, item) {
+                var key = item.updatedAt.split('T')[0];
+                var current = (data[key] || (data[key] = {date: key, added: 0, removed: 0}));
+                if(item.isOpen) current['added'] += 1;
+                else current['removed'] -= 1;
+                return data
+            }, {});
+
+            vm.chartsData = Object.values(data).reverse();
+        }
+
+        //endregion
 
         /**
          * Callback method for Date Time Range selection.

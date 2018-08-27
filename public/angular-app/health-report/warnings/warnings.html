@@ -27,36 +27,20 @@
             </div>
         </div>
     </div>
-    <!--<div class="row" ng-if="vm.ViewData.viewStats.viewStats.length >= 2">-->
-        <!--<div class="panel-group" id="p1">-->
-            <!--<div class="panel panel-default">-->
-                <!--<div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p1" data-target="#collapseP1">-->
-                    <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #FD8D3C"></span> Views on Sheet</p>-->
-                    <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #3182BD"></span> Total Views</p>-->
-                    <!--<h4 class="panel-title">Views / Views on Sheet</h4>-->
-                <!--</div>-->
-                <!--<div id="collapseP1" class="panel-collapse collapse in">-->
-                    <!--<div class="panel-body no-padding">-->
-                        <!--<d3-multi-series-line-brushed data="vm.ViewData.viewStats.viewStats" keys="vm.ViewKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--<div class="row" ng-if="vm.ViewData.viewStats.viewStats.length >= 2">-->
-        <!--<div class="panel-group" id="p2">-->
-            <!--<div class="panel panel-default">-->
-                <!--<div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p2" data-target="#collapseP2">-->
-                    <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #FD8D3C"></span> Schedules on Sheet</p>-->
-                    <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #3182BD"></span> Total Schedules</p>-->
-                    <!--<h4 class="panel-title">Schedules / Schedules on Sheet</h4>-->
-                <!--</div>-->
-                <!--<div id="collapseP2" class="panel-collapse collapse in">-->
-                    <!--<div class="panel-body no-padding">-->
-                        <!--<d3-multi-series-line-brushed data="vm.ViewData.viewStats.viewStats" keys="vm.ScheduleKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
+    <div class="row">
+        <div class="panel-group" id="p2">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #5cb85c"></span> Removed</p>
+                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #d9534f"></span> Added</p>
+                    <h4 class="panel-title">Warnings</h4>
+                </div>
+                <div class="panel-collapse" style="min-height: 500px">
+                    <div class="panel-body no-padding">
+                        <d3-bars-stacked data="vm.chartsData"></d3-bars-stacked>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
