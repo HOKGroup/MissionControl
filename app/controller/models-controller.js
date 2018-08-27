@@ -6,13 +6,14 @@ var Models = mongoose.model('Models');
 
 ModelsService = {
     /**
-     * Createa a new Views Document.
+     * Create a new Views Document.
      * @param req
      * @param res
      */
     add: function(req, res){
         Models
             .create(req.body, function (err, response){
+                console.log(response);
                 var result = {
                     status: 201,
                     message: response

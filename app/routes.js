@@ -10,6 +10,7 @@ var links = require('./models/links-model');
 var models = require('./models/models-model');
 var views = require('./models/views-model');
 var groups = require('./models/groups-model');
+var warnings = require('./models/warnings');
 var zombieLogs = require('./models/zombie-logs-model');
 
  module.exports = function(app) {
@@ -59,6 +60,9 @@ var zombieLogs = require('./models/zombie-logs-model');
      app.get('/api/v2/addins', addins.findAll);
      app.post('/api/v2/addins', addins.add);
      app.post('/api/v2/addins/:id/addlog', addins.addLog);
+
+     var zombieLogs = require('./controller/zombie-logs-controller');
+     app.post('/api/v2/zombielogs', zombieLogs.add);
 
      var families = require('./controller/families-controller');
      app.get('/api/v2/families/centralpath/:uri*', families.findByCentralPath);
@@ -124,6 +128,9 @@ var zombieLogs = require('./models/zombie-logs-model');
      app.put('/api/v2/groups/:id/updatefilepath', groups.updateFilePath);
      app.post('/api/v2/groups/groupstats', groups.getGroupStats);
 
-     var zombieLogs = require('./controller/zombie-logs-controller');
-     app.post('/api/v2/zombielogs', zombieLogs.add);
+     var warnings = require('./controller/warnings');
+     app.post('/api/v2/warnings/update', warnings.update);
+     app.post('/api/v2/warnings/add', warnings.add);
+     app.get('/api/v2/warnings/centralpath/:uri*', warnings.getByCentralPath);
+     app.post('/api/v2/warnings/daterange', warnings.getWarningStats);
   };
