@@ -94,7 +94,6 @@ WarningsService = {
         Warnings
             .find({'centralPath': rgx})
             .sort({'_id': -1})
-            .limit(200)
             .exec(function (err, response) {
                 var result = {
                     status: 200,
