@@ -9,6 +9,10 @@ function WarningsFactory($http){
             return $http.get('/api/v2/warnings/centralpath/' + centralPath).then(complete).catch(failed);
         },
 
+        getByCentralPathOpen: function (centralPath) {
+            return $http.get('/api/v2/warnings/centralpath/' + centralPath + '/open').then(complete).catch(failed);
+        },
+
         getByDateRange: function (data) {
             return $http.post('/api/v2/warnings/daterange', data).then(complete).catch(failed);
         }

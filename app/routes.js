@@ -133,5 +133,6 @@ var zombieLogs = require('./models/zombie-logs-model');
      app.post('/api/v2/warnings/update', warnings.update);
      app.post('/api/v2/warnings/add', warnings.add);
      app.get('/api/v2/warnings/centralpath/:uri*', warnings.getByCentralPath);
+     app.get('/api/v2/warnings/centralpath/:uri*/open', warnings.getOpen);
      app.post('/api/v2/warnings/daterange', warnings.getWarningStats);
   };

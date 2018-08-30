@@ -6,8 +6,6 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
         vm.projectId = $routeParams.projectId;
         vm.FamilyData = this.processed;
 
-        console.log(vm.FamilyData);
-
         processData();
 
         /**

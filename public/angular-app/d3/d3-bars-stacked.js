@@ -38,7 +38,7 @@ angular.module('MissionControlApp').directive('d3BarsStacked', ['d3', function(d
                 svg.selectAll("*").remove();
 
                 // setup variables
-                var margin = {top: 15, right: 20, bottom: 5, left: 40},
+                var margin = {top: 30, right: 40, bottom: 5, left: 60},
                     width = d3.select($ele[0])._groups[0][0].offsetWidth,
                     height = 500;
 
@@ -61,6 +61,13 @@ angular.module('MissionControlApp').directive('d3BarsStacked', ['d3', function(d
 
                 var z = d3.scaleOrdinal(d3.schemeCategory10);
 
+                var ticksNum = 10;
+                var yAxisTicks = [];
+                var yDomain = [d3.min(series, stackMin), d3.max(series, stackMax)];
+                for (var i = 0; i < ticksNum; i++ ){
+                    yAxisTicks.push((yDomain[1] - yDomain[0]) / (ticksNum - 1)* i + yDomain[0]);
+                }
+
                 svg.append("g")
                     .selectAll("g")
                     .data(series)
@@ -82,7 +89,7 @@ angular.module('MissionControlApp').directive('d3BarsStacked', ['d3', function(d
                 svg.append("g")
                     .attr("class", "y axis")
                     .attr("transform", "translate(" + margin.left + ",0)")
-                    .call(d3.axisLeft(y));
+                    .call(d3.axisLeft(y).tickValues(yAxisTicks));
 
                 function stackMin(series) {
                     return d3.min(series, function(d) { return d[0]; });

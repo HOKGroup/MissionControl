@@ -79,6 +79,35 @@ WarningsService = {
             });
     },
 
+    getOpen: function(req, res) {
+        // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
+        // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.
+        var isRevitServer = req.params.uri.match(/rsn:/i);
+        var isBim360 = req.params.uri.match(/bim 360:/i);
+        var rgx;
+        if(isRevitServer || isBim360){
+            rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
+        } else {
+            rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
+        }
+
+        Warnings
+            .find({$and: [{'centralPath': rgx}, {'isOpen': true}]}, function (err, response) {
+                var result = {
+                    status: 200,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            })
+    },
+
     getByCentralPath: function (req, res) {
         // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
         // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.
@@ -94,7 +123,6 @@ WarningsService = {
         Warnings
             .find({'centralPath': rgx})
             .sort({'_id': -1})
-            .limit(200)
             .exec(function (err, response) {
                 var result = {
                     status: 200,
