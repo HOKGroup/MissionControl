@@ -27,17 +27,53 @@
             </div>
         </div>
     </div>
+    <!--<div class="row">-->
+        <!--<div class="panel-group" id="p2">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading">-->
+                    <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #5cb85c"></span> Removed</p>-->
+                    <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #d9534f"></span> Added</p>-->
+                    <!--<h4 class="panel-title">Warnings</h4>-->
+                <!--</div>-->
+                <!--<div class="panel-collapse" style="min-height: 500px">-->
+                    <!--<div class="panel-body no-padding">-->
+                        <!--<d3-bars-stacked data="vm.chartsData"></d3-bars-stacked>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
     <div class="row">
         <div class="panel-group" id="p2">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #5cb85c"></span> Removed</p>
                     <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #d9534f"></span> Added</p>
-                    <h4 class="panel-title">Warnings</h4>
+                    <h4 class="panel-title">Warnings History</h4>
                 </div>
                 <div class="panel-collapse" style="min-height: 500px">
                     <div class="panel-body no-padding">
-                        <d3-bars-stacked data="vm.chartsData"></d3-bars-stacked>
+                        <d3-area data="vm.chartsData"></d3-area>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-if="vm.WarningData.show.value">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Warnings</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <table id="warningsTable"
+                               datatable=""
+                               dt-options="vm.dtOptions"
+                               dt-columns="vm.dtColumns"
+                               dt-instance="vm.dtInstance"
+                               class="table table-hover table-condensed datatable">
+                        </table>
                     </div>
                 </div>
             </div>
