@@ -20,20 +20,10 @@ function WarningsController($routeParams, WarningsFactory, HealthReportFactory, 
          * By watching this variable we can detect when user selected to see this page.
          */
         $scope.$watch('vm.WarningData.show.value', function (newValue) {
-            // if(newValue) reloadTable();
             createTable();
         });
 
-        // /**
-        //  * Method to recalculate data table contents and reload it.
-        //  */
-        // function reloadTable() {
-        //     if(vm.dtInstance) {vm.dtInstance.reloadData(true);}
-        //     if(vm.dtInstance) {vm.dtInstance.rerender();}
-        // }
-
         function createTable() {
-            // set table options for zombielogs
             vm.dtInstance = {};
             vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
                 return new Promise(function(resolve, reject){
@@ -116,12 +106,11 @@ function WarningsController($routeParams, WarningsFactory, HealthReportFactory, 
                 centralPath: vm.WarningData.warningStats[0].centralPath
             };
             HealthReportFactory.processWarningStats(data, function (result) {
-                if (!result){
-                    console.log("Given date range contains no data.")
-                }
+                if (!result) console.log("Given date range contains no data.");
+
+                vm.loading = false;
                 vm.WarningData = result;
                 setChartData();
-                vm.loading = false;
             });
         };
 
