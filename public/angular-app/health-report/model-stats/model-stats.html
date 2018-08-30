@@ -14,7 +14,7 @@
                     </h4>
                 </div>
                 <div class="panel-collapse">
-                    <div class="panel-body">
+                    <div class="panel-body" id="firstChart">
                         <health-report-summary data="vm.ModelData.scoreData"
                                                description="vm.ModelData.description"
                                                bullets="vm.ModelData.bullets"
@@ -138,7 +138,10 @@
                 </div>
                 <div id="collapseP3" class="panel-collapse collapse in">
                     <div class="panel-body no-padding">
-                        <d3-zoomable-line data="vm.ModelSizes" format-value="vm.formatValue(item)"></d3-zoomable-line>
+                        <d3-zoomable-line
+                                data="vm.ModelSizes"
+                                format-value="vm.formatValue(item)">
+                        </d3-zoomable-line>
                     </div>
                 </div>
             </div>

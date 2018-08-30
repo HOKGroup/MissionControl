@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('ModelStatsController', ModelStatsController);
 
-function ModelStatsController($routeParams, UtilityService, DTColumnBuilder, DTOptionsBuilder, $scope, $uibModal, HealthReportFactory){
+function ModelStatsController($timeout, $routeParams, UtilityService, DTColumnBuilder, DTOptionsBuilder, $scope, $uibModal, HealthReportFactory){
     var vm = this;
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
@@ -16,6 +16,7 @@ function ModelStatsController($routeParams, UtilityService, DTColumnBuilder, DTO
         vm.tableData = [];
 
         setDefaults();
+        createTable();
 
         /**
          * Since all health report components are initiated when data is finished loading
@@ -24,7 +25,9 @@ function ModelStatsController($routeParams, UtilityService, DTColumnBuilder, DTO
          * By watching this variable we can detect when user selected to see this page.
          */
         $scope.$watch('vm.ModelData.show.value', function (newValue) {
-            if(newValue) reloadTable();
+            if (newValue === true){
+                reloadTable();
+            }
         });
 
         /**
@@ -122,48 +125,49 @@ function ModelStatsController($routeParams, UtilityService, DTColumnBuilder, DTO
 
         //region DataTable
 
-        // set table options for dimension types
-        vm.dtInstance = {};
-        vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
-            return getData()
-        }).withPaginationType('simple_numbers')
-            .withDisplayLength(10)
-            .withOption('order', [0, 'asc'])
-            .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
-            .withOption('rowCallback', function (row, data, index) {
-                if (evaluateEventTime(data)){
-                    row.className = row.className + ' bg-danger'
-                } else {
-                    row.className = row.className + ' table-info'
-                }
-            });
+        function createTable() {
+            vm.dtInstance = {};
+            vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
+                return getData()
+            }).withPaginationType('simple_numbers')
+                .withDisplayLength(10)
+                .withOption('order', [0, 'asc'])
+                .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
+                .withOption('rowCallback', function (row, data, index) {
+                    if (evaluateEventTime(data)){
+                        row.className = row.className + ' bg-danger'
+                    } else {
+                        row.className = row.className + ' table-info'
+                    }
+                });
 
-        vm.dtColumns = [
-            DTColumnBuilder.newColumn('createdOn')
-                .withTitle('Date/Time')
-                .withOption('width', '15%')
-                .renderWith(parseDateTime),
-            DTColumnBuilder.newColumn('user')
-                .withTitle('User')
-                .withOption('width', '50%'),
-            DTColumnBuilder.newColumn('value')
-                .withTitle('Duration')
-                .withOption('className', 'text-center')
-                .withOption('width', '15%')
-                .withOption('orderData', 3)
-                .renderWith(durationFromValue),
-            DTColumnBuilder.newColumn('value')
-                .withTitle('Hidden')
-                .notVisible(),
-            DTColumnBuilder.newColumn('worksets')
-                .withTitle('Size')
-                .withOption('className', 'text-center')
-                .withOption('orderData', 5)
-                .withOption('width', '10%'),
-            DTColumnBuilder.newColumn('worksetPercentage')
-                .withTitle('Hidden')
-                .notVisible()
-        ];
+            vm.dtColumns = [
+                DTColumnBuilder.newColumn('createdOn')
+                    .withTitle('Date/Time')
+                    .withOption('width', '15%')
+                    .renderWith(parseDateTime),
+                DTColumnBuilder.newColumn('user')
+                    .withTitle('User')
+                    .withOption('width', '50%'),
+                DTColumnBuilder.newColumn('value')
+                    .withTitle('Duration')
+                    .withOption('className', 'text-center')
+                    .withOption('width', '15%')
+                    .withOption('orderData', 3)
+                    .renderWith(durationFromValue),
+                DTColumnBuilder.newColumn('value')
+                    .withTitle('Hidden')
+                    .notVisible(),
+                DTColumnBuilder.newColumn('worksets')
+                    .withTitle('Size')
+                    .withOption('className', 'text-center')
+                    .withOption('orderData', 5)
+                    .withOption('width', '10%'),
+                DTColumnBuilder.newColumn('worksetPercentage')
+                    .withTitle('Hidden')
+                    .notVisible()
+            ];
+        }
 
         /**
          * Retrieves data. We need a function that returns a promise here so that we can
