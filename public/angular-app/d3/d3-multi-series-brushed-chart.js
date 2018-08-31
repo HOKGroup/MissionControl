@@ -110,8 +110,10 @@ angular.module('MissionControlApp').directive('d3MultiSeriesLineBrushed', ['d3',
                     .x(function(d) {return x2(d.date); })
                     .y(function(d) {return y2(d.value); });
 
+                var id = guid();
+
                 svg.append("defs").append("clipPath")
-                    .attr("id", "clip")
+                    .attr("id", id)
                     .append("rect")
                     .attr("width", width)
                     .attr("height", height);
@@ -137,7 +139,7 @@ angular.module('MissionControlApp').directive('d3MultiSeriesLineBrushed', ['d3',
                     .attr("class","line")
                     .attr("d", function(d) { return line(d.values); })
                     .style("stroke", function(d) {return color(d.name);})
-                    .attr("clip-path", "url(#clip)")
+                    .attr("clip-path", "url(#" + id + ")")
                     .style("opacity", 0)
                     .transition()
                     .duration(1500)
@@ -313,6 +315,19 @@ angular.module('MissionControlApp').directive('d3MultiSeriesLineBrushed', ['d3',
                     focus.selectAll(".line").attr("d", function(d) { return line(d.values); });
                     focus.select(".x.axis").call(xAxis);
                     context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+                }
+
+                /**
+                 * Generates a unique Id for each chart brush rectangle.
+                 * @returns {string}
+                 */
+                function guid() {
+                    function s4() {
+                        return Math.floor((1 + Math.random()) * 0x10000)
+                            .toString(16)
+                            .substring(1);
+                    }
+                    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
                 }
             };
         }
