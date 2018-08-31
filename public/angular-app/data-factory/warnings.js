@@ -15,6 +15,10 @@ function WarningsFactory($http){
 
         getByDateRange: function (data) {
             return $http.post('/api/v2/warnings/daterange', data).then(complete).catch(failed);
+        },
+
+        updateFilePath: function (data) {
+            return $http.put('/api/v2/warnings/updatefilepath', data).then(complete).catch(failed);
         }
     };
 

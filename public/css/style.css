@@ -148,6 +148,19 @@ p.normal {
   transform: translate(-50%, 0);
 }
 
+.scrollable-menu-centered2{
+  height: auto;
+  max-height: 195px;
+  overflow-x: hidden;
+  width:100%;
+  left: 50%;
+  right: auto;
+  padding-right: 20px;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 /*Dropdown menu for Health Report - centered*/
 .dropdown-menu-centered{
   width:100%;

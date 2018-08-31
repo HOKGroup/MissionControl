@@ -3,8 +3,13 @@
  */
 angular.module('MissionControlApp').controller('ConfigController', ConfigController);
 
-function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRecordsFactory, DTColumnDefBuilder, UtilityService, $window, $uibModal){
+function ConfigController($routeParams, FilePathsFactory, ConfigFactory, ProjectFactory, TriggerRecordsFactory,
+                          DTColumnDefBuilder, UtilityService, $window, $uibModal, ngToast){
+
+    //region Init
+
     var vm = this;
+    var toasts = [];
     vm.status = '';
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = {};
@@ -14,8 +19,12 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
     vm.selectedRecords = [];
     vm.newFile = '';
     vm.fileWarningMsg = '';
+    vm.files = [];
 
     getSelectedProjectConfiguration(vm.projectId);
+    getFiles();
+
+    //endregion
 
     //region Family Name Overrides
 
@@ -69,6 +78,7 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
     vm.RemoveTag = function (arr, index) {
         arr.splice(index, 1);
     };
+
     //endregion
 
     //region Date Filtering
@@ -112,7 +122,7 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
 
         TriggerRecordsFactory.getManyByCentralPathDates(data)
             .then(function (response) {
-                if(!response || response.status !== 200) return;
+                if(!response || response.status !== 200) throw response;
 
                 vm.triggerRecords = response.data;
                 var triggerRecords = [];
@@ -129,6 +139,13 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
             .catch(function (err) {
                 vm.loading = false;
                 console.log(err);
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
             });
     };
 
@@ -186,11 +203,28 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
             if(!request) return;
 
             var data = request.response;
+
+            // (Konrad) Update config file path.
             vm.selectedConfig.files.forEach(function(item){
                 if(item.centralPath.toLowerCase() === data.before.toLowerCase()){
-                    item.centralPath = data.after;
+                    item.centralPath = data.after.toLowerCase();
                 }
-            })
+            });
+
+            // (Konrad) Update file path for dropdown.
+            vm.files.forEach(function (item) {
+                if(item.centralPath.toLowerCase() === data.before.toLowerCase()){
+                    item.centralPath = data.after.toLowerCase();
+                }
+            });
+
+            toasts.push(ngToast.success({
+                dismissButton: true,
+                dismissOnTimeout: true,
+                timeout: 4000,
+                newestOnTop: true,
+                content: 'Successfully changed file path.'
+            }));
         }).catch(function(){
             //if modal dismissed
         });
@@ -230,7 +264,7 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
         var uri = UtilityService.getHttpSafeFilePath(filePath);
         ConfigFactory.getByCentralPath(uri)
             .then(function(response){
-                if(!response || response.status !== 200) return;
+                if(!response || response.status !== 200) throw response;
 
                 var configFound = response.data;
                 var configNames = '';
@@ -260,13 +294,39 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
                 }
             })
             .then(function (response) {
-                if(!response || response.status !== 202) return;
+                if(!response || response.status !== 202) throw response;
 
-                vm.status = 'Successfully added new file to Configuration.';
+                var data = {
+                    centralPath: filePath,
+                    projectId: vm.projectId
+                };
+                return FilePathsFactory.addToProject(data);
+            })
+            .then(function (response) {
+                if(!response || response.status !== 201) throw response;
+
+                // (Konrad) Now that file path was used, let's remove it from dropdown.
+                vm.files = vm.files.filter(function (path) {
+                    return path.centralPath !== filePath;
+                });
+
+                toasts.push(ngToast.success({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: 'Successfully added new file to Configuration.'
+                }));
             })
             .catch(function (err) {
-                console.log(err.message);
-                vm.status = 'Unable to get configuration data: ' + err.message;
+                console.log(err);
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
             });
     };
 
@@ -282,13 +342,41 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
 
                 ConfigFactory.deleteFile(vm.selectedConfig._id, file)
                     .then(function (response) {
-                        if(!response || response.status !== 202) return;
+                        if(!response || response.status !== 202) throw response;
 
-                        console.log(response);
+                        var data = {
+                            centralPath: filePath.toLowerCase()
+                        };
+                        return FilePathsFactory.removeFromProject(data);
+                    })
+                    .then(function (response) {
+                        if(!response || response.status !== 201) throw response;
+
+                        vm.files.push({
+                            centralPath: filePath.toLowerCase(),
+                            name: UtilityService.fileNameFromPath(filePath.toLowerCase())
+                        });
+
+                        toasts.push(ngToast.success({
+                            dismissButton: true,
+                            dismissOnTimeout: true,
+                            timeout: 4000,
+                            newestOnTop: true,
+                            content: 'Successfully removed file from Configuration.'
+                        }));
                     })
                     .catch(function (err) {
-                        console.log(err.message);
+                        console.log(err);
+                        toasts.push(ngToast.danger({
+                            dismissButton: true,
+                            dismissOnTimeout: true,
+                            timeout: 4000,
+                            newestOnTop: true,
+                            content: err.message
+                        }));
                     });
+
+                // (Konrad) It worked! Jump out...
                 break;
             }
         }
@@ -303,11 +391,24 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
                 if (response && response.status === 201){
                     $window.location.reload();
                 } else {
-                    vm.status = 'Configuration update failed.';
+                    toasts.push(ngToast.danger({
+                        dismissButton: true,
+                        dismissOnTimeout: true,
+                        timeout: 4000,
+                        newestOnTop: true,
+                        content: 'Configuration update failed.'
+                    }));
                 }
             })
-            .catch(function (error) {
-                vm.status = 'Configuration update failed: ' + error.message;
+            .catch(function (err) {
+                console.log(err);
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
             });
     };
 
@@ -321,26 +422,36 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
             return record._id;
         });
 
-        ConfigFactory.deleteConfiguration(id)
+        ConfigFactory.deleteConfiguration(id) // Configuration
             .then(function(response) {
-                if(!response || response.status !== 204) return;
-                return ProjectFactory.deleteConfig(vm.projectId, id);
+                if(!response || response.status !== 204) throw response;
+                return ProjectFactory.deleteConfig(vm.projectId, id); // Project.Configurations
             })
             .then(function (response) {
-                if(!response || response.status !== 201) return;
-                return TriggerRecordsFactory.deleteMany(ids);
+                if(!response || response.status !== 201) throw response;
+                return FilePathsFactory.removeManyFromProject(vm.selectedConfig.files); // File Paths
             })
             .then(function (response) {
-                if(!response || response.status !== 201) return;
-                return ProjectFactory.deleteTriggerRecords(vm.projectId, ids);
+                if(!response || response.status !== 201) throw response;
+                return TriggerRecordsFactory.deleteMany(ids); // Trigger Records
             })
             .then(function (response) {
-                if(!response || response.status !== 201) return;
+                if(!response || response.status !== 201) throw response;
+                return ProjectFactory.deleteTriggerRecords(vm.projectId, ids); // Project.TriggerRecords
+            })
+            .then(function (response) {
+                if(!response || response.status !== 201) throw response;
                 $window.location.reload();
             })
             .catch(function (err) {
-                console.log(err.message);
-                vm.status = 'Unable to delete Configuration:' + err.message;
+                console.log(err);
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: 'Unable to delete Configuration.'
+                }));
             });
     };
 
@@ -365,13 +476,39 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
     //region Utilities
 
     /**
+     * Retrieves all central model file paths that were not yet assigned
+     * to any configurations.
+     */
+    function getFiles(){
+        FilePathsFactory.getAll()
+            .then(function (response) {
+                if(!response || response.status !== 200) throw response;
+
+                response.data.forEach(function (file) {
+                    file['name'] = UtilityService.fileNameFromPath(file.centralPath)
+                });
+                vm.files = response.data;
+            })
+            .catch(function (err) {
+                console.log(err);
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
+            })
+    }
+
+    /**
      * Retrieves Project Configuration.
      * @param projectId
      */
     function getSelectedProjectConfiguration(projectId) {
         ProjectFactory.getProjectByIdPopulateConfigurations(projectId)
             .then(function(response){
-                if(!response || response.status !== 200) return;
+                if(!response || response.status !== 200) throw response;
 
                 SetFilter();
 
@@ -385,8 +522,14 @@ function ConfigController($routeParams, ConfigFactory, ProjectFactory, TriggerRe
                 }
             })
             .catch(function (err) {
-                console.log(err.message);
-                vm.status = 'Unable to load Configuration data: ' + err.message;
+                console.log(err);
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
             });
     }
 
