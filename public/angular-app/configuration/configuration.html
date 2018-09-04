@@ -52,8 +52,8 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="file in vm.selectedConfig.files">
-                                <td>{{ file.centralPath | uppercase }}</td>
-                                <td class="text-right">
+                                <td style="vertical-align: middle">{{ file.centralPath | uppercase }}</td>
+                                <td style="vertical-align: middle" class="text-right">
                                     <button type="button" class="btn btn-default" ng-click="vm.editPath(file.centralPath, 'lg')">
                                         <span class="glyphicon glyphicon-pencil" style="margin-right: 0"></span>
                                     </button>
