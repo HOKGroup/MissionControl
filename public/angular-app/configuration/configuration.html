@@ -52,8 +52,8 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="file in vm.selectedConfig.files">
-                                <td>{{ file.centralPath | uppercase }}</td>
-                                <td class="text-right">
+                                <td style="vertical-align: middle">{{ file.centralPath | uppercase }}</td>
+                                <td style="vertical-align: middle" class="text-right">
                                     <button type="button" class="btn btn-default" ng-click="vm.editPath(file.centralPath, 'lg')">
                                         <span class="glyphicon glyphicon-pencil" style="margin-right: 0"></span>
                                     </button>
@@ -79,13 +79,46 @@
                                 <td class="col-md-7" style="padding-right: 0">
                                     <input type="text" class="form-control" id="formNewFile" placeholder="Enter a central file path for Revit project. (.rvt)" ng-model="vm.newFile">
                                     <p class="text-warning">{{ vm.fileWarningMsg }}</p>
+
+                                    <!--Filters-->
+                                    <div>
+                                        <b>Filters:</b>
+                                        <div class="btn-group" style="padding-bottom: 10px; padding-left: 10px">
+                                            <button class="btn btn-primary btn-sm dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                                {{vm.selectedOffice.name}}
+                                            </button>
+                                            <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0">
+                                                <li ng-repeat="office in vm.offices" style="padding-right: 5px; padding-left: 5px">
+                                                    <a href="" ng-click="vm.selectedOffice = office" style="padding-left: 0; padding-right: 0">
+                                                        {{office.name}}
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="btn-group" style="padding-bottom: 10px; padding-left: 10px">
+                                            <button class="btn btn-primary btn-sm dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                                {{vm.selectedType}}
+                                            </button>
+                                            <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0">
+                                                <li ng-repeat="type in vm.fileTypes" style="padding-right: 5px; padding-left: 5px">
+                                                    <a href="" ng-click="vm.selectedType = type" style="padding-left: 0; padding-right: 0">
+                                                        {{type}}
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <!--File selection-->
                                     <div class="btn-group" style="width: 100%;">
                                         <button class="btn btn-default dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
                                             <span class="caret"></span>
-                                            Files
+                                            Files ({{filtered.length}})
                                         </button>
                                         <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0">
-                                            <li ng-repeat="file in vm.files" style="padding-right: 5px; padding-left: 5px">
+                                            <li ng-repeat="file in vm.files | filter: vm.filterFn as filtered" style="padding-right: 5px; padding-left: 5px">
                                                 <a href="" ng-click="vm.newFile = file.centralPath" style="padding-left: 0; padding-right: 0">
                                                     {{file.name | uppercase}}
                                                 </a>

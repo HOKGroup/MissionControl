@@ -20,6 +20,37 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     vm.newFile = '';
     vm.fileWarningMsg = '';
     vm.files = [];
+    vm.offices = [
+        {name: "All", code: "All"},
+        {name: "Atlanta", code: ["ATL"]},
+        {name: "Beijing", code: ["BEI"]},
+        {name: "St. Louis", code: ["BJC"]},
+        {name: "Calgary", code: ["CAL"]},
+        {name: "Chicago", code: ["CHI"]},
+        {name: "Columbus", code: ["COL"]},
+        {name: "Dallas", code: ["DAL"]},
+        {name: "Doha", code: ["DOH"]},
+        {name: "Dubai", code: ["DUB"]},
+        {name: "Hong Kong", code: ["HK"]},
+        {name: "Houston", code: ["HOU"]},
+        {name: "Kansas City", code: ["KC"]},
+        {name: "Los Angeles", code: ["LA"]},
+        {name: "London", code: ["LON"]},
+        {name: "New York", code: ["NY"]},
+        {name: "Ottawa", code: ["OTT"]},
+        {name: "Philadephia", code: ["PHI"]},
+        {name: "Seattle", code: ["SEA"]},
+        {name: "San Francisco", code: ["SF"]},
+        {name: "Shanghai", code: ["SH"]},
+        {name: "St. Louis", code: ["STL"]},
+        {name: "Toronto", code: ["TOR"]},
+        {name: "Tampa", code: ["TPA"]},
+        {name: "Washington DC", code: ["WDC"]},
+        {name: "Undefined", code: ["EMC", "SDC", "OSS", "LD", "LDC", ""]}
+    ];
+    vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'BIM 360'];
+    vm.selectedOffice = { name: "All", code: "All" };
+    vm.selectedType = 'All';
 
     getSelectedProjectConfiguration(vm.projectId);
     getFiles();
@@ -77,6 +108,73 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
      */
     vm.RemoveTag = function (arr, index) {
         arr.splice(index, 1);
+    };
+
+    /**
+     * Method used by the files dropdown to filter out results.
+     * @param item
+     * @returns {boolean}
+     */
+    vm.filterFn = function(item)
+    {
+        var filePath = item.centralPath.toLowerCase();
+        var passedOffice = false;
+        var passedType = false;
+
+        if(vm.selectedOffice.name === 'All'){
+            passedOffice = true;
+        } else {
+            var isLocal = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
+            var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
+            var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
+
+            if(isLocal){
+                var regx = /^\\\\group\\hok\\(.+?(?=\\))|^\\\\(.{2,3})-\d{2}svr(\.group\.hok\.com)?\\/g;
+                var match = regx.exec(filePath);
+                if(match === null || match[1] === null){
+                    passedOffice = false;
+                } else {
+                    passedOffice = (vm.selectedOffice.code.findIndex(function (item) {
+                        return item.toLowerCase() === match[1]
+                    }) !== -1);
+                }
+            }
+
+            if(isRevitServer){
+                var regx1 = /(rsn:\/\/)(\w*)/g;
+                var match1 = regx1.exec(filePath);
+                if(match1 === null || match1[2] === null){
+                    passedOffice = false;
+                } else {
+                    passedOffice = (vm.selectedOffice.code.findIndex(function (item) {
+                        return item.toLowerCase() === match1[2]
+                    }) !== -1);
+                }
+            }
+
+            // (Konrad) BIM 360 files are not being stored with proper office designations
+            // so we can just ignore them when filtering for office.
+            if(isBim360){
+                passedOffice = true;
+            }
+        }
+
+        switch(vm.selectedType){
+            case 'All':
+                passedType = true;
+                break;
+            case 'Local':
+                passedType = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
+                break;
+            case 'Revit Server':
+                passedType = filePath.lastIndexOf('rsn://', 0) === 0;
+                break;
+            case 'BIM 360':
+                passedType = filePath.lastIndexOf('bim 360://', 0) === 0;
+                break;
+        }
+
+        return passedType && passedOffice;
     };
 
     //endregion
