@@ -64,7 +64,7 @@
                             </tr>
                             </tbody>
                         </table>
-                        <table class="table table-hover">
+                        <table class="table">
                             <thead></thead>
                             <tbody>
                             <tr>
@@ -76,9 +76,22 @@
                                         <i class="fa fa-info-circle text-primary" ng-click="vm.launchHelpWindow('lg')"></i>
                                     </a>
                                 </td>
-                                <td class="col-md-7">
+                                <td class="col-md-7" style="padding-right: 0">
                                     <input type="text" class="form-control" id="formNewFile" placeholder="Enter a central file path for Revit project. (.rvt)" ng-model="vm.newFile">
                                     <p class="text-warning">{{ vm.fileWarningMsg }}</p>
+                                    <div class="btn-group" style="width: 100%;">
+                                        <button class="btn btn-default dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                            Files
+                                        </button>
+                                        <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0">
+                                            <li ng-repeat="file in vm.files" style="padding-right: 5px; padding-left: 5px">
+                                                <a href="" ng-click="vm.newFile = file.centralPath" style="padding-left: 0; padding-right: 0">
+                                                    {{file.name | uppercase}}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </td>
                                 <td class="col-md-2 text-right">
                                     <button type="button" class="btn btn-default" ng-click="vm.addFile()">

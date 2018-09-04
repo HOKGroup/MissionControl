@@ -164,6 +164,35 @@ WarningsService = {
                     res.status(result.status).json(result.message);
                 }
             )
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    updateFilePath: function (req, res) {
+        var before = req.body.before.replace(/\\/g, "\\").toLowerCase();
+        var after = req.body.after.replace(/\\/g, "\\").toLowerCase();
+        Warnings
+            .update(
+                { 'centralPath': before },
+                { $set: { 'centralPath': after }},
+                { multi: true }, function (err, response){
+                    var result = {
+                        status: 201,
+                        message: response
+                    };
+                    if (err){
+                        result.status = 500;
+                        result.message = err;
+                    } else if (!response){
+                        result.status = 404;
+                        result.message = err;
+                    }
+                    res.status(result.status).json(result.message);
+                }
+            )
     }
 };
 

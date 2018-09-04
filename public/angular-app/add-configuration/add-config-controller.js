@@ -3,8 +3,13 @@
  */
 angular.module('MissionControlApp').controller('AddConfigController', AddConfigController);
 
-function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $window, $uibModal){
+function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePathsFactory, UtilityService, $window,
+                             $uibModal, ngToast){
+
+    //region Init
+
     var vm = this;
+    var toasts = [];
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = {};
     vm.newConfig = {};
@@ -12,9 +17,13 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $windo
     vm.fileWarningMsg = '';
     vm.HasFiles = false;
     vm.status = " ";
+    vm.files = [];
 
     getSelectedProject(vm.projectId);
     setDefaultConfig();
+    getFiles();
+
+    //endregion
 
     /**
      * Adds new file to the Configuration, but first it verifies that it doesn't
@@ -56,7 +65,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $windo
         var centralPath = filePath.replace(/\\/g, '|');
         ConfigFactory.getByCentralPath(centralPath)
             .then(function(response){
-                if(!response || response.status !== 200) return;
+                if(!response || response.status !== 200) throw response;
 
                 var configFound = response.data;
                 var configNames = '';
@@ -77,14 +86,27 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $windo
                 }
                 if(configMatched) {
                     vm.fileWarningMsg = 'Warning! File already exists in other configurations.\n' + configNames;
-                } else{
+                } else {
                     var file1 = { centralPath: filePath };
                     vm.newConfig.files.push(file1);
                     vm.HasFiles = true;
                     vm.newFile = '';
+
+                    // (Konrad) Temporarily remove from vm.files
+                    vm.files = vm.files.filter(function (item) {
+                        return item.centralPath !== filePath;
+                    });
                 }
-            }, function(error){
-                vm.status = 'Unable to get configuration data: ' + error.message;
+            })
+            .catch(function (err) {
+                console.log(err);
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
             });
     };
 
@@ -95,9 +117,15 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $windo
     vm.deleteFile = function(filePath){
         for (var i = 0; i < vm.newConfig.files.length; i++) {
             var file =  vm.newConfig.files[i];
-            if (file.centralPath.toLowerCase() === filePath.toLowerCase()) {
+            if (file.centralPath === filePath) {
                 vm.newConfig.files.splice(i, 1);
-                if(vm.newConfig.files.length === 0) vm.HasFiles = false;
+                if (vm.newConfig.files.length === 0) vm.HasFiles = false;
+
+                // (Konrad) Add it back to vm.files
+                vm.files.push({
+                    centralPath: filePath,
+                    name: UtilityService.fileNameFromPath(filePath)
+                });
                 break;
             }
         }
@@ -111,24 +139,50 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $windo
         {
             ConfigFactory.addConfiguration(vm.newConfig)
                 .then(function(response){
-                    if(!response || response.status !== 201) return;
+                    if(!response || response.status !== 201) throw response;
 
                     var configId = response.data._id;
                     return ProjectFactory.addConfig(vm.projectId, configId);
                 })
                 .then(function (response) {
-                    if(!response || response.status !== 201) return;
+                    if(!response || response.status !== 201) throw response;
+
+                    var data = [];
+                    vm.newConfig.files.forEach(function (item) {
+                        data.push({
+                            centralPath: item.centralPath,
+                            projectId: vm.projectId
+                        });
+                    });
+                    return FilePathsFactory.addMany(data);
+                })
+                .then(function (response) {
+                    if(!response || response.status !== 201) throw response;
 
                     $window.location.href = '#/projects/configurations/' + vm.projectId;
                 })
                 .catch(function (err) {
-                    console.log(err.message);
-                    vm.status = 'Unable to create Configuration: ' + err.message;
+                    console.log(err);
+                    toasts.push(ngToast.danger({
+                        dismissButton: true,
+                        dismissOnTimeout: true,
+                        timeout: 4000,
+                        newestOnTop: true,
+                        content: err.message
+                    }));
                 });
         }
         else vm.HasFiles = false;
 
-        if(!vm.HasFiles || vm.newConfig.name.length === 0) vm.status = "Please fill out all required fields."
+        if(!vm.HasFiles || vm.newConfig.name.length === 0) {
+            toasts.push(ngToast.warning({
+                dismissButton: true,
+                dismissOnTimeout: true,
+                timeout: 4000,
+                newestOnTop: true,
+                content: "Please fill out all required fields."
+            }));
+        }
     };
 
     /**
@@ -193,7 +247,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $windo
     };
 
     /**
-     * Removes a string from arry by index.
+     * Removes a string from array by index.
      * @param arr
      * @param index
      * @constructor
@@ -207,24 +261,56 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $windo
     //region Utilities
 
     /**
+     * Retrieves all central model file paths that were not yet assigned
+     * to any configurations.
+     */
+    function getFiles(){
+        FilePathsFactory.getAll()
+            .then(function (response) {
+                if(!response || response.status !== 200) throw response;
+
+                response.data.forEach(function (file) {
+                    file['name'] = UtilityService.fileNameFromPath(file.centralPath)
+                });
+                vm.files = response.data;
+            })
+            .catch(function (err) {
+                console.log(err);
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
+            })
+    }
+
+    /**
      * Retrieves Project from MongoDB.
      * @param projectId
      */
     function getSelectedProject(projectId) {
         ProjectFactory.getProjectById(projectId)
             .then(function(response){
-                if(!response || response.status !== 200) return;
+                if(!response || response.status !== 200) throw response;
 
                 vm.selectedProject = response.data;
             })
             .catch(function (err) {
-                console.log(err.message);
-                vm.status = 'Unable to load configuration data: ' + err.message;
+                console.log(err);
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
             });
     }
 
     /**
-     * Creates a default configuration setttings.
+     * Creates a default configuration settings.
      */
     function setDefaultConfig(){
         var updater_dtm =
@@ -256,7 +342,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $windo
                     },
                     {
                         categoryName: "Scope Boxes",
-                        description: "Scope Boxe elements cannot be modified.",
+                        description: "Scope Boxes elements cannot be modified.",
                         isEnabled: false,
                         locked: false
                     },
@@ -311,7 +397,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, $windo
                 description: 'This tool will prevent users from Unloading Linked Revit files for "all users" which causes such Linked File to be unloaded by default when opening project.',
                 addInId: '9C4D37B2-155D-4AC8-ACCF-383D86673F1C',
                 addInName: 'Mission Control',
-                isUpdaterOn: true,
+                isUpdaterOn: false,
                 categoryTriggers: []
             };
 
