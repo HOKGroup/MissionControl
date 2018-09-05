@@ -94,8 +94,10 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                     .extent([[0, 0], [width, height]])
                     .on("zoom", zoomed);
 
+                var id = guid();
+
                 svg.append("defs").append("clipPath")
-                    .attr("id", "clip")
+                    .attr("id", id)
                     .append("rect")
                     .attr("width", width)
                     .attr("height", height);
@@ -112,14 +114,14 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                     .data([data])
                     .attr("class", "area")
                     .attr("fill", "#d9534f")
-                    .attr("clip-path", "url(#clip)")
+                    .attr("clip-path", "url(#" + id + ")")
                     .attr("d", area);
 
                 focus.append("path")
                     .data([data])
                     .attr("class", "area1")
                     .attr("fill", "#5cb85c")
-                    .attr("clip-path", "url(#clip)")
+                    .attr("clip-path", "url(#" + id + ")")
                     .attr("d", area1);
 
                 focus.append("g")
@@ -187,6 +189,19 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                     focus.select(".area1").attr("d", area1);
                     focus.select(".x.axis").call(d3.axisBottom(x));
                     context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+                }
+
+                /**
+                 * Generates a unique Id for each chart brush rectangle.
+                 * @returns {string}
+                 */
+                function guid() {
+                    function s4() {
+                        return Math.floor((1 + Math.random()) * 0x10000)
+                            .toString(16)
+                            .substring(1);
+                    }
+                    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
                 }
             };
         }
