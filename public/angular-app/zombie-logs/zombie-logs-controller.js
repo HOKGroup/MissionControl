@@ -3,60 +3,8 @@
  */
 angular.module('MissionControlApp').controller('ZombieLogsController', ZombieLogsController);
 
-function ZombieLogsController($timeout, ZombieLogsFactory, DTOptionsBuilder, DTColumnBuilder, ngToast, $scope){
+function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuilder){
     var vm = this;
-    var toasts = [];
-
-    //region Sockets
-
-    var app = {
-        socket: null,
-        connect: function() {
-            var self = this;
-            if( self.socket ) {
-                self.socket.destroy();
-                delete self.socket;
-                self.socket = null;
-            }
-            this.socket = io.connect({transports: ['websocket']});
-            this.socket.reconnection = true;
-            this.socket.reconnectionDelay = 1000;
-            this.socket.reconnectionDelayMax = 5000;
-            this.socket.reconnectionAttempts = Infinity;
-
-            this.socket.on('connect', function () {
-                self.socket.emit('room', 'zombie_logs');
-            });
-            this.socket.on( 'disconnect', function () {
-                $timeout( app.connect, 5000 );
-            });
-            this.socket.on('log_added', function (data) {
-                vm.logs.push(data);
-                vm.dtInstance.changeData(function () {
-                    return ZombieLogsFactory.get()
-                        .then(function (response) {
-                            if(!response || response.status !== 200) return;
-
-                            return response.data;
-                        })
-                        .catch(function (err) {
-                            console.log('Unable to load project data: ' + err.message);
-                        })
-                });
-                toasts.push(ngToast.success({
-                    dismissButton: true,
-                    dismissOnTimeout: true,
-                    timeout: 4000,
-                    newestOnTop: true,
-                    content: '<strong>Added: </strong>' + parseDateTime(data.createdAt) + ' ' + data.machine
-                }))
-            });
-        }
-    };
-
-    app.connect();
-
-    //endregion
 
     //region Public Properties
 
@@ -93,6 +41,7 @@ function ZombieLogsController($timeout, ZombieLogsFactory, DTOptionsBuilder, DTC
         { name: "Washington DC", code: ["WDC"] },
         { name: "Undefined", code: ["EMC", "SDC", "OSS", "LD", "LDC", ""] }
     ];
+    vm.MainChartColor = "steelblue";
     vm.dtFrom = new Date();
     vm.dtTo = new Date();
     vm.dtTo.setDate(vm.dtTo.getDate() + 1);
@@ -118,67 +67,7 @@ function ZombieLogsController($timeout, ZombieLogsFactory, DTOptionsBuilder, DTC
             .then(function (response) {
                 if(!response || response.status !== 200) return;
 
-                //region DataTable
-
-                vm.logs = response.data.sort(function(a,b){
-                    return new Date(b.createdAt) - new Date(a.createdAt);
-                });
-
-                //endregion
-
-                //region Toast Messages
-
-                var fLogs = vm.logs.filter(function (item) {
-                    return item.level === 'Fatal';
-                }).forEach(function (log) {
-                    toasts.push(ngToast.danger({
-                        dismissButton: true,
-                        dismissOnTimeout: false,
-                        newestOnTop: true,
-                        content: '<strong>Fatal: </strong>' + parseDateTime(log.createdAt) + ' ' + log.machine
-                    }))
-                });
-
-                //endregion
-
-                //region Donut Chart
-
-                var donuts = {};
-                var temp = {};
-                var fatal = [];
-                vm.logs.forEach(function (log) {
-                    if(temp.hasOwnProperty(log.machine)) return;
-
-                    if(log.level === 'Fatal') fatal.push(log); // store 'fatal' logs for second table
-                    temp[log.machine] = log;
-
-                    var version = getVersion(log.message);
-                    if(donuts.hasOwnProperty(version)){
-                        donuts[version] = donuts[version] + 1;
-                    } else {
-                        donuts[version] = 1;
-                    }
-                });
-                vm.donutData = Object.keys(donuts).map(function(key) {
-                    if(versionCompare(key, vm.latestVersion) === 1){
-                        vm.latestVersion = key;
-                    }
-                    return {
-                        name: key,
-                        count: donuts[key]
-                    }
-                });
-                vm.selectedMachines = fatal;
-
-                // refresh table1
-                vm.dtInstance1.changeData(function () {
-                    return new Promise(function(resolve, reject){
-                        if (!vm.selectedMachines) reject();
-                        else resolve(vm.selectedMachines);
-                    });
-                });
-
-                //endregion
+                processTableData(response.data);
 
                 return vm.logs;
             })
@@ -322,9 +211,12 @@ function ZombieLogsController($timeout, ZombieLogsFactory, DTOptionsBuilder, DTC
      */
     function getVersion(s){
         var myRegexp = /Version:\s?(.*?)$/g;
+        var myRegexp1 = /version:\s?(.*?)$/g;
         var match = myRegexp.exec(s);
+        var match1 = myRegexp1.exec(s);
         if(match !== null) return match[1];
-        else return 'Fatal';
+        if(match1 !== null) return match1[1];
+        return 'Fatal';
     }
 
     /**
@@ -383,6 +275,52 @@ function ZombieLogsController($timeout, ZombieLogsFactory, DTOptionsBuilder, DTC
     }
 
     /**
+     *
+     * @param data
+     */
+    function processTableData(data) {
+        vm.logs = data.sort(function(a,b){
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+
+        var donuts = {};
+        var temp = {};
+        var fatal = [];
+        vm.logs.forEach(function (log) {
+            if(temp.hasOwnProperty(log.machine)){
+                var existing = temp[log.machine];
+                if(log.level === 'Info' && existing.level !== 'Info'){
+                    // override stored one with info status which is latest successful update
+                    temp[log.machine] = log;
+                }
+            } else {
+                temp[log.machine] = log;
+            }
+        });
+
+        Object.keys(temp).map(function (key) {
+            var version = getVersion(temp[key].message);
+            if(version === 'Fatal') fatal.push(temp[key]);
+            if(donuts.hasOwnProperty(version)){
+                donuts[version] = donuts[version] + 1;
+            } else {
+                donuts[version] = 1;
+            }
+        });
+
+        vm.donutData = Object.keys(donuts).map(function(key) {
+            if(versionCompare(key, vm.latestVersion) === 1){
+                vm.latestVersion = key;
+            }
+            return {
+                name: key,
+                count: donuts[key]
+            }
+        });
+        vm.selectedMachines = fatal;
+    }
+
+    /**
      * Handles user clicking on Donut Chart. Populates the table.
      * @param item
      * @constructor
@@ -390,55 +328,36 @@ function ZombieLogsController($timeout, ZombieLogsFactory, DTOptionsBuilder, DTC
     vm.OnClick = function(item){
         vm.dtInstance1.changeData(function () {
             return new Promise(function(resolve, reject){
+
+                // (Konrad) Sort all logs by machine with preference for last successful update.
+                var temp = {};
+                vm.logs.forEach(function (log) {
+                    if(temp.hasOwnProperty(log.machine)){
+                        var existing = temp[log.machine];
+                        if(log.level === 'Info' && existing.level !== 'Info'){
+                            // override stored one with info status which is latest successful update
+                            temp[log.machine] = log;
+                        }
+                    } else {
+                        temp[log.machine] = log;
+                    }
+                });
+
                 var data = {};
                 var result = [];
-                if(item.name === 'Fatal'){
-                    result = vm.logs.filter(function (log) {
-                        if(!data.hasOwnProperty(log.machine)){
-                            data[log.machine] = log;
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }).filter(function (log) {
-                        return log.level === 'Fatal';
-                    });
-                } else {
-                    result = vm.logs.filter(function (log) {
-                        if(!data.hasOwnProperty(log.machine)){
-                            data[log.machine] = log;
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }).filter(function (log) {
-                        return getVersion(log.message) === item.name;
-                    });
-                }
+                Object.keys(temp).map(function (key) {
+                    var version = getVersion(temp[key].message);
+                    if(item.name === 'Fatal'){
+                        if(version === 'Fatal') result.push(temp[key]);
+                    } else {
+                        if(version === item.name) result.push(temp[key]);
+                    }
+                });
 
                 if (!result) reject();
                 else resolve(result);
             });
         });
-    };
-
-    //endregion
-
-    //region Toasts
-
-    /**
-     * Makes sure that the toasts get dismissed.
-     */
-    $scope.$on('$locationChangeStart', function( event ) {
-        vm.dismissAll();
-    });
-
-    /**
-     * Dismisses all toast notifications.
-     */
-    vm.dismissAll = function () {
-        ngToast.dismiss();
-        toasts = [];
     };
 
     //endregion
@@ -469,8 +388,10 @@ function ZombieLogsController($timeout, ZombieLogsFactory, DTOptionsBuilder, DTC
                 .then(function (response) {
                     if(!response || response.status !== 201) return;
 
+                    processTableData(response.data);
                     vm.loading = false;
-                    return response.data;
+
+                    return vm.logs;
                 })
                 .catch(function (err) {
                     vm.loading = false;

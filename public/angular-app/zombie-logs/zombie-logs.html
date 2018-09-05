@@ -96,36 +96,41 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4 no-padding-left">
-            <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">Office: {{vm.selectedOffice.name}}</h4>
-                    </div>
-                    <div class="panel-collapse">
-                        <div class="panel-body">
-                            <d3-donut-chart data="vm.donutData" latest="vm.latestVersion" d3-on-click="vm.OnClick(item)"></d3-donut-chart>
-                        </div>
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Office Filter: {{vm.selectedOffice.name}}</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <d3-horizontal-bar-chart-timeout
+                                data="vm.donutData"
+                                margin-left="60"
+                                domain-padding="10"
+                                d3-on-click="vm.OnClick(item)"
+                                clickable="true"
+                                fill-color="vm.MainChartColor">
+                        </d3-horizontal-bar-chart-timeout>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-8 no-padding">
-            <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">Machines</h4>
-                    </div>
-                    <div class="panel-collapse">
-                        <div class="panel-body">
-                            <table id="machinesTable"
-                                   datatable=""
-                                   dt-options="vm.dtOptions1"
-                                   dt-columns="vm.dtColumns1"
-                                   dt-instance="vm.dtInstance1"
-                                   class="table table-hover table-condensed datatable">
-                            </table>
-                        </div>
+    </div>
+    <div class="row">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Selected</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <table id="machinesTable"
+                               datatable=""
+                               dt-options="vm.dtOptions1"
+                               dt-columns="vm.dtColumns1"
+                               dt-instance="vm.dtInstance1"
+                               class="table table-hover table-condensed datatable">
+                        </table>
                     </div>
                 </div>
             </div>
