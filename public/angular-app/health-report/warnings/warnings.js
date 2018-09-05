@@ -74,9 +74,15 @@ function WarningsController($routeParams, WarningsFactory, HealthReportFactory, 
         function setChartData(){
             var data = vm.WarningData.warningStats.reduce(function (data, item) {
                 var key = item.createdAt.split('T')[0];
-                var current = (data[key] || (data[key] = {'date': key, 'added': 0, 'removed': 0}));
-                if(item.isOpen) current['added'] += 1;
-                else current['removed'] -= 1;
+                var created = (data[key] || (data[key] = {'date': key, 'added': 0, 'removed': 0}));
+                created['added'] += 1;
+
+                if(!item.isOpen){
+                    var key1 = item.closedAt.split('T')[0];
+                    var closed = (data[key1] || (data[key1] = {'date': key1, 'added': 0, 'removed': 0}));
+                    closed['removed'] -= 1;
+                }
+
                 return data
             }, {});
 

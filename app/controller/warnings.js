@@ -21,17 +21,22 @@ WarningsService = {
                 return {
                     'updateOne': {
                         filter: {'centralPath': item.centralPath, 'uniqueId': item.uniqueId},
-                        update: {$set: {
-                            'createdBy': 'Unknown', // override this to unknown
-                            'descriptionText': item.descriptionText,
-                            'createdAt': Date.now(),
-                            'closedBy': item.closedBy,
-                            'closedAt': item.closedAt,
-                            'isOpen': item.isOpen,
-                            'failingElements': item.failingElements,
-                            'updatedAt': Date.now(),
-                            '__v': 0
-                        }},
+                        update: {
+                            $set: {
+                                'updatedAt': Date.now()
+                            },
+                            $setOnInsert: {
+                                'createdBy': 'Unknown', // override this to unknown
+                                'createdAt': Date.now(),
+                                'updatedAt': Date.now(),
+                                'descriptionText': item.descriptionText,
+                                'closedBy': item.closedBy,
+                                'closedAt': item.closedAt,
+                                'isOpen': item.isOpen,
+                                'failingElements': item.failingElements,
+                                '__v': 0
+                            }
+                        },
                         upsert: true
                     }
                 }
