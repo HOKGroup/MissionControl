@@ -7,6 +7,7 @@
  * @param {{ centralPath: string }} File Path
  */
 var mongoose = require('mongoose');
+var global = require('./socket/global');
 var Warnings = mongoose.model('Warnings');
 
 WarningsService = {
@@ -85,17 +86,7 @@ WarningsService = {
     },
 
     getOpen: function(req, res) {
-        // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
-        // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.
-        var isRevitServer = req.params.uri.match(/rsn:/i);
-        var isBim360 = req.params.uri.match(/bim 360:/i);
-        var rgx;
-        if(isRevitServer || isBim360){
-            rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
-        } else {
-            rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
-        }
-
+        var rgx = global.utilities.uriToString(req.params.uri);
         Warnings
             .find({$and: [{'centralPath': rgx}, {'isOpen': true}]}, function (err, response) {
                 var result = {
@@ -114,17 +105,7 @@ WarningsService = {
     },
 
     getByCentralPath: function (req, res) {
-        // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
-        // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.
-        var isRevitServer = req.params.uri.match(/rsn:/i);
-        var isBim360 = req.params.uri.match(/bim 360:/i);
-        var rgx;
-        if(isRevitServer || isBim360){
-            rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
-        } else {
-            rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
-        }
-
+        var rgx = global.utilities.uriToString(req.params.uri);
         Warnings
             .find({'centralPath': rgx})
             .sort({'_id': -1})
