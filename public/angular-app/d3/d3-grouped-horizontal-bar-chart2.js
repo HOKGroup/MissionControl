@@ -1,4 +1,4 @@
-// Data is exected in following format:
+// Data is expected in following format:
 // data = [
 //      { onOpened: 12,
 //        onSynched: 12,
@@ -79,6 +79,7 @@ angular.module('MissionControlApp').directive('d3GroupedHorizontalBarChart2', ['
                     .tickPadding(8);
 
                 var keys = d3.keys(data[0]).filter(function(key) { return key !== "user"; });
+                console.log(keys);
                 y0.domain(data.map(function(d) { return d.user; }));
                 y1.domain(keys).rangeRound([0, y0.bandwidth()]);
                 x.domain([0, 100]);

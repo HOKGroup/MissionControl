@@ -13,6 +13,8 @@ var groups = require('./models/groups-model');
 var warnings = require('./models/warnings');
 var zombieLogs = require('./models/zombie-logs-model');
 var filePaths = require('./models/filepaths');
+var openTimes = require('./models/opentimes');
+var synchTimes = require('./models/synchtimes');
 
  module.exports = function(app) {
      var projects = require('./controller/projects');
@@ -116,6 +118,16 @@ var filePaths = require('./models/filepaths');
      app.put('/api/v2/models/:id/updatefilepath', models.updateFilePath);
      app.post('/api/v2/models/modelstats', models.getModelStats);
      app.get('/api/v2/models/usernames/:uri*', models.getUserNamesByCentralPath);
+
+     var openTimes = require('./controller/opentimes');
+     app.post('/api/v2/opentimes', openTimes.add);
+     app.post('/api/v2/opentimes/getall', openTimes.getAll);
+     app.post('/api/v2/opentimes/getbydate', openTimes.getByDate);
+
+     var synchTimes = require('./controller/synchtimes');
+     app.post('/api/v2/synchtimes', synchTimes.add);
+     app.post('/api/v2/synchtimes/getall', synchTimes.getAll);
+     app.post('/api/v2/synchtimes/getbydate', synchTimes.getByDate);
 
      var views = require('./controller/views-controller');
      app.get('/api/v2/views/centralpath/:uri*', views.findByCentralPath);

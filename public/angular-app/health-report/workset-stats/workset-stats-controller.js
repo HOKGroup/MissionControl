@@ -10,6 +10,8 @@ function WorksetsController($routeParams, UtilityService, HealthReportFactory){
         vm.showTimeSettings = false;
         vm.loading = false;
 
+        console.log(vm.WorksetData.worksetOpenedData);
+
         /**
          * Callback method for Date Time Range selection.
          * @param date
