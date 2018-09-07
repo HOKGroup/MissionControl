@@ -87,9 +87,7 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', '$c
                     .attr("x", margin.left)
                     .attr("width", 0)
                     .attr("y", function (d) { return y(d.name) + margin.top; })
-                    .attr("fill", function (d) {
-                        return qualityChecks(d).color;
-                    })
+                    .attr("fill", function (d) { return qualityChecks(d).color; })
                     .on("mouseover", function(d){
                         var result = qualityChecks(d);
                         if(!result.message) return;
@@ -193,8 +191,8 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', '$c
                     // (Konrad) Only trim strings that are longer than 25 characters.
                     // Leave some space between left margin and trimmed string. 5px.
                     while (maxIterations > 0 && text.length > 25) {
-                        if(textWidth >= (margin.left - 15)){
-                            text = text.slice(0, -textLength * 0.15);
+                        if(textWidth >= margin.left){
+                            text = text.slice(0, -textLength * 0.35);
                             self.text(text + '...');
                             textWidth = self.node().getComputedTextLength();
                             textLength = text.length;

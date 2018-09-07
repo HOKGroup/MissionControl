@@ -7,7 +7,8 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
                                OpenTimesFactory, ngToast, UtilityService){
     var vm = this;
     var toasts = [];
-    var filePaths = [];
+    var filePaths = []; // variable holding file paths for filter
+    var queryData = {}; // variable holding date range for filter
 
     //region Init
 
@@ -28,12 +29,12 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
     //endregion
 
     /**
-     *
+     * Filter for activity chart that queries additional data by date range.
      * @param item
      */
     vm.filterRange = function (item) {
         vm.selectedRange = item;
-        var data = {
+        queryData = {
             centralPaths: filePaths,
             from: new Date(),
             to: new Date()
@@ -42,16 +43,16 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
             case 'All':
                 break;
             case '7 days':
-                data.from = data.from.setDate(data.from.getDate() - 7);
+                queryData.from = queryData.from.setDate(queryData.from.getDate() - 7);
                 break;
             case '14 days':
-                data.from = data.from.setDate(data.from.getDate() - 14);
+                queryData.from = queryData.from.setDate(queryData.from.getDate() - 14);
                 break;
             case '28 days':
-                data.from = data.from.setDate(data.from.getDate() - 28);
+                queryData.from = queryData.from.setDate(queryData.from.getDate() - 28);
                 break;
             case '84 days':
-                data.from = data.from.setDate(data.from.getDate() - 84);
+                queryData.from = queryData.from.setDate(queryData.from.getDate() - 84);
                 break;
         }
 
@@ -61,7 +62,7 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
                     if(!response || response.status !== 201) throw response;
 
                     vm.openTimes = response.data;
-                    return SynchTimesFactory.getByDate(data);
+                    return SynchTimesFactory.getAll(filePaths);
                 })
                 .then(function (response) {
                     if(!response || response.status !== 201) throw response;
@@ -79,12 +80,12 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
                     }));
                 })
         } else {
-            OpenTimesFactory.getByDate(data)
+            OpenTimesFactory.getByDate(queryData)
                 .then(function (response) {
                     if(!response || response.status !== 201) throw response;
 
                     vm.openTimes = response.data;
-                    return SynchTimesFactory.getByDate(data);
+                    return SynchTimesFactory.getByDate(queryData);
                 })
                 .then(function (response) {
                     if(!response || response.status !== 201) throw response;
@@ -106,8 +107,6 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
 
     /**
      * Deletes a project and all associated Configurations.
-     * TODO: Do we need to delete all Sheets, Families, WorksetStats, ModelStats etc.
-     * TODO: We could leave them here, and then potentially re-connect them if needed.
      */
     vm.deleteProject = function(){
         ProjectFactory.deleteProject(vm.selectedProject._id)
@@ -164,7 +163,7 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
     //region Utilities
 
     /**
-     *
+     * Retrieves Project and Configurations, then sets initial project activity data.
      * @param projectId
      */
     function getOpenTimes(projectId) {
@@ -183,13 +182,21 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
                     return acc.concat(val);
                 });
 
-                return OpenTimesFactory.getAll(filePaths);
+                // (Konrad) Set date range filter to query data for last 7 days
+                queryData = {
+                    centralPaths: filePaths,
+                    from: new Date(),
+                    to: new Date()
+                };
+                queryData.from = queryData.from.setDate(queryData.from.getDate() - 7);
+
+                return OpenTimesFactory.getByDate(queryData);
             })
             .then(function (response) {
                 if(!response || response.status !== 201) throw response;
 
                 vm.openTimes = response.data;
-                return SynchTimesFactory.getAll(filePaths);
+                return SynchTimesFactory.getByDate(queryData);
             })
             .then(function (response) {
                 if(!response || response.status !== 201) throw response;
@@ -209,7 +216,7 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
     }
 
     /**
-     *
+     * Processes open and synch time stamps in order to create data format suitable for d3 chart.
      * @param openTimes
      * @param synchTimes
      */

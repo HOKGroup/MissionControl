@@ -190,11 +190,13 @@
 							</li>
 						</ul>
 					</div>
+					<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #759CC3"></span> Synched</p>
+					<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #4378A7"></span> Opened</p>
 					<h4 class="panel-title" style="padding-top: 5px;">Project Activity</h4>
 				</div>
 				<div class="panel-collapse">
 					<div class="panel-body no-padding">
-						<d3-stacked-vertical-bar-chart data="vm.chartData"></d3-stacked-vertical-bar-chart>
+						<d3-stacked-horizontal-bar-chart data="vm.chartData" margin-left="150" domain-padding="10"></d3-stacked-horizontal-bar-chart>
 					</div>
 				</div>
 			</div>
