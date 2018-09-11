@@ -5,7 +5,6 @@ angular.module('MissionControlApp').factory('WorksetsFactory', WorksetsFactory);
 
 function WorksetsFactory($http){
     return {
-        // aggregates
         updateFilePath: function (data){
             return $http.put('/api/v2/worksets/updatefilepath', data).then(complete).catch(failed);
         },

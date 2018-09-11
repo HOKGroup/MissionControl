@@ -5,11 +5,9 @@ angular.module('MissionControlApp').factory('ModelsFactory', ModelsFactory);
 
 function ModelsFactory($http){
     return {
-        // open times
         getUserNamesByCentralPath: function (centralPath) {
             return $http.get('/api/v2/model/opentimes/usernames/' + centralPath).then(complete).catch(failed);
         },
-        // aggregates
         getall: function (data) {
             return $http.post('/api/v2/model/getall', data).then(complete).catch(failed);
         },
