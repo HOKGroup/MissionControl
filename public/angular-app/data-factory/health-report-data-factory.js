@@ -578,40 +578,41 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
          * @param callback
          */
         processModelStats: function(data, callback) {
-            ModelsFactory.getModelStats(data)
+            var cp = data.centralPath;
+            ModelsFactory.getModelsData(data)
                 .then(function (response) {
-                    if( !response || !response.data || response.status !== 201){
+                    if(!response || !response.data || response.status !== 201){
                         callback(null);
                         return;
                     }
-                    if( response.data.modelSizes.length === 0 ||
-                        response.data.openTimes.length === 0 ||
-                        response.data.synchTimes.length === 0 ||
-                        response.data.worksets.onOpened === 0 ||
-                        response.data.worksets.onSynched === 0) {
+                    if( response.data[0].opentimes.length === 0 ||
+                        response.data[0].synchtimes.length === 0 ||
+                        response.data[0].modelsizes.length === 0 ||
+                        response.data[0].onopened.length === 0 ||
+                        response.data[0].onsynched.length === 0){
                         // (Konrad) In case that the specified date range contains no data
                         // we can return the response object only. It has the centralPath
                         // property needed to re-call this filter without crashing.
                         callback({
                             modelStats: {
-                                modelSizes: response.data.modelSizes,
-                                openTimes: response.data.openTimes,
-                                synchTimes: response.data.synchTimes,
-                                onOpened: response.data.worksets.onOpened,
-                                onSynched: response.data.worksets.onSynched,
-                                centralPath: response.data.centralPath
+                                modelSizes: response.data[0].modelsizes,
+                                openTimes: response.data[0].opentimes,
+                                synchTimes: response.data[0].synchtimes,
+                                onOpened: response.data[0].onopened,
+                                onSynched: response.data[0].onsynched,
+                                centralPath: cp
                             }
                         });
                     } else {
                         // (Konrad) Due to how aggregation model works when data is retrieved
                         // it comes in nested under an extra field. This simplifies it for later
                         var data = {
-                            modelSizes: response.data.modelSizes,
-                            openTimes: response.data.openTimes,
-                            synchTimes: response.data.synchTimes,
-                            onOpened: response.data.worksets.onOpened,
-                            onSynched: response.data.worksets.onSynched,
-                            centralPath: response.data.centralPath
+                            modelSizes: response.data[0].modelsizes,
+                            openTimes: response.data[0].opentimes,
+                            synchTimes: response.data[0].synchtimes,
+                            onOpened: response.data[0].onopened,
+                            onSynched: response.data[0].onsynched,
+                            centralPath: cp
                         };
 
                         // (Konrad) Since all these are displayed in a chart we need at least two (2) data points.
@@ -678,10 +679,9 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             color: UtilityService.color().grey
                         });
                     }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
+                }).catch(function (err) {
+                    console.log(err.message);
+            });
         },
 
         /**
@@ -690,23 +690,30 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
          * @param callback
          */
         processWorksetStats: function(data, callback) {
+            var cf = data.centralPath;
             WorksetsFactory.getWorksetStats(data)
                 .then(function (response) {
+                    var worksetData = {
+                        onOpened: response.data[0].onOpened,
+                        onSynched: response.data[0].onSynched,
+                        itemCount: response.data[0].itemCount,
+                        centralPath: cf
+                    };
+
                     if( !response || response.status !== 201){
                         callback(null);
                         return;
                     }
+
                     if( !response.data ||
-                        !response.data.onOpened ||
-                        response.data.onOpened.length < 1 ||
-                        !response.data.onSynched ||
-                        response.data.onSynched.length < 1){
-                        callback({
-                            worksetStats: response.data
+                        response.data[0].onOpened.length < 1 ||
+                        response.data[0].onSynched.length < 1 ||
+                        response.data[0].itemCount.length < 1){
+                            callback({
+                                worksetStats: worksetData
                         })
                     } else {
-                        var data = response.data;
-                        var opened = CalculateTotals(data.onOpened);
+                        var opened = CalculateTotals(worksetData.onOpened);
                         var output = [];
                         opened.forEach(function(item) {
                             output.push({
@@ -716,7 +723,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             )
                         });
 
-                        var synched = CalculateTotals(data.onSynched);
+                        var synched = CalculateTotals(worksetData.onSynched);
                         synched.forEach(function (item) {
                             var openedObj = output.filter(function(obj){
                                 return obj.user === item.user;
@@ -754,7 +761,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             return x < y ? -1 : x > y ? 1 : 0;
                         }); // sorted by name
 
-                        var worksetItemCountData = data.itemCount[0].worksets;
+                        var worksetItemCountData = worksetData.itemCount[0].worksets;
                         worksetItemCountData.sort(function(a,b){
                             return a.count - b.count;
                         }).reverse(); // sorted by count
@@ -849,7 +856,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             // worksetScore: passingChecks,
                             name: "Worksets",
                             color: color,
-                            worksetStats: data,
+                            worksetStats: worksetData,
                             show: {name: "worksets", value: false}
                         });
                     }

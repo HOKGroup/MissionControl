@@ -4,17 +4,17 @@ var triggerrecords = require('./models/trigger-records-model');
 var addins = require('./models/addins-model');
 var families = require('./models/families-model');
 var sheets = require('./models/sheets-model');
-var worksets = require('./models/worksets-model');
+// var worksets = require('./models/worksets-model');
+var worksets = require('./models/worksets');
 var styles = require('./models/styles-model');
 var links = require('./models/links-model');
-var models = require('./models/models-model');
+// var models = require('./models/models-model');
 var views = require('./models/views-model');
 var groups = require('./models/groups-model');
 var warnings = require('./models/warnings');
 var zombieLogs = require('./models/zombie-logs-model');
 var filePaths = require('./models/filepaths');
-var openTimes = require('./models/opentimes');
-var synchTimes = require('./models/synchtimes');
+var models = require('./models/models');
 
  module.exports = function(app) {
      var projects = require('./controller/projects');
@@ -90,14 +90,6 @@ var synchTimes = require('./models/synchtimes');
      app.post('/api/v2/sheets/:id/deletetasks', sheets.deleteTasks);
      app.post('/api/v2/sheets/:id/updatetasks', sheets.updateSheetTask);
 
-     var worksets = require('./controller/worksets-controller');
-     app.post('/api/v2/worksets', worksets.add);
-     app.post('/api/v2/worksets/:id/itemcount', worksets.postItemCount);
-     app.post('/api/v2/worksets/:id/onopened', worksets.onOpened);
-     app.post('/api/v2/worksets/:id/onsynched', worksets.onSynched);
-     app.put('/api/v2/worksets/:id/updatefilepath', worksets.updateFilePath);
-     app.post('/api/v2/worksets/worksetstats', worksets.getWorksetStats);
-
      var styles = require('./controller/styles-controller');
      app.post('/api/v2/styles', styles.add);
      app.post('/api/v2/styles/:id/stylestats', styles.styleStats);
@@ -110,24 +102,47 @@ var synchTimes = require('./models/synchtimes');
      app.put('/api/v2/links/:id/updatefilepath', links.updateFilePath);
      app.post('/api/v2/links/linkstats', links.getLinkStats);
 
-     var models = require('./controller/models-controller');
-     app.post('/api/v2/models', models.add);
-     app.post('/api/v2/models/:id/modelsize', models.postModelSize);
-     app.post('/api/v2/models/:id/modelopentime', models.postModelOpenTime);
-     app.post('/api/v2/models/:id/modelsynchtime', models.postModelSynchTime);
-     app.put('/api/v2/models/:id/updatefilepath', models.updateFilePath);
-     app.post('/api/v2/models/modelstats', models.getModelStats);
-     app.get('/api/v2/models/usernames/:uri*', models.getUserNamesByCentralPath);
+     // var models = require('./controller/models-controller');
+     // app.post('/api/v2/models', models.add);
+     // app.post('/api/v2/models/:id/modelsize', models.postModelSize);
+     // app.post('/api/v2/models/:id/modelopentime', models.postModelOpenTime);
+     // app.post('/api/v2/models/:id/modelsynchtime', models.postModelSynchTime);
+     // app.put('/api/v2/models/:id/updatefilepath', models.updateFilePath); ----------------------------
+     // app.post('/api/v2/models/modelstats', models.getModelStats); -------------------------------------
+     // app.get('/api/v2/models/usernames/:uri*', models.getUserNamesByCentralPath); ---------------------
 
-     var openTimes = require('./controller/opentimes');
-     app.post('/api/v2/opentimes', openTimes.add);
-     app.post('/api/v2/opentimes/getall', openTimes.getAll);
-     app.post('/api/v2/opentimes/getbydate', openTimes.getByDate);
+     // var worksets = require('./controller/worksets-controller');
+     // app.post('/api/v2/worksets', worksets.add);
+     // app.post('/api/v2/worksets/:id/itemcount', worksets.postItemCount);
+     // app.post('/api/v2/worksets/:id/onopened', worksets.onOpened);
+     // app.post('/api/v2/worksets/:id/onsynched', worksets.onSynched);
+     // app.put('/api/v2/worksets/:id/updatefilepath', worksets.updateFilePath); ------------------------
+     // app.post('/api/v2/worksets/worksetstats', worksets.getWorksetStats);
 
-     var synchTimes = require('./controller/synchtimes');
-     app.post('/api/v2/synchtimes', synchTimes.add);
-     app.post('/api/v2/synchtimes/getall', synchTimes.getAll);
-     app.post('/api/v2/synchtimes/getbydate', synchTimes.getByDate);
+     var worksets = require('./controller/worksets');
+     // on synched
+     app.post('/api/v2/worksets/onsynched', worksets.addOnSynched);
+     // on opened
+     app.post('/api/v2/worksets/onopened', worksets.addOnOpened);
+     // item counts
+     app.post('/api/v2/worksets/itemcount', worksets.addItemsCount);
+     // aggregate
+     app.post('/api/v2/worksets/getworksetsdata', worksets.getWorksetsData);
+     app.put('/api/v2/worksets/updatefilepath', worksets.updateFilePath);
+
+     var models = require('./controller/models');
+     // open times
+     app.post('/api/v2/model/opentimes', models.addOpenTime);
+     app.get('/api/v2/model/opentimes/usernames/:uri*', models.getUserNamesByCentralPath);
+     // synch times
+     app.post('/api/v2/model/synchtimes', models.addSynchTime);
+     // model sizes
+     app.post('/api/v2/model/modelsizes', models.addModelSize);
+     // aggregates
+     app.post('/api/v2/model/getall', models.getAll);
+     app.post('/api/v2/model/getbydate', models.getByDate);
+     app.post('/api/v2/model/getmodelsdata', models.getModelsData);
+     app.put('/api/v2/model/updatefilepath', models.updateFilePath);
 
      var views = require('./controller/views-controller');
      app.get('/api/v2/views/centralpath/:uri*', views.findByCentralPath);

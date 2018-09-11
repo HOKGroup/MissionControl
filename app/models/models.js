@@ -13,4 +13,6 @@ var schema = new mongoose.Schema(
 );
 
 schema.index({"centralPath": "text"});
+var OpenTimes = mongoose.model( 'OpenTimes', schema );
 var SynchTimes = mongoose.model( 'SynchTimes', schema );
+var ModelSizes = mongoose.model( 'ModelSizes', schema );

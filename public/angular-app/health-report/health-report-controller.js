@@ -127,7 +127,14 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
             centralPath: link.centralPath
         };
 
-        HealthReportFactory.processModelStats(data, function (result) {
+        var data1 = {
+            from: null,
+            to: null,
+            centralPath: link.centralPath
+        };
+
+        HealthReportFactory.processModelStats(data1, function (result) {
+            console.log(result);
             if( result && result.modelStats &&
                 result.modelStats.modelSizes.length > 0 &&
                 result.modelStats.openTimes.length > 0 &&
@@ -177,7 +184,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
             vm.SelectionChanged('main');
         });
 
-        HealthReportFactory.processWorksetStats(data, function (result) {
+        HealthReportFactory.processWorksetStats(data1, function (result) {
             if( result &&
                 result.worksetStats.onOpened.length > 0 &&
                 result.worksetStats.onSynched.length > 0 &&

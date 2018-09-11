@@ -3,8 +3,7 @@
  */
 angular.module('MissionControlApp').controller('EditProjectController', EditProjectController);
 
-function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $window, SynchTimesFactory,
-                               OpenTimesFactory, ngToast, UtilityService){
+function EditProjectController($routeParams, $window, ProjectFactory, ConfigFactory, ModelsFactory, ngToast, UtilityService){
     var vm = this;
     var toasts = [];
     var filePaths = []; // variable holding file paths for filter
@@ -12,7 +11,6 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
 
     //region Init
 
-    vm.status = '';
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = {
         'address':{},
@@ -57,20 +55,13 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
         }
 
         if(item === 'All'){
-            OpenTimesFactory.getAll(filePaths)
+            ModelsFactory.getall(queryData)
                 .then(function (response) {
-                    if(!response || response.status !== 201) throw response;
+                    if(!response || response.status !== 201) throw { message: 'Failed to get data.' };
 
-                    vm.openTimes = response.data;
-                    return SynchTimesFactory.getAll(filePaths);
-                })
-                .then(function (response) {
-                    if(!response || response.status !== 201) throw response;
-
-                    setChartData(vm.openTimes, response.data);
+                    setChartData(response.data[0].opentimes, response.data[0].synchtimes);
                 })
                 .catch(function (err) {
-                    console.log(err);
                     toasts.push(ngToast.danger({
                         dismissButton: true,
                         dismissOnTimeout: true,
@@ -80,20 +71,13 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
                     }));
                 })
         } else {
-            OpenTimesFactory.getByDate(queryData)
+            ModelsFactory.getByDate(queryData)
                 .then(function (response) {
-                    if(!response || response.status !== 201) throw response;
+                    if(!response || response.status !== 201) throw { message: 'Failed to get data.' };
 
-                    vm.openTimes = response.data;
-                    return SynchTimesFactory.getByDate(queryData);
-                })
-                .then(function (response) {
-                    if(!response || response.status !== 201) throw response;
-
-                    setChartData(vm.openTimes, response.data);
+                    setChartData(response.data[0].opentimes, response.data[0].synchtimes);
                 })
                 .catch(function (err) {
-                    console.log(err);
                     toasts.push(ngToast.danger({
                         dismissButton: true,
                         dismissOnTimeout: true,
@@ -111,20 +95,25 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
     vm.deleteProject = function(){
         ProjectFactory.deleteProject(vm.selectedProject._id)
             .then(function(response) {
-                if(!response || response.status !== 201) return;
+                if(!response || response.status !== 201) throw { message: 'Unable to delete Project.'};
 
                 var configIds = vm.selectedProject.configurations;
                 return ConfigFactory.deleteMany(configIds)
             })
             .then(function (response) {
-                if(!response || response.status !== 201) return;
+                if(!response || response.status !== 201) throw { message: 'Unable to delete Configurations.'};
 
                 //(Konrad) Reloads the resources so it should remove project from table.
                 $window.location.href = '#/projects/';
             })
             .catch(function (err) {
-                console.log(err);
-                vm.status = 'Unable to delete Project and its Configurations: ' + err.message;
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
             });
     };
 
@@ -134,14 +123,26 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
     vm.updateProject = function(){
         ProjectFactory.updateProject(vm.selectedProject)
             .then(function(response){
-                if(!response || response.status !== 202) return;
+                if(!response || response.status !== 202) throw { message: 'Unable to update Project.' };
 
-                vm.status = 'Project updated';
+                toasts.push(ngToast.success({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: 'Project updated.'
+                }));
+
                 $window.location.assign('#/projects/');
             })
             .catch(function (err) {
-                console.log(err.message);
-                vm.status = 'Unable to update Project: ' + err.message;
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
             });
     };
 
@@ -169,7 +170,7 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
     function getOpenTimes(projectId) {
         ProjectFactory.getProjectByIdPopulateConfigurations(projectId)
             .then(function(response){
-                if(!response || response.status !== 200) throw response;
+                if(!response || response.status !== 200) throw { message: 'Failed to get Project.' };
 
                 vm.selectedProject = response.data;
                 vm.configurations = response.data.configurations;
@@ -190,21 +191,14 @@ function EditProjectController($routeParams, ProjectFactory, ConfigFactory, $win
                 };
                 queryData.from = queryData.from.setDate(queryData.from.getDate() - 7);
 
-                return OpenTimesFactory.getByDate(queryData);
+                return ModelsFactory.getByDate(queryData);
             })
             .then(function (response) {
-                if(!response || response.status !== 201) throw response;
+                if(!response || response.status !== 201) throw { message: 'Failed to get data.' };
 
-                vm.openTimes = response.data;
-                return SynchTimesFactory.getByDate(queryData);
-            })
-            .then(function (response) {
-                if(!response || response.status !== 201) throw response;
-
-                setChartData(vm.openTimes, response.data);
+                setChartData(response.data[0].opentimes, response.data[0].synchtimes);
             })
             .catch(function (err) {
-                console.log(err);
                 toasts.push(ngToast.danger({
                     dismissButton: true,
                     dismissOnTimeout: true,

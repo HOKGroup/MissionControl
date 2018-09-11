@@ -13,7 +13,6 @@ ModelsService = {
     add: function(req, res){
         Models
             .create(req.body, function (err, response){
-                console.log(response);
                 var result = {
                     status: 201,
                     message: response

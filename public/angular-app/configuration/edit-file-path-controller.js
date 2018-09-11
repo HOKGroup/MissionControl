@@ -23,16 +23,16 @@ function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactor
             return;
         }
 
-        // (Konrad) Everything is lower case to make matching easier.
-        // Checks if file path is one of the three (3) approved types
-        var isLocal = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
-        var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
-        var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
-
-        if(!isLocal && !isBim360 && !isRevitServer){
-            vm.warning = 'File Path must be either Local, BIM 360 or Revit Server.';
-            return;
-        }
+        // // (Konrad) Everything is lower case to make matching easier.
+        // // Checks if file path is one of the three (3) approved types
+        // var isLocal = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
+        // var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
+        // var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
+        //
+        // if(!isLocal && !isBim360 && !isRevitServer){
+        //     vm.warning = 'File Path must be either Local, BIM 360 or Revit Server.';
+        //     return;
+        // }
 
         // (Konrad) Before allowing user to change file name, let's check they are not changing it to
         // name that might already exist in the DB.
@@ -102,7 +102,7 @@ function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactor
             })
             .then(function (response) {
                 if(!response) return;
-                return ModelsFactory.updateFilePath(id, data); // Models
+                return ModelsFactory.updateFilePath(data); // Model data (opentimes, synchtimes, modelsizes)
             })
             .then(function (response) {
                 if(!response) return;
@@ -122,7 +122,7 @@ function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactor
             })
             .then(function (response) {
                 if(!response) return;
-                return WorksetsFactory.updateFilePath(id, data); // Worksets
+                return WorksetsFactory.updateFilePath(data); // Worksets (onsynched, onopened, itemcount)
             })
             .then(function (response) {
                 if(!response) return;

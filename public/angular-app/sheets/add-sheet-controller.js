@@ -28,7 +28,7 @@ function AddSheetController($uibModalInstance, UtilityService, ModelsFactory, mo
                 // (Konrad) We need all unique user names of people that ever opened the model.
                 // These will be used to populate dropdowns when assigning tasks. It will allow
                 // us to only assign tasks to people that actually work in the model.
-                var userNamesSet = new Set(response.data[0].openTimes.filter(function (item) {
+                var userNamesSet = new Set(response.data.filter(function (item) {
                     return item.user;
                 }).map(function (item) {
                     return item.user;
