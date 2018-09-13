@@ -46,7 +46,7 @@ angular.module('MissionControlApp').directive('d3StackedHorizontalBarChart', ['d
                 // setup variables
                 var margin = {top: 25, right: 40, bottom: 25, left: scope.marginLeft};
                 var width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right;
-                var height = data.length * 50;
+                var height = data.length * 30;
 
                 svg.attr('height', height + margin.top + margin.bottom);
 
@@ -102,7 +102,7 @@ angular.module('MissionControlApp').directive('d3StackedHorizontalBarChart', ['d
                         var matrix = this.getScreenCTM().translate(+ this.getAttribute("x"), + this.getAttribute("y"));
                         tooltip
                             .style("left", (window.pageXOffset + matrix.e + x(d[1]) - x(d[0])) + "px")
-                            .style("top", (window.pageYOffset + matrix.f + (y.bandwidth()/4)) + "px")
+                            .style("top", (window.pageYOffset + matrix.f + (y.bandwidth() - 26)) + "px")
                             .style("display", "inline-block")
                             .html(d[1] - d[0]);
                         colorStorage = this.style.fill;
@@ -148,7 +148,7 @@ angular.module('MissionControlApp').directive('d3StackedHorizontalBarChart', ['d
                         var matrix = this.getScreenCTM().translate(+ this.getAttribute("x"), + this.getAttribute("y"));
                         tooltip
                             .style("left", (window.pageXOffset + matrix.e + x(d.total)) + "px")
-                            .style("top", (window.pageYOffset + matrix.f - 13) + "px")
+                            .style("top", (window.pageYOffset + matrix.f - 12) + "px")
                             .style("display", "inline-block")
                             .html(d.name);
                     })

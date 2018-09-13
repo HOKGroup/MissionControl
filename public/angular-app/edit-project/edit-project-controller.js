@@ -67,9 +67,10 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                             newestOnTop: true,
                             content: "No activity in more than " + item + "."
                         }));
-                    } else {
-                        setChartData(response.data[0].opentimes, response.data[0].synchtimes);
                     }
+
+                    setUserData(response.data[0].opentimes, response.data[0].synchtimes);
+                    setChartData(response.data[0].opentimes, response.data[0].synchtimes);
                 })
                 .catch(function (err) {
                     toasts.push(ngToast.danger({
@@ -93,9 +94,10 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                             newestOnTop: true,
                             content: "No activity in more than " + item + "."
                         }));
-                    } else {
-                        setChartData(response.data[0].opentimes, response.data[0].synchtimes);
                     }
+
+                    setUserData(response.data[0].opentimes, response.data[0].synchtimes);
+                    setChartData(response.data[0].opentimes, response.data[0].synchtimes);
                 })
                 .catch(function (err) {
                     toasts.push(ngToast.danger({
@@ -224,9 +226,10 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                         newestOnTop: true,
                         content: "No activity in more than 7 days."
                     }));
-                } else {
-                    setChartData(response.data[0].opentimes, response.data[0].synchtimes);
                 }
+
+                setUserData(response.data[0].opentimes, response.data[0].synchtimes);
+                setChartData(response.data[0].opentimes, response.data[0].synchtimes);
             })
             .catch(function (err) {
                 toasts.push(ngToast.danger({
@@ -237,6 +240,44 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                     content: err.message
                 }));
             });
+    }
+
+    /**
+     *
+     * @param openTimes
+     * @param synchTimes
+     */
+    function setUserData(openTimes, synchTimes){
+        var unknown = {'name': 'unknown', 'opened': 0, 'synched': 0, 'total': 0};
+        var data = synchTimes.reduce(function (data, item) {
+            var key = item.user.toLowerCase();
+            if(key.toLowerCase() !== 'unknown'){
+                var c = (data[key] || (data[key] = {'name': key, 'opened': 0, 'synched': 0, 'total': 0}));
+                c['synched'] += 1;
+                c['total'] += 1;
+            } else {
+                unknown.synched += 1;
+                unknown.total +=1;
+            }
+            return data;
+        }, {});
+
+        var data1 = openTimes.reduce(function (data, item) {
+            var key = item.user.toLowerCase();
+            if(key.toLowerCase() !== 'unknown'){
+                var c = (data[key] || (data[key] = {'name': key, 'opened': 0, 'synched': 0, 'total': 0}));
+                c['opened'] += 1;
+                c['total'] += 1;
+            } else {
+                unknown.opened += 1;
+                unknown.total +=1;
+            }
+            return data;
+        }, data);
+
+        // (Konrad) Set data for the users chart. IE doesn't support Object.values
+        vm.userData = Object.keys(data1).map(function(item) { return data1[item]; });
+        vm.unknownUserData = unknown;
     }
 
     /**
