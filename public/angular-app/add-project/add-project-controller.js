@@ -3,8 +3,9 @@
  */
 angular.module('MissionControlApp').controller('AddProjectController', AddProjectController);
 
-function AddProjectController(ProjectFactory, $window){
+function AddProjectController(ProjectFactory, $window, ngToast){
     var vm = this;
+    var toasts = [];
     vm.status = "";
     vm.newProject = {
         address: {},
@@ -22,8 +23,14 @@ function AddProjectController(ProjectFactory, $window){
         if( !vm.newProject.hasOwnProperty('number') ||
             !vm.newProject.hasOwnProperty('name') ||
             !vm.newProject.hasOwnProperty('office')){
-            vm.status = 'Name, Number and Office are required fields. Please fill them out.';
-            return;
+                toasts.push(ngToast.warning({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: 'Name, Number, Office are required fields.'
+                }));
+                return;
         }
 
         var project = {
@@ -54,13 +61,18 @@ function AddProjectController(ProjectFactory, $window){
         ProjectFactory
             .addProject(project)
             .then(function(response){
-                if(!response || response.status !== 201) return;
+                if(!response || response.status !== 201) throw { message: 'Unable to add project.' };
 
                 $window.location.assign('#/configurations/add/' + response.data._id);
             })
             .catch(function(err){
-                console.log(err);
-                vm.status = 'Unable to add project: ' + err.message;
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
             });
     };
 

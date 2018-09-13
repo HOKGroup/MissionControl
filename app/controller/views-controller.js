@@ -121,37 +121,49 @@ ViewsService = {
      * @param res
      */
     getViewStats: function (req, res) {
+        var limit = -200;
+        var pipeline = [];
         var from = new Date(req.body.from);
         var to = new Date(req.body.to);
-        Views
-            .aggregate([
-                { $match: { 'centralPath': req.body.centralPath }},
-                { $project: {
-                    'viewStats': { $filter: {
-                        input: '$viewStats',
-                        as: 'item',
-                        cond: { $and: [
-                            { $gte: ['$$item.createdOn', from]},
-                            { $lte: ['$$item.createdOn', to]}
-                        ]}
-                    }},
-                    '_id': 1,
-                    'centralPath': 1
-                }}]
-            ).exec(function (err, response){
-                var result = {
-                    status: 201,
-                    message: response[0]
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response[0]){
-                    result.status = 404;
-                    result.message = err;
-                }
-                res.status(result.status).json(result.message);
-            });
+
+        if(!req.body.from || !req.body.to){
+            pipeline = {
+                'viewStats': { $slice: ['$viewStats', limit]},
+                '_id': 1,
+                'centralPath': 1
+            };
+        } else {
+            pipeline = {
+                'viewStats': { $filter: {
+                    input: '$viewStats',
+                    as: 'item',
+                    cond: { $and: [
+                        { $gte: ['$$item.createdOn', from]},
+                        { $lte: ['$$item.createdOn', to]}
+                    ]}}
+                },
+                '_id': 1,
+                'centralPath': 1
+            };
+        }
+
+        Views.aggregate([
+            { $match: { 'centralPath': req.body.centralPath }},
+            { $project: pipeline }]
+        ).exec(function (err, response){
+            var result = {
+                status: 201,
+                message: response[0]
+            };
+            if (err){
+                result.status = 500;
+                result.message = err;
+            } else if (!response[0]){
+                result.status = 404;
+                result.message = err;
+            }
+            res.status(result.status).json(result.message);
+        });
     }
 };
 

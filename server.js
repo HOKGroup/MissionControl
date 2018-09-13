@@ -25,7 +25,11 @@ if(localMongo){
 	mongo_uri='mongodb://admin:admin@ds011495.mlab.com:11495/missioncontrol';
 }
 
-mongoose.connect(mongo_uri);
+mongoose.connect(mongo_uri, {
+    useCreateIndex: true,
+    useNewUrlParser: true
+});
+
 var db = mongoose.connection;
 db.on( 'error', function () {
   var msg = 'unable to connect to database at ';

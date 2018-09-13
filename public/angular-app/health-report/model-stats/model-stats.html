@@ -14,7 +14,7 @@
                     </h4>
                 </div>
                 <div class="panel-collapse">
-                    <div class="panel-body" id="firstChart">
+                    <div class="panel-body" id="firstChart" ng-if="vm.Validate()">
                         <health-report-summary data="vm.ModelData.scoreData"
                                                description="vm.ModelData.description"
                                                bullets="vm.ModelData.bullets"
@@ -51,7 +51,7 @@
                     </h4>
                 </div>
                 <div class="panel-collapse">
-                    <div class="panel-body no-padding">
+                    <div class="panel-body no-padding" ng-if="vm.Validate()">
                         <d3-line-brushed-dots
                                 data="vm.ModelOpenTimes"
                                 excluded="vm.ExcludedModelOpenTimes"
@@ -86,7 +86,7 @@
                     </h4>
                 </div>
                 <div class="panel-collapse">
-                    <div class="panel-body no-padding">
+                    <div class="panel-body no-padding" ng-if="vm.Validate()">
                         <d3-line-brushed-dots
                                 data="vm.ModelSynchTimes"
                                 excluded="vm.ExcludedModelSynchTimes"
@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="panel-collapse">
-                    <div class="panel-body">
+                    <div class="panel-body" ng-if="vm.Validate()">
                         <table id="modelStatsTable"
                                datatable=""
                                dt-options="vm.dtOptions"
@@ -137,7 +137,7 @@
                     <h4 class="panel-title">Model Size</h4>
                 </div>
                 <div id="collapseP3" class="panel-collapse collapse in">
-                    <div class="panel-body no-padding">
+                    <div class="panel-body no-padding" ng-if="vm.Validate()">
                         <d3-zoomable-line
                                 data="vm.ModelSizes"
                                 format-value="vm.formatValue(item)">

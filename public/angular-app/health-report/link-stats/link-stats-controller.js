@@ -1,7 +1,8 @@
 angular.module('MissionControlApp').controller('LinkStatsController', LinkStatsController);
 
-function LinkStatsController($routeParams, DTColumnDefBuilder, HealthReportFactory){
+function LinkStatsController($routeParams, DTColumnDefBuilder, HealthReportFactory, ngToast){
     var vm = this;
+    var toasts = [];
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
         vm.LinkData = this.processed;
@@ -23,8 +24,14 @@ function LinkStatsController($routeParams, DTColumnDefBuilder, HealthReportFacto
                 centralPath: vm.LinkData.linkStats.centralPath
             };
             HealthReportFactory.processLinkStats(data, function (result) {
-                if (!result){
-                    console.log("Given date range contains no data.")
+                if (!result || result.linkStats.linkStats.length === 0){
+                    toasts.push(ngToast.warning({
+                        dismissButton: true,
+                        dismissOnTimeout: true,
+                        timeout: 4000,
+                        newestOnTop: true,
+                        content: 'No data found for these dates.'
+                    }));
                 }
                 vm.LinkData = result;
                 vm.loading = false;

@@ -1,7 +1,8 @@
 angular.module('MissionControlApp').controller('ViewStatsController', ViewStatsController);
 
-function ViewStatsController($routeParams, HealthReportFactory){
+function ViewStatsController($routeParams, HealthReportFactory, ngToast){
     var vm = this;
+    var toasts = [];
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
         vm.ViewData = this.processed;
@@ -21,9 +22,16 @@ function ViewStatsController($routeParams, HealthReportFactory){
                 centralPath: vm.ViewData.viewStats.centralPath
             };
             HealthReportFactory.processViewStats(data, function (result) {
-                if (!result){
-                    console.log("Given date range contains no data.")
+                if (!result || result.viewStats.viewStats.length < 2){
+                    toasts.push(ngToast.warning({
+                        dismissButton: true,
+                        dismissOnTimeout: true,
+                        timeout: 4000,
+                        newestOnTop: true,
+                        content: 'No data found for these dates.'
+                    }));
                 }
+
                 vm.ViewData = result;
                 vm.loading = false;
             });

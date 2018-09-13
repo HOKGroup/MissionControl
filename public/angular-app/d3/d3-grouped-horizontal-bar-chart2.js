@@ -1,4 +1,4 @@
-// Data is exected in following format:
+// Data is expected in following format:
 // data = [
 //      { onOpened: 12,
 //        onSynched: 12,

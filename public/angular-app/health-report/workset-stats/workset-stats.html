@@ -13,7 +13,7 @@
                         </a>
                     </h4>
                 </div>
-                <div class="panel-collapse" ng-if="vm.WorksetData.scoreData">
+                <div class="panel-collapse" ng-if="vm.Validate()">
                     <div class="panel-body">
                         <health-report-summary data="vm.WorksetData.scoreData"
                                                description="vm.WorksetData.description"
@@ -35,8 +35,8 @@
                     <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-chevron-up"></span> On Model Open</p>
                     <h4 class="panel-title" style="padding-top: 5px;">Worksets opened %</h4>
                 </div>
-                <div class="panel-collapse" ng-if="vm.WorksetData.worksetOpenedData">
-                    <div class="panel-body no-padding" style="max-height: 400px; overflow-y: scroll; width: 100%">
+                <div class="panel-collapse">
+                    <div class="panel-body no-padding" style="max-height: 400px; overflow-y: scroll; width: 100%" ng-if="vm.Validate()">
                         <d3-grouped-horizontal-bar-chart2 data="vm.WorksetData.worksetOpenedData"
                                                           d3-on-click="vm.d3OnClick(item)">
                         </d3-grouped-horizontal-bar-chart2>
@@ -67,8 +67,8 @@
                     <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #d9534f"></span> Bulk Content >50%</p>
                     <h4 class="panel-title" style="padding-top: 5px;">Workset Item Counts</h4>
                 </div>
-                <div id="collapseThree" class="panel-collapse collapse in" ng-if="vm.WorksetData.dataWorksetItemCount">
-                    <div class="panel-body no-padding">
+                <div id="collapseThree" class="panel-collapse collapse in">
+                    <div class="panel-body no-padding" ng-if="vm.Validate()">
                         <d3-horizontal-bar-chart data="vm.WorksetData.dataWorksetItemCount"
                                                  count-total="vm.WorksetData.worksetCountTotal"
                                                  margin-left="150"

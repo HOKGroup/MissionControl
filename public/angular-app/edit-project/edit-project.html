@@ -16,62 +16,60 @@
 					<h3 class="panel-title">Project Info</h3>
 				</div>
 				<div class="panel-body">
-					<fieldset class="form-group">
-						<label for="formProjectNumber">
-							Project Number
-							<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.selectedProject.number"></span>
-							<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.selectedProject.number"></span>
-						</label>
-						<input type="text" name="pNumber" class="form-control" id="formProjectNumber" placeholder="00.00000.00" ng-model="vm.selectedProject.number" required>
-						<div ng-show="form.$submitted || form.pNumber.$touched">
-							<div ng-show="form.pNumber.$error.required" class="text-danger">(*) Project Number is required.</div>
-						</div>
-					</fieldset>
-					<fieldset class="form-group">
-						<label for="formProjectName">
-							Project Name
-							<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.selectedProject.name"></span>
-							<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.selectedProject.name"></span>
-						</label>
-						<input type="text" name="pName" class="form-control" id="formProjectName" placeholder="Project Name" ng-model="vm.selectedProject.name" required>
-						<div ng-show="form.$submitted || form.pName.$touched">
-							<div ng-show="form.pName.$error.required" class="text-danger">(*) Project Name is required.</div>
-						</div>
-						<div ng-show="vm.selectedProject.name.length > 35">
-							<div class="text-danger">(*) Project Name is too long.</div>
-						</div>
-					</fieldset>
-					<fieldset class="form-group">
-						<label for="formOfficeSelect">
-							Office
-							<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.selectedProject.office"></span>
-							<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.selectedProject.office"></span>
-						</label>
-						<select class="form-control" id="formOfficeSelect" ng-model="vm.selectedProject.office">
-							<option value="ATL">Atlanta</option>
-							<option value="CHI">Chicago</option>
-							<option value="DUB">Dubai</option>
-							<option value="HK">Hong Kong</option>
-							<option value="HOU">Houston</option>
-							<option value="KC">Kansas City</option>
-							<option value="LA">Los Angeles</option>
-							<option value="LON">London</option>
-							<option value="NY">New York</option>
-							<option value="PHI">Philadelphia</option>
-							<option value="SF">San Francisco</option>
-							<option value="STL">St. Louis</option>
-							<option value="WDC">Washington, D.C</option>
-						</select>
-					</fieldset>
-					<fieldset class="form-group">
-						<div google-drawing-map
-							 address="vm.selectedProject.address"
-							 geo-location="vm.selectedProject.geoLocation"
-							 geo-polygon="vm.selectedProject.geoPolygon"
-							 initialized="vm.initialized">
-						</div>
-					</fieldset>
 					<form class ="form-horizontal">
+						<fieldset class="form-group">
+							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formProjectNumber">
+								Project Number
+								<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.selectedProject.number"></span>
+								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.selectedProject.number"></span>
+							</label>
+							<div class="col-sm-9 no-padding-right">
+								<input type="text" name="pNumber" class="form-control" id="formProjectNumber" placeholder="00.00000.00" ng-model="vm.selectedProject.number" required>
+								<div ng-show="form.$submitted || form.pNumber.$touched">
+									<div ng-show="form.pNumber.$error.required" class="text-danger">(*) Project Number is required.</div>
+								</div>
+							</div>
+						</fieldset>
+						<fieldset class="form-group">
+							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formProjectName">
+								Project Name
+								<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.selectedProject.name"></span>
+								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.selectedProject.name"></span>
+							</label>
+							<div class="col-sm-9 no-padding-right">
+								<input type="text" name="pName" class="form-control" id="formProjectName" placeholder="Project Name" ng-model="vm.selectedProject.name" required>
+								<div ng-show="form.$submitted || form.pName.$touched">
+									<div ng-show="form.pName.$error.required" class="text-danger">(*) Project Name is required.</div>
+								</div>
+								<div ng-show="vm.selectedProject.name.length > 35">
+									<div class="text-danger">(*) Project Name is too long.</div>
+								</div>
+							</div>
+						</fieldset>
+						<fieldset class="form-group">
+							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formOfficeSelect">
+								Office
+								<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.selectedProject.office"></span>
+								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.selectedProject.office"></span>
+							</label>
+							<div class="col-sm-9 no-padding-right">
+								<select class="form-control" id="formOfficeSelect" ng-model="vm.selectedProject.office">
+									<option value="ATL">Atlanta</option>
+									<option value="CHI">Chicago</option>
+									<option value="DUB">Dubai</option>
+									<option value="HK">Hong Kong</option>
+									<option value="HOU">Houston</option>
+									<option value="KC">Kansas City</option>
+									<option value="LA">Los Angeles</option>
+									<option value="LON">London</option>
+									<option value="NY">New York</option>
+									<option value="PHI">Philadelphia</option>
+									<option value="SF">San Francisco</option>
+									<option value="STL">St. Louis</option>
+									<option value="WDC">Washington, D.C</option>
+								</select>
+							</div>
+						</fieldset>
 						<fieldset class="form-group">
 							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formStreet">Street Address</label>
 							<div class="col-sm-9 no-padding-right">
@@ -160,53 +158,74 @@
 								<input type="text" class="form-control" id="formContury" ng-model="vm.selectedProject.address.country">
 							</div>
 						</fieldset>
-						<fieldset class="form-group">
-							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formLatitude">Latitude</label>
-							<div class="col-sm-3 no-padding-right">
-								<input type="text" class="form-control" id="formLatitude" ng-model="vm.selectedProject.geoLocation.coordinates[1]" disabled>
-							</div>
-							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formLongitude">Longitude</label>
-							<div class="col-sm-3 no-padding-right">
-								<input type="text" class="form-control" id="formLongitude" ng-model="vm.selectedProject.geoLocation.coordinates[0]" disabled>
-							</div>
-						</fieldset>
 					</form>
+					<button type="submit"
+							class="btn btn-primary pull-right"
+							ng-click="vm.updateProject()"
+							ng-disabled="vm.verifyForm()">
+						<span class="glyphicon glyphicon-ok"></span>
+						Update
+					</button>
+					<button class="btn btn-secondary pull-right"
+							ng-click="vm.cancel()"
+							style="margin-right: 10px">
+						Cancel
+					</button>
 				</div>
 			</div>
+		</form>
+	</div>
+	<div class="row">
+		<div class="panel-group">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
+						<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+							{{vm.selectedRange}}
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 50px">
+							<li ng-repeat="item in vm.availableRanges">
+								<a href="" ng-click="vm.filterRange(item)">{{item}}</a>
+							</li>
+						</ul>
+					</div>
+					<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #759CC3"></span> Synched</p>
+					<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #4378A7"></span> Opened</p>
+					<h4 class="panel-title" style="padding-top: 5px;">
+						Project Activity
+					</h4>
+				</div>
+				<div class="panel-collapse">
+					<div class="panel-body no-padding">
+						<d3-stacked-horizontal-bar-chart data="vm.chartData" margin-left="150" domain-padding="10"></d3-stacked-horizontal-bar-chart>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="panel-group">
 			<div class="panel panel-danger">
 				<div class="panel-heading">
-					<h3 class="panel-title">Danger Zone</h3>
+					<h4 class="panel-title">Danger Zone</h4>
 				</div>
-				<div class="panel-body">
-					<form>
-						<div class="form-group row" style="margin-bottom: 0">
-							<label class="col-sm-8" style="margin-top: 8px">This button will delete this PROJECT and all related CONFIGURATIONS.</label>
-							<div class="col-sm-4">
-								<button type="submit" class="btn btn-danger pull-right" ng-click="vm.deleteProject()">
-									<span class="glyphicon glyphicon-trash"></span>
-									Delete
-								</button>
+				<div class="panel-collapse">
+					<div class="panel-body">
+						<form>
+							<div class="form-group row" style="margin-bottom: 0">
+								<label class="col-sm-8" style="margin-top: 8px">This button will delete this PROJECT and all related CONFIGURATIONS.</label>
+								<div class="col-sm-4">
+									<button type="submit" class="btn btn-danger pull-right" ng-click="vm.deleteProject()">
+										<span class="glyphicon glyphicon-trash"></span>
+										Delete
+									</button>
+								</div>
 							</div>
-						</div>
-					</form>
+						</form>
+					</div>
 				</div>
 			</div>
-			<label style="padding-left:0; margin-top:7px;"
-				   class="text-danger">
-				{{vm.status}}
-			</label>
-			<button type="submit"
-					class="btn btn-primary pull-right"
-					ng-click="vm.updateProject()"
-					ng-disabled="vm.verifyForm()">
-				<span class="glyphicon glyphicon-ok"></span>
-				Update
-			</button>
-			<button class="btn btn-secondary pull-right"
-					ng-click="vm.cancel()"
-					style="margin-right: 10px">
-				Cancel
-			</button>
-		</form>
+		</div>
 	</div>
 </div>

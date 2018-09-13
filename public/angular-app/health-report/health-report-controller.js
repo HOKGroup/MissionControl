@@ -122,8 +122,8 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         var dtFrom = new Date();
         dtFrom.setMonth(dtFrom.getMonth() - 1);
         var data = {
-            from: dtFrom,
-            to: new Date(),
+            from: null,
+            to: null,
             centralPath: link.centralPath
         };
 
@@ -198,7 +198,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
             vm.SelectionChanged('main');
         });
 
-        HealthReportFactory.processWarningStats({from: null, to: null, centralPath: data.centralPath}, function (result) {
+        HealthReportFactory.processWarningStats(data, function (result) {
             if(result && result.warningStats.length > 0){
                 vm.noData = false;
                 vm.WarningData = result;
