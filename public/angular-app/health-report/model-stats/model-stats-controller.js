@@ -3,8 +3,9 @@
  */
 angular.module('MissionControlApp').controller('ModelStatsController', ModelStatsController);
 
-function ModelStatsController($timeout, $routeParams, UtilityService, DTColumnBuilder, DTOptionsBuilder, $scope, $uibModal, HealthReportFactory){
+function ModelStatsController($timeout, $routeParams, UtilityService, DTColumnBuilder, DTOptionsBuilder, $scope, $uibModal, HealthReportFactory, ngToast){
     var vm = this;
+    var toasts = [];
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
         var synchLimit = 3600000; // 1h
@@ -14,6 +15,17 @@ function ModelStatsController($timeout, $routeParams, UtilityService, DTColumnBu
         vm.TableDataTypes = ['Open', 'Synch'];
         vm.loading = false;
         vm.tableData = [];
+
+        /**
+         * @return {boolean}
+         */
+        vm.Validate = function () {
+            return vm.ModelData.modelStats.modelSizes.length > 2 &&
+                vm.ModelData.modelStats.onOpened.length > 2 &&
+                vm.ModelData.modelStats.onSynched.length > 2 &&
+                vm.ModelData.modelStats.openTimes.length > 2 &&
+                vm.ModelData.modelStats.synchTimes.length > 2;
+        };
 
         setDefaults();
         createTable();
@@ -51,8 +63,19 @@ function ModelStatsController($timeout, $routeParams, UtilityService, DTColumnBu
                 to: date.to,
                 centralPath: vm.ModelData.modelStats.centralPath
             };
+            console.log(data);
             HealthReportFactory.processModelStats(data, function (result) {
                 vm.ModelData = result;
+
+                if(!result || !vm.Validate()){
+                    toasts.push(ngToast.warning({
+                        dismissButton: true,
+                        dismissOnTimeout: true,
+                        timeout: 4000,
+                        newestOnTop: true,
+                        content: 'No data found for these dates.'
+                    }));
+                }
 
                 setDefaults();
                 reloadTable();

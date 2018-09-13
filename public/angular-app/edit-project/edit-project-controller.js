@@ -59,7 +59,17 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                 .then(function (response) {
                     if(!response || response.status !== 201) throw { message: 'Failed to get data.' };
 
-                    setChartData(response.data[0].opentimes, response.data[0].synchtimes);
+                    if(response.data[0].opentimes.length === 0 && response.data[0].synchtimes.length === 0){
+                        toasts.push(ngToast.warning({
+                            dismissButton: true,
+                            dismissOnTimeout: true,
+                            timeout: 4000,
+                            newestOnTop: true,
+                            content: "No activity in more than " + item + "."
+                        }));
+                    } else {
+                        setChartData(response.data[0].opentimes, response.data[0].synchtimes);
+                    }
                 })
                 .catch(function (err) {
                     toasts.push(ngToast.danger({
@@ -75,7 +85,17 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                 .then(function (response) {
                     if(!response || response.status !== 201) throw { message: 'Failed to get data.' };
 
-                    setChartData(response.data[0].opentimes, response.data[0].synchtimes);
+                    if(response.data[0].opentimes.length === 0 && response.data[0].synchtimes.length === 0){
+                        toasts.push(ngToast.warning({
+                            dismissButton: true,
+                            dismissOnTimeout: true,
+                            timeout: 4000,
+                            newestOnTop: true,
+                            content: "No activity in more than " + item + "."
+                        }));
+                    } else {
+                        setChartData(response.data[0].opentimes, response.data[0].synchtimes);
+                    }
                 })
                 .catch(function (err) {
                     toasts.push(ngToast.danger({
@@ -196,7 +216,17 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
             .then(function (response) {
                 if(!response || response.status !== 201) throw { message: 'Failed to get data.' };
 
-                setChartData(response.data[0].opentimes, response.data[0].synchtimes);
+                if(response.data[0].opentimes.length === 0 && response.data[0].synchtimes.length === 0){
+                    toasts.push(ngToast.warning({
+                        dismissButton: true,
+                        dismissOnTimeout: true,
+                        timeout: 4000,
+                        newestOnTop: true,
+                        content: "No activity in more than 7 days."
+                    }));
+                } else {
+                    setChartData(response.data[0].opentimes, response.data[0].synchtimes);
+                }
             })
             .catch(function (err) {
                 toasts.push(ngToast.danger({

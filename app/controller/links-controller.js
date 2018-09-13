@@ -87,37 +87,49 @@ LinksService = {
      * @param res
      */
     getLinkStats: function (req, res) {
+        var limit = -200;
+        var pipeline = [];
         var from = new Date(req.body.from);
         var to = new Date(req.body.to);
-        Links
-            .aggregate([
-                { $match: { 'centralPath': req.body.centralPath }},
-                { $project: {
-                    'linkStats': { $filter: {
-                        input: '$linkStats',
-                        as: 'item',
-                        cond: { $and: [
-                            { $gte: ['$$item.createdOn', from]},
-                            { $lte: ['$$item.createdOn', to]}
-                        ]}
-                    }},
-                    '_id': 1,
-                    'centralPath': 1
-                }}]
-            ).exec(function (err, response){
-                var result = {
-                    status: 201,
-                    message: response[0]
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response[0]){
-                    result.status = 404;
-                    result.message = err;
-                }
-                res.status(result.status).json(result.message);
-            });
+
+        if(!req.body.from || !req.body.to){
+            pipeline = {
+                'linkStats': { $slice: ['$linkStats', limit]},
+                '_id': 1,
+                'centralPath': 1
+            };
+        } else {
+            pipeline = {
+                'linkStats': { $filter: {
+                    input: '$linkStats',
+                    as: 'item',
+                    cond: { $and: [
+                        { $gte: ['$$item.createdOn', from]},
+                        { $lte: ['$$item.createdOn', to]}
+                    ]}}
+                },
+                '_id': 1,
+                'centralPath': 1
+            };
+        }
+
+        Links.aggregate([
+            { $match: { 'centralPath': req.body.centralPath }},
+            { $project: pipeline }
+        ]).exec(function (err, response){
+            var result = {
+                status: 201,
+                message: response[0]
+            };
+            if (err){
+                result.status = 500;
+                result.message = err;
+            } else if (!response[0]){
+                result.status = 404;
+                result.message = err;
+            }
+            res.status(result.status).json(result.message);
+        });
     }
 };
 

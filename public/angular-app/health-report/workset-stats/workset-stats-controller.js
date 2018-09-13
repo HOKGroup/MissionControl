@@ -1,7 +1,8 @@
 angular.module('MissionControlApp').controller('WorksetsController', WorksetsController);
 
-function WorksetsController($routeParams, UtilityService, HealthReportFactory){
+function WorksetsController($routeParams, UtilityService, HealthReportFactory, ngToast){
     var vm = this;
+    var toasts = [];
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
         vm.WorksetData = this.processed;
@@ -9,6 +10,15 @@ function WorksetsController($routeParams, UtilityService, HealthReportFactory){
         vm.d3GoalLine = {name: "Goal", value: 50}; // reference line
         vm.showTimeSettings = false;
         vm.loading = false;
+
+        /**
+         * @return {boolean}
+         */
+        vm.Validate = function () {
+            return vm.WorksetData.worksetStats.itemCount.length > 2 &&
+                vm.WorksetData.worksetStats.onOpened.length > 2 &&
+                vm.WorksetData.worksetStats.onSynched.length > 2;
+        };
 
         /**
          * Callback method for Date Time Range selection.
@@ -24,11 +34,21 @@ function WorksetsController($routeParams, UtilityService, HealthReportFactory){
             };
             HealthReportFactory.processWorksetStats(data, function (result) {
                 vm.WorksetData = result;
-                vm.loading = false;
+
+                if(!result || !vm.Validate()){
+                    toasts.push(ngToast.warning({
+                        dismissButton: true,
+                        dismissOnTimeout: true,
+                        timeout: 4000,
+                        newestOnTop: true,
+                        content: 'No data found for these dates.'
+                    }));
+                }
 
                 vm.UserData = [];
                 vm.SelectedUser = '';
                 vm.WorksetsOpenedType = '';
+                vm.loading = false;
             });
         };
 

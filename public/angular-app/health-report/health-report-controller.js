@@ -134,7 +134,6 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         };
 
         HealthReportFactory.processModelStats(data1, function (result) {
-            console.log(result);
             if( result && result.modelStats &&
                 result.modelStats.modelSizes.length > 0 &&
                 result.modelStats.openTimes.length > 0 &&
@@ -148,7 +147,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
             vm.SelectionChanged('main');
         });
 
-        HealthReportFactory.processFamilyStats(data, function (result) {
+        HealthReportFactory.processFamilyStats(data1, function (result) {
             if(result && result.familyStats.families.length > 0){
                 vm.noData = false;
                 vm.FamilyData = result;
@@ -157,7 +156,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
             vm.SelectionChanged('main');
         });
 
-        HealthReportFactory.processStyleStats(data, function (result) {
+        HealthReportFactory.processStyleStats(data1, function (result) {
             if(result && result.styleStats.styleStats.length > 0){
                 vm.noData = false;
                 vm.StyleData = result;
@@ -166,7 +165,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
             vm.SelectionChanged('main');
         });
 
-        HealthReportFactory.processLinkStats(data, function (result) {
+        HealthReportFactory.processLinkStats(data1, function (result) {
             if(result && result.linkStats.linkStats.length > 0){
                 vm.noData = false;
                 vm.LinkData = result;

@@ -585,11 +585,11 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         callback(null);
                         return;
                     }
-                    if( response.data[0].opentimes.length === 0 ||
-                        response.data[0].synchtimes.length === 0 ||
-                        response.data[0].modelsizes.length === 0 ||
-                        response.data[0].onopened.length === 0 ||
-                        response.data[0].onsynched.length === 0){
+                    if( response.data[0].opentimes.length <= 2 ||
+                        response.data[0].synchtimes.length <= 2 ||
+                        response.data[0].modelsizes.length <= 2 ||
+                        response.data[0].onopened.length <= 2 ||
+                        response.data[0].onsynched.length <= 2){
                         // (Konrad) In case that the specified date range contains no data
                         // we can return the response object only. It has the centralPath
                         // property needed to re-call this filter without crashing.
@@ -614,11 +614,6 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             onSynched: response.data[0].onsynched,
                             centralPath: cp
                         };
-
-                        // (Konrad) Since all these are displayed in a chart we need at least two (2) data points.
-                        if(data.modelSizes.length <= 1) return;
-                        if(data.openTimes.length <= 1) return;
-                        if(data.synchTimes.length <= 1) return;
 
                         var modelSize = UtilityService.formatNumber(data.modelSizes[data.modelSizes.length-1].value);
                         var avgOpenTime = UtilityService.formatDuration(SumProperty(data.openTimes, "value") / data.openTimes.length);
@@ -693,13 +688,6 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
             var cf = data.centralPath;
             WorksetsFactory.getWorksetStats(data)
                 .then(function (response) {
-                    var worksetData = {
-                        onOpened: response.data[0].onOpened,
-                        onSynched: response.data[0].onSynched,
-                        itemCount: response.data[0].itemCount,
-                        centralPath: cf
-                    };
-
                     if( !response || response.status !== 201){
                         callback(null);
                         return;
@@ -710,9 +698,20 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         response.data[0].onSynched.length < 1 ||
                         response.data[0].itemCount.length < 1){
                             callback({
-                                worksetStats: worksetData
-                        })
+                                worksetStats: {
+                                    onOpened: response.data[0].onOpened,
+                                    onSynched: response.data[0].onSynched,
+                                    itemCount: response.data[0].itemCount,
+                                    centralPath: cf
+                                }
+                        });
                     } else {
+                        var worksetData = {
+                            onOpened: response.data[0].onOpened,
+                            onSynched: response.data[0].onSynched,
+                            itemCount: response.data[0].itemCount,
+                            centralPath: cf
+                        };
                         var opened = CalculateTotals(worksetData.onOpened);
                         var output = [];
                         opened.forEach(function(item) {
