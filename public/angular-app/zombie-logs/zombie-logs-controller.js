@@ -3,8 +3,9 @@
  */
 angular.module('MissionControlApp').controller('ZombieLogsController', ZombieLogsController);
 
-function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuilder){
+function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder, DTColumnBuilder, ngToast){
     var vm = this;
+    var toasts = [];
 
     //region Public Properties
 
@@ -56,7 +57,31 @@ function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuild
     vm.popup1 = { opened: false };
     vm.popup2 = { opened: false };
 
+    getUsers();
+
     //endregion
+
+    function getUsers() {
+        UsersFactory.getAll().then(function (response) {
+            if(!response || response.status !== 200){
+                throw {message: "Could not retrieve user info."};
+            }
+
+            vm.users = response.data.reduce(function (obj, item) {
+                obj[item.machine] = item.user;
+                return obj;
+            });
+            console.log(vm.users);
+        }).catch(function (err) {
+            toasts.push(ngToast.warning({
+                dismissButton: true,
+                dismissOnTimeout: true,
+                timeout: 4000,
+                newestOnTop: true,
+                content: err.message
+            }));
+        })
+    }
 
     //region Table
 
@@ -98,12 +123,12 @@ function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuild
     vm.dtColumns = [
         DTColumnBuilder.newColumn('createdAt')
             .withTitle('Date/Time')
-            .withOption('width', '15%')
+            .withOption('width', '12%')
             // .withOption('orderData', 0)
             .renderWith(parseDateTime),
         DTColumnBuilder.newColumn('machine')
             .withTitle('Location')
-            .withOption('width', '10%')
+            .withOption('width', '8%')
             .withOption('className', 'text-center')
             .renderWith(parseLocation),
         DTColumnBuilder.newColumn('machine')
@@ -111,10 +136,11 @@ function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuild
             .withOption('className', 'text-center')
             .withOption('width', '10%')
             .renderWith(parseMachine),
-        DTColumnBuilder.newColumn('level')
-            .withTitle('Level')
+        DTColumnBuilder.newColumn('machine')
+            .withTitle('User')
             .withOption('className', 'text-center')
-            .withOption('width', '10%'),
+            .withOption('width', '15%')
+            .renderWith(parseUsername),
         DTColumnBuilder.newColumn('message')
             .withTitle('Message')
             .withOption('width', '55%')
@@ -151,17 +177,22 @@ function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuild
     vm.dtColumns1 = [
         DTColumnBuilder.newColumn('machine')
             .withTitle('Location')
-            .withOption('width', '13%')
+            .withOption('width', '8%')
             .withOption('className', 'text-center')
             .renderWith(parseLocation),
         DTColumnBuilder.newColumn('machine')
             .withTitle('Machine')
             .withOption('className', 'text-center')
-            .withOption('width', '13%')
+            .withOption('width', '10%')
             .renderWith(parseMachine),
+        DTColumnBuilder.newColumn('machine')
+            .withTitle('User')
+            .withOption('className', 'text-center')
+            .withOption('width', '15%')
+            .renderWith(parseUsername),
         DTColumnBuilder.newColumn('message')
             .withTitle('Message')
-            .withOption('width', '74%')
+            .withOption('width', '67%')
     ];
 
     /**
@@ -175,6 +206,13 @@ function ZombieLogsController(ZombieLogsFactory, DTOptionsBuilder, DTColumnBuild
         var parts = machine.split('-');
         if(parts.length > 2) return parts[1] + '-' + parts[2];
         else return parts[1];
+    }
+
+    function parseUsername(machine) {
+        if(!machine) return 'N/A';
+
+        if(vm.users.hasOwnProperty(machine)) return vm.users[machine];
+        else return "Unknown";
     }
 
     /**
