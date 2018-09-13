@@ -13,6 +13,7 @@ var warnings = require('./models/warnings');
 var zombieLogs = require('./models/zombie-logs-model');
 var filePaths = require('./models/filepaths');
 var models = require('./models/models');
+var users = require('./models/users');
 
  module.exports = function(app) {
      var projects = require('./controller/projects');
@@ -146,4 +147,8 @@ var models = require('./models/models');
      app.put('/api/v2/filepaths/remove', filepaths.removeFromProject);
      app.put('/api/v2/filepaths/removemany', filepaths.removeManyFromProject);
      app.put('/api/v2/filepaths/change', filepaths.changeFilePath);
+
+     var users = require('./controller/users');
+     app.post('/api/v2/users/add', users.add);
+     app.get('/api/v2/users', users.getAll);
   };
