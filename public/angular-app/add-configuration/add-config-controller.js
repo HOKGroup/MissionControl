@@ -57,6 +57,17 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
     //endregion
 
     /**
+     *
+     * @param type
+     */
+    vm.setTypeFilter = function (type) {
+        vm.selectedType = type;
+        if(type === 'BIM 360'){
+            vm.selectedOffice = { name: "All", code: "All" };
+        }
+    };
+
+    /**
      * Adds new file to the Configuration, but first it verifies that it doesn't
      * exists in any other Configuration.
      */

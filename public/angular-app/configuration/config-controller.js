@@ -268,6 +268,17 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     //endregion
 
     /**
+     *
+     * @param type
+     */
+    vm.setTypeFilter = function (type) {
+        vm.selectedType = type;
+        if(type === 'BIM 360'){
+            vm.selectedOffice = { name: "All", code: "All" };
+        }
+    };
+
+    /**
      * Sets active/selected Configuration.
      * @param configId
      */

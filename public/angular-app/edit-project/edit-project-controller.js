@@ -18,9 +18,9 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
         'geoPolygon':{}
     };
     vm.configurations = [];
-    vm.chartData = [];
     vm.selectedRange = '7 days';
     vm.availableRanges = ['7 days', '14 days', '28 days', '84 days', 'All'];
+    vm.loading = false;
 
     getOpenTimes(vm.projectId);
 
@@ -31,6 +31,9 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
      * @param item
      */
     vm.filterRange = function (item) {
+        if(vm.selectedRange === item) return;
+
+        vm.loading = true;
         vm.selectedRange = item;
         queryData = {
             centralPaths: filePaths,
@@ -69,8 +72,7 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                         }));
                     }
 
-                    setUserData(response.data[0].opentimes, response.data[0].synchtimes);
-                    setChartData(response.data[0].opentimes, response.data[0].synchtimes);
+                    setAllData(response.data[0].opentimes, response.data[0].synchtimes);
                 })
                 .catch(function (err) {
                     toasts.push(ngToast.danger({
@@ -96,8 +98,7 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                         }));
                     }
 
-                    setUserData(response.data[0].opentimes, response.data[0].synchtimes);
-                    setChartData(response.data[0].opentimes, response.data[0].synchtimes);
+                    setAllData(response.data[0].opentimes, response.data[0].synchtimes);
                 })
                 .catch(function (err) {
                     toasts.push(ngToast.danger({
@@ -109,6 +110,8 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                     }));
                 })
         }
+
+        vm.loading = false;
     };
 
     /**
@@ -228,8 +231,7 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                     }));
                 }
 
-                setUserData(response.data[0].opentimes, response.data[0].synchtimes);
-                setChartData(response.data[0].opentimes, response.data[0].synchtimes);
+                setAllData(response.data[0].opentimes, response.data[0].synchtimes);
             })
             .catch(function (err) {
                 toasts.push(ngToast.danger({
@@ -244,68 +246,43 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
 
     /**
      *
-     * @param openTimes
-     * @param synchTimes
+     * @param ot
+     * @param st
      */
-    function setUserData(openTimes, synchTimes){
-        var unknown = {'name': 'unknown', 'opened': 0, 'synched': 0, 'total': 0};
-        var data = synchTimes.reduce(function (data, item) {
-            var key = item.user.toLowerCase();
-            if(key.toLowerCase() !== 'unknown'){
-                var c = (data[key] || (data[key] = {'name': key, 'opened': 0, 'synched': 0, 'total': 0}));
-                c['synched'] += 1;
-                c['total'] += 1;
-            } else {
-                unknown.synched += 1;
-                unknown.total +=1;
-            }
-            return data;
-        }, {});
+    function setAllData(ot, st){
+        var activity = {};
+        var users = {};
+        st.forEach(function (item) {
+            var aKey = UtilityService.fileNameFromPath(item.centralPath).toUpperCase();
+            var a = (activity[aKey] || (activity[aKey] = {'name': aKey, 'opened': 0, 'synched': 0, 'total': 0}));
+            a.synched += 1;
+            a.total += 1;
 
-        var data1 = openTimes.reduce(function (data, item) {
-            var key = item.user.toLowerCase();
-            if(key.toLowerCase() !== 'unknown'){
-                var c = (data[key] || (data[key] = {'name': key, 'opened': 0, 'synched': 0, 'total': 0}));
-                c['opened'] += 1;
-                c['total'] += 1;
-            } else {
-                unknown.opened += 1;
-                unknown.total +=1;
-            }
-            return data;
-        }, data);
+            var uKey = item.user.toLowerCase();
+            var u = (users[uKey] || (users[uKey] = {'name': uKey, 'opened': 0, 'synched': 0, 'total': 0}));
+            u.synched += 1;
+            u.total += 1;
+        });
 
-        // (Konrad) Set data for the users chart. IE doesn't support Object.values
-        vm.userData = Object.keys(data1).map(function(item) { return data1[item]; });
-        vm.unknownUserData = unknown;
-    }
+        ot.forEach(function (item) {
+            var aKey = UtilityService.fileNameFromPath(item.centralPath).toUpperCase();
+            var a = (activity[aKey] || (activity[aKey] = {'name': aKey, 'opened': 0, 'synched': 0, 'total': 0}));
+            a.opened += 1;
+            a.total += 1;
 
-    /**
-     * Processes open and synch time stamps in order to create data format suitable for d3 chart.
-     * @param openTimes
-     * @param synchTimes
-     */
-    function setChartData(openTimes, synchTimes) {
-        var data = synchTimes.reduce(function (data, item) {
-            var key = UtilityService.fileNameFromPath(item.centralPath).toUpperCase();
-            var created = (data[key] || (data[key] = {'name': key, 'opened': 0, 'synched': 0, 'total': 0}));
-            created['synched'] += 1;
-            created['total'] += 1;
+            var uKey = item.user.toLowerCase();
+            var u = (users[uKey] || (users[uKey] = {'name': uKey, 'opened': 0, 'synched': 0, 'total': 0}));
+            u.opened += 1;
+            u.total += 1;
+        });
 
-            return data;
-        }, {});
+        if(users.hasOwnProperty('unknown')){
+            vm.unknownUserData = users['unknown'];
+            delete users['unknown'];
+        }
 
-        var data1 = openTimes.reduce(function (data, item) {
-            var key = UtilityService.fileNameFromPath(item.centralPath).toUpperCase();
-            var created = (data[key] || (data[key] = {'name': key, 'opened': 0, 'synched': 0, 'total': 0}));
-            created['opened'] += 1;
-            created['total'] += 1;
-
-            return data;
-        }, data);
-
-        // (Konrad) Set data for the histogram chart. IE doesn't support Object.values
-        vm.chartData = Object.keys(data1).map(function(item) { return data1[item]; });
+        vm.userData = Object.keys(users).map(function(item) { return users[item]; });
+        vm.chartData = Object.keys(activity).map(function(item) { return activity[item]; });
     }
 
     //endregion

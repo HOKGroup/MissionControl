@@ -7,8 +7,7 @@ angular.module('MissionControlApp').directive('d3StackedHorizontalBarChart', ['d
         scope: {
             data: '=',
             marginLeft: '=',
-            domainPadding: '=',
-            onClick: '&d3OnClick'
+            domainPadding: '='
         },
         link: function(scope, ele) {
             var refreshScope = function() {
