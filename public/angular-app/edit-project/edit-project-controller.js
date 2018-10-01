@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('EditProjectController', EditProjectController);
 
-function EditProjectController($scope, $routeParams, $window, ProjectFactory, ConfigFactory, ModelsFactory, ngToast, UtilityService){
+function EditProjectController($routeParams, $window, ProjectFactory, ConfigFactory, ModelsFactory, ngToast, UtilityService){
     var vm = this;
     var toasts = [];
     var filePaths = []; // variable holding file paths for filter
