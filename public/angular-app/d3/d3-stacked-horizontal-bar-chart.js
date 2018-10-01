@@ -10,10 +10,6 @@ angular.module('MissionControlApp').directive('d3StackedHorizontalBarChart', ['d
             domainPadding: '='
         },
         link: function(scope, ele) {
-            var refreshScope = function() {
-                scope.$apply();
-            };
-
             var svg = d3.select(ele[0])
                 .append("svg")
                 .attr("width", "100%");
@@ -22,6 +18,7 @@ angular.module('MissionControlApp').directive('d3StackedHorizontalBarChart', ['d
             window.onresize = function() {
                 return scope.$apply();
             };
+
             scope.$watch(function(){
                     return angular.element(window)[0].innerWidth;
                 }, function(){
@@ -30,10 +27,11 @@ angular.module('MissionControlApp').directive('d3StackedHorizontalBarChart', ['d
             );
 
             // watch for data changes and re-render
-            scope.$watch("data", function(newVals) {
-                if(!newVals) return;
-                return scope.render(newVals);
-            }, true);
+            scope.$watch("data", function(newVals, oldVals) {
+                if(newVals !== oldVals){
+                    return scope.render(newVals);
+                }
+            }, false);
 
             // define render function for grouped bar charts
             scope.render = function(data){
