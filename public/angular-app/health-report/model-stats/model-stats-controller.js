@@ -352,24 +352,15 @@ function ModelStatsController($timeout, $routeParams, UtilityService, DTColumnBu
          */
         function setDefaults() {
             vm.ModelSizes = vm.ModelData.modelStats.modelSizes;
-            // vm.ModelSizes.sort(function (a,b) {
-            //     return new Date(b.createdOn) - new Date(a.createdOn);
-            // });
 
             // set data for synch charts
             var filtered = filterData(vm.ModelData.modelStats.synchTimes, synchLimit, "All"); //1h
             vm.ModelSynchTimes = filtered.data;
-            // vm.ModelSynchTimes.sort(function (a,b) {
-            //     return new Date(b.createdOn) - new Date(a.createdOn);
-            // });
             vm.ExcludedModelSynchTimes = filtered.excludedData;
 
             // set data for open charts
             var filtered1 = filterData(vm.ModelData.modelStats.openTimes, openLimit, "All"); //5h
             vm.ModelOpenTimes = filtered1.data;
-            // vm.ModelOpenTimes.sort(function (a,b) {
-            //     return new Date(b.createdOn) - new Date(a.createdOn);
-            // });
             vm.ExcludedModelOpenTimes = filtered1.excludedData;
 
             // set data for user filters
