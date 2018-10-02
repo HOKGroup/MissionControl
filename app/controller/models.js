@@ -153,7 +153,7 @@ module.exports = {
         if(!req.body.from || !req.body.to){
             pipeline = [
                 { $match: { 'centralPath': req.body.centralPath }},
-                { $sort: { 'createdOn': -1 }},
+                { $sort: { 'createdOn': 1 }},
                 { $limit: limit }
             ];
         } else {
