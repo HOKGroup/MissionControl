@@ -129,14 +129,14 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
 
         HealthReportFactory.processModelStats(data, function (result) {
             if( result && result.modelStats &&
-                result.modelStats.modelSizes.length > 0 &&
-                result.modelStats.openTimes.length > 0 &&
-                result.modelStats.synchTimes.length > 0 &&
-                result.modelStats.onOpened.length > 0 &&
-                result.modelStats.onSynched.length > 0){
-                vm.noData = false;
-                vm.ModelData = result;
-                vm.AllData.splice(0, 0, result);
+                result.modelStats.modelSizes.length > 2 &&
+                result.modelStats.openTimes.length > 2 &&
+                result.modelStats.synchTimes.length > 2 &&
+                result.modelStats.onOpened.length > 2 &&
+                result.modelStats.onSynched.length > 2){
+                    vm.noData = false;
+                    vm.ModelData = result;
+                    vm.AllData.splice(0, 0, result);
             }
             vm.SelectionChanged('main');
         });
@@ -178,10 +178,10 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         });
 
         HealthReportFactory.processWorksetStats(data, function (result) {
-            if( result &&
-                result.worksetStats.onOpened.length > 0 &&
-                result.worksetStats.onSynched.length > 0 &&
-                result.worksetStats.itemCount.length > 0) {
+            if( result && result.worksetStats &&
+                result.worksetStats.onOpened.length > 2 &&
+                result.worksetStats.onSynched.length > 2 &&
+                result.worksetStats.itemCount.length > 2) {
                     vm.noData = false;
                     vm.WorksetData = result;
                     vm.AllData.splice(0, 0, result);
