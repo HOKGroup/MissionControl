@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-strict-di>
+
+<head>
+  <base href="angularjs-toast">
+  <meta charset="utf-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <title>AngularJS Toast</title>
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-dark.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="//unpkg.com/angularjs-toast@latest/angularjs-toast.min.css">
+  <link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+
+<body ng-controller="mainController">
+  <div class="contain">
+    <div class="col40">
+      <a class="github-button" href="https://github.com/Sibiraj-S" aria-label="Follow @Sibiraj-S on GitHub">Follow @Sibiraj-S</a>
+      <a class="github-button" href="https://github.com/Sibiraj-S/angularjs-toast/fork" data-icon="octicon-repo-forked" aria-label="Fork Sibiraj-S/angularjs-toast on GitHub">Fork</a>
+      <a class="github-button" href="https://github.com/Sibiraj-S/angularjs-toast/archive/master.zip" data-icon="octicon-cloud-download"
+        aria-label="Download Sibiraj-S/angularjs-toast on GitHub">Download angularjs-toast</a>
+      <br>
+      <br>
+      <h3>angularjs-toast demo</h3>
+      <p>angularjs-toast is a simple service for creating toast notification for AngularJS pages</p>
+      <hr>
+      <p>Sample alerts. Click on any following buttons to see toasts in action</p>
+      <p>Here it is configured to display inside container using `container` propery</p>
+      <br>
+      <button class="btn btn-success" ng-click="toast('alert-success')">Success</button>
+      <button class="btn btn-warning" ng-click="toast('alert-warning')">Warning</button>
+      <button class="btn btn-danger" ng-click="toast('alert-danger')">Danger</button>
+      <button class="btn btn-info" ng-click="toast('alert-info')">Info</button>
+      <div id="appendAlert">
+        <div class="col-md-11 no-pl" ng-if="!dismiss">
+          <br>
+          <div class="alert alert-success">
+            <strong>Success!</strong> Indicates a successful or positive action.
+          </div>
+
+          <div class="alert alert-info">
+            <strong>Info!</strong> Indicates a neutral informative change or action.
+          </div>
+
+          <div class="alert alert-warning">
+            <strong>Warning!</strong> Indicates a warning that might need attention.
+          </div>
+
+          <div class="alert alert-danger">
+            <strong>Danger!</strong> Indicates a dangerous or potentially negative action.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col60">
+      <h2>angularjs-toast
+        <a href="https://www.npmjs.com/package/angularjs-toast">
+          <img alt="npm version" src="https://img.shields.io/npm/v/angularjs-toast.svg">
+        </a>
+      </h2>
+      <h3>Installation</h3>
+      <p>Installation can be done via package managers such as npm, yarn and bower</p>
+      <pre><code class="bash">
+  npm install angularjs-toast --save
+  # or
+  yarn add angularjs-toast
+  </code></pre>
+      <h3>Usage</h3>
+      <p> import the modules required for angularjs-toast. It is necessary to include
+        <a href="https://docs.angularjs.org/api/ngSanitize" target="_blank">ngSanitize</a> and
+        <a href="https://docs.angularjs.org/guide/animations" target="_blank">ngAnimate</a> for angularjs-toast to work</p>
+      <pre><code class="html">
+  &lt;link rel="stylesheet" href="../angularjs-toast.min.css"&gt;
+
+  &lt;script src="angular/angular.min.js"&gt;&lt;/script&gt;
+  &lt;script src="angular-sanitize/angular-sanitize.min.js"&gt;&lt;/script&gt;
+  &lt;script src="angular-animate/angular-animate.min.js"&gt;&lt;/script&gt;
+  &lt;script src="../angularjs-toast.min.js"&gt;&lt;/script&gt;
+      </code></pre>
+      <p>add the
+        <a href="https://github.com/Sibiraj-S/angularjs-toast" target="_blank">angularjsToast</a> dependency to the module</p>
+      <pre><code class="javascript">
+  angular.module('myApp', ['angularjsToast'])
+      </code></pre>
+      <p>in your controller</p>
+      <pre><code class="javascript">
+  angular.controller('toastController', ['toast', function(toast){
+
+    toast({
+      duration  : 10000,
+      message   : "Hi there!",
+      className : "alert-success"
+    });
+
+  }]);
+      </code></pre>
+      <h3>Options</h3>
+      <p>all options are type sensitive</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>className</td>
+            <td>string</td>
+            <td>alert-success</td>
+            <td>accepted values are alert-(success|danger|primary|info)</td>
+          </tr>
+          <tr>
+            <td>duration</td>
+            <td>number</td>
+            <td>5000</td>
+            <td>timeout for each toast messages to disappear</td>
+          </tr>
+          <tr>
+            <td>position</td>
+            <td>string</td>
+            <td>right</td>
+            <td>position of the element can be 'left', 'center' and 'right'</td>
+          </tr>
+          <tr>
+            <td>container</td>
+            <td>string</td>
+            <td>body</td>
+            <td>appends alert to the specific class or id or element. inputs should be like '.class' or '#id' </td>
+          </tr>
+          <tr>
+            <td>masterClass</td>
+            <td>string</td>
+            <td>"</td>
+            <td>adds class to the container for more flexibility in styling (optional)</td>
+          </tr>
+          <tr>
+            <td>message</td>
+            <td>html-string or string</td>
+            <td>Hi there!</td>
+            <td>can be HTML or plain string </td>
+          </tr>
+          <tr>
+            <td>dismissible</td>
+            <td>boolean</td>
+            <td>true</td>
+            <td>show / hide the close icon. if set to false the toast will hide on timeout</td>
+          </tr>
+          <tr>
+            <td>maxToast</td>
+            <td>number</td>
+            <td>6</td>
+            <td>maximum number of toast messages to show. if max reached the element inserted first will be removed</td>
+          </tr>
+          <tr>
+            <td>insertFromTop</td>
+            <td>boolean</td>
+            <td>true</td>
+            <td>setting true will insert new messages on top else inserts at bottom</td>
+          </tr>
+          <tr>
+            <td>removeFromTop</td>
+            <td>boolean</td>
+            <td>false</td>
+            <td>setting true removes first element when maxToast is reached else removes last element</td>
+          </tr>
+        </tbody>
+      </table>
+      <hr>
+      <div class="filler"></div>
+    </div>
+  </div>
+  <!-- <div class="container" style="padding-top:50px;">
+    <input type="text" ng-model="message">
+    <button id="submit" name="submit" class="btn btn-sm btn-success" ng-click="click()">Toast</button>
+  </div> -->
+
+  <!-- dependencies -->
+  <script src="//unpkg.com/angular@1.7.2/angular.min.js"></script>
+  <script src="//unpkg.com/angular-sanitize@1.7.2/angular-sanitize.min.js"></script>
+  <script src="//unpkg.com/angular-animate@1.7.2/angular-animate.min.js"></script>
+  <!-- packages -->
+  <script src="//unpkg.com/angularjs-toast@latest/angularjs-toast.min.js"></script>
+  <!-- app scripts -->
+  <script src="./app.js"></script>
+  <!-- highlight js -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
+</body>
+
+</html>

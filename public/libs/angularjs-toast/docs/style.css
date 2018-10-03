@@ -1,0 +1,75 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700");
+.btn:active, .btn:active:focus, .btn:focus {
+  outline: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-width: 1200px;
+  overflow: hidden;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+}
+body p {
+  font-size: 13px;
+}
+body .hljs {
+  border-radius: 5px;
+}
+body .contain {
+  display: flex;
+  padding: 10px 0;
+}
+body .contain .col40 {
+  padding: 15px;
+  flex-basis: 40%;
+}
+body .contain .col60 {
+  padding: 15px;
+  flex-basis: 60%;
+  border-left: 1px solid #ddd;
+  height: 100vh;
+  overflow: auto;
+  overflow-x: hidden;
+}
+body .contain .col60 .filler {
+  height: 40px;
+}
+body .contain .col60 pre {
+  background: transparent;
+  padding-left: 0;
+  border: none;
+}
+body .contain table th {
+  padding: 15px 15px 15px 0;
+  text-align: left;
+}
+body .contain table th:nth-child(2) {
+  width: 18%;
+}
+body .contain table th:nth-child(3) {
+  width: 15%;
+}
+body .contain table td {
+  padding: 15px 15px 15px 0;
+  border-top: 1px solid #ddd;
+}
+body .contain table tr td:first-child {
+  font-weight: 600;
+}
+body .contain table tr td:nth-child(2),
+body .contain table tr td:nth-child(3),
+body .contain table tr td:nth-child(4),
+body .contain table tr td:nth-child(5) {
+  font-size: 12px;
+}
+
+.angularjs-toast ul.toast-container.left {
+  margin-left: 0;
+}
+
+.no-pl {
+  padding-left: 0;
+}

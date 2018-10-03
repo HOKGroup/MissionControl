@@ -1,0 +1,264 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+body { 
+	padding-top:30px;
+	margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+body > .container {
+  padding: 60px 15px 0;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
+/*Turns on pointer cursor for collapsible panels*/
+.panel-default > .panel-heading-clickable{
+    cursor: pointer;
+}
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+code {
+  font-size: 80%;
+}
+#main-content-container{
+	margin-bottom: 200px;
+}
+#map{
+	height:500px;
+}
+.controls {
+  margin-top: 10px;
+  border: 1px solid transparent;
+  border-radius: 2px 0 0 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  height: 32px;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+#pac-input {
+  background-color: #fff;
+  font-family: Roboto, serif;
+  font-size: 15px;
+  font-weight: 300;
+  margin-left: 12px;
+  padding: 0 11px 0 13px;
+  text-overflow: ellipsis;
+  width: 400px;
+}
+#pac-input:focus {
+  border-color: #4d90fe;
+}
+#map-container {
+  margin:10px;
+}
+
+/*Directive content centering*/
+.cn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*Used by table to highlight text values*/
+p.thick {
+  font-weight: bold;
+}
+p.normal {
+  font-weight: normal;
+}
+
+/*Grid Divider line for Health Report Main Page*/
+@media ( min-width: 768px ) {
+  .grid-divider {
+    position: relative;
+    padding: 0;
+  }
+  .grid-divider>[class*='col-'] {
+    position: static;
+  }
+  .grid-divider>[class*='col-']:nth-child(n+2):before {
+    content: "";
+    border-left: 1px solid #DDD;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+  }
+  .col-padding {
+    padding: 0 15px;
+  }
+}
+
+/*Top Padding between Divs*/
+.bottom-buffer {
+    margin-bottom:20px;
+}
+
+/*Left padded text*/
+.p.pad-left {
+    padding-left: 20px;
+}
+
+/*Removes column gutter*/
+.no-padding-left {
+  padding-left: 0
+}
+
+.no-padding-right {
+  padding-right: 0
+}
+
+.no-padding-bottom {
+  padding-bottom: 0
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.textAlignMiddle{
+  vertical-align: middle;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.scrollable-menu-centered{
+  height: auto;
+  max-height: 195px;
+  overflow-x: hidden;
+  width:100%;
+  left: 50%;
+  right: auto;
+  padding-right: 20px;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transform: translate(-50%, 0);
+}
+
+/*Dropdown menu for Health Report - centered*/
+.dropdown-menu-centered{
+  width:100%;
+  left: 50%;
+  right: auto;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform: translate(-50%, 0);
+}
+
+/*Scrollable menu for long lists*/
+.scrollable-menu {
+  height: auto;
+  max-height: 195px;
+  overflow-x: hidden;
+}
+
+table {
+    table-layout: fixed;
+    word-wrap: break-word;
+    width: 100%;
+}
+
+/*hides overflowing text*/
+.hide-overflow-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 100%;
+}
+
+/*Modal dialog form constraint to allow vertical resize only.*/
+textarea {
+  resize: vertical;
+}
+
+.panel-header .radio .checkbox{
+  display: inline-block;
+}
+.panel .glyphicon,.list-group-item .glyphicon {
+  margin-right:5px;
+}
+.panel-body .radio, .checkbox {
+  display:inline-block;
+  margin-left:20px;
+  margin-bottom: 0;
+  margin-top: 0
+}
+.list-group-item:hover, a.list-group-item:focus {
+  text-decoration: none;
+  background-color: rgb(245, 245, 245);
+}
+
+[ng-click],
+[data-ng-click],
+[x-ng-click] {
+  cursor: pointer;
+}
+
+.project-link {
+  color: black;
+}
+
+/*Link decoration for the project page*/
+.project-link:hover{
+  color: #2A5DB0;
+  text-decoration: none;
+}
+
+/*For Sheets table row. When deleted.*/
+.strike {
+  text-decoration: line-through;
+}
+
+.strike label{
+  text-decoration: line-through;
+}
+
+/*For Add Sheet custom operator buttons*/
+.nohover:hover{
+  background-color: initial;
+  cursor: default;
+}
+
+.popover {
+  min-width: 200px;
+}
+
+/*Handles overflow in input fields.*/
+input[type=text]{
+  text-overflow: ellipsis;
+}
+
+a {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.animate-show-hide.ng-hide {
+  opacity: 0;
+}
+
+.animate-show-hide.ng-hide-add,
+.animate-show-hide.ng-hide-remove {
+  transition: all linear 0.5s;
+}

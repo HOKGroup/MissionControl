@@ -1,0 +1,85 @@
+// bootstrap alert classes
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    position: relative;
+
+    h4 {
+        margin-top: 0;
+        color: inherit;
+    }
+
+    .alert-link {
+        font-weight: bold;
+    }
+
+    > {
+        p,
+        ul {
+            margin-bottom: 0;
+        }
+
+        p + p {
+            margin-top: 5px;
+        }
+    }
+
+    &.alert-dismissible {
+        padding-right: 35px;
+
+        .close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 15px;
+            color: inherit;
+        }
+    }
+
+    .close {
+        float: right;
+        font-size: 21px;
+        font-weight: bold;
+        line-height: 1;
+        color: #000;
+        text-shadow: 0 1px 0 #fff;
+        filter: alpha(opacity = 20);
+        opacity: 0.2;
+        text-decoration: none;
+
+        &:focus,
+        &:hover {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+            filter: alpha(opacity = 50);
+            opacity: 0.5;
+        }
+    }
+
+    &.alert-success {
+        color: #3c763d;
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+    }
+
+    &.alert-info {
+        color: #31708f;
+        background-color: #d9edf7;
+        border-color: #bce8f1;
+    }
+
+    &.alert-warning {
+        color: #8a6d3b;
+        background-color: #fcf8e3;
+        border-color: #faebcc;
+    }
+
+    &.alert-danger {
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+    }
+}

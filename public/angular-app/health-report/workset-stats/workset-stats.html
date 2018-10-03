@@ -1,0 +1,82 @@
+<div class="container-fluid">
+    <div class="row animate-show-hide ng-hide" ng-show="vm.showTimeSettings" >
+        <time-range-selection loading="vm.loading" on-hide="vm.toggleTimeSettings()" on-filter="vm.OnFilter(date)"></time-range-selection>
+    </div>
+    <div class="row">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Worksets Health Score:
+                        <a href="" class="faa-parent faa-slow animated-hover">
+                            <i class="fa fa-gear faa-spin text-primary" ng-click="vm.showTimeSettings = !vm.showTimeSettings"></i>
+                        </a>
+                    </h4>
+                </div>
+                <div class="panel-collapse" ng-if="vm.Validate()">
+                    <div class="panel-body">
+                        <health-report-summary data="vm.WorksetData.scoreData"
+                                               description="vm.WorksetData.description"
+                                               bullets="vm.WorksetData.bullets"
+                                               details="true"
+                                               name="'Secondary'"
+                                               title="vm.WorksetData.name">
+                        </health-report-summary>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-chevron-down"></span> On Model Synch</p>
+                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-chevron-up"></span> On Model Open</p>
+                    <h4 class="panel-title" style="padding-top: 5px;">Worksets opened %</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body no-padding" style="max-height: 400px; overflow-y: scroll; width: 100%" ng-if="vm.Validate()">
+                        <d3-grouped-horizontal-bar-chart2 data="vm.WorksetData.worksetOpenedData"
+                                                          d3-on-click="vm.d3OnClick(item)">
+                        </d3-grouped-horizontal-bar-chart2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-if="vm.UserData.length > 2" id="UserChart">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" style="padding-top: 5px;">Worksets Opened % : {{vm.SelectedUser}} : {{vm.WorksetsOpenedType}}</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body no-padding">
+                        <d3-zoomable-line data="vm.UserData" format-value="vm.formatDuration(item)" domain-y="100"></d3-zoomable-line>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="panel-group" id="accordion3">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#accordion3" data-target="#collapseThree">
+                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #f0ad4e"></span> "Link"/"CAD" w/ content</p>
+                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #d9534f"></span> Bulk Content >50%</p>
+                    <h4 class="panel-title" style="padding-top: 5px;">Workset Item Counts</h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse in">
+                    <div class="panel-body no-padding" ng-if="vm.Validate()">
+                        <d3-horizontal-bar-chart data="vm.WorksetData.dataWorksetItemCount"
+                                                 count-total="vm.WorksetData.worksetCountTotal"
+                                                 margin-left="150"
+                                                 domain-padding="100">
+                        </d3-horizontal-bar-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

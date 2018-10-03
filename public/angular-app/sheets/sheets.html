@@ -1,0 +1,100 @@
+<style>
+    html {
+        overflow-y:scroll;
+    }
+</style>
+
+<!--<script type="text/ng-template" id="editMultipleSheets">-->
+    <!--<div class="modal-content">-->
+        <!--<div class="modal-header">-->
+            <!--<h5 class="modal-title pull-left">Edit Multiple Rows</h5>-->
+            <!--<button type="button" class="close pull-right" ng-click="cancel()">-->
+                <!--<span aria-hidden="true">&times;</span>-->
+            <!--</button>-->
+        <!--</div>-->
+        <!--<div class="modal-body">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-heading">-->
+                    <!--<h4 class="panel-title">Edits:</h4>-->
+                <!--</div>-->
+                <!--<div class="panel-body">-->
+                    <!--<div class="form-group">-->
+                        <!--<label for="multi_sheet_number" class="form-control-label">Sheet Number:</label>-->
+                        <!--<input type="text" class="form-control" id="multi_sheet_number" value="Uneditable" disabled>-->
+                        <!--<label for="multi_sheet_name" class="form-control-label">Sheet Name:</label>-->
+                        <!--<input type="text" class="form-control" id="multi_sheet_name" value="name" ng-model="name">-->
+                        <!--<label for="multi_sheet_revision" class="form-control-label">Sheet Revision:</label>-->
+                        <!--<input type="text" class="form-control" id="multi_sheet_revision" value="Uneditable" disabled>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="modal-footer">-->
+            <!--<button type="button" class="btn btn-secondary" ng-click="cancel()">Close</button>-->
+            <!--<button type="button" class="btn btn-primary" ng-click="submit()"><span class="glyphicon glyphicon-ok"></span> Submit</button>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</script>-->
+
+<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1>
+                <a href="#/projects/edit/{{ vm.selectedProject._id }}" class="project-link">{{ vm.selectedProject.number }} {{ vm.selectedProject.name }}</a>
+                <a href="#/projects/configurations/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/parameter_32.png" height="32" width="32" style="margin-top:0" ></a>
+                <a href="#/projects/healthreport/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/health_32.png" height="32" width="32" style="margin-top:0"></a>
+                <a href="#/projects/sheets/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/sheets_32.png" height="32" width="32" style="margin-top:0"></a>
+            </h1>
+        </div>
+    </div>
+    <div class="row" ng-if="vm.Data.length > 0">
+        <div class="panel-group" id="p1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
+                        <!--<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #d9534f"></span> >50%</p>-->
+                        <!--<button type="button" class="btn btn-primary" ng-click="vm.editMultipleSheets('large', vm.selectedItems)" ng-if="vm.selectedItems.length > 1">-->
+                            <!--<span class="glyphicon glyphicon-pencil"></span>-->
+                            <!--Multi-Edit-->
+                        <!--</button>-->
+                        <!--<button type="button" class="btn btn-primary" ng-click="vm.editSheet('large', vm.selectedItems[0])" ng-if="vm.selectedItems.length === 1">-->
+                            <!--<span class="glyphicon glyphicon-pencil"></span>-->
+                            <!--Single-Edit-->
+                        <!--</button>-->
+                        <button type="button" class="btn btn-primary" ng-click="vm.addSheet('lg')">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            Add Sheet
+                        </button>
+                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                            {{vm.selectedModel.name | uppercase}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 100px">
+                            <li ng-repeat="file in vm.availableModels">
+                                <a href="" ng-click="vm.SetCurrentModelFilter(file)">{{file.name | uppercase}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <h4 class="panel-title" style="padding-top: 5px;">
+                        Sheets
+                        <a href="">
+                            <i class="fa fa-info-circle text-primary" ng-click="vm.launchHelpWindow('lg')"></i>
+                        </a>
+                    </h4>
+                </div>
+                <!--SHEETS TABLE-->
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <table id="sheetsTable"
+                               datatable=""
+                               dt-options="vm.dtOptions"
+                               dt-columns="vm.dtColumns"
+                               dt-instance="vm.dtInstance"
+                               class="table table-hover table-condensed datatable">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

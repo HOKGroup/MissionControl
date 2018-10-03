@@ -1,0 +1,75 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title pull-left">{{vm.title}}</h5>
+        <button type="button" class="close pull-right" ng-click="vm.cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                    {{vm.sheet.number}} - {{vm.sheet.name}}
+                </h4>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div ng-class="vm.isChanged('number') ? 'form-group has-warning' : 'form-group'">
+                        <label for="sheet_name" class="control-label">Sheet Number:</label>
+                        <input type="text" class="form-control" id="sheet_name" value="vm.sheet.number" ng-model="vm.sheet.number" ng-disabled="vm.sheet.completedBy">
+                    </div>
+                    <div ng-class="vm.isChanged('name') ? 'form-group has-warning' : 'form-group'">
+                        <label for="sheet_number" class="control-label">Sheet Name:</label>
+                        <input type="text" class="form-control" id="sheet_number" value="vm.sheet.name" ng-model="vm.sheet.name" ng-disabled="vm.sheet.completedBy">
+                    </div>
+                    <div class="col-md-6 no-padding-left">
+                        <div class="form-group">
+                            <label for="sheet_revision" class="form-control-label">Current Revision:</label>
+                            <input type="text" class="form-control" id="sheet_revision" value="vm.sheet.revisionNumber" ng-model="vm.sheet.revisionNumber" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6 no-padding-right">
+                        <div class="form-group">
+                            <label for="recipient_name" class="form-control-label">
+                                Recipient:
+                                <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.sheet.assignedTo"></span>
+                                <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.sheet.assignedTo"></span>
+                            </label>
+                            <div class="btn-group" style="width: 100%" id="recipient_name">
+                                <button class="btn btn-default dropdown-toggle scrollable-menu-centered" data-toggle="dropdown" ng-disabled="vm.sheet.completedBy">
+                                    <span class="caret"></span>
+                                    {{vm.sheet.assignedTo}}
+                                </button>
+                                <ul class="dropdown-menu scrollable-menu-centered">
+                                    <li ng-repeat="user in vm.userNames">
+                                        <a href="" class="no-padding-left" ng-click="vm.sheet.assignedTo = user">
+                                            {{user}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div ng-show="vm.userNames.length === 0">
+                                <div class="text-danger">(*) This model doesn't have  active users.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message_text" class="form-control-label">
+                            Message:
+                            <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.sheet.message"></span>
+                            <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.sheet.message"></span>
+                        </label>
+                        <textarea id="message_text" style="min-height: 100px" class="form-control" ng-model="vm.sheet.message" ng-disabled="vm.sheet.completedBy" required></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
+        <button type="button" class="btn btn-primary" ng-disabled="!vm.sheet.message || !vm.sheet.assignedTo" ng-click="vm.submit()" ng-if="!vm.sheet.completedBy"><span class="glyphicon glyphicon-ok"></span> Submit</button>
+        <button type="button" class="btn btn-primary" ng-click="vm.reopen()" ng-if="vm.sheet.completedBy">Re-Open</button>
+        <button type="button" class="btn btn-danger pull-left" ng-disabled="!vm.sheet.message || !vm.sheet.assignedTo" ng-click="vm.delete()"><span class="glyphicon glyphicon-trash"></span> Delete Sheet</button>
+    </div>
+</div>

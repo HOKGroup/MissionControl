@@ -1,0 +1,130 @@
+<style>
+    html {
+        overflow-y:scroll;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1>
+                <a href="#/projects/edit/{{ vm.selectedProject._id }}" class="project-link">{{ vm.selectedProject.number }} {{ vm.selectedProject.name }}</a>
+                <a href="#/projects/configurations/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/parameter_32.png" height="32" width="32" style="margin-top:0" ></a>
+                <a href="#/projects/healthreport/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/health_32.png" height="32" width="32" style="margin-top:0" ng-click="vm.SelectionChanged('main')"></a>
+                <a href="#/projects/sheets/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/sheets_32.png" height="32" width="32" style="margin-top:0"></a>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="row row-offcanvas row-offcanvas-left">
+            <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+                <div class="list-group">
+                    <div class="btn-group" style="width:100%" ng-if="vm.showMenu">
+                        <button class="btn btn-default dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
+                            <span class="caret"></span>
+                            {{vm.selectedFileName | uppercase}}
+                        </button>
+                        <ul class="dropdown-menu scrollable-menu-centered">
+                            <li ng-repeat="file in vm.files">
+                                <a href="" ng-click="vm.SetProject(file, true)" class="no-padding-left">
+                                    {{file.name | uppercase}}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <a class="list-group-item"
+                       href=""
+                       ng-repeat="d in vm.AllData"
+                       ng-if="d.show.name != 'main'"
+                       ng-class="{'active': d.show.value}"
+                       ng-click="vm.SelectionChanged(d.show.name)">
+                        {{d.name}}
+                        <span ng-class="d.color">
+                            {{d.scoreData.passingChecks > d.scoreData.newMax
+                                ? 'N'
+                                : d.scoreData.passingChecks}}/{{d.scoreData.passingChecks > d.scoreData.newMax
+                                ? 'A'
+                                : d.scoreData.newMax}}
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <div class="col-xs-12 col-sm-9" ng-if="vm.noData">
+                    <h2 style="margin-top: 0">No data available.</h2>
+                    <h4 style="margin-top: 0; color: grey">Please select a different model. It is also possible that there was
+                        no activity in this model for more than a month. Only most recent data is displayed.</h4>
+                </div>
+                <div class="col-xs-12 col-sm-9">
+                    <workset-stats processed="vm.WorksetData"
+                                   ng-if="vm.LoadPage('worksets')"
+                                   ng-hide="!vm.ShowPage('worksets')">
+                    </workset-stats>
+                </div>
+                <div class="col-xs-12 col-sm-9">
+                    <link-stats processed="vm.LinkData"
+                                ng-if="vm.LoadPage('links')"
+                                ng-hide="!vm.ShowPage('links')">
+                    </link-stats>
+                </div>
+                <div class="col-xs-12 col-sm-9">
+                    <view-stats processed="vm.ViewData"
+                                ng-if="vm.LoadPage('views')"
+                                ng-hide="!vm.ShowPage('views')">
+                    </view-stats>
+                </div>
+                <div class="col-xs-12 col-sm-9">
+                    <style-stats processed="vm.StyleData"
+                                 ng-if="vm.LoadPage('styles')"
+                                 ng-hide="!vm.ShowPage('styles')">
+                    </style-stats>
+                </div>
+                <div class="col-xs-12 col-sm-9">
+                    <model-stats processed="vm.ModelData"
+                                 show="vm.ModelData.show.value"
+                                 ng-if="vm.LoadPage('models')"
+                                 ng-hide="!vm.ShowPage('models')">
+                    </model-stats>
+                </div>
+                <div class="col-xs-12 col-sm-9">
+                    <family-stats processed="vm.FamilyData"
+                                  ng-if="vm.LoadPage('families')"
+                                  ng-hide="!vm.ShowPage('families')">
+                    </family-stats>
+                </div>
+                <div class="col-xs-12 col-sm-9">
+                    <group-stats processed="vm.GroupData"
+                                  ng-if="vm.LoadPage('groups')"
+                                  ng-hide="!vm.ShowPage('groups')">
+                    </group-stats>
+                </div>
+                <div class="col-xs-12 col-sm-9">
+                    <warnings processed="vm.WarningData"
+                                  ng-if="vm.LoadPage('warnings')"
+                                  ng-hide="!vm.ShowPage('warnings')">
+                    </warnings>
+                </div>
+                <div class="col-xs-12 col-sm-9" ng-if="vm.ShowPage('main')">
+                    <div class="row" ng-repeat="d in vm.AllData" ng-if="d.show.name != 'main'">
+                        <div class="panel-group">
+                            <div class="panel panel-default" style="border: none; box-shadow: none">
+                                <div class="panel-collapse">
+                                    <div class="panel-body no-padding">
+                                        <health-report-summary data="d.scoreData"
+                                                               description="d.description"
+                                                               bullets="d.bullets"
+                                                               details="false"
+                                                               name="'Primary'"
+                                                               title="d.name">
+                                        </health-report-summary>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
