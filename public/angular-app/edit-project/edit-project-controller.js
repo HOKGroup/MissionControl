@@ -279,6 +279,8 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
         if(users.hasOwnProperty('unknown')){
             vm.unknownUserData = users['unknown'];
             delete users['unknown'];
+        } else {
+            vm.unknownUserData = {'name': 'unknown', 'opened': 0, 'synched': 0, 'total': 0};
         }
 
         vm.userData = Object.keys(users).map(function(item) { return users[item]; });
