@@ -22,6 +22,8 @@ ConfigurationService = {
             rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
         }
 
+        console.log(rgx);
+
         Configuration
             .find({ 'files.centralPath': rgx }, function (err, response){
                 var result = {

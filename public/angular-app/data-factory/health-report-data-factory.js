@@ -688,15 +688,14 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
             var cf = data.centralPath;
             WorksetsFactory.getWorksetStats(data)
                 .then(function (response) {
-                    if( !response || response.status !== 201){
+                    if( !response || !response.data || response.status !== 201){
                         callback(null);
                         return;
                     }
 
-                    if( !response.data ||
-                        response.data[0].onOpened.length < 1 ||
-                        response.data[0].onSynched.length < 1 ||
-                        response.data[0].itemCount.length < 1){
+                    if( response.data[0].onOpened.length <= 2 ||
+                        response.data[0].onSynched.length <= 2 ||
+                        response.data[0].itemCount.length <= 2){
                             callback({
                                 worksetStats: {
                                     onOpened: response.data[0].onOpened,

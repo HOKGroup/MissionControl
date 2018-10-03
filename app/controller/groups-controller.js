@@ -41,9 +41,7 @@ module.exports = {
                     status: 201,
                     message: response
                 };
-                console.log(response);
                 if (err){
-                    console.log(err);
                     result.status = 500;
                     result.message = err;
                 } else if (!response){
@@ -102,6 +100,8 @@ module.exports = {
                 result.status = 500;
                 result.message = err;
             } else if (!response[0]){
+                console.log(req.body.centralPath);
+                console.log(response);
                 result.status = 404;
                 result.message = err;
             }

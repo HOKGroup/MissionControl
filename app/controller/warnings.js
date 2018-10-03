@@ -117,7 +117,7 @@ WarningsService = {
                 if (err){
                     result.status = 500;
                     result.message = err;
-                } else if (!response){
+                } else if (response.length === 0){
                     result.status = 404;
                     result.message = err;
                 }
@@ -143,7 +143,7 @@ WarningsService = {
                     if (err){
                         result.status = 500;
                         result.message = err;
-                    } else if (!response){
+                    } else if (response.length === 0){
                         result.status = 404;
                         result.message = err;
                     }
