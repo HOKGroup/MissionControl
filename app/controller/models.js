@@ -153,7 +153,7 @@ module.exports = {
         if(!req.body.from || !req.body.to){
             pipeline = [
                 { $match: { 'centralPath': req.body.centralPath }},
-                { $sort: { '_id': -1 }},
+                { $sort: { 'createdOn': -1 }}, // latest
                 { $limit: limit }
             ];
         } else {
@@ -209,7 +209,12 @@ module.exports = {
                     { $replaceRoot: { newRoot: '$onsynched' }}
                 ]
             }},
-            { $project: { 'opentimes': 1, 'synchtimes': 1, 'modelsizes': 1, 'onopened': 1, 'onsynched': 1 }}
+            { $project: {
+                'opentimes': { $reverseArray: '$opentimes' },
+                'synchtimes': { $reverseArray: '$synchtimes' },
+                'modelsizes': { $reverseArray: '$modelsizes' },
+                'onopened': { $reverseArray: '$onopened' },
+                'onsynched': { $reverseArray: '$onsynched' }}}
         ]).exec(function (err, response){
             var result = {
                 status: 201,

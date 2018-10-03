@@ -63,7 +63,7 @@ function ModelStatsController($timeout, $routeParams, UtilityService, DTColumnBu
                 to: date.to,
                 centralPath: vm.ModelData.modelStats.centralPath
             };
-            console.log(data);
+
             HealthReportFactory.processModelStats(data, function (result) {
                 vm.ModelData = result;
 

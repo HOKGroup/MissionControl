@@ -184,6 +184,11 @@ angular.module('MissionControlApp').directive('d3ZoomableLine', ['d3', function(
 
                 var bisectDate = d3.bisector(function(d) { return d.date; }).left;
 
+                /**
+                 * (Konrad) This method depends on data being supplied in asc order from
+                 * earliest to latest. That sorting is originally returned from DB, but in
+                 * case that it changed, we might need to re-sort the data here.
+                 */
                 function mousemove() {
                     var x0 = x.invert(d3.mouse(this)[0]),
                         i = bisectDate(data, x0, 1),
