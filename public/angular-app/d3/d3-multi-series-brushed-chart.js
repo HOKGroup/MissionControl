@@ -73,6 +73,8 @@ angular.module('MissionControlApp').directive('d3MultiSeriesLineBrushed', ['d3',
                     });
                 });
 
+                maxValue = Math.ceil((maxValue+1) / 10) * 10; // round up to nearest 10
+
                 y.domain([0, maxValue]);
                 x2.domain(x.domain());
                 y2.domain(y.domain());

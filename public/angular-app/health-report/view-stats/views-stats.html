@@ -37,7 +37,10 @@
                 </div>
                 <div id="collapseP1" class="panel-collapse collapse in" ng-if="vm.ViewData.viewStats.viewStats.length >= 2">
                     <div class="panel-body no-padding">
-                        <d3-multi-series-line-brushed data="vm.ViewData.viewStats.viewStats" keys="vm.ViewKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>
+                        <d3-multi-series-line-brushed data="vm.ViewData.viewStats.viewStats"
+                                                      keys="vm.ViewKeys"
+                                                      reference-line="vm.d3GoalLine">
+                        </d3-multi-series-line-brushed>
                     </div>
                 </div>
             </div>
@@ -53,7 +56,10 @@
                 </div>
                 <div id="collapseP2" class="panel-collapse collapse in">
                     <div class="panel-body no-padding" ng-if="vm.ViewData.viewStats.viewStats.length >= 2">
-                        <d3-multi-series-line-brushed data="vm.ViewData.viewStats.viewStats" keys="vm.ScheduleKeys" reference-line="vm.d3GoalLine"></d3-multi-series-line-brushed>
+                        <d3-multi-series-line-brushed data="vm.ViewData.viewStats.viewStats"
+                                                      keys="vm.ScheduleKeys"
+                                                      reference-line="vm.d3GoalLine">
+                        </d3-multi-series-line-brushed>
                     </div>
                 </div>
             </div>
