@@ -1,5 +1,5 @@
 angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'datatables', 'datatables.buttons', 'ngSanitize', 'ngToast'])
-    .config(['ngToastProvider', '$routeProvider', '$locationProvider', function(ngToast, $routeProvider, $locationProvider){
+    .config(['ngToastProvider', '$routeProvider', '$locationProvider', function( ngToast, $routeProvider, $locationProvider){
         // ngRoute - used for routing below
         // ui.bootstrap - used by modal dialog
         // ngAnimate - used by modal dialog
@@ -29,6 +29,13 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
             .when('/projects', {
                 templateUrl: 'angular-app/project/project.html',
                 controller: 'ProjectController',
+                controllerAs: 'vm'
+            })
+
+            // file paths page
+            .when('/file-paths', {
+                templateUrl: 'angular-app/file-paths/file-paths.html',
+                controller: 'FilePathsController',
                 controllerAs: 'vm'
             })
 
@@ -84,5 +91,5 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
                 templateUrl: 'angular-app/sheets/sheets.html',
                 controller: 'SheetsController',
                 controllerAs: 'vm'
-            })
+            });
 }]);

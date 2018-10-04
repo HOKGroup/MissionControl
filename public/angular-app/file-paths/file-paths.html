@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1>Files</h1>
+        </div>
+    </div>
+    <div class="row" ng-if="vm.files.length > 0">
+        <table datatable="ng"
+               dt-options="vm.dtOptions"
+               dt-column-defs="vm.dtColumnDefs"
+               class="table table-hover table-condensed datatable">
+            <thead>
+            <tr>
+                <th class="col-md-2">Project Number</th>
+                <th class="col-md-6">Project Name</th>
+                <th class="col-md-1 text-center">Office</th>
+                <th class="col-md-3">Project Address</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="x in vm.projects" ng-click="vm.go('/projects/edit/' + x._id)">
+                <td>{{ x.number }}</td>
+                <td>{{ x.name }}</td>
+                <td class="text-center">{{ x.office }}</td>
+                <td>{{ x.address.city }}, {{ x.address.state }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row" style="padding-top: 10px">
+        <a class="btn btn-primary pull-right" href="#/projects/add" style="margin-bottom:10px;"><span class="glyphicon glyphicon-plus"></span> New Project</a>
+    </div>
+</div>

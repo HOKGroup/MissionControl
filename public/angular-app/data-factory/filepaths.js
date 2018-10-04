@@ -5,8 +5,12 @@ angular.module('MissionControlApp').factory('FilePathsFactory', FilePathsFactory
 
 function FilePathsFactory($http){
     return {
-        getAll: function (centralPath) {
+        getAll: function () {
             return $http.get('/api/v2/filepaths').then(complete).catch(failed);
+        },
+
+        getAllUnassigned: function () {
+            return $http.get('/api/v2/filepaths/unassigned').then(complete).catch(failed);
         },
 
         addToProject: function (data) {

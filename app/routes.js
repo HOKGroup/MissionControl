@@ -141,6 +141,7 @@ var users = require('./models/users');
 
      var filepaths = require('./controller/filepaths');
      app.get('/api/v2/filepaths', filepaths.getAll);
+     app.get('/api/v2/filepaths/unassigned', filepaths.getAllUnassigned);
      app.post('/api/v2/filepaths/add', filepaths.add);
      app.post('/api/v2/filepaths/addmany', filepaths.addMany);
      app.put('/api/v2/filepaths/add', filepaths.addToProject);

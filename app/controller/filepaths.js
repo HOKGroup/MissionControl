@@ -49,7 +49,7 @@ FilePathsService = {
                             }},
                             upsert: true
                         }
-                    }
+                    };
                 }), function (err, response) {
                     var result = {
                         status: 201,
@@ -91,7 +91,7 @@ FilePathsService = {
                     }
                     res.status(result.status).json(result.message);
                 }
-            )
+            );
     },
 
     /**
@@ -117,7 +117,7 @@ FilePathsService = {
                     }
                     res.status(result.status).json(result.message);
                 }
-            )
+            );
     },
 
     /**
@@ -136,7 +136,7 @@ FilePathsService = {
                                 'projectId': ''
                             }}
                         }
-                    }
+                    };
                 }), function (err, response) {
                     var result = {
                         status: 201,
@@ -177,7 +177,7 @@ FilePathsService = {
                     }
                     res.status(result.status).json(result.message);
                 }
-            )
+            );
     },
 
     /**
@@ -185,7 +185,7 @@ FilePathsService = {
      * @param req
      * @param res
      */
-    getAll: function (req, res) {
+    getAllUnassigned: function (req, res) {
         FilePaths
             .find({ 'projectId': null }, function (err, response){
                 var result = {
@@ -200,7 +200,30 @@ FilePathsService = {
                     result.message = err;
                 }
                 res.status(result.status).json(result.message);
-            })
+            });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    getAll: function (req, res) {
+        FilePaths
+            .find({}, function (err, response){
+                var result = {
+                    status: 200,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
     }
 };
 

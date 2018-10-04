@@ -34,8 +34,13 @@
 					<li class="nav-item active">
 						<a href="#/home">Home</a>
 					</li>
-					<li class="nav-item">
-						<a href="#/projects">Projects</a>
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#/projects">Projects</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="#/file-paths">Files</a></li>
+						</ul>
 					</li>
 					<li class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Addins <span class="caret"></span></a>
@@ -96,6 +101,7 @@
 	<script src="angular-app/configuration/file-path-help-controller.js"></script>
 	<script src="angular-app/edit-project/edit-project-controller.js"></script>
 	<script src="angular-app/project/project-controller.js"></script>
+	<script src="angular-app/file-paths/file-paths.js"></script>
 
 	<!--Health Report Controllers-->
 	<script src="angular-app/health-report/health-report-controller.js"></script>
