@@ -6,6 +6,7 @@
 .idea/jsLibraryMappings.xml
 .idea/MissionControl.iml
 .idea/modules.xml
+.idea/codeStyleSettings.xml
 
 # Sensitive or high-churn files:
 .idea/dataSources.ids

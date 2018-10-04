@@ -8,7 +8,7 @@
     <option browserify="false" />
     <option camelcase="false" />
     <option couch="false" />
-    <option curly="true" />
+    <option curly="false" />
     <option debug="false" />
     <option devel="false" />
     <option dojo="false" />
@@ -67,14 +67,14 @@
     <option shelljs="false" />
     <option singleGroups="false" />
     <option smarttabs="false" />
-    <option strict="true" />
+    <option strict="false" />
     <option sub="false" />
     <option supernew="false" />
     <option trailing="false" />
     <option typed="false" />
     <option undef="true" />
     <option unused="false" />
-    <option validthis="false" />
+    <option validthis="true" />
     <option varstmt="false" />
     <option white="false" />
     <option withstmt="false" />

@@ -12,37 +12,37 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder,
     vm.logs = []; // logs shown in main table
     vm.donutData = []; // data filtered for the donut chart
     vm.selectedMachines = []; // data filtered for second table
-    vm.latestVersion = "0.0.0.0"; // latest version of the plugin (used to color chart)
-    vm.selectedOffice = { name: "All", code: "All" };
+    vm.latestVersion = '0.0.0.0'; // latest version of the plugin (used to color chart)
+    vm.selectedOffice = { name: 'All', code: 'All' };
     vm.officeFilters = [
-        { name: "All", code: "All" },
-        { name: "Atlanta", code: ["ATL"] },
-        { name: "Beijing", code: ["BEI"] },
-        { name: "St. Louis", code: ["BJC"] },
-        { name: "Calgary", code: ["CAL"] },
-        { name: "Chicago", code: ["CHI"] },
-        { name: "Columbus", code: ["COL"] },
-        { name: "Dallas", code: ["DAL"] },
-        { name: "Doha", code: ["DOH"] },
-        { name: "Dubai", code: ["DUB"] },
-        { name: "Hong Kong", code: ["HK"] },
-        { name: "Houston", code: ["HOU"] },
-        { name: "Kansas City", code: ["KC"] },
-        { name: "Los Angeles", code: ["LA"] },
-        { name: "London", code: ["LON"] },
-        { name: "New York", code: ["NY"] },
-        { name: "Ottawa", code: ["OTT"] },
-        { name: "Philadephia", code: ["PHI"] },
-        { name: "Seattle", code: ["SEA"] },
-        { name: "San Francisco", code: ["SF"] },
-        { name: "Shanghai", code: ["SH"] },
-        { name: "St. Louis", code: ["STL"] },
-        { name: "Toronto", code: ["TOR"] },
-        { name: "Tampa", code: ["TPA"] },
-        { name: "Washington DC", code: ["WDC"] },
-        { name: "Undefined", code: ["EMC", "SDC", "OSS", "LD", "LDC", ""] }
+        { name: 'All', code: 'All' },
+        { name: 'Atlanta', code: ['ATL'] },
+        { name: 'Beijing', code: ['BEI'] },
+        { name: 'St. Louis', code: ['BJC'] },
+        { name: 'Calgary', code: ['CAL'] },
+        { name: 'Chicago', code: ['CHI'] },
+        { name: 'Columbus', code: ['COL'] },
+        { name: 'Dallas', code: ['DAL'] },
+        { name: 'Doha', code: ['DOH'] },
+        { name: 'Dubai', code: ['DUB'] },
+        { name: 'Hong Kong', code: ['HK'] },
+        { name: 'Houston', code: ['HOU'] },
+        { name: 'Kansas City', code: ['KC'] },
+        { name: 'Los Angeles', code: ['LA'] },
+        { name: 'London', code: ['LON'] },
+        { name: 'New York', code: ['NY'] },
+        { name: 'Ottawa', code: ['OTT'] },
+        { name: 'Philadephia', code: ['PHI'] },
+        { name: 'Seattle', code: ['SEA'] },
+        { name: 'San Francisco', code: ['SF'] },
+        { name: 'Shanghai', code: ['SH'] },
+        { name: 'St. Louis', code: ['STL'] },
+        { name: 'Toronto', code: ['TOR'] },
+        { name: 'Tampa', code: ['TPA'] },
+        { name: 'Washington DC', code: ['WDC'] },
+        { name: 'Undefined', code: ['EMC', 'SDC', 'OSS', 'LD', 'LDC', ''] }
     ];
-    vm.MainChartColor = "steelblue";
+    vm.MainChartColor = 'steelblue';
     vm.dtFrom = new Date();
     vm.dtTo = new Date();
     vm.dtTo.setDate(vm.dtTo.getDate() + 1);
@@ -64,7 +64,7 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder,
     function getUsers() {
         UsersFactory.getAll().then(function (response) {
             if(!response || response.status !== 200){
-                throw {message: "Could not retrieve user info."};
+                throw {message: 'Could not retrieve user info.'};
             }
 
             vm.users = response.data.reduce(function (obj, item) {
@@ -80,7 +80,7 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder,
                 newestOnTop: true,
                 content: err.message
             }));
-        })
+        });
     }
 
     //region Table
@@ -98,7 +98,7 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder,
             })
             .catch(function (err) {
                 console.log('Unable to load project data: ' + err.message);
-            })
+            });
     }).withPaginationType('simple_numbers')
         .withDisplayLength(10)
         .withOption('order', [0, 'desc'])
@@ -201,18 +201,30 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder,
      * @returns {*}
      */
     function parseMachine(machine) {
-        if(!machine) return 'N/A';
+        if(!machine) {
+            return 'N/A';
+        }
 
         var parts = machine.split('-');
-        if(parts.length > 2) return parts[1] + '-' + parts[2];
-        else return parts[1];
+        if(parts.length > 2) {
+            return parts[1] + '-' + parts[2];
+        }
+        else {
+            return parts[1];
+        }
     }
 
     function parseUsername(machine) {
-        if(!machine) return 'N/A';
+        if(!machine) {
+            return 'N/A';
+        }
 
-        if(vm.users.hasOwnProperty(machine)) return vm.users[machine];
-        else return "Unknown";
+        if(vm.users.hasOwnProperty(machine)) {
+            return vm.users[machine];
+        }
+        else {
+            return 'Unknown';
+        }
     }
 
     /**
@@ -221,7 +233,9 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder,
      * @returns {string}
      */
     function parseLocation(machine) {
-        if(!machine) return 'N/A';
+        if(!machine) {
+            return 'N/A';
+        }
 
         var parts = machine.split('-');
         return parts[0];
@@ -252,8 +266,12 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder,
         var myRegexp1 = /version:\s?(.*?)$/g;
         var match = myRegexp.exec(s);
         var match1 = myRegexp1.exec(s);
-        if(match !== null) return match[1];
-        if(match1 !== null) return match1[1];
+        if(match !== null) {
+            return match[1];
+        }
+        if(match1 !== null) {
+            return match1[1];
+        }
         return 'Fatal';
     }
 
@@ -280,8 +298,8 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder,
         }
 
         if (zeroExtend) {
-            while (v1parts.length < v2parts.length) v1parts.push("0");
-            while (v2parts.length < v1parts.length) v2parts.push("0");
+            while (v1parts.length < v2parts.length) v1parts.push('0');
+            while (v2parts.length < v1parts.length) v2parts.push('0');
         }
 
         if (!lexicographical) {
@@ -338,7 +356,9 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder,
 
         Object.keys(temp).map(function (key) {
             var version = getVersion(temp[key].message);
-            if(version === 'Fatal') fatal.push(temp[key]);
+            if(version === 'Fatal') {
+                fatal.push(temp[key]);
+            }
             if(donuts.hasOwnProperty(version)){
                 donuts[version] = donuts[version] + 1;
             } else {
@@ -353,7 +373,7 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder,
             return {
                 name: key,
                 count: donuts[key]
-            }
+            };
         });
         vm.selectedMachines = fatal;
     }
@@ -386,9 +406,13 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder,
                 Object.keys(temp).map(function (key) {
                     var version = getVersion(temp[key].message);
                     if(item.name === 'Fatal'){
-                        if(version === 'Fatal') result.push(temp[key]);
+                        if(version === 'Fatal') {
+                            result.push(temp[key]);
+                        }
                     } else {
-                        if(version === item.name) result.push(temp[key]);
+                        if(version === item.name) {
+                            result.push(temp[key]);
+                        }
                     }
                 });
 
@@ -435,7 +459,7 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder,
                     vm.loading = false;
                     console.log(err);
                 });
-        })
+        });
     };
 
     /**

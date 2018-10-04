@@ -1,1 +1,3 @@
-{ "preset": "jquery", "requireCurlyBraces": false }
+{
+  "preset": "jquery", "requireCurlyBraces": false
+}
