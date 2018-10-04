@@ -43,22 +43,6 @@
             <!--</div>-->
         <!--</div>-->
     <!--</div>-->
-    <div class="row">
-        <div class="panel-group" ng-if="vm.chartsData.length > 1">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #5cb85c"></span> Removed</p>
-                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #d9534f"></span> Added</p>
-                    <h4 class="panel-title">Warnings History</h4>
-                </div>
-                <div class="panel-collapse" style="min-height: 500px">
-                    <div class="panel-body no-padding">
-                        <d3-area data="vm.chartsData"></d3-area>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="row" ng-if="vm.WarningData.show.value">
         <div class="panel-group">
             <div class="panel panel-default">
@@ -74,6 +58,22 @@
                                dt-instance="vm.dtInstance"
                                class="table table-hover table-condensed datatable">
                         </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="panel-group" ng-if="vm.chartsData.length > 1">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #5cb85c"></span> Removed</p>
+                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #d9534f"></span> Added</p>
+                    <h4 class="panel-title">Warnings History</h4>
+                </div>
+                <div class="panel-collapse" style="min-height: 500px">
+                    <div class="panel-body no-padding">
+                        <d3-area data="vm.chartsData"></d3-area>
                     </div>
                 </div>
             </div>

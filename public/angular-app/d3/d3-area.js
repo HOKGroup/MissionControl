@@ -47,11 +47,13 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                 // set the height based on the calculations above
                 svg.attr('height', height + margin.top + margin.bottom);
 
+                var dateFormat = d3.timeFormat("%d %b");
                 var parseTime = d3.timeParse("%Y-%m-%d");
-                var x = d3.scaleTime().range([0, width]);
-                var x2 = d3.scaleTime().range([0, width]);
-                var y = d3.scaleLinear().range([height, 0]);
-                var y2 = d3.scaleLinear().range([height2, 0]);
+
+                var x = d3.scaleTime().range([0, width]),
+                    x2 = d3.scaleTime().range([0, width]),
+                    y = d3.scaleLinear().range([height, 0]),
+                    y2 = d3.scaleLinear().range([height2, 0]);
 
                 // main areas
                 var area = d3.area()
@@ -79,10 +81,26 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                     d.date = parseTime(d.date);
                 });
 
+                var minValue = d3.min(data, function (d) { return d.removed });
+                minValue = getRounded(minValue);
+
+                var maxValue = d3.max(data, function(d) { return d.added; });
+                maxValue = getRounded(maxValue);
+
                 x.domain(d3.extent(data, function(d) { return d.date; }));
-                y.domain([d3.min(data, function (d) { return d.removed }), d3.max(data, function(d) { return d.added; })]);
+                y.domain([minValue, maxValue]);
                 x2.domain(x.domain());
                 y2.domain(y.domain());
+
+                var ticksNum = 10;
+                var yAxisTicks = [];
+                var yDomain = [minValue, maxValue];
+                for (var i = 0; i < ticksNum; i++ ){
+                    yAxisTicks.push((yDomain[1] - yDomain[0]) / (ticksNum - 1)* i + yDomain[0]);
+                }
+
+                var xAxis = d3.axisBottom(x).ticks(5).tickFormat(dateFormat),
+                    xAxis2 = d3.axisBottom(x2).ticks(5).tickFormat(dateFormat);
 
                 var brush = d3.brushX()
                     .extent([[0, 0], [width, height2]])
@@ -127,11 +145,11 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                 focus.append("g")
                     .attr("class", "x axis")
                     .attr("transform", "translate(0," + height + ")")
-                    .call(d3.axisBottom(x));
+                    .call(xAxis);
 
                 focus.append("g")
                     .attr("class", "y axis")
-                    .call(d3.axisLeft(y));
+                    .call(d3.axisLeft(y).tickValues(yAxisTicks));
 
                 // Add brushing area below chart.
                 context.append("path")
@@ -149,7 +167,7 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                 context.append("g")
                     .attr("class", "x axis")
                     .attr("transform", "translate(0," + height2 + ")")
-                    .call(d3.axisBottom(x2));
+                    .call(xAxis2);
 
                 context.append("g")
                     .attr("class", "brush")
@@ -162,6 +180,17 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                     .attr("height", height)
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                     .call(zoom);
+
+                /**
+                 * Returns value rounded to nearest 10. Either negative or positive.
+                 * @param value
+                 * @returns {number}
+                 */
+                function getRounded(value) {
+                    return  value < 0
+                        ? (Math.ceil((Math.abs(value)+1) / 10) * 10) * -1 // round down to nearest 10
+                        : Math.ceil((value+1) / 10) * 10; // round up to nearest 10
+                }
 
                 /**
                  * Handles brushing event resetting line, dots and x-axis.

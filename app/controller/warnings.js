@@ -106,9 +106,9 @@ WarningsService = {
 
     getByCentralPath: function (req, res) {
         var rgx = global.utilities.uriToString(req.params.uri);
+
         Warnings
             .find({'centralPath': rgx})
-            .sort({'_id': -1})
             .exec(function (err, response) {
                 var result = {
                     status: 200,
