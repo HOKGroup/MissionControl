@@ -87,7 +87,10 @@ function WarningsController($routeParams, WarningsFactory, HealthReportFactory, 
             }, {});
 
             // (Konrad) Set data for the histogram chart. IE doesn't support Object.values
-            vm.chartsData = Object.keys(data).map(function(item) { return data[item]; }).reverse();
+            vm.chartsData = Object.keys(data).map(function(item) { return data[item]; });
+            vm.chartsData.sort(function(a,b){
+                return new Date(a.date) - new Date(b.date);
+            }); // sort in reverse a-b
 
             // (Konrad) Set data for the table.
             vm.openWarnings = vm.WarningData.warningStats.filter(function (item) {

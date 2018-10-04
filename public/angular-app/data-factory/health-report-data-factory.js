@@ -888,24 +888,22 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                     })
             } else {
                 var uri = UtilityService.getHttpSafeFilePath(data.centralPath);
-                WarningsFactory.getByCentralPath(uri)
-                    .then(function (response) {
-                        if(!response || response.status !== 200){
-                            callback(null);
-                            return;
-                        }
-                        if(response.data.length === 0){
-                            callback({
-                                warningStats: response.data,
-                                centralPath: data.centralPath
-                            });
-                        } else {
-                            callback(process(response.data))
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    })
+                WarningsFactory.getByCentralPath(uri).then(function (response) {
+                    if(!response || response.status !== 200){
+                        callback(null);
+                        return;
+                    }
+                    if(response.data.length === 0){
+                        callback({
+                            warningStats: response.data,
+                            centralPath: data.centralPath
+                        });
+                    } else {
+                        callback(process(response.data))
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                })
             }
 
             /**
