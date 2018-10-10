@@ -8,9 +8,9 @@
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         Worksets Health Score:
-                        <a href="" class="faa-parent faa-slow animated-hover">
-                            <i class="fa fa-gear faa-spin text-primary" ng-click="vm.showTimeSettings = !vm.showTimeSettings"></i>
-                        </a>
+                        <button class="fa-button faa-parent faa-slow animated-hover" ng-click="vm.showTimeSettings = !vm.showTimeSettings">
+                            <i class="fas fa-cog faa-spin text-primary"></i>
+                        </button>
                     </h4>
                 </div>
                 <div class="panel-collapse" ng-if="vm.Validate()">
@@ -31,12 +31,12 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-chevron-down"></span> On Model Synch</p>
-                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-chevron-up"></span> On Model Open</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-chevron-down"></i> On Model Synch</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-chevron-up"></i> On Model Open</p>
                     <h4 class="panel-title" style="padding-top: 5px;">Worksets opened %</h4>
                 </div>
                 <div class="panel-collapse">
-                    <div class="panel-body no-padding" style="max-height: 400px; overflow-y: scroll; width: 100%" ng-if="vm.Validate()">
+                    <div class="panel-body no-padding" style="max-height: 400px; overflow-y: scroll; width: 100%;" ng-if="vm.Validate()">
                         <d3-grouped-horizontal-bar-chart2 data="vm.WorksetData.worksetOpenedData"
                                                           d3-on-click="vm.d3OnClick(item)">
                         </d3-grouped-horizontal-bar-chart2>
@@ -63,8 +63,8 @@
         <div class="panel-group" id="accordion3">
             <div class="panel panel-default">
                 <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#accordion3" data-target="#collapseThree">
-                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #f0ad4e"></span> "Link"/"CAD" w/ content</p>
-                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #d9534f"></span> Bulk Content >50%</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-square" style="color: #f0ad4e;"></i> "Link"/"CAD" w/ content</p>
+                    <p class="pull-right textAlignMiddle"><span class="fas fa-square" style="color: #d9534f;"></span> Bulk Content >50%</p>
                     <h4 class="panel-title" style="padding-top: 5px;">Workset Item Counts</h4>
                 </div>
                 <div id="collapseThree" class="panel-collapse collapse in">

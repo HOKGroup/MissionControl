@@ -75,8 +75,8 @@
         <div class="panel-group" id="p1">
             <div class="panel panel-default">
                 <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p1" data-target="#collapseP1">
-                    <p class="pull-right textAlignMiddle"><span class="fa fa-square" style="color: #F0AD4E"></span> 2/3 Fail</p>
-                    <p class="pull-right textAlignMiddle"><span class="fa fa-square" style="color: #D9534F"></span> All checks Fail</p>
+                    <p class="pull-right textAlignMiddle"><span class="fas fa-square" style="color: #F0AD4E;"></span> 2/3 Fail</p>
+                    <p class="pull-right textAlignMiddle"><span class="fas fa-square" style="color: #D9534F;"></span> All checks Fail</p>
                     <h4 class="panel-title">Family Checks: no placed instances, >1MB size, misnamed</h4>
                 </div>
                 <div id="collapseP1" class="panel-collapse collapse in">
@@ -112,20 +112,18 @@
                                 <td class="text-center"
                                     ng-mouseenter="onHover = true"
                                     ng-mouseleave="onHover = false">
-                                    <a href="">
-                                        <span class="glyphicon glyphicon-plus"
-                                              ng-if="i.tasks.length === 0 && onHover"
-                                              ng-style="vm.evaluateTasks(i)"
-                                              ng-click="vm.launchEditor(i, vm.FamilyData.userNames)">
-                                        </span>
-                                    </a>
-                                    <a href="">
-                                        <span class="glyphicon glyphicon-tasks"
-                                              ng-show="i.tasks.length > 0"
-                                              ng-style="vm.evaluateTasks(i)"
-                                              ng-click="vm.launchEditor(i, vm.FamilyData.userNames)">
-                                        </span>
-                                    </a>
+                                    <button class="fa-button"
+                                            ng-if="i.tasks.length === 0 && onHover"
+                                            ng-style="vm.evaluateTasks(i)"
+                                            ng-click="vm.launchEditor(i, vm.FamilyData.userNames)">
+                                        <i class="fas fa-plus text-primary"></i>
+                                    </button>
+                                    <button class="fa-button"
+                                            ng-show="i.tasks.length > 0"
+                                            ng-style="vm.evaluateTasks(i)"
+                                            ng-click="vm.launchEditor(i, vm.FamilyData.userNames)">
+                                        <i class="fas fa-tasks text-primary"></i>
+                                    </button>
                                 </td>
                                 <td>{{i.tasks.length}}</td>
                                 <td class="text-center">

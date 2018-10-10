@@ -3,11 +3,15 @@
 </div>
 <div ng-class="vm.descriptionClass">
     <div class="small">
-        <h4 style="margin: 0; padding-bottom: 5px">
+        <h4 style="margin: 0; padding-bottom: 5px;">
             {{vm.title}}
             <a href="">
-                <i class="fa fa-caret-right text-primary" ng-click="vm.toggleDetails()" ng-if="!vm.showDetails"></i>
-                <i class="fa fa-caret-down text-primary" ng-click="vm.toggleDetails()" ng-if="vm.showDetails"></i>
+                <button class="fa-button" ng-click="vm.toggleDetails()" ng-if="!vm.showDetails">
+                    <i class="fas fa-caret-right fa-lg text-primary"></i>
+                </button>
+                <button class="fa-button" ng-click="vm.toggleDetails()" ng-if="vm.showDetails">
+                    <i class="fas fa-caret-down fa-lg text-primary"></i>
+                </button>
             </a>
         </h4>
         <p>
@@ -19,7 +23,10 @@
     <div ng-attr-id="{{vm.name + '-' + 'menu'}}">
         <div class="panel list-group">
             <div ng-repeat="bullet in vm.bullets">
-                <a href="" class="list-group-item" data-toggle="collapse" ng-attr-data-target="{{'#' + vm.name + '-' + vm.title + '-' + $index}}" ng-attr-data-parent="{{'#' + vm.name + '-' + 'menu'}}">
+                <a href="" class="list-group-item"
+                   data-toggle="collapse"
+                   ng-attr-data-target="{{'#' + vm.name + '-' + vm.title + '-' + $index}}"
+                   ng-attr-data-parent="{{'#' + vm.name + '-' + 'menu'}}">
                     {{bullet.title}}
                     <span ng-class="bullet.bulletColor">{{bullet.bulletText}}</span>
                 </a>

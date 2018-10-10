@@ -24,7 +24,13 @@
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body no-padding">
-                        <d3-horizontal-bar-chart-timeout data="vm.d3HorizontalData" margin-left="180" domain-padding="5" d3-on-click="vm.OnClick(item)" clickable="true" fill-color="vm.MainChartColor"></d3-horizontal-bar-chart-timeout>
+                        <d3-horizontal-bar-chart-timeout data="vm.d3HorizontalData"
+                                                         margin-left="180"
+                                                         domain-padding="5"
+                                                         d3-on-click="vm.OnClick(item)"
+                                                         clickable="true"
+                                                         fill-color="vm.MainChartColor">
+                        </d3-horizontal-bar-chart-timeout>
                     </div>
                 </div>
             </div>
@@ -39,7 +45,7 @@
                             {{vm.SelectedOffice}}
                             <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 50px">
+                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 50px;">
                             <li ng-repeat="office in vm.officeFilters">
                                 <a href="" ng-click="vm.SetOfficeFilter(office)">{{office.name}}</a>
                             </li>
@@ -48,8 +54,14 @@
                     <h4 class="panel-title" style="padding-top: 5px;">Users: {{vm.SelectedPlugin}} / {{vm.SelectedYear}}</h4>
                 </div>
                 <div class="panel-collapse" ng-if="vm.UserDetails.length > 0">
-                    <div class="panel-body no-padding" style="max-height: 500px; overflow-y: scroll">
-                        <d3-horizontal-bar-chart-timeout data="vm.UserDetails" margin-left="180" domain-padding="5" clickable="false" fill-color="vm.UserChartColor" axis-top="true"></d3-horizontal-bar-chart-timeout>
+                    <div class="panel-body no-padding" style="max-height: 500px; overflow-y: scroll;">
+                        <d3-horizontal-bar-chart-timeout data="vm.UserDetails"
+                                                         margin-left="180"
+                                                         domain-padding="5"
+                                                         clickable="false"
+                                                         fill-color="vm.UserChartColor"
+                                                         axis-top="true">
+                        </d3-horizontal-bar-chart-timeout>
                     </div>
                 </div>
             </div>
@@ -59,14 +71,16 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #d9534f"></span> Never</p>
-                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #5cb85c"></span> Always</p>
-                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #f0ad4e"></span> CurrentSessionOnly</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-square" style="color: #d9534f;"></i> Never</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-square" style="color: #5cb85c;"></i> Always</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-square" style="color: #f0ad4e;"></i> CurrentSessionOnly</p>
                     <h4 class="panel-title" style="padding-top: 5px;">Addin Manager: Usage Details - {{vm.SelectedYear}}</h4>
                 </div>
                 <div class="panel-collapse">
-                    <div class="panel-body no-padding" style="max-height: 500px; overflow-y: scroll">
-                        <d3-normalized-horizontal-bar-chart data="vm.AddinManagerStats" margin-left="180"></d3-normalized-horizontal-bar-chart>
+                    <div class="panel-body no-padding" style="max-height: 500px; overflow-y: scroll;">
+                        <d3-normalized-horizontal-bar-chart data="vm.AddinManagerStats"
+                                                            margin-left="180">
+                        </d3-normalized-horizontal-bar-chart>
                     </div>
                 </div>
             </div>

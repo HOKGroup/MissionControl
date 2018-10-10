@@ -20,6 +20,8 @@ function HealthScoreSummaryController(){
         }
 
         vm.toggleDetails = function () {
+            console.log("Toggle details");
+
             vm.showDetails = !vm.showDetails;
             if (vm.showDetails){
                 // contract description
