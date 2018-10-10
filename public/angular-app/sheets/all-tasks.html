@@ -7,11 +7,17 @@
     </div>
     <div class="modal-body">
         <div class="panel panel-default">
-            <div class="panel-heading" style="padding-top: 10px; padding-bottom: 5px">
-                <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-remove-circle" style="color: red"></span> Incomplete</p>
-                <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-ok-circle" style="color: green"></span> Complete</p>
+            <div class="panel-heading" style="padding-top: 10px; padding-bottom: 5px;">
+                <p class="pull-right textAlignMiddle">
+                    <i class="fas fa-times-circle" style="color: red;"></i>
+                    Incomplete
+                </p>
+                <p class="pull-right textAlignMiddle">
+                    <i class="fas fa-check-circle" style="color: green;"></i>
+                    Complete
+                </p>
                 <input type="checkbox" value="Name:" id="mainCheckbox" ng-model="vm.check" ng-change="vm.selectAll(check)">
-                <label style="padding-left: 10px">Sheet Number - Sheet Name:</label>
+                <label style="padding-left: 10px;">Sheet Number - Sheet Name:</label>
             </div>
             <ul class="list-group">
                 <li class="list-group-item" ng-repeat="task in vm.tasks | orderBy: 'createdAt' : true">
