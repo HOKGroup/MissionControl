@@ -4,30 +4,40 @@
             <h1>Files</h1>
         </div>
     </div>
-    <div class="row" ng-if="vm.files.length > 0">
-        <table datatable="ng"
-               dt-options="vm.dtOptions"
-               dt-column-defs="vm.dtColumnDefs"
-               class="table table-hover table-condensed datatable">
-            <thead>
-            <tr>
-                <th class="col-md-2">Project Number</th>
-                <th class="col-md-6">Project Name</th>
-                <th class="col-md-1 text-center">Office</th>
-                <th class="col-md-3">Project Address</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="x in vm.projects" ng-click="vm.go('/projects/edit/' + x._id)">
-                <td>{{ x.number }}</td>
-                <td>{{ x.name }}</td>
-                <td class="text-center">{{ x.office }}</td>
-                <td>{{ x.address.city }}, {{ x.address.state }}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row" style="padding-top: 10px">
-        <a class="btn btn-primary pull-right" href="#/projects/add" style="margin-bottom:10px;"><span class="glyphicon glyphicon-plus"></span> New Project</a>
+    <div class="row">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class=" btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
+                    </div>
+                    <h4 class="panel-title">File Paths</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <table datatable="ng"
+                               dt-options="vm.dtOptions"
+                               dt-column-defs="vm.dtColumnDefs"
+                               class="table table-hover table-condensed datatable">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-1 text-center">#</th>
+                                    <th class="col-md-9">File Path</th>
+                                    <th class="col-md-1 text-center">Used?</th>
+                                    <th class="col-md-1"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="i in vm.files" ng-class="vm.getRowStyle(i)">
+                                    <td class="text-center"><span ng-bind="$index"></span></td>
+                                    <td><span ng-bind="i.centralPath"></span></td>
+                                    <td class="text-center"><span ng-bind="i.projectId !== null ? 'Yes' : 'No'"></span></td>
+                                    <td><file-path-buttons item="i" on-disable="vm.disable(item)"></file-path-buttons></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

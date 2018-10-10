@@ -11,185 +11,12 @@ FilePathsService = {
      * @param res
      */
     add: function(req, res){
-        FilePaths
-            .updateOne(
-                { 'centralPath': req.body.centralPath },
-                { $set: { 'centralPath': req.body.centralPath }},
-                { upsert: true }, function (err, response){
-                    var result = {
-                        status: 201,
-                        message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
-                    }
-                    res.status(result.status).json(result.message);
-                });
-    },
-
-    /**
-     *
-     * @param req
-     * @param res
-     */
-    addMany: function(req, res){
-        FilePaths
-            .bulkWrite(
-                req.body.map(function (item) {
-                    return {
-                        'updateOne': {
-                            filter: { 'centralPath': item.centralPath },
-                            update: { $set: {
-                                'centralPath': item.centralPath,
-                                'projectId': item.projectId
-                            }},
-                            upsert: true
-                        }
-                    };
-                }), function (err, response) {
-                    var result = {
-                        status: 201,
-                        message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
-                    }
-                    res.status(result.status).json(result.message);
-                }
-            );
-    },
-
-    /**
-     *
-     * @param req
-     * @param res
-     */
-    addToProject: function (req, res) {
-        FilePaths
-            .updateOne(
-                { 'centralPath': req.body.centralPath },
-                { $set: { 'centralPath': req.body.centralPath, 'projectId': req.body.projectId }},
-                { upsert: true }, function (err, response) {
-                    var result = {
-                        status: 201,
-                        message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
-                    }
-                    res.status(result.status).json(result.message);
-                }
-            );
-    },
-
-    /**
-     *
-     * @param req
-     * @param res
-     */
-    removeFromProject: function (req, res) {
-        FilePaths
-            .updateOne(
-                { 'centralPath': req.body.centralPath },
-                { $unset: { 'projectId': '' }}, function (err, response) {
-                    var result = {
-                        status: 201,
-                        message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
-                    }
-                    res.status(result.status).json(result.message);
-                }
-            );
-    },
-
-    /**
-     *
-     * @param req
-     * @param res
-     */
-    removeManyFromProject: function (req, res) {
-        FilePaths
-            .bulkWrite(
-                req.body.map(function (item) {
-                    return {
-                        'updateOne': {
-                            filter: { 'centralPath': item.centralPath },
-                            update: { $unset: {
-                                'projectId': ''
-                            }}
-                        }
-                    };
-                }), function (err, response) {
-                    var result = {
-                        status: 201,
-                        message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
-                    }
-                    res.status(result.status).json(result.message);
-                }
-            );
-    },
-
-    /**
-     *
-     * @param req
-     * @param res
-     */
-    changeFilePath: function (req, res) {
-        FilePaths
-            .updateOne(
-                { 'centralPath': req.body.before },
-                { $set: { 'centralPath': req.body.after }}, function (err, response) {
-                    var result = {
-                        status: 201,
-                        message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
-                    }
-                    res.status(result.status).json(result.message);
-                }
-            );
-    },
-
-    /**
-     *
-     * @param req
-     * @param res
-     */
-    getAllUnassigned: function (req, res) {
-        FilePaths
-            .find({ 'projectId': null }, function (err, response){
+        FilePaths.updateOne(
+            { 'centralPath': req.body.centralPath },
+            { $set: { 'centralPath': req.body.centralPath }},
+            { upsert: true }, function (err, response){
                 var result = {
-                    status: 200,
+                    status: 201,
                     message: response
                 };
                 if (err){
@@ -208,11 +35,196 @@ FilePathsService = {
      * @param req
      * @param res
      */
-    getAll: function (req, res) {
-        FilePaths
-            .find({}, function (err, response){
+    addMany: function(req, res){
+        FilePaths.bulkWrite(
+            req.body.map(function (item) {
+                return {
+                    'updateOne': {
+                        filter: { 'centralPath': item.centralPath },
+                        update: { $set: {
+                            'centralPath': item.centralPath,
+                            'projectId': item.projectId
+                        }},
+                        upsert: true
+                    }
+                };
+            }), function (err, response) {
                 var result = {
-                    status: 200,
+                    status: 201,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    addToProject: function (req, res) {
+        FilePaths.updateOne(
+            { 'centralPath': req.body.centralPath },
+            { $set: { 'centralPath': req.body.centralPath, 'projectId': req.body.projectId }},
+            { upsert: true }, function (err, response) {
+                var result = {
+                    status: 201,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    removeFromProject: function (req, res) {
+        FilePaths.updateOne(
+            { 'centralPath': req.body.centralPath },
+            { $unset: { 'projectId': '' }}, function (err, response) {
+                var result = {
+                    status: 201,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    removeManyFromProject: function (req, res) {
+        FilePaths.bulkWrite(
+            req.body.map(function (item) {
+                return {
+                    'updateOne': {
+                        filter: { 'centralPath': item.centralPath },
+                        update: { $unset: {
+                            'projectId': ''
+                        }}
+                    }
+                };
+            }), function (err, response) {
+                var result = {
+                    status: 201,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    changeFilePath: function (req, res) {
+        FilePaths.updateOne(
+            { 'centralPath': req.body.before },
+            { $set: { 'centralPath': req.body.after }}, function (err, response) {
+                var result = {
+                    status: 201,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    getAllUnassigned: function (req, res) {
+        FilePaths.find({ 'projectId': null, 'isDisabled': false }, function (err, response){
+            var result = {
+                status: 200,
+                message: response
+            };
+            if (err){
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
+            }
+            res.status(result.status).json(result.message);
+        });
+    },
+
+    /**
+     *
+     * @param req
+     * @param res
+     */
+    getAll: function (req, res) {
+        FilePaths.find({}, function (err, response){
+            var result = {
+                status: 200,
+                message: response
+            };
+            if (err){
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
+            }
+            res.status(result.status).json(result.message);
+        });
+    },
+
+    /**
+     * Removes given file path object from DB.
+     * @param req
+     * @param res
+     */
+    disable: function (req, res) {
+        var id = req.params.id;
+        FilePaths.updateOne(
+            { '_id': id },
+            { $set: { 'isDisabled': req.body.isDisabled }}, function (err, response){
+                var result = {
+                    status: 201,
                     message: response
                 };
                 if (err){

@@ -3,6 +3,23 @@
     <option name="myName" value="Project Default" />
     <inspection_tool class="CssMissingSemicolon" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="Eslint" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myValues">
+        <value>
+          <list size="8">
+            <item index="0" class="java.lang.String" itemvalue="dt-options" />
+            <item index="1" class="java.lang.String" itemvalue="dt-column-defs" />
+            <item index="2" class="java.lang.String" itemvalue="item" />
+            <item index="3" class="java.lang.String" itemvalue="on-delete" />
+            <item index="4" class="java.lang.String" itemvalue="ng-disabled" />
+            <item index="5" class="java.lang.String" itemvalue="tooltip-placement" />
+            <item index="6" class="java.lang.String" itemvalue="dt-instance" />
+            <item index="7" class="java.lang.String" itemvalue="on-disable" />
+          </list>
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
     <inspection_tool class="JSIgnoredPromiseFromCall" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="JSUnfilteredForInLoop" enabled="false" level="WARNING" enabled_by_default="false" />
   </profile>

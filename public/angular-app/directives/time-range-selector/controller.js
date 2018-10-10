@@ -32,7 +32,7 @@ function TimeRangeSelectorController(){
          * Call defined hide function that will hide the div.
          */
         vm.hide = function () {
-            this.onHide()
+            this.onHide();
         };
 
         /**

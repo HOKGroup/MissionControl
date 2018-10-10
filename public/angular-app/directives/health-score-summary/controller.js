@@ -30,6 +30,6 @@ function HealthScoreSummaryController(){
                 vm.descriptionClass = 'col-md-9';
                 vm.showDetails = false;
             }
-        }
+        };
     };
 }

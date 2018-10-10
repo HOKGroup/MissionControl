@@ -9,6 +9,10 @@ function FilePathsFactory($http){
             return $http.get('/api/v2/filepaths').then(complete).catch(failed);
         },
 
+        disable: function (data) {
+            return $http.put('/api/v2/filepaths/' + data._id + '/disable', data).then(complete).catch(failed);
+        },
+
         getAllUnassigned: function () {
             return $http.get('/api/v2/filepaths/unassigned').then(complete).catch(failed);
         },
