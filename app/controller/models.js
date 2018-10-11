@@ -99,7 +99,7 @@ module.exports = {
                     }
                     res.status(result.status).json(result.message);
                 }
-            )
+            );
     },
 
     /**

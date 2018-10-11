@@ -589,7 +589,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
      * to any configurations.
      */
     function getFiles(){
-        FilePathsFactory.getAll()
+        FilePathsFactory.getAllUnassigned()
             .then(function (response) {
                 if(!response || response.status !== 200) throw response;
 

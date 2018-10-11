@@ -25,3 +25,13 @@ angular.module('MissionControlApp').component('healthReportSummary', {
         name: '='
     }
 });
+
+angular.module('MissionControlApp').component('filePathButtons', {
+    templateUrl: 'angular-app/directives/file-path-buttons/template.html',
+    controller: 'FilePathButtonsController',
+    controllerAs: 'vm',
+    bindings: {
+        item: '=',
+        onDisable: '&onDisable'
+    }
+});

@@ -1,0 +1,43 @@
+<div class="container">
+    <div class="row">
+        <div class="page-header">
+            <h1>Files</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class=" btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
+                    </div>
+                    <h4 class="panel-title">File Paths</h4>
+                </div>
+                <div class="panel-collapse">
+                    <div class="panel-body">
+                        <table datatable="ng"
+                               dt-options="vm.dtOptions"
+                               dt-column-defs="vm.dtColumnDefs"
+                               class="table table-hover table-condensed datatable">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-1 text-center">#</th>
+                                    <th class="col-md-9">File Path</th>
+                                    <th class="col-md-1 text-center">Used?</th>
+                                    <th class="col-md-1"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="i in vm.files" ng-class="vm.getRowStyle(i)">
+                                    <td class="text-center"><span ng-bind="$index"></span></td>
+                                    <td><span ng-bind="i.centralPath"></span></td>
+                                    <td class="text-center"><span ng-bind="i.projectId !== null ? 'Yes' : 'No'"></span></td>
+                                    <td><file-path-buttons item="i" on-disable="vm.disable(item)"></file-path-buttons></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

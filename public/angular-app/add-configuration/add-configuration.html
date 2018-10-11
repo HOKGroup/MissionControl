@@ -3,8 +3,8 @@
 		<div class="page-header">
 			<h1>
 				{{ vm.selectedProject.number }} {{ vm.selectedProject.name }}
-				<a href="#/projects/configurations/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/parameter_32.png" height="32" width="32" style="margin-top:0" ></a>
-				<a href="#/projects/healthreport/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/health_32.png" height="32" width="32" style="margin-top:0" > </a>
+				<a href="#/projects/configurations/{{ vm.selectedProject._id }}" style="padding:0;"><img src="images/parameter_32.png" height="32" width="32" style="margin-top:0;"></a>
+				<a href="#/projects/healthreport/{{ vm.selectedProject._id }}" style="padding:0;"><img src="images/health_32.png" height="32" width="32" style="margin-top:0;"></a>
 			</h1>
 		</div>
 	</div>
@@ -15,8 +15,12 @@
 			<div class="form-group row">
 				<label style="margin-top:7px;" class="form-control-label col-sm-2" for="configName">
 					Configuration Name:
-					<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.newConfig.name"></span>
-					<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.newConfig.name"></span>
+					<i ng-if="vm.newConfig.name">
+						<i class="fas fa-check fa-sm" style="color: green;"></i>
+					</i>
+					<i ng-if="!vm.newConfig.name">
+						<i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+					</i>
 				</label>
 				<div class="col-sm-10">
 					<input type="text" name="cName" class="form-control" id="configName" placeholder="Name" ng-model="vm.newConfig.name" required>
@@ -33,8 +37,12 @@
 						<tr>
 							<th class="col-md-10">
 								Revit Files Added:
-								<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.HasFiles"></span>
-								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.HasFiles"></span>
+								<i ng-if="vm.HasFiles">
+									<i class="fas fa-check fa-sm" style="color: green;"></i>
+								</i>
+								<i ng-if="!vm.HasFiles">
+									<i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+								</i>
 							</th>
 							<th class="col-md-2"></th>
 						</tr>
@@ -44,7 +52,7 @@
 							<td>{{ file.centralPath }}</td>
 							<td class="text-right">
 								<button type="button" class="btn btn-danger" ng-click="vm.deleteFile(file.centralPath)">
-									<span class="glyphicon glyphicon-trash" style="margin-right: 0px"></span>
+									<i class="fas fa-trash" style="margin-right: 0;"></i>
 								</button>
 							</td>
 						</tr>
@@ -54,42 +62,46 @@
 						<thead></thead>
 						<tbody>
                             <tr>
-                                <td class="col-md-3 text-left" style="padding-top: 15px">
+                                <td class="col-md-3 text-left" style="padding-top: 15px;">
                                     <b>Add Revit File:</b>
-                                    <i class="fa fa-asterisk" style="color: red;" ng-if="!vm.HasFiles"></i>
-                                    <i class="fa fa-check" style="color: green;" ng-if="vm.HasFiles"></i>
-                                    <a href="">
-                                        <i class="fa fa-info-circle text-primary" ng-click="vm.launchHelpWindow('lg')"></i>
-                                    </a>
+									<i ng-if="vm.HasFiles">
+										<i class="fas fa-check fa-sm" style="color: green;"></i>
+									</i>
+									<i ng-if="!vm.HasFiles">
+										<i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+									</i>
+									<button class="fa-button" ng-click="vm.launchHelpWindow('lg')">
+										<i class="fas fa-info-circle text-primary"></i>
+									</button>
                                 </td>
-                                <td class="col-md-7" style="padding-right: 0">
+                                <td class="col-md-7" style="padding-right: 0;">
                                     <input type="text" class="form-control" id="formNewFile" placeholder="Enter a central file path for Revit project. (.rvt)" ng-model="vm.newFile">
                                     <p class="text-warning">{{ vm.fileWarningMsg }}</p>
 
                                     <!--Filters-->
                                     <div>
                                         <b>Filters:</b>
-                                        <div class="btn-group" style="padding-bottom: 10px; padding-left: 10px">
+                                        <div class="btn-group" style="padding-bottom: 10px; padding-left: 10px;">
                                             <button class="btn btn-primary btn-sm dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
                                                 <span class="caret"></span>
                                                 {{vm.selectedOffice.name}}
                                             </button>
-                                            <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0">
-                                                <li ng-repeat="office in vm.offices" style="padding-right: 5px; padding-left: 5px">
-                                                    <a href="" ng-click="vm.selectedOffice = office" style="padding-left: 0; padding-right: 0" ng-show="vm.selectedType !== 'BIM 360' || office.name === 'All'">
+                                            <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0;">
+                                                <li ng-repeat="office in vm.offices" style="padding-right: 5px; padding-left: 5px;">
+                                                    <a href="" ng-click="vm.selectedOffice = office" style="padding-left: 0; padding-right: 0;" ng-show="vm.selectedType !== 'BIM 360' || office.name === 'All'">
                                                         {{office.name}}
                                                     </a>
                                                 </li>
                                             </ul>
                                         </div>
-                                        <div class="btn-group" style="padding-bottom: 10px; padding-left: 10px">
+                                        <div class="btn-group" style="padding-bottom: 10px; padding-left: 10px;">
                                             <button class="btn btn-primary btn-sm dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
                                                 <span class="caret"></span>
                                                 {{vm.selectedType}}
                                             </button>
-                                            <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0">
-                                                <li ng-repeat="type in vm.fileTypes" style="padding-right: 5px; padding-left: 5px">
-                                                    <a href="" ng-click="vm.setTypeFilter(type)" style="padding-left: 0; padding-right: 0">
+                                            <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0;">
+                                                <li ng-repeat="type in vm.fileTypes" style="padding-right: 5px; padding-left: 5px;">
+                                                    <a href="" ng-click="vm.setTypeFilter(type)" style="padding-left: 0; padding-right: 0;">
                                                         {{type}}
                                                     </a>
                                                 </li>
@@ -103,9 +115,9 @@
                                             <span class="caret"></span>
                                             Files ({{filtered.length}})
                                         </button>
-                                        <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0">
-                                            <li ng-repeat="file in vm.files | filter: vm.filterFn as filtered" style="padding-right: 5px; padding-left: 5px">
-                                                <a href="" ng-click="vm.newFile = file.centralPath" style="padding-left: 0; padding-right: 0">
+                                        <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0;">
+                                            <li ng-repeat="file in vm.files | filter: vm.filterFn as filtered" style="padding-right: 5px; padding-left: 5px;">
+                                                <a href="" ng-click="vm.newFile = file.centralPath" style="padding-left: 0; padding-right: 0;">
                                                     {{file.name | uppercase}}
                                                 </a>
                                             </li>
@@ -114,7 +126,7 @@
                                 </td>
                                 <td class="col-md-2 text-right">
                                     <button type="button" class="btn btn-default" ng-click="vm.addFile()">
-                                        <span class="glyphicon glyphicon-plus" style="margin-right: 0"></span>
+                                        <span class="glyphicon glyphicon-plus" style="margin-right: 0;"></span>
                                     </button>
                                 </td>
                             </tr>
@@ -150,7 +162,7 @@
 							<label>User Overrides</label>
 							<ul class="list-inline">
 								<li>
-									<div class="col-md-4" style="padding-top: 5px">
+									<div class="col-md-4" style="padding-top: 5px;">
 										{{ updater.userOverrides.familyNameCheck.description }}
 									</div>
 									<div class="col-md-3">
@@ -162,24 +174,24 @@
 												   ng-model="vm.familyNameCheckTag"
 												   ng-keypress="vm.onEnter($event, updater.userOverrides.familyNameCheck.values, 'FamilyNameCheck')">
 											<span class="input-group-btn">
-                                                        <button class="btn btn-default btn-sm"
-																type="button"
-																ng-click="vm.AddFamilyTag(updater.userOverrides.familyNameCheck.values)">
-                                                            <span class="fa fa-plus"></span>
-                                                        </button>
-                                                    </span>
+												<button class="btn btn-default btn-sm"
+														type="button"
+														ng-click="vm.AddFamilyTag(updater.userOverrides.familyNameCheck.values)">
+													<i class="fas fa-plus"></i>
+												</button>
+											</span>
 										</div>
 									</div>
 									<div class="col-md-5">
-                                                <span ng-repeat="tag in updater.userOverrides.familyNameCheck.values track by $index"
-													  class="btn btn-default btn-sm"
-													  ng-click="vm.RemoveTag(updater.userOverrides.familyNameCheck.values, $index)">
-                                                    {{tag}}
-                                                </span>
+										<span ng-repeat="tag in updater.userOverrides.familyNameCheck.values track by $index"
+											  class="btn btn-default btn-sm"
+											  ng-click="vm.RemoveTag(updater.userOverrides.familyNameCheck.values, $index)">
+											{{tag}}
+										</span>
 									</div>
 								</li>
 								<li>
-									<div class="col-md-4" style="padding-top: 5px">
+									<div class="col-md-4" style="padding-top: 5px;">
 										{{ updater.userOverrides.dimensionValueCheck.description }}
 									</div>
 									<div class="col-md-3">
@@ -191,20 +203,20 @@
 												   ng-model="vm.dimensionValueCheckTag"
 												   ng-keypress="vm.onEnter($event, updater.userOverrides.dimensionValueCheck.values, 'DimensionValueCheck')">
 											<span class="input-group-btn">
-                                                        <button class="btn btn-default btn-sm"
-																type="button"
-																ng-click="vm.AddDimensionTag(updater.userOverrides.dimensionValueCheck.values)">
-                                                            <span class="fa fa-plus"></span>
-                                                        </button>
-                                                    </span>
+												<button class="btn btn-default btn-sm"
+														type="button"
+														ng-click="vm.AddDimensionTag(updater.userOverrides.dimensionValueCheck.values)">
+													<i class="fas fa-plus"></i>
+												</button>
+											</span>
 										</div>
 									</div>
 									<div class="col-md-5">
-                                                <span ng-repeat="tag in updater.userOverrides.dimensionValueCheck.values track by $index"
-													  class="btn btn-default btn-sm"
-													  ng-click="vm.RemoveTag(updater.userOverrides.dimensionValueCheck.values, $index)">
-                                                    {{tag}}
-                                                </span>
+										<span ng-repeat="tag in updater.userOverrides.dimensionValueCheck.values track by $index"
+											  class="btn btn-default btn-sm"
+											  ng-click="vm.RemoveTag(updater.userOverrides.dimensionValueCheck.values, $index)">
+											{{tag}}
+										</span>
 									</div>
 								</li>
 							</ul>
@@ -227,10 +239,14 @@
 							</label>
 						</fieldset>
 						<fieldset class="form-group" ng-show="vm.newConfig.sharedParamMonitor.isMonitorOn">
-							<label style="margin-top:7px;" class="control-label" for="formNewSheetFile">
+							<label style="margin-top:7px;" class="control-label" for="formNewSharedParamPath">
 								File Path:
-								<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.newConfig.sharedParamMonitor.filePath"></span>
-								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.newConfig.sharedParamMonitor.filePath"></span>
+								<i ng-if="vm.newConfig.sharedParamMonitor.filePath">
+									<i class="fas fa-check fa-sm" style="color: green;"></i>
+								</i>
+								<i ng-if="!vm.newConfig.sharedParamMonitor.filePath">
+									<i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+								</i>
 							</label>
 							<input type="text" class="form-control" id="formNewSharedParamPath" placeholder="Shared Parameter File Location. (.txt)" ng-model="vm.newConfig.sharedParamMonitor.filePath">
 						</fieldset>
@@ -245,13 +261,13 @@
 			<button type="submit"
 					class="btn btn-primary pull-right"
 					ng-click="vm.addConfiguration()">
-				<span class="glyphicon glyphicon-plus"></span>
+				<i class="fas fa-plus"></i>
 				Add Configuration
 			</button>
 			<a href="#/projects/configurations/{{ vm.projectId }}"
 			   class="btn btn-primary pull-right"
 			   role="button"
-			   style="margin-right: 10px">
+			   style="margin-right: 10px;">
 				Cancel
 			</a>
 		</form>

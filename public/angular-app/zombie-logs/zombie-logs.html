@@ -29,7 +29,7 @@
                                                show-button-bar="false"/>
                                         <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default btn-sm" ng-click="vm.openDatePicker('from')">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                    <i class="fas fa-calendar"></i>
                                                 </button>
                                             </span>
                                     </div>
@@ -51,7 +51,7 @@
                                                close-text="Close"/>
                                         <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default btn-sm" ng-click="vm.openDatePicker('to')">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                    <i class="fas fa-calendar"></i>
                                                 </button>
                                             </span>
                                     </div>
@@ -72,7 +72,9 @@
                             </div>
                             <div class="col-md-2 no-padding-right">
                                 <button class="btn btn-primary btn-sm pull-right" id="run" ng-click="vm.filterDate()">
-                                    <i class="fa fa-circle-o-notch fa-spin" ng-show="vm.loading"></i>
+                                    <i ng-show="vm.loading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </i>
                                     Filter
                                 </button>
                             </div>
@@ -98,13 +100,12 @@
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <d3-horizontal-bar-chart-timeout
-                                data="vm.donutData"
-                                margin-left="60"
-                                domain-padding="10"
-                                d3-on-click="vm.OnClick(item)"
-                                clickable="true"
-                                fill-color="vm.MainChartColor">
+                        <d3-horizontal-bar-chart-timeout data="vm.donutData"
+                                                         margin-left="60"
+                                                         domain-padding="10"
+                                                         d3-on-click="vm.OnClick(item)"
+                                                         clickable="true"
+                                                         fill-color="vm.MainChartColor">
                         </d3-horizontal-bar-chart-timeout>
                     </div>
                 </div>

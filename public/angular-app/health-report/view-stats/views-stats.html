@@ -8,9 +8,9 @@
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         Views Health Score:
-                        <a href="" class="faa-parent faa-slow animated-hover">
-                            <i class="fa fa-gear faa-spin text-primary" ng-click="vm.showTimeSettings = !vm.showTimeSettings"></i>
-                        </a>
+                        <button class="fa-button faa-parent faa-slow animated-hover" ng-click="vm.showTimeSettings = !vm.showTimeSettings">
+                            <i class="fas fa-cog faa-spin text-primary"></i>
+                        </button>
                     </h4>
                 </div>
                 <div class="panel-collapse">
@@ -31,8 +31,8 @@
         <div class="panel-group" id="p1">
             <div class="panel panel-default">
                 <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p1" data-target="#collapseP1">
-                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #FD8D3C"></span> Views on Sheet</p>
-                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #3182BD"></span> Total Views</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-square" style="color: #FD8D3C;"></i> Views on Sheet</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-square" style="color: #3182BD;"></i> Total Views</p>
                     <h4 class="panel-title">Views / Views on Sheet</h4>
                 </div>
                 <div id="collapseP1" class="panel-collapse collapse in" ng-if="vm.ViewData.viewStats.viewStats.length >= 2">
@@ -50,8 +50,8 @@
         <div class="panel-group" id="p2">
             <div class="panel panel-default">
                 <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p2" data-target="#collapseP2">
-                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #FD8D3C"></span> Schedules on Sheet</p>
-                    <p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #3182BD"></span> Total Schedules</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-square" style="color: #FD8D3C;"></i> Schedules on Sheet</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-square" style="color: #3182BD;"></i> Total Schedules</p>
                     <h4 class="panel-title">Schedules / Schedules on Sheet</h4>
                 </div>
                 <div id="collapseP2" class="panel-collapse collapse in">

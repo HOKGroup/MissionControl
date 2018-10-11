@@ -3,25 +3,29 @@
 		<div class="page-header">
 			<h1>
 				{{ vm.selectedProject.number }} {{ vm.selectedProject.name }}
-				<a href="#/projects/configurations/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/parameter_32.png" height="32" width="32" style="margin-top:0"></a>
-				<a href="#/projects/healthreport/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/health_32.png" height="32" width="32" style="margin-top:0"></a>
-				<a href="#/projects/sheets/{{ vm.selectedProject._id }}" style="padding:0"><img src="images/sheets_32.png" height="32" width="32" style="margin-top:0"></a>
+				<a href="#/projects/configurations/{{ vm.selectedProject._id }}" style="padding:0;"><img src="images/parameter_32.png" height="32" width="32" style="margin-top:0;"></a>
+				<a href="#/projects/healthreport/{{ vm.selectedProject._id }}" style="padding:0;"><img src="images/health_32.png" height="32" width="32" style="margin-top:0;"></a>
+				<a href="#/projects/sheets/{{ vm.selectedProject._id }}" style="padding:0;"><img src="images/sheets_32.png" height="32" width="32" style="margin-top:0;"></a>
 			</h1>
 		</div>
 	</div>
 	<div class="row">
 		<form name="form" class="css-form" novalidate>
-			<div class="panel panel-default" style="margin-top:10px">
+			<div class="panel panel-default" style="margin-top:10px;">
 				<div class="panel-heading">
 					<h3 class="panel-title">Project Info</h3>
 				</div>
 				<div class="panel-body">
 					<form class ="form-horizontal">
 						<fieldset class="form-group">
-							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formProjectNumber">
+							<label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="formProjectNumber">
 								Project Number
-								<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.selectedProject.number"></span>
-								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.selectedProject.number"></span>
+								<button class="fa-wrapper" ng-if="vm.selectedProject.number">
+									<i class="fas fa-check fa-sm" style="color: green;"></i>
+								</button>
+								<button class="fa-wrapper" ng-if="!vm.selectedProject.number">
+									<i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+								</button>
 							</label>
 							<div class="col-sm-9 no-padding-right">
 								<input type="text" name="pNumber" class="form-control" id="formProjectNumber" placeholder="00.00000.00" ng-model="vm.selectedProject.number" required>
@@ -31,10 +35,14 @@
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
-							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formProjectName">
+							<label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="formProjectName">
 								Project Name
-								<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.selectedProject.name"></span>
-								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.selectedProject.name"></span>
+								<button class="fa-wrapper" ng-if="vm.selectedProject.name">
+									<i class="fas fa-check fa-sm" style="color: green;"></i>
+								</button>
+								<button class="fa-wrapper" ng-if="!vm.selectedProject.name">
+									<i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+								</button>
 							</label>
 							<div class="col-sm-9 no-padding-right">
 								<input type="text" name="pName" class="form-control" id="formProjectName" placeholder="Project Name" ng-model="vm.selectedProject.name" required>
@@ -47,10 +55,14 @@
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
-							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formOfficeSelect">
+							<label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="formOfficeSelect">
 								Office
-								<span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.selectedProject.office"></span>
-								<span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.selectedProject.office"></span>
+								<button class="fa-wrapper" ng-if="vm.selectedProject.office">
+									<i class="fas fa-check fa-sm" style="color: green;"></i>
+								</button>
+								<button class="fa-wrapper" ng-if="!vm.selectedProject.office">
+									<i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+								</button>
 							</label>
 							<div class="col-sm-9 no-padding-right">
 								<select class="form-control" id="formOfficeSelect" ng-model="vm.selectedProject.office">
@@ -71,25 +83,25 @@
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
-							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formStreet">Street Address</label>
+							<label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="formStreet">Street Address</label>
 							<div class="col-sm-9 no-padding-right">
 								<input type="text" class="form-control" id="formStreet" placeholder="Street address, P.O. box, company name" ng-model="vm.selectedProject.address.street1">
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
-							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formStreet2">Street Address2</label>
+							<label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="formStreet2">Street Address2</label>
 							<div class="col-sm-9 no-padding-right">
 								<input type="text" class="form-control" id="formStreet2" placeholder="Apartment, suite, unit, building, floor, etc." ng-model="vm.selectedProject.address.street2">
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
-							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formCity">City</label>
+							<label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="formCity">City</label>
 							<div class="col-sm-9 no-padding-right">
 								<input type="text" class="form-control" id="formCity" ng-model="vm.selectedProject.address.city">
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
-							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formState">State</label>
+							<label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="formState">State</label>
 							<div class="col-sm-9 no-padding-right">
 								<select class="form-control" id="formState" ng-model="vm.selectedProject.address.state">
 									<option value="AL">Alabama</option>
@@ -147,15 +159,15 @@
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
-							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formZip">Zip Code</label>
+							<label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="formZip">Zip Code</label>
 							<div class="col-sm-9 no-padding-right">
 								<input type="text" class="form-control" id="formZip" ng-model="vm.selectedProject.address.zipCode">
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
-							<label class="control-label col-sm-3 text-right" style="margin-top: 8px" for="formContury">Contury</label>
+							<label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="formCountry">Country</label>
 							<div class="col-sm-9 no-padding-right">
-								<input type="text" class="form-control" id="formContury" ng-model="vm.selectedProject.address.country">
+								<input type="text" class="form-control" id="formCountry" ng-model="vm.selectedProject.address.country">
 							</div>
 						</fieldset>
 					</form>
@@ -163,12 +175,12 @@
 							class="btn btn-primary pull-right"
 							ng-click="vm.updateProject()"
 							ng-disabled="vm.verifyForm()">
-						<span class="glyphicon glyphicon-ok"></span>
+						<i class="fas fa-check"></i>
 						Update
 					</button>
 					<button class="btn btn-secondary pull-right"
 							ng-click="vm.cancel()"
-							style="margin-right: 10px">
+							style="margin-right: 10px;">
 						Cancel
 					</button>
 				</div>
@@ -184,14 +196,14 @@
 							{{vm.selectedRange}}
 							<span class="caret"></span>
 						</button>
-						<ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 50px">
+						<ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 50px;">
 							<li ng-repeat="item in vm.availableRanges">
 								<a href="" ng-click="vm.filterRange(item)">{{item}}</a>
 							</li>
 						</ul>
 					</div>
-					<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #759CC3"></span> Synched</p>
-					<p class="pull-right textAlignMiddle"><span class="glyphicon glyphicon-stop" style="color: #4378A7"></span> Opened</p>
+					<p class="pull-right textAlignMiddle"><i class="fas fa-square" style="color: #759CC3;"></i> Synched</p>
+					<p class="pull-right textAlignMiddle"><i class="fas fa-square" style="color: #4378A7;"></i> Opened</p>
 					<h4 class="panel-title" style="padding-top: 5px;">
 						Project Activity
 					</h4>
@@ -230,11 +242,11 @@
 				<div class="panel-collapse">
 					<div class="panel-body">
 						<form>
-							<div class="form-group row" style="margin-bottom: 0">
-								<label class="col-sm-8" style="margin-top: 8px">This button will delete this PROJECT and all related CONFIGURATIONS.</label>
+							<div class="form-group row" style="margin-bottom: 0;">
+								<label class="col-sm-8" style="margin-top: 8px;">This button will delete this PROJECT and all related CONFIGURATIONS.</label>
 								<div class="col-sm-4">
 									<button type="submit" class="btn btn-danger pull-right" ng-click="vm.deleteProject()">
-										<span class="glyphicon glyphicon-trash"></span>
+										<i class="fas fa-trash"></i>
 										Delete
 									</button>
 								</div>

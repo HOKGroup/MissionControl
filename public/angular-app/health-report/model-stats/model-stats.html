@@ -8,9 +8,9 @@
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         Model Health Score:
-                        <a href="" class="faa-parent faa-slow animated-hover">
-                            <i class="fa fa-gear faa-spin text-primary" ng-click="vm.showTimeSettings = !vm.showTimeSettings"></i>
-                        </a>
+                        <button class="fa-button faa-parent faa-slow animated-hover" ng-click="vm.showTimeSettings = !vm.showTimeSettings">
+                            <i class="fas fa-cog faa-spin text-primary"></i>
+                        </button>
                     </h4>
                 </div>
                 <div class="panel-collapse">
@@ -44,10 +44,10 @@
                     </div>
                     <h4 class="panel-title" style="padding-top: 5px;">
                         Model Open Time
-                        [> 5h <i class="fa fa-circle" style="color: #D9534F"></i>]
-                        <a href="">
-                            <i class="fa fa-info-circle text-primary" ng-click="vm.launchHelpWindow('lg')"></i>
-                        </a>
+                        [> 5h <i class="fas fa-circle" style="color: #D9534F;"></i>]
+                        <button class="fa-button" ng-click="vm.launchHelpWindow('lg')">
+                            <i class="fas fa-info-circle text-primary"></i>
+                        </button>
                     </h4>
                 </div>
                 <div class="panel-collapse">
@@ -71,7 +71,7 @@
                             {{vm.selectedSynchUser}}
                             <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 50px">
+                        <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 50px;">
                             <li ng-repeat="user in vm.SynchUsers">
                                 <a href="" ng-click="vm.setUserFilter(user, 'synchTimes')">{{user}}</a>
                             </li>
@@ -79,10 +79,10 @@
                     </div>
                     <h4 class="panel-title" style="padding-top: 5px;">
                         Model Synch Time
-                        [> 1h <i class="fa fa-circle" style="color: #D9534F"></i>]
-                        <a href="">
-                            <i class="fa fa-info-circle text-primary" ng-click="vm.launchHelpWindow('lg')"></i>
-                        </a>
+                        [> 1h <i class="fas fa-circle" style="color: #D9534F;"></i>]
+                        <button class="fa-button" ng-click="vm.launchHelpWindow('lg')">
+                            <i class="fas fa-info-circle text-primary"></i>
+                        </button>
                     </h4>
                 </div>
                 <div class="panel-collapse">

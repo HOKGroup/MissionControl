@@ -11,8 +11,7 @@ ProjectService = {
      * @param res
      */
     findAndSort : function(req, res){
-        Project
-            .find({})
+        Project.find({})
             .sort({ number: 1 })
             .exec(function (err, response){
                 var result = {

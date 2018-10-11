@@ -1,46 +1,64 @@
 <!--PREFIX SUFFIX POPOVER-->
 <script type="text/ng-template" id="prefixSuffix.html">
-    <div class="btn-group" style="width: 100%">
+    <div class="btn-group" style="width: 100%;">
         <label for="prefix_suffix" class="form-control-label">Prefix/Suffix Value:</label>
         <input type="text" class="form-control" id="prefix_suffix" value="vm.currentOperator.value" ng-model="vm.currentOperator.value">
     </div>
-    <hr style="margin-bottom: 5px">
+    <hr style="margin-bottom: 5px;">
     <div class="btn-group">
-        <a ng-click="vm.moveLeft($index)" ng-if="vm.showLeftArrow($index)"><span class="glyphicon glyphicon-triangle-left"></span></a>
-        <a ng-click="vm.deleteOperator($index)"><span class="glyphicon glyphicon-trash"></span></a>
-        <a ng-click="vm.moveRight($index)" ng-if="vm.showRightArrow($index)"><span class="glyphicon glyphicon-triangle-right"></span></a>
+        <button class="fa-button" ng-if="vm.showLeftArrow($index)" ng-click="vm.moveLeft($index)">
+            <i class="fas fa-caret-left fa-lg text-primary"></i>
+        </button>
+        <button class="fa-button" ng-click="vm.deleteOperator($index)">
+            <i class="fas fa-trash text-danger"></i>
+        </button>
+        <button class="fa-button" ng-click="vm.moveRight($index)" ng-if="vm.showRightArrow($index)">
+            <i class="fas fa-caret-right fa-lg text-primary"></i>
+        </button>
     </div>
 </script>
 
 <!--NUMBER SERIES POPOVER-->
 <script type="text/ng-template" id="numberSeries.html">
-    <div class="btn-group" style="width: 100%">
+    <div class="btn-group" style="width: 100%;">
         <label for="series_start" class="form-control-label">Start:</label>
         <input type="number" min="0" class="form-control" id="series_start" value="vm.currentOperator.start" ng-model="vm.currentOperator.start">
         <label for="series_step" class="form-control-label">Step:</label>
         <input type="number" min="1" class="form-control" id="series_step" value="vm.currentOperator.step" ng-model="vm.currentOperator.step">
     </div>
-    <hr style="margin-bottom: 5px">
+    <hr style="margin-bottom: 5px;">
     <div class="btn-group">
-        <a ng-click="vm.moveLeft($index)" ng-if="vm.showLeftArrow($index)"><span class="glyphicon glyphicon-triangle-left"></span></a>
-        <a ng-click="vm.deleteOperator($index)"><span class="glyphicon glyphicon-trash"></span></a>
-        <a ng-click="vm.moveRight($index)" ng-if="vm.showRightArrow($index)"><span class="glyphicon glyphicon-triangle-right"></span></a>
+        <button class="fa-button" ng-click="vm.moveLeft($index)" ng-if="vm.showLeftArrow($index)">
+            <i class="fas fa-caret-left fa-lg text-primary"></i>
+        </button>
+        <button class="fa-button" ng-click="vm.deleteOperator($index)">
+            <i class="fas fa-trash text-danger"></i>
+        </button>
+        <button class="fa-button" ng-click="vm.moveRight($index)" ng-if="vm.showRightArrow($index)">
+            <i class="fas fa-caret-right fa-lg text-primary"></i>
+        </button>
     </div>
 </script>
 
 <!--LETTER SERIES POPOVER-->
 <script type="text/ng-template" id="letterSeries.html">
-    <div class="btn-group" style="width: 100%">
+    <div class="btn-group" style="width: 100%;">
         <label for="char_series_start" class="form-control-label">Start:</label>
         <input type="text" class="form-control" id="char_series_start" value="vm.currentOperator.start" ng-model="vm.currentOperator.start">
         <label for="char_series_step" class="form-control-label">Step:</label>
         <input type="number" min="1" class="form-control" id="char_series_step" value="vm.currentOperator.step" ng-model="vm.currentOperator.step">
     </div>
-    <hr style="margin-bottom: 5px">
+    <hr style="margin-bottom: 5px;">
     <div class="btn-group">
-        <a ng-click="vm.moveLeft($index)" ng-if="vm.showLeftArrow($index)"><span class="glyphicon glyphicon-triangle-left"></span></a>
-        <a ng-click="vm.deleteOperator($index)"><span class="glyphicon glyphicon-trash"></span></a>
-        <a ng-click="vm.moveRight($index)" ng-if="vm.showRightArrow($index)"><span class="glyphicon glyphicon-triangle-right"></span></a>
+        <button class="fa-button" ng-click="vm.moveLeft($index)" ng-if="vm.showLeftArrow($index)">
+            <i class="fas fa-caret-left fa-lg text-primary"></i>
+        </button>
+        <button class="fa-button" ng-click="vm.deleteOperator($index)">
+            <i class="fas fa-trash text-danger"></i>
+        </button>
+        <button class="fa-button" ng-click="vm.moveRight($index)" ng-if="vm.showRightArrow($index)">
+            <i class="fas fa-caret-right fa-lg text-primary"></i>
+        </button>
     </div>
 </script>
 
@@ -60,7 +78,7 @@
                         {{vm.selectedModel.name | uppercase}}
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 100px">
+                    <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 100px;">
                         <li ng-repeat="file in vm.models">
                             <a href="" ng-click="vm.selectedModel = file">{{file.name | uppercase}}</a>
                         </li>
@@ -71,7 +89,7 @@
                         {{vm.selectedSheetType}}
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 100px">
+                    <ul class="dropdown-menu dropdown-menu-right scrollable-menu" style="min-width: 100px;">
                         <li ng-repeat="type in vm.availableSheetTypes">
                             <a href="" ng-click="vm.setSheetTypeTemplate(type)">{{type}}</a>
                         </li>
@@ -95,10 +113,14 @@
                         <div class="form-group">
                             <label for="recipient_name" class="form-control-label">
                                 Recipient:
-                                <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.template.assignedTo"></span>
-                                <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.template.assignedTo"></span>
+                                <i ng-if="vm.template.assignedTo">
+                                    <i class="fas fa-check fa-sm" style="color: green;"></i>
+                                </i>
+                                <i ng-if="!vm.template.assignedTo">
+                                    <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+                                </i>
                             </label>
-                            <div class="btn-group" style="width: 100%" id="recipient_name">
+                            <div class="btn-group" style="width: 100%;" id="recipient_name">
                                 <button class="btn btn-default dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
                                     <span class="caret"></span>
                                     {{vm.template.assignedTo}}
@@ -118,10 +140,10 @@
                     </div>
 
                     <!--PLACEHOLDER-->
-                    <div class="col-md-3 no-padding-left no-padding-right no-padding-bottom" style="margin-bottom: 0">
-                        <div class="form-group no-padding-bottom" style="margin-bottom: 0">
+                    <div class="col-md-3 no-padding-left no-padding-right no-padding-bottom" style="margin-bottom: 0;">
+                        <div class="form-group no-padding-bottom" style="margin-bottom: 0;">
                             <label class="form-control-label">Placeholder:</label>
-                            <button class="btn btn-default dropdown-toggle" style="width: 100%" data-toggle="dropdown">
+                            <button class="btn btn-default dropdown-toggle" style="width: 100%;" data-toggle="dropdown">
                                 <span class="caret"></span>
                                 {{vm.template.isPlaceholder ? 'Yes' : 'No'}}
                             </button>
@@ -137,8 +159,12 @@
                         <div class="form-group">
                             <label for="message_text" class="form-control-label">
                                 Message:
-                                <span class="glyphicon glyphicon-ok small" style="color: green;" ng-if="vm.template.message"></span>
-                                <span class="glyphicon glyphicon-asterisk small" style="color: red;" ng-if="!vm.template.message"></span>
+                                <i ng-if="vm.template.message">
+                                    <i class="fas fa-check fa-sm" style="color: green;"></i>
+                                </i>
+                                <i ng-if="!vm.template.message">
+                                    <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+                                </i>
                             </label>
                             <textarea id="message_text" class="form-control" ng-model="vm.template.message" required></textarea>
                         </div>
@@ -163,10 +189,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 no-padding-left no-padding-right no-padding-bottom" style="margin-bottom: 0">
-                        <div class="form-group no-padding-bottom" style="margin-bottom: 0">
+                    <div class="col-md-3 no-padding-left no-padding-right no-padding-bottom" style="margin-bottom: 0;">
+                        <div class="form-group no-padding-bottom" style="margin-bottom: 0;">
                             <label class="form-control-label">Components:</label>
-                            <button class="btn btn-default dropdown-toggle" style="width: 100%" data-toggle="dropdown">
+                            <button class="btn btn-default dropdown-toggle" style="width: 100%;" data-toggle="dropdown">
                                 <span class="caret"></span>
                                 Type
                             </button>
@@ -196,14 +222,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 no-padding-left no-padding-right no-padding-bottom" style="margin-bottom: 0">
-                        <div class="form-group no-padding-bottom" style="margin-bottom: 0">
+                    <div class="col-md-3 no-padding-left no-padding-right no-padding-bottom" style="margin-bottom: 0;">
+                        <div class="form-group no-padding-bottom" style="margin-bottom: 0;">
                             <label class="form-control-label">Components:</label>
-                            <button class="btn btn-default dropdown-toggle" style="width: 100%" data-toggle="dropdown">
+                            <button class="btn btn-default dropdown-toggle" style="width: 100%;" data-toggle="dropdown">
                                 <span class="caret"></span>
                                 Type
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-centered" style="margin-top: 0">
+                            <ul class="dropdown-menu dropdown-menu-centered" style="margin-top: 0;">
                                 <li ng-repeat="type in vm.operators">
                                     <a href="" ng-click="vm.addOperator(type, 'name')">{{type}}</a>
                                 </li>
@@ -219,7 +245,7 @@
                 class="btn btn-primary"
                 ng-disabled="!vm.template.assignedTo || !vm.template.message"
                 ng-click="vm.create()">
-            <span class="glyphicon glyphicon-plus"></span>
+            <i class="fas fa-plus"></i>
             Create
         </button>
         <button type="button"
@@ -230,7 +256,7 @@
         <button type="button"
                 class="btn btn-danger pull-left"
                 ng-click="vm.clear()">
-            <span class="glyphicon glyphicon-erase"></span>
+            <i class="fas fa-eraser"></i>
             Clear
         </button>
     </div>

@@ -262,3 +262,18 @@ a {
 .animate-show-hide.ng-hide-remove {
   transition: all linear 0.5s;
 }
+
+.fa-button {
+  border-style: none;
+  background-color: transparent;
+  padding: 0;
+  outline:none;
+}
+
+.fa-wrapper {
+    border-style: none;
+    background-color: transparent;
+    padding: 0;
+    outline:none;
+    cursor: default;
+}

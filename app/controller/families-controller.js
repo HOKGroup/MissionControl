@@ -19,14 +19,14 @@ FamiliesService = {
         var isBim360 = req.params.uri.match(/bim 360:/i);
         var rgx;
         if(isRevitServer || isBim360){
-            rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
+            rgx = req.params.uri.replace(/\|/g, '/').toLowerCase();
         } else {
-            rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
+            rgx = req.params.uri.replace(/\|/g, '\\').toLowerCase();
         }
 
         Families
             .find(
-                {"centralPath": rgx}, function (err, result) {
+                {'centralPath': rgx}, function (err, result) {
                     var response = {
                         status: 200,
                         message: result
@@ -35,11 +35,11 @@ FamiliesService = {
                         response.status = 500;
                         response.message = err;
                     } else if(!result){
-                        console.log("File Path wasn't found in any Sheets Collections.");
+                        console.log('File Path wasn\'t found in any Sheets Collections.');
                     }
                     res.status(response.status).json(response.message);
                 }
-            )
+            );
     },
 
     /**
@@ -72,8 +72,8 @@ FamiliesService = {
      * @param res
      */
     updateFilePath: function(req, res){
-        var before = req.body.before.replace(/\\/g, "\\").toLowerCase();
-        var after = req.body.after.replace(/\\/g, "\\").toLowerCase();
+        var before = req.body.before.replace(/\\/g, '\\').toLowerCase();
+        var after = req.body.after.replace(/\\/g, '\\').toLowerCase();
         Families
             .update(
                 { 'centralPath': before },
@@ -152,7 +152,7 @@ FamiliesService = {
                         });
                     }
 
-                    res.status(200).json(task)
+                    res.status(200).json(task);
                 }
             });
     },
@@ -176,7 +176,7 @@ FamiliesService = {
                     response.message = err;
                 } else if(!doc){
                     response.status = 404;
-                    response.message = {"message": "Families Id not found."}
+                    response.message = {'message': 'Families Id not found.'};
                 }
                 if(doc){
                     updateFamiliesTask(req, res, doc);
@@ -220,7 +220,7 @@ FamiliesService = {
                         'familyName': req.params.name });
                     res.status(result.status).json(result.message);
                 }
-            )
+            );
     },
 
     /**
@@ -231,41 +231,39 @@ FamiliesService = {
      * @param res
      */
     getFamilyStats: function (req, res) {
-        Families
-            .aggregate([
-                { $match: { 'centralPath': req.body.centralPath }},
-                { $lookup: {
-                    from: 'models',
-                    localField: 'centralPath',
-                    foreignField: 'centralPath',
-                    as: 'models'
-                }},
-                { $unwind: '$models'},
-                { $project: {
-                    'models.openTimes.user': 1,
-                    '_id': 1,
-                    'centralPath': 1,
-                    'totalFamilies': 1,
-                    'unusedFamilies': 1,
-                    'oversizedFamilies': 1,
-                    'inPlaceFamilies': 1,
-                    'families': 1
-                }}
+        Families.aggregate([
+            { $facet: {
+                'families': [
+                    { $match: { 'centralPath': req.body.centralPath }}
+                ],
+                'opentimes': [
+                    { $limit: 1 },
+                    { $lookup: {
+                        from: 'opentimes',
+                        pipeline: [
+                            { $match: { 'centralPath': req.body.centralPath }}
+                        ],
+                        as: 'opentimes'
+                    }},
+                    { $unwind: '$opentimes' },
+                    { $replaceRoot: { newRoot: '$opentimes' }}
                 ]
-            ).exec(function (err, response){
-                var result = {
-                    status: 201,
-                    message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
-                }
-                res.status(result.status).json(result.message);
-            });
+            }},
+            { $project: { 'opentimes.user': 1, 'families': 1 }}
+        ]).exec(function (err, response){
+            var result = {
+                status: 201,
+                message: response
+            };
+            if (err) {
+                result.status = 500;
+                result.message = err;
+            } else if (!response) {
+                result.status = 404;
+                result.message = err;
+            }
+            res.status(result.status).json(result.message);
+        });
     }
 };
 

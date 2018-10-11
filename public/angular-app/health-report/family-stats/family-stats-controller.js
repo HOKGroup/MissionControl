@@ -15,7 +15,7 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
          * By watching this variable we can detect when user selected to see this page.
          */
         $scope.$watch('vm.FamilyData.show.value', function (newValue) {
-            if(newValue)reloadTable();
+            if(newValue) reloadTable();
         });
 
         /**
@@ -64,7 +64,7 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
             var open = f.tasks.find(function (item) {
                 return !!item.completedBy;
             });
-            return !!open ? {"color": "#5cb85c"} : {"color": "#D9534F"};
+            return !!open ? {'color': '#5cb85c'} : {'color': '#D9534F'};
         };
 
         /**
@@ -149,7 +149,7 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
             if(family.tasks.length > 0){
                 openAllTasks('lg', family, userNames);
             } else {
-                openEditTask('lg', family, null, 'Add Task', userNames)
+                openEditTask('lg', family, null, 'Add Task', userNames);
             }
         };
 
@@ -184,7 +184,7 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
                     });
                 }
             }).catch(function(){
-                console.log("All Tasks Dialog dismissed...");
+                console.log('All Tasks Dialog dismissed...');
             });
         };
 
@@ -226,7 +226,7 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
                     family.tasks.push(newTask);
                 }
             }).catch(function(){
-                console.log("All Tasks Dialog dismissed...");
+                console.log('All Tasks Dialog dismissed...');
             });
         };
 
@@ -249,15 +249,15 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
             vm.AllFamilies.forEach(function(item){
                 vm.pcoordinatesData.push({
                     name: item.name,
-                    "Size": item.sizeValue,
-                    "Instances": item.instances,
-                    "Parameters": item.parametersCount,
-                    "Nested Families": item.nestedFamilyCount,
-                    "Voids": item.voidCount,
-                    "Ref. Planes": item.refPlaneCount,
-                    "Arrays": item.arrayCount,
-                    "Images": !item.imageCount ? 0 : item.imageCount
-                })
+                    'Size': item.sizeValue,
+                    'Instances': item.instances,
+                    'Parameters': item.parametersCount,
+                    'Nested Families': item.nestedFamilyCount,
+                    'Voids': item.voidCount,
+                    'Ref. Planes': item.refPlaneCount,
+                    'Arrays': item.arrayCount,
+                    'Images': !item.imageCount ? 0 : item.imageCount
+                });
             });
             createTable();
         }

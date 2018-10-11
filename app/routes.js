@@ -141,12 +141,14 @@ var users = require('./models/users');
 
      var filepaths = require('./controller/filepaths');
      app.get('/api/v2/filepaths', filepaths.getAll);
+     app.get('/api/v2/filepaths/unassigned', filepaths.getAllUnassigned);
      app.post('/api/v2/filepaths/add', filepaths.add);
      app.post('/api/v2/filepaths/addmany', filepaths.addMany);
      app.put('/api/v2/filepaths/add', filepaths.addToProject);
      app.put('/api/v2/filepaths/remove', filepaths.removeFromProject);
      app.put('/api/v2/filepaths/removemany', filepaths.removeManyFromProject);
      app.put('/api/v2/filepaths/change', filepaths.changeFilePath);
+     app.put('/api/v2/filepaths/:id/disable', filepaths.disable);
 
      var users = require('./controller/users');
      app.post('/api/v2/users/add', users.add);

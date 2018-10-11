@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/style.css"> <!-- custom styles -->
 	<link rel="stylesheet" href="css/slider.css"> <!-- custom styles -->
 	<link rel="stylesheet" href="css/d3-styles.css"> <!-- custom d3 styles -->
-	<link rel="stylesheet" href="libs/components-font-awesome/css/font-awesome.min.css"> <!-- font awesome icons -->
+	<link rel="stylesheet" href="libs/fontawesome-free-5.3.1-web/css/all.min.css"> <!-- font awesome icons -->
 	<link rel="stylesheet" href="libs/datatables.net-bs/css/dataTables.bootstrap.min.css">
 	<link rel="stylesheet" href="libs/font-awesome-animation/dist/font-awesome-animation.min.css">
 	<link rel="stylesheet" href="libs/ngToast/dist/ngToast.min.css">
@@ -34,8 +34,13 @@
 					<li class="nav-item active">
 						<a href="#/home">Home</a>
 					</li>
-					<li class="nav-item">
-						<a href="#/projects">Projects</a>
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#/projects">Projects</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="#/file-paths">Files</a></li>
+						</ul>
 					</li>
 					<li class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Addins <span class="caret"></span></a>
@@ -48,8 +53,8 @@
 				</ul>
 			   <ul class="nav navbar-nav navbar-right">
 				<li>
-					<a href="http://www.hok.com/" style="padding:0">
-						<img src="images/hoklogo.ico" height="32" width="32" style="margin-top:0">
+					<a href="http://www.hok.com/" style="padding:0;">
+						<img src="images/hoklogo.ico" height="32" width="32" style="margin-top:0;">
 					</a>
 				</li>
 			  </ul>
@@ -67,7 +72,6 @@
 	</footer>
 
     <!-- external imports -->
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA4fiiMya5-TqIRSck08N19DX0D4kPB1xw&libraries=places,drawing"></script>
     <script src="libs/jquery/dist/jquery.min.js"></script>
     <script src="libs/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="libs/angular/angular.min.js"></script>
@@ -77,6 +81,7 @@
 	<script src="libs/angular-sanitize/angular-sanitize.min.js"></script>
 	<script src="libs/ngToast/dist/ngToast.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
+	<script defer src="libs/fontawesome-free-5.3.1-web/js/all.min.js"></script>
 
 	<!--DataTable requirements-->
 	<script src="libs/angular-datatables/dist/angular-datatables.min.js"></script>
@@ -96,6 +101,7 @@
 	<script src="angular-app/configuration/file-path-help-controller.js"></script>
 	<script src="angular-app/edit-project/edit-project-controller.js"></script>
 	<script src="angular-app/project/project-controller.js"></script>
+	<script src="angular-app/file-paths/file-paths.js"></script>
 
 	<!--Health Report Controllers-->
 	<script src="angular-app/health-report/health-report-controller.js"></script>
@@ -159,6 +165,7 @@
 	<!--Directive Controllers-->
 	<script src="angular-app/directives/time-range-selector/controller.js"></script>
 	<script src="angular-app/directives/health-score-summary/controller.js"></script>
+	<script src="angular-app/directives/file-path-buttons/controller.js"></script>
 
 	<!--D3 Directives-->
 	<script src="angular-app/d3/d3-horizontal-bar-chart.js"></script>
