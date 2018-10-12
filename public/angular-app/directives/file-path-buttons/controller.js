@@ -7,6 +7,7 @@ function FilePathButtonsController($location){
     var vm = this;
     this.$onInit = function () {
         vm.item = this.item;
+        console.log(vm.item);
 
         /**
          * Navigates to given page.

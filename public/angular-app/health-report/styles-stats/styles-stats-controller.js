@@ -8,7 +8,6 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
         vm.StylesData = this.processed;
-        // vm.Data = this.full.styleStats[0];
 
         // set table options for dimension segments
         vm.dtOptions = {
@@ -46,7 +45,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
                 $('#table2_row1')
                     .append( $('#table2_length').addClass('col-md-6'))
                     .append( $('#table2_filter').addClass('col-md-5'))
-                    .append( $('#table2_wrapper > .dt-buttons').addClass('col-md-1').css({'padding-left': '5px'}))
+                    .append( $('#table2_wrapper > .dt-buttons').addClass('col-md-1').css({'padding-left': '5px'}));
             })
             .withButtons([
                 {
@@ -88,7 +87,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
             DTColumnBuilder.newColumn('underline').withTitle('Underline').notVisible()
         ];
 
-        // set table options for dimension types
+        // set table options for text types
         vm.dtInstance2 = {};
         //noinspection JSUnusedLocalSymbols
         vm.dtOptions3 = DTOptionsBuilder.newOptions()
@@ -108,8 +107,8 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
                 $('#table3_wrapper').prepend('<div class="row" id="table3_row1">');
                 $('#table3_row1')
                     .append( $('#table3_length').addClass('col-md-6'))
-                    .append( $("#table3_filter").addClass('col-md-5'))
-                    .append( $('#table3_wrapper > .dt-buttons').addClass('col-md-1').css({'padding-left': '5px'}))
+                    .append( $('#table3_filter').addClass('col-md-5'))
+                    .append( $('#table3_wrapper > .dt-buttons').addClass('col-md-1').css({'padding-left': '5px'}));
             })
             .withButtons([
                 {
@@ -161,7 +160,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
          * @returns {string}
          */
         function stringFromBool(value){
-            return value ? "Yes" : "No";
+            return value ? 'Yes' : 'No';
         }
 
         /**
@@ -171,7 +170,7 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
          */
         function renderColor(data) {
             var colorHex = UtilityService.rgbToHex(data[0], data[1], data[2]);
-            return ' <i class="fa fa-square" style="color: ' + colorHex + '"></i>';
+            return ' <i class="fas fa-square" style="color: ' + colorHex + ';"></i>';
         }
 
         /**
@@ -184,57 +183,57 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
             if (!d) return '';
             return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:100px;">'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Type Name:</td>'+
+                '<td style="padding-left: 25px;">Type Name:</td>'+
                 '<td><b>' + d.name + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Type:</td>'+
+                '<td style="padding-left: 25px;">Type:</td>'+
                 '<td><b>'+ d.styleType + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Count:</td>'+
+                '<td style="padding-left: 25px;">Count:</td>'+
                 '<td><b>' + d.instances + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Uses Project Units:</td>'+
+                '<td style="padding-left: 25px;">Uses Project Units:</td>'+
                 '<td><b>'+ stringFromBool(d.usesProjectUnits) + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Bold:</td>'+
+                '<td style="padding-left: 25px;">Bold:</td>'+
                 '<td><b>'+ stringFromBool(d.bold) + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Italic:</td>'+
+                '<td style="padding-left: 25px;">Italic:</td>'+
                 '<td><b>'+ stringFromBool(d.italic) + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Leader Type:</td>'+
+                '<td style="padding-left: 25px;">Leader Type:</td>'+
                 '<td><b>'+ d.leaderType + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Line Weight:</td>'+
+                '<td style="padding-left: 25px;">Line Weight:</td>'+
                 '<td><b>'+ d.lineWeight + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Font:</td>'+
+                '<td style="padding-left: 25px;">Font:</td>'+
                 '<td><b>'+ d.textFont + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Size:</td>'+
+                '<td style="padding-left: 25px;">Size:</td>'+
                 '<td><b>'+ d.textSizeString + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Underline:</td>'+
+                '<td style="padding-left: 25px;">Underline:</td>'+
                 '<td><b>'+ stringFromBool(d.underline) + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
@@ -252,52 +251,52 @@ function StyleStatsController($routeParams, DTColumnDefBuilder, DTOptionsBuilder
             var colorHex = UtilityService.rgbToHex(d.color[0], d.color[1], d.color[2]);
             return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:100px;">'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Type Name:</td>'+
+                '<td style="padding-left: 25px;">Type Name:</td>'+
                 '<td><b>' + d.name + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Count:</td>'+
+                '<td style="padding-left: 25px;">Count:</td>'+
                 '<td><b>' + d.instances + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Font:</td>'+
+                '<td style="padding-left: 25px;">Font:</td>'+
                 '<td><b>'+ d.textFont + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Size:</td>'+
+                '<td style="padding-left: 25px;">Size:</td>'+
                 '<td><b>'+ d.textSizeString + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Color:</td>'+
-                '<td><i class="fa fa-square" style="color: ' + colorHex + '"></i></td>'+
+                '<td style="padding-left: 25px;">Color:</td>'+
+                '<td><i class="fa fa-square" style="color: ' + colorHex + ';"></i></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Bold:</td>'+
+                '<td style="padding-left: 25px;">Bold:</td>'+
                 '<td><b>'+ stringFromBool(d.bold) + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Italic:</td>'+
+                '<td style="padding-left: 25px;">Italic:</td>'+
                 '<td><b>'+ stringFromBool(d.italic) + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Leader Arrowhead:</td>'+
+                '<td style="padding-left: 25px;">Leader Arrowhead:</td>'+
                 '<td><b>'+ d.leaderArrowhead + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Line Weight:</td>'+
+                '<td style="padding-left: 25px;">Line Weight:</td>'+
                 '<td><b>'+ d.lineWeight + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+
                 '<tr>'+
-                '<td style="padding-left: 25px">Underline:</td>'+
+                '<td style="padding-left: 25px;">Underline:</td>'+
                 '<td><b>'+ stringFromBool(d.underline) + '</b></td>'+
                 '<td></td>'+
                 '</tr>'+

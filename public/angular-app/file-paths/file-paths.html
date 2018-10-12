@@ -14,26 +14,12 @@
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <table datatable="ng"
+                        <table id="datatable"
+                               datatable=""
                                dt-options="vm.dtOptions"
-                               dt-column-defs="vm.dtColumnDefs"
+                               dt-columns="vm.dtColumns"
+                               dt-instance="vm.dtInstance"
                                class="table table-hover table-condensed datatable">
-                            <thead>
-                                <tr>
-                                    <th class="col-md-1 text-center">#</th>
-                                    <th class="col-md-9">File Path</th>
-                                    <th class="col-md-1 text-center">Used?</th>
-                                    <th class="col-md-1"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="i in vm.files" ng-class="vm.getRowStyle(i)">
-                                    <td class="text-center"><span ng-bind="$index"></span></td>
-                                    <td><span ng-bind="i.centralPath"></span></td>
-                                    <td class="text-center"><span ng-bind="i.projectId !== null ? 'Yes' : 'No'"></span></td>
-                                    <td><file-path-buttons item="i" on-disable="vm.disable(item)"></file-path-buttons></td>
-                                </tr>
-                            </tbody>
                         </table>
                     </div>
                 </div>

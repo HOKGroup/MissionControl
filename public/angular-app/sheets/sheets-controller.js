@@ -6,7 +6,7 @@ angular.module('MissionControlApp').controller('SheetsController', SheetsControl
 function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFactory, ProjectFactory, UtilityService,
                           DTOptionsBuilder, DTColumnBuilder){
     var vm = this;
-    var all = { name: "All", collectionId: '', centralPath: '' };
+    var all = { name: 'All', collectionId: '', centralPath: '' };
 
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = null;
@@ -60,7 +60,7 @@ function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFacto
     };
 
     /**
-     * When user clicks on table row, this will reconsile which dialog should launch.
+     * When user clicks on table row, this will reconcile which dialog should launch.
      * @param sheetId
      */
     vm.launchSheetEditor = function(sheetId){
@@ -210,7 +210,7 @@ function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFacto
                             });
                             newSheet['centralPath'] = request.sheets[0].centralPath;
                             if(newSheet) vm.Data.push(newSheet);
-                        })
+                        });
                     }
 
                     reloadTable();
@@ -249,7 +249,7 @@ function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFacto
         vm.dtInstance = {};
         //noinspection JSUnusedLocalSymbols
         vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
-            return getData()
+            return getData();
         }).withPaginationType('simple_numbers')
             .withDisplayLength(10)
             .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
@@ -405,7 +405,7 @@ function SheetsController($routeParams, $scope, $compile, $uibModal, SheetsFacto
                             sheet['centralPath'] = item.centralPath;
                             vm.Data.push(sheet);
                         }
-                    })
+                    });
                 });
                 if(vm.availableModels.length > 0) vm.selectedModel = vm.availableModels[0];
                 createTable();
