@@ -43,7 +43,7 @@
             <!--</div>-->
         <!--</div>-->
     <!--</div>-->
-    <div class="row" ng-if="vm.WarningData.show.value">
+    <div class="row">
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -51,12 +51,13 @@
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <table id="warningsTable"
+                        <table id="datatable"
                                datatable=""
                                dt-options="vm.dtOptions"
                                dt-columns="vm.dtColumns"
                                dt-instance="vm.dtInstance"
-                               class="table table-hover table-condensed datatable">
+                               class="table table-hover table-condensed datatable"
+                               style="width:100%;">
                         </table>
                     </div>
                 </div>

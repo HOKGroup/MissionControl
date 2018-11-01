@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('WarningsController', WarningsController);
 
-function WarningsController($routeParams, WarningsFactory, HealthReportFactory, UtilityService, DTOptionsBuilder, DTColumnBuilder, $scope){
+function WarningsController($routeParams, HealthReportFactory, DTOptionsBuilder, DTColumnBuilder){
     var vm = this;
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
@@ -13,28 +13,26 @@ function WarningsController($routeParams, WarningsFactory, HealthReportFactory, 
         vm.chartsData = [];
         vm.openWarnings = [];
 
-        /**
-         * Since all health report components are initiated when data is finished loading
-         * none of them are yet visible. The DOM has not yet loaded the divs etc. This means
-         * that all divs have a width of 0 and table is initiated with that width as well.
-         * By watching this variable we can detect when user selected to see this page.
-         */
-        $scope.$watch('vm.WarningData.show.value', function (newValue) {
-            createTable();
-        });
+        createTable();
+        setChartData();
 
+        /**
+         * Creates Warnings Table
+         */
         function createTable() {
             vm.dtInstance = {};
-            vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
-                return new Promise(function(resolve, reject){
-                    if (!vm.openWarnings) reject();
-                    else resolve(vm.openWarnings);
-                });
-            }).withPaginationType('simple_numbers')
-                .withDisplayLength(15)
-                .withOption('order', [0, 'desc'])
-                .withOption('deferRender', true)
-                .withOption('lengthMenu', [[15, 25, 50, 100, -1],[15, 25, 50, 100, 'All']]);
+            vm.dtOptions = DTOptionsBuilder.newOptions()
+                .withOption('ajax', {
+                    url: '/api/v2/warnings/datatable',
+                    type: 'POST',
+                    data: { centralPath: vm.WarningData.warningStats[0].centralPath }
+                })
+                .withDataProp('data')
+                .withOption('processing', true)
+                .withOption('serverSide', true)
+                .withPaginationType('simple_numbers')
+                .withOption('autoWidth', false)
+                .withOption('lengthMenu', [[10, 50, 100, -1], [10, 50, 100, 'All']]);
 
             vm.dtColumns = [
                 DTColumnBuilder.newColumn('createdAt')
@@ -49,56 +47,7 @@ function WarningsController($routeParams, WarningsFactory, HealthReportFactory, 
                     .withTitle('Message')
                     .withOption('width', '60%')
             ];
-
-            /**
-             * Parses UTC Date into local date.
-             * @param value
-             * @returns {string}
-             */
-            function parseDateTime(value) {
-                return new Date(value).toLocaleString('en-US', {
-                    year: '2-digit',
-                    month: '2-digit',
-                    day: '2-digit'
-                });
-            }
         }
-
-        setChartData();
-
-        //region Utilities
-
-        /**
-         *
-         */
-        function setChartData(){
-            var data = vm.WarningData.warningStats.reduce(function (data, item) {
-                var key = item.createdAt.split('T')[0];
-                var created = (data[key] || (data[key] = {'date': key, 'added': 0, 'removed': 0}));
-                created['added'] += 1;
-
-                if(!item.isOpen){
-                    var key1 = item.closedAt.split('T')[0];
-                    var closed = (data[key1] || (data[key1] = {'date': key1, 'added': 0, 'removed': 0}));
-                    closed['removed'] -= 1;
-                }
-
-                return data
-            }, {});
-
-            // (Konrad) Set data for the histogram chart. IE doesn't support Object.values
-            vm.chartsData = Object.keys(data).map(function(item) { return data[item]; });
-            vm.chartsData.sort(function(a,b){
-                return new Date(a.date) - new Date(b.date);
-            }); // sort in reverse a-b
-
-            // (Konrad) Set data for the table.
-            vm.openWarnings = vm.WarningData.warningStats.filter(function (item) {
-                return item.isOpen;
-            });
-        }
-
-        //endregion
 
         /**
          * Callback method for Date Time Range selection.
@@ -115,7 +64,7 @@ function WarningsController($routeParams, WarningsFactory, HealthReportFactory, 
                 centralPath: vm.WarningData.warningStats[0].centralPath
             };
             HealthReportFactory.processWarningStats(data, function (result) {
-                if (!result) console.log("Given date range contains no data.");
+                if (!result) console.log('Given date range contains no data.');
 
                 vm.loading = false;
                 vm.WarningData = result;
@@ -129,5 +78,52 @@ function WarningsController($routeParams, WarningsFactory, HealthReportFactory, 
         vm.toggleTimeSettings = function() {
             vm.showTimeSettings = !vm.showTimeSettings;
         };
+
+        //region Utilities
+
+        /**
+         * Parses UTC Date into local date.
+         * @param value
+         * @returns {string}
+         */
+        function parseDateTime(value) {
+            return new Date(value).toLocaleString('en-US', {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit'
+            });
+        }
+
+        /**
+         *
+         */
+        function setChartData(){
+            var data = vm.WarningData.warningStats.reduce(function (data, item) {
+                var key = item.createdAt.split('T')[0];
+                var created = (data[key] || (data[key] = {'date': key, 'added': 0, 'removed': 0}));
+                created['added'] += 1;
+
+                if(!item.isOpen){
+                    var key1 = item.closedAt.split('T')[0];
+                    var closed = (data[key1] || (data[key1] = {'date': key1, 'added': 0, 'removed': 0}));
+                    closed['removed'] -= 1;
+                }
+
+                return data;
+            }, {});
+
+            // (Konrad) Set data for the histogram chart. IE doesn't support Object.values
+            vm.chartsData = Object.keys(data).map(function(item) { return data[item]; });
+            vm.chartsData.sort(function(a,b){
+                return new Date(a.date) - new Date(b.date);
+            }); // sort in reverse a-b
+
+            // (Konrad) Set data for the table.
+            vm.openWarnings = vm.WarningData.warningStats.filter(function (item) {
+                return item.isOpen;
+            });
+        }
+
+        //endregion
     };
 }

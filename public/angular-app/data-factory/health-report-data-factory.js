@@ -97,16 +97,16 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                     var familyScoreData = {
                         passingChecks: passingChecks,
                         count: familyStats.totalFamilies,
-                        label: "Families",
+                        label: 'Families',
                         newMax: 8};
 
                     // (Konrad) This score needs to be remapped to 0-6 range
                     var familyScore = Math.round((passingChecks * 6)/8);
 
-                    var desc = "Families are integral part of Revit functionality. It is however, important to remember," +
-                        "that oversized (>1MB) families can be a sign of trouble (poorly modeled, imported DWGs etc.). That's " +
-                        "why it's imperative to follow HOK's best practices in modeling and naming Revit Families. InPlace families " +
-                        "should be limited in use as they do not allow full functionality of the regular Families.";
+                    var desc = 'Families are integral part of Revit functionality. It is however, important to remember,' +
+                        'that oversized (>1MB) families can be a sign of trouble (poorly modeled, imported DWGs etc.). That\'s ' +
+                        'why it\'s imperative to follow HOK\'s best practices in modeling and naming Revit Families. InPlace families ' +
+                        'should be limited in use as they do not allow full functionality of the regular Families.';
 
                     var bullets = [
                         {
@@ -157,10 +157,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         scoreData: familyScoreData,
                         familyScore: familyScore,
                         description: desc,
-                        name: "Families",
+                        name: 'Families',
                         familyStats: familyStats,
                         bullets: bullets,
-                        show: {name: "families", value: false},
+                        show: {name: 'families', value: false},
                         color: color,
                         userNames: userNames
                     });
@@ -187,7 +187,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         response.data.linkStats.length === 0){
                         callback({
                             linkStats: response.data
-                        })
+                        });
                     } else {
                         var data = response.data;
                         var latest = data.linkStats[data.linkStats.length - 1];
@@ -225,15 +225,15 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         var linkScoreData = {
                             passingChecks: passingChecks,
                             count: latest.totalImportedDwg,
-                            label: "Import Instances",
+                            label: 'Import Instances',
                             newMax: 6};
 
-                        var desc = "Excessive linking of RVT/DWG/NWC files " +
-                            "can impact file performance even if the file is otherwise well maintained. Each linked Revit model should " +
-                            "be placed on its own Workset to allow it to be closed, and conserve resources. " +
-                            "This model has " + (latest.totalLinkedModels - latest.totalLinkedDwg) + " Linked Revit Models, " +
-                            "and " + latest.totalLinkedDwg + " Linked CAD Files. These links were placed " + latest.totalImportedDwg + " times." +
-                            "\n*Not all links have to be placed.";
+                        var desc = 'Excessive linking of RVT/DWG/NWC files ' +
+                            'can impact file performance even if the file is otherwise well maintained. Each linked Revit model should ' +
+                            'be placed on its own Workset to allow it to be closed, and conserve resources. ' +
+                            'This model has ' + (latest.totalLinkedModels - latest.totalLinkedDwg) + ' Linked Revit Models, ' +
+                            'and ' + latest.totalLinkedDwg + ' Linked CAD Files. These links were placed ' + latest.totalImportedDwg + ' times.' +
+                            '\n*Not all links have to be placed.';
 
                         var bullets = [
                             {
@@ -274,17 +274,17 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             importedFiles: latest.importedDwgFiles,
                             linkScore: linkScoreData.passingChecks,
                             description: desc,
-                            name: "Links",
+                            name: 'Links',
                             linkStats: data,
                             bullets: bullets,
-                            show: {name: "links", value: false},
+                            show: {name: 'links', value: false},
                             color: color
                         });
                     }
                 })
                 .catch(function (error) {
                     console.log(error);
-                })
+                });
         },
 
         /**
@@ -304,7 +304,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         response.data.styleStats.length === 0){
                         callback({
                             styleStats: response.data
-                        })
+                        });
                     } else {
                         var data = response.data;
                         var latest = data.styleStats[0]; //we filter this data on server side so only 1 doc is returned
@@ -354,7 +354,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         var styleScoreData = {
                             passingChecks: passingChecks,
                             count: unusedTypes,
-                            label: "Unused Styles",
+                            label: 'Unused Styles',
                             newMax: 8};
 
                         // (Konrad) This score needs to be remapped to 0-6 range
@@ -419,17 +419,17 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             scoreData: styleScoreData,
                             styleScore: styleScore,
                             description: desc,
-                            name: "Styles",
+                            name: 'Styles',
                             styleStats: data,
                             bullets: bullets,
-                            show: {name: "styles", value: false},
+                            show: {name: 'styles', value: false},
                             color: color
                         });
                     }
                 })
                 .catch(function (error) {
                     console.log(error);
-                })
+                });
         },
 
         /**
@@ -452,7 +452,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         // property needed to re-call this filter without crashing.
                         callback({
                             viewStats: response.data
-                        })
+                        });
                     } else {
                         var data = response.data;
                         var latest = data.viewStats[data.viewStats.length - 1];
@@ -503,7 +503,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         var viewScoreData = {
                             passingChecks: passingChecks,
                             count: latest.totalViews,
-                            label: "Views",
+                            label: 'Views',
                             newMax: 8};
 
                         // (Konrad) This score needs to be remapped to 0-6 range
@@ -562,17 +562,17 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             scoreData: viewScoreData,
                             viewScore: viewScore,
                             description: desc,
-                            name: "Views",
+                            name: 'Views',
                             viewStats: data,
                             bullets: bullets,
-                            show: {name: "views", value: false},
+                            show: {name: 'views', value: false},
                             color: color
                         });
                     }
                 })
                 .catch(function (error) {
                     console.log(error);
-                })
+                });
         },
 
         /**
@@ -619,13 +619,13 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         };
 
                         var modelSize = UtilityService.formatNumber(data.modelSizes[data.modelSizes.length-1].value);
-                        var avgOpenTime = UtilityService.formatDuration(SumProperty(data.openTimes, "value") / data.openTimes.length);
-                        var avgSynchTime = UtilityService.formatDuration(SumProperty(data.synchTimes, "value") / data.openTimes.length);
+                        var avgOpenTime = UtilityService.formatDuration(SumProperty(data.openTimes, 'value') / data.openTimes.length);
+                        var avgSynchTime = UtilityService.formatDuration(SumProperty(data.synchTimes, 'value') / data.openTimes.length);
 
                         var modelScoreData = {
                             passingChecks: 7,
                             count: modelSize,
-                            label: "Model Size",
+                            label: 'Model Size',
                             newMax: 6
                         };
 
@@ -670,10 +670,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             scoreData: modelScoreData,
                             modelScore: 7,
                             description: desc,
-                            name: "Model",
+                            name: 'Model',
                             modelStats: data,
                             bullets: bullets,
-                            show: {name: "models", value: false},
+                            show: {name: 'models', value: false},
                             color: UtilityService.color().grey
                         });
                     }
@@ -721,7 +721,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                                 user: item.user,
                                 onOpened: (item.opened * 100) / (item.closed + item.opened),
                                 onSynched: 0} // this will be filled out later
-                            )
+                            );
                         });
 
                         var synched = CalculateTotals(worksetData.onSynched);
@@ -744,7 +744,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         // (Konrad) Process data to append d3 compatible structure
                         var keys = Object.keys(output[0])
                             .filter(function(x){
-                                return x !== "user";
+                                return x !== 'user';
                             });
 
                         output.forEach(function(x){
@@ -769,30 +769,30 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
 
                         // (Konrad) This section collects all data about Workset Item Counts (horizontal bar chart)
                         // Returns most recently added workset count information (response.data.itemCount.length-1)
-                        var onlyDefaultWorksets = "No";
+                        var onlyDefaultWorksets = 'No';
                         var onlyDefaultWorksetsColor = UtilityService.color().green;
-                        var contentOnSingleWorkset = "No";
+                        var contentOnSingleWorkset = 'No';
                         var contentOnSingleWorksetColor = UtilityService.color().green;
                         var unusedWorksets = 0;
                         var unusedWorksetsColor = UtilityService.color().green;
                         var workset1 = false;
                         var sharedLevels = false;
                         var overallCount = worksetItemCountData.length;
-                        var worksetCountTotal = SumProperty(worksetItemCountData, "count");
+                        var worksetCountTotal = SumProperty(worksetItemCountData, 'count');
 
                         worksetItemCountData.forEach(function (item) {
                             if(item.count <= 0) unusedWorksets += 1;
-                            if(item.name === "Workset1") workset1 = true;
-                            if(item.name === "Shared Levels and Grids") sharedLevels = true;
+                            if(item.name === 'Workset1') workset1 = true;
+                            if(item.name === 'Shared Levels and Grids') sharedLevels = true;
                             if((item.count * 100)/worksetCountTotal >= 50) {
                                 contentOnSingleWorksetColor = UtilityService.color().red;
-                                contentOnSingleWorkset = "Yes";
+                                contentOnSingleWorkset = 'Yes';
                             }
                         });
 
                         if(workset1 && sharedLevels && overallCount === 2){
                             onlyDefaultWorksetsColor = UtilityService.color().red;
-                            onlyDefaultWorksets = "Yes";
+                            onlyDefaultWorksets = 'Yes';
                         }
 
                         var passingChecks = 0;
@@ -801,13 +801,13 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         } else {
                             unusedWorksetsColor = UtilityService.color().red;
                         }
-                        if(onlyDefaultWorksets === "No") passingChecks += 2;
-                        if(contentOnSingleWorkset === "No") passingChecks += 2;
+                        if(onlyDefaultWorksets === 'No') passingChecks += 2;
+                        if(contentOnSingleWorkset === 'No') passingChecks += 2;
 
                         var worksetScoreData = {
                             passingChecks: passingChecks,
                             count: worksetItemCountData.length,
-                            label: "Worksets",
+                            label: 'Worksets',
                             newMax: 6};
 
                         var desc = 'Only open selected Worksets if possible, to minimize the impact the model will ' +
@@ -855,10 +855,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             worksetOpenedData: output,
                             worksetCountTotal: worksetCountTotal,
                             // worksetScore: passingChecks,
-                            name: "Worksets",
+                            name: 'Worksets',
                             color: color,
                             worksetStats: worksetData,
-                            show: {name: "worksets", value: false}
+                            show: {name: 'worksets', value: false}
                         });
                     }
                 })
@@ -886,9 +886,9 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                                 centralPath: data.centralPath
                             });
                         } else {
-                            callback(process(response.data))
+                            callback(process(response.data));
                         }
-                    })
+                    });
             } else {
                 var uri = UtilityService.getHttpSafeFilePath(data.centralPath);
                 WarningsFactory.getByCentralPath(uri).then(function (response) {
@@ -902,11 +902,11 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             centralPath: data.centralPath
                         });
                     } else {
-                        callback(process(response.data))
+                        callback(process(response.data));
                     }
                 }).catch(function (error) {
                     console.log(error);
-                })
+                });
             }
 
             /**
@@ -933,7 +933,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                 var warningScoreData = {
                     passingChecks: passingChecks,
                     count: openWarnings,
-                    label: "Warnings",
+                    label: 'Warnings',
                     newMax: 2
                 };
 
@@ -964,10 +964,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                     scoreData: warningScoreData,
                     modelScore: passingChecks,
                     description: desc,
-                    name: "Warnings",
+                    name: 'Warnings',
                     warningStats: data,
                     bullets: bullets,
-                    show: {name: "warnings", value: false},
+                    show: {name: 'warnings', value: false},
                     color: color
                 };
             }
@@ -1040,7 +1040,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         var groupScoreData = {
                             passingChecks: passingChecks,
                             count: data.groupStats.groups.length,
-                            label: "Groups",
+                            label: 'Groups',
                             newMax: 6
                         };
 
@@ -1086,17 +1086,17 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             scoreData: groupScoreData,
                             modelScore: passingChecks,
                             description: desc,
-                            name: "Groups",
+                            name: 'Groups',
                             groupStats: data,
                             bullets: bullets,
-                            show: {name: "groups", value: false},
+                            show: {name: 'groups', value: false},
                             color: color
                         });
                     }
                 })
                 .catch(function (error) {
                     console.log(error);
-                })
+                });
         },
 
         /**
@@ -1146,7 +1146,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
         var sum = [];
         data.forEach(function(item){
             var existing = sum.filter(function(i){
-                return i.user === item.user
+                return i.user === item.user;
             })[0];
             if(!existing){
                 sum.push(item);

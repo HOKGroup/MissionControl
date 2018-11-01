@@ -151,16 +151,16 @@ function ModelStatsController($timeout, $routeParams, UtilityService, DTColumnBu
         function createTable() {
             vm.dtInstance = {};
             vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
-                return getData()
+                return getData();
             }).withPaginationType('simple_numbers')
                 .withDisplayLength(10)
                 .withOption('order', [0, 'asc'])
                 .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
                 .withOption('rowCallback', function (row, data, index) {
                     if (evaluateEventTime(data)){
-                        row.className = row.className + ' bg-danger'
+                        row.className = row.className + ' bg-danger';
                     } else {
-                        row.className = row.className + ' table-info'
+                        row.className = row.className + ' table-info';
                     }
                 });
 
@@ -282,7 +282,7 @@ function ModelStatsController($timeout, $routeParams, UtilityService, DTColumnBu
                     else if (+item.value < limit && item.user === user) data.push(item);
                 }
             });
-            return {'data' : data, "excludedData" : excludedData}
+            return {'data' : data, 'excludedData' : excludedData};
         }
 
         /**
@@ -290,7 +290,7 @@ function ModelStatsController($timeout, $routeParams, UtilityService, DTColumnBu
          * (Konrad) The idea here is that on synch event Workset info gets posted first so the time
          * stamp for that will have x value. Then when synch is done, a synch time is posted
          * and its time stamp now is y. When we are matching synch times to workset info we
-         * make sure that y-x is not negative which would mean that synch time occured later than
+         * make sure that y-x is not negative which would mean that synch time occurred later than
          * workset info was posted. That would be info for another synch event. If it's positive
          * then we are looking for the smallest time difference, and that's our synch time/workset data.
          * @param arr
@@ -354,26 +354,26 @@ function ModelStatsController($timeout, $routeParams, UtilityService, DTColumnBu
             vm.ModelSizes = vm.ModelData.modelStats.modelSizes;
 
             // set data for synch charts
-            var filtered = filterData(vm.ModelData.modelStats.synchTimes, synchLimit, "All"); //1h
+            var filtered = filterData(vm.ModelData.modelStats.synchTimes, synchLimit, 'All'); //1h
             vm.ModelSynchTimes = filtered.data;
             vm.ExcludedModelSynchTimes = filtered.excludedData;
 
             // set data for open charts
-            var filtered1 = filterData(vm.ModelData.modelStats.openTimes, openLimit, "All"); //5h
+            var filtered1 = filterData(vm.ModelData.modelStats.openTimes, openLimit, 'All'); //5h
             vm.ModelOpenTimes = filtered1.data;
             vm.ExcludedModelOpenTimes = filtered1.excludedData;
 
             // set data for user filters
-            vm.selectedSynchUser = "All";
-            vm.selectedOpenUser = "All";
+            vm.selectedSynchUser = 'All';
+            vm.selectedOpenUser = 'All';
             vm.OpenUsers = Array.from(new Set(vm.ModelOpenTimes.map(function(item){
                 return item.user;
             })));
-            vm.OpenUsers.unshift("All");
+            vm.OpenUsers.unshift('All');
             vm.SynchUsers = Array.from(new Set(vm.ModelSynchTimes.map(function(item){
                 return item.user;
             })));
-            vm.SynchUsers.unshift("All");
+            vm.SynchUsers.unshift('All');
             vm.selectedTableData = 'Open';
         }
 

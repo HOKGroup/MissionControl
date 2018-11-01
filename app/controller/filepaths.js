@@ -296,8 +296,8 @@ FilePathsService = {
                 status: 201,
                 message: {
                     draw: req.body['draw'],
-                    recordsTotal: response.length - 1,
-                    recordsFiltered: filtered.length > 0 ? filtered.length - 1 : response.length - 1,
+                    recordsTotal: response.length,
+                    recordsFiltered: filtered.length > 0 ? filtered.length : response.length,
                     data: data
                 }
             };
@@ -310,7 +310,6 @@ FilePathsService = {
             }
             res.status(result.status).json(result.message);
         });
-
     }
 };
 
