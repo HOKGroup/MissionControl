@@ -16,38 +16,38 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
     vm.newFile = '';
     vm.fileWarningMsg = '';
     vm.HasFiles = false;
-    vm.status = " ";
+    vm.status = ' ';
     vm.files = [];
     vm.offices = [
-        {name: "All", code: "All"},
-        {name: "Atlanta", code: ["ATL"]},
-        {name: "Beijing", code: ["BEI"]},
-        {name: "St. Louis", code: ["BJC"]},
-        {name: "Calgary", code: ["CAL"]},
-        {name: "Chicago", code: ["CHI"]},
-        {name: "Columbus", code: ["COL"]},
-        {name: "Dallas", code: ["DAL"]},
-        {name: "Doha", code: ["DOH"]},
-        {name: "Dubai", code: ["DUB"]},
-        {name: "Hong Kong", code: ["HK"]},
-        {name: "Houston", code: ["HOU"]},
-        {name: "Kansas City", code: ["KC"]},
-        {name: "Los Angeles", code: ["LA"]},
-        {name: "London", code: ["LON"]},
-        {name: "New York", code: ["NY"]},
-        {name: "Ottawa", code: ["OTT"]},
-        {name: "Philadephia", code: ["PHI"]},
-        {name: "Seattle", code: ["SEA"]},
-        {name: "San Francisco", code: ["SF"]},
-        {name: "Shanghai", code: ["SH"]},
-        {name: "St. Louis", code: ["STL"]},
-        {name: "Toronto", code: ["TOR"]},
-        {name: "Tampa", code: ["TPA"]},
-        {name: "Washington DC", code: ["WDC"]},
-        {name: "Undefined", code: ["EMC", "SDC", "OSS", "LD", "LDC", ""]}
+        {name: 'All', code: 'All'},
+        {name: 'Atlanta', code: ['ATL']},
+        {name: 'Beijing', code: ['BEI']},
+        {name: 'St. Louis', code: ['BJC']},
+        {name: 'Calgary', code: ['CAL']},
+        {name: 'Chicago', code: ['CHI']},
+        {name: 'Columbus', code: ['COL']},
+        {name: 'Dallas', code: ['DAL']},
+        {name: 'Doha', code: ['DOH']},
+        {name: 'Dubai', code: ['DUB']},
+        {name: 'Hong Kong', code: ['HK']},
+        {name: 'Houston', code: ['HOU']},
+        {name: 'Kansas City', code: ['KC']},
+        {name: 'Los Angeles', code: ['LA']},
+        {name: 'London', code: ['LON']},
+        {name: 'New York', code: ['NY']},
+        {name: 'Ottawa', code: ['OTT']},
+        {name: 'Philadephia', code: ['PHI']},
+        {name: 'Seattle', code: ['SEA']},
+        {name: 'San Francisco', code: ['SF']},
+        {name: 'Shanghai', code: ['SH']},
+        {name: 'St. Louis', code: ['STL']},
+        {name: 'Toronto', code: ['TOR']},
+        {name: 'Tampa', code: ['TPA']},
+        {name: 'Washington DC', code: ['WDC']},
+        {name: 'Undefined', code: ['EMC', 'SDC', 'OSS', 'LD', 'LDC', '']}
     ];
     vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'BIM 360'];
-    vm.selectedOffice = { name: "All", code: "All" };
+    vm.selectedOffice = { name: 'All', code: 'All' };
     vm.selectedType = 'All';
 
     getSelectedProject(vm.projectId);
@@ -63,7 +63,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
     vm.setTypeFilter = function (type) {
         vm.selectedType = type;
         if(type === 'BIM 360'){
-            vm.selectedOffice = { name: "All", code: "All" };
+            vm.selectedOffice = { name: 'All', code: 'All' };
         }
     };
 
@@ -222,7 +222,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
                 dismissOnTimeout: true,
                 timeout: 4000,
                 newestOnTop: true,
-                content: "Please fill out all required fields."
+                content: 'Please fill out all required fields.'
             }));
         }
     };
@@ -270,7 +270,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
                     passedOffice = false;
                 } else {
                     passedOffice = (vm.selectedOffice.code.findIndex(function (item) {
-                        return item.toLowerCase() === match[1]
+                        return item.toLowerCase() === match[1];
                     }) !== -1);
                 }
             }
@@ -282,7 +282,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
                     passedOffice = false;
                 } else {
                     passedOffice = (vm.selectedOffice.code.findIndex(function (item) {
-                        return item.toLowerCase() === match1[2]
+                        return item.toLowerCase() === match1[2];
                     }) !== -1);
                 }
             }
@@ -379,7 +379,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
                 if(!response || response.status !== 200) throw response;
 
                 response.data.forEach(function (file) {
-                    file['name'] = UtilityService.fileNameFromPath(file.centralPath)
+                    file['name'] = UtilityService.fileNameFromPath(file.centralPath);
                 });
                 vm.files = response.data;
             })
@@ -392,7 +392,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
                     newestOnTop: true,
                     content: err.message
                 }));
-            })
+            });
     }
 
     /**
@@ -432,32 +432,32 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
                 isUpdaterOn: false,
                 categoryTriggers:[
                     {
-                        categoryName: "Grids",
-                        description: "Grid elements cannot be modified except 2D extents.",
+                        categoryName: 'Grids',
+                        description: 'Grid elements cannot be modified except 2D extents.',
                         isEnabled: false,
                         locked: false
                     },
                     {
-                        categoryName: "Levels",
-                        description: "Level elements cannot be modified.",
+                        categoryName: 'Levels',
+                        description: 'Level elements cannot be modified.',
                         isEnabled: false,
                         locked: false
                     },
                     {
-                        categoryName: "Views",
-                        description: "View template elements cannot be modified.",
+                        categoryName: 'Views',
+                        description: 'View template elements cannot be modified.',
                         isEnabled: false,
                         locked: false
                     },
                     {
-                        categoryName: "Scope Boxes",
-                        description: "Scope Boxes elements cannot be modified.",
+                        categoryName: 'Scope Boxes',
+                        description: 'Scope Boxes elements cannot be modified.',
                         isEnabled: false,
                         locked: false
                     },
                     {
-                        categoryName: "RVT Links",
-                        description: "RVT Links cannot be modified.",
+                        categoryName: 'RVT Links',
+                        description: 'RVT Links cannot be modified.',
                         isEnabled: false,
                         locked: false
                     }]
@@ -473,8 +473,8 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
                 isUpdaterOn: false,
                 categoryTriggers:[
                     {
-                        categoryName: "Doors",
-                        description: "Invalid Door Parameter.",
+                        categoryName: 'Doors',
+                        description: 'Invalid Door Parameter.',
                         isEnabled: false,
                         locked: false
                     }]
@@ -491,8 +491,8 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
                 isUpdaterOn: false,
                 categoryTriggers:[
                     {
-                        categoryName: "Sheets",
-                        description: "",
+                        categoryName: 'Sheets',
+                        description: '',
                         isEnabled: false,
                         locked: false
                     }
@@ -520,12 +520,12 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
             categoryTriggers: [],
             userOverrides: {
                 familyNameCheck: {
-                    description: "Family Name Check:",
-                    values: ["HOK_I", "HOK_M"]
+                    description: 'Family Name Check:',
+                    values: ['HOK_I', 'HOK_M']
                 },
                 dimensionValueCheck: {
-                    description: "Dimension Override Check:",
-                    values: ["EQ"]
+                    description: 'Dimension Override Check:',
+                    values: ['EQ']
                 }
             }
         };

@@ -6,7 +6,7 @@ angular.module('MissionControlApp').controller('AddProjectController', AddProjec
 function AddProjectController(ProjectFactory, $window, ngToast){
     var vm = this;
     var toasts = [];
-    vm.status = "";
+    vm.status = '';
     vm.newProject = {
         address: {},
         geoLocation: {},

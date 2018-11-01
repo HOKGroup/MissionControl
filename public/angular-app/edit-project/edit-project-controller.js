@@ -68,7 +68,7 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                             dismissOnTimeout: true,
                             timeout: 4000,
                             newestOnTop: true,
-                            content: "No activity in more than " + item + "."
+                            content: 'No activity at all.'
                         }));
                     }
 
@@ -82,7 +82,7 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                         newestOnTop: true,
                         content: err.message
                     }));
-                })
+                });
         } else {
             ModelsFactory.getByDate(queryData)
                 .then(function (response) {
@@ -94,7 +94,7 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                             dismissOnTimeout: true,
                             timeout: 4000,
                             newestOnTop: true,
-                            content: "No activity in more than " + item + "."
+                            content: 'No activity in more than ' + item + '.'
                         }));
                     }
 
@@ -108,7 +108,7 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                         newestOnTop: true,
                         content: err.message
                     }));
-                })
+                });
         }
 
         vm.loading = false;
@@ -123,7 +123,7 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                 if(!response || response.status !== 201) throw { message: 'Unable to delete Project.'};
 
                 var configIds = vm.selectedProject.configurations;
-                return ConfigFactory.deleteMany(configIds)
+                return ConfigFactory.deleteMany(configIds);
             })
             .then(function (response) {
                 if(!response || response.status !== 201) throw { message: 'Unable to delete Configurations.'};
@@ -196,10 +196,10 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
         ProjectFactory.getProjectByIdPopulateConfigurations(projectId)
             .then(function(response){
                 if(!response || response.status !== 200) throw { message: 'Failed to get Project.' };
-
                 vm.selectedProject = response.data;
                 vm.configurations = response.data.configurations;
 
+                if(response.data.configurations.length === 0) throw { message: 'Project does not have a Configuration.' };
                 filePaths = vm.configurations.map(function (config) {
                     return config.files.map(function (path) {
                         return path.centralPath;
@@ -227,7 +227,7 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
                         dismissOnTimeout: true,
                         timeout: 4000,
                         newestOnTop: true,
-                        content: "No activity in more than 7 days."
+                        content: 'No activity in more than 7 days.'
                     }));
                 }
 
