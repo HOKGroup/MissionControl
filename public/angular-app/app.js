@@ -1,10 +1,16 @@
 angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'datatables', 'datatables.buttons', 'ngSanitize', 'ngToast'])
-    .config(['ngToastProvider', '$routeProvider', '$locationProvider', function( ngToast, $routeProvider, $locationProvider){
+    .config(['ngToastProvider', '$routeProvider', '$locationProvider', '$httpProvider', function( ngToast, $routeProvider, $locationProvider, $httpProvider){
         // ngRoute - used for routing below
         // ui.bootstrap - used by modal dialog
         // ngAnimate - used by modal dialog
         // datatables - used by all tables
         // ngToast - used by zombie logs
+
+        // (Konrad) Browser caching has been a pain for some of the pages like Configurations
+        // Users would create a new Configuration and it will not show, since cache kicks in
+        // and old page is served up again. This has led to some confusion and complaints.
+        $httpProvider.defaults.headers.common['Cache-Control'] = 'no-cache';
+        $httpProvider.defaults.cache = false;
 
         ngToast.configure({
             verticalPosition: 'top',
