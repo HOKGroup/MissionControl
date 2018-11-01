@@ -138,6 +138,7 @@ var users = require('./models/users');
      app.get('/api/v2/warnings/centralpath/:uri*/open', warnings.getOpen);
      app.post('/api/v2/warnings/daterange', warnings.getWarningStats);
      app.put('/api/v2/warnings/updatefilepath', warnings.updateFilePath);
+     app.post('/api/v2/warnings/datatable', warnings.datatable);
 
      var filepaths = require('./controller/filepaths');
      app.get('/api/v2/filepaths', filepaths.getAll);

@@ -6,7 +6,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
     vm.FamilyCollection = null;
     vm.HealthRecords = [];
     vm.AllData = [{
-        show: {name: "main", value: true}
+        show: {name: 'main', value: true}
     }];
     vm.files = [];
 
@@ -52,7 +52,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
      */
     function dynamicSort(property) {
         var sortOrder = 1;
-        if(property[0] === "-") {
+        if(property[0] === '-') {
             sortOrder = -1;
             property = property.substr(1);
         }
@@ -61,7 +61,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
             var prop2 = UtilityService.fileNameFromPath(b[property]);
             var result = (prop1 < prop2) ? -1 : (prop1 > prop2) ? 1 : 0;
             return result * sortOrder;
-        }
+        };
     }
 
     //endregion
@@ -114,7 +114,7 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         vm.noData = true;
 
         if (reset) vm.AllData = [{
-            show: {name: "main", value: true}
+            show: {name: 'main', value: true}
         }];
 
         // (Konrad) By default we will take only last month worth of data.
