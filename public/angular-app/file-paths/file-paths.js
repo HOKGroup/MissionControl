@@ -65,10 +65,12 @@ function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder
             })
     ];
 
-    vm.toggle = function (item) {
-        item.isDisabled = !item.isDisabled;
-        this.onDisable({item: item});
-    };
+    // vm.toggle = function (item) {
+    //     console.log(item);
+    //
+    //     item.isDisabled = !item.isDisabled;
+    //     this.onDisable({item: item});
+    // };
 
     vm.go = function(path){
         $location.path(path);
@@ -88,8 +90,11 @@ function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder
      * @param item
      */
     vm.toggle = function (item) {
+        console.log(item);
         var id = item.split('|')[0];
         var isDisabled = item.split('|')[1] === 'true';
+        console.log(id);
+        console.log(isDisabled);
 
         FilePathsFactory.disable({_id: id, isDisabled: isDisabled}).then(function (response) {
             if(!response || response.status !== 201){

@@ -219,10 +219,11 @@ FilePathsService = {
      * @param res
      */
     disable: function (req, res) {
-        var id = req.params.id;
+        var id = mongoose.Types.ObjectId(req.params.id);
+        var bool = Boolean(!req.body.isDisabled);
         FilePaths.updateOne(
             { '_id': id },
-            { $set: { 'isDisabled': req.body.isDisabled }}, function (err, response){
+            { $set: { 'isDisabled': bool }}, function (err, response){
                 var result = {
                     status: 201,
                     message: response
