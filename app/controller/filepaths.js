@@ -146,7 +146,11 @@ FilePathsService = {
     },
 
     /**
-     *
+     * Updates File Path of the object. If existing file path was updated to a new file path,
+     * that already exist in the model, but that file path is not used in a configuration, that,
+     * file path will be removed so that we don't have duplicates. It's not possible to change
+     * file path to a new file path that is already used in a Configuration so that will never be
+     * an issue.
      * @param req
      * @param res
      */
@@ -165,7 +169,18 @@ FilePathsService = {
                     result.status = 404;
                     result.message = err;
                 }
-                res.status(result.status).json(result.message);
+
+                FilePaths.deleteOne(
+                    { 'centralPath': req.body.after, 'projectId': null }, function (err, response) {
+                        if (err){
+                            result.status = 500;
+                            result.message = err;
+                        } else if (!response){
+                            result.status = 404;
+                            result.message = err;
+                        }
+                        res.status(result.status).json(result.message);
+                    });
             });
     },
 
@@ -219,10 +234,11 @@ FilePathsService = {
      * @param res
      */
     disable: function (req, res) {
-        var id = req.params.id;
+        var id = mongoose.Types.ObjectId(req.params.id);
+        var bool = Boolean(!req.body.isDisabled);
         FilePaths.updateOne(
             { '_id': id },
-            { $set: { 'isDisabled': req.body.isDisabled }}, function (err, response){
+            { $set: { 'isDisabled': bool }}, function (err, response){
                 var result = {
                     status: 201,
                     message: response

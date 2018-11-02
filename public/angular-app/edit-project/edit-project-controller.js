@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('EditProjectController', EditProjectController);
 
-function EditProjectController($routeParams, $window, ProjectFactory, ConfigFactory, ModelsFactory, ngToast, UtilityService){
+function EditProjectController($routeParams, $window, ProjectFactory, ConfigFactory, ModelsFactory, FilePathsFactory, ngToast, UtilityService){
     var vm = this;
     var toasts = [];
     var filePaths = []; // variable holding file paths for filter
@@ -122,11 +122,27 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
             .then(function(response) {
                 if(!response || response.status !== 201) throw { message: 'Unable to delete Project.'};
 
-                var configIds = vm.selectedProject.configurations;
+                var configIds = [];
+                vm.selectedProject.configurations.forEach(function (config) {
+                    configIds.push(config._id);
+                });
+
                 return ConfigFactory.deleteMany(configIds);
             })
             .then(function (response) {
                 if(!response || response.status !== 201) throw { message: 'Unable to delete Configurations.'};
+
+                var files = [];
+                vm.configurations.forEach(function (config) {
+                    config.files.forEach(function (file){
+                        files.push(file);
+                    });
+                });
+
+                return FilePathsFactory.removeManyFromProject(files);
+            })
+            .then(function (response) {
+                if(!response || response.status !== 201) throw { message: 'Unable to delete File Paths.'};
 
                 //(Konrad) Reloads the resources so it should remove project from table.
                 $window.location.href = '#/projects/';

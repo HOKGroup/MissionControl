@@ -126,11 +126,11 @@ function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactor
             })
             .then(function (response) {
                 if(!response) return;
-                return FilePathsFactory.changeFilePath(data) // FilePaths
+                return FilePathsFactory.changeFilePath(data); // FilePaths
             })
             .then(function (response) {
                 if(!response) return;
-                return WarningsFactory.updateFilePath(data) // Warnings
+                return WarningsFactory.updateFilePath(data); // Warnings
             })
             .then(function (response) {
                 if(!response) return;
@@ -140,5 +140,5 @@ function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactor
                 console.log(err);
                 vm.warning = 'Could not update all related file paths.';
             });
-    }
+    };
 }
