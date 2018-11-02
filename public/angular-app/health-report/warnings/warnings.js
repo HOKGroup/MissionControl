@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('WarningsController', WarningsController);
 
-function WarningsController($routeParams, HealthReportFactory, DTOptionsBuilder, DTColumnBuilder){
+function WarningsController($routeParams, HealthReportFactory, DTOptionsBuilder, DTColumnBuilder, $scope){
     var vm = this;
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
@@ -13,7 +13,16 @@ function WarningsController($routeParams, HealthReportFactory, DTOptionsBuilder,
         vm.chartsData = [];
         vm.openWarnings = [];
 
-        createTable();
+        /**
+         * Since all health report components are initiated when data is finished loading
+         * none of them are yet visible. The DOM has not yet loaded the divs etc. This means
+         * that all divs have a width of 0 and table is initiated with that width as well.
+         * By watching this variable we can detect when user selected to see this page.
+         */
+        $scope.$watch('vm.WarningData.show.value', function (newValue) {
+            if (newValue === true) createTable();
+        });
+
         setChartData();
 
         /**
