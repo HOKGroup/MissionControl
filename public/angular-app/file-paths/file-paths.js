@@ -65,36 +65,17 @@ function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder
             })
     ];
 
-    // vm.toggle = function (item) {
-    //     console.log(item);
-    //
-    //     item.isDisabled = !item.isDisabled;
-    //     this.onDisable({item: item});
-    // };
-
     vm.go = function(path){
         $location.path(path);
     };
-
-    function reloadTable() {
-        if(vm.dtInstance){
-            vm.dtInstance.reloadData();
-            vm.dtInstance.rerender();
-        }
-    }
-
-
 
     /**
      * Removes given file Path object from the DB.
      * @param item
      */
     vm.toggle = function (item) {
-        console.log(item);
         var id = item.split('|')[0];
         var isDisabled = item.split('|')[1] === 'true';
-        console.log(id);
-        console.log(isDisabled);
 
         FilePathsFactory.disable({_id: id, isDisabled: isDisabled}).then(function (response) {
             if(!response || response.status !== 201){
@@ -120,38 +101,13 @@ function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder
         });
     };
 
-    // /**
-    //  * Retrieves all FilePath objects from the DB.
-    //  */
-    // function getFiles(){
-    //     FilePathsFactory.getAll()
-    //         .then(function (response) {
-    //             if(!response || response.status !== 200){
-    //                 toasts.push(ngToast.danger({
-    //                     dismissButton: true,
-    //                     dismissOnTimeout: true,
-    //                     timeout: 7000,
-    //                     newestOnTop: true,
-    //                     content: 'Failed to retrieve data for File Paths.'
-    //                 }));
-    //                 return;
-    //             }
-    //
-    //             vm.data = response.data;
-    //             response.data.forEach(function (item) {
-    //                 vm.files.push(item);
-    //             });
-    //
-    //             createTable(); // generate table instance and render
-    //         }).catch(function (error) {
-    //             toasts.push(ngToast.danger({
-    //                 dismissButton: true,
-    //                 dismissOnTimeout: true,
-    //                 timeout: 7000,
-    //                 newestOnTop: true,
-    //                 content: error.message
-    //             }));
-    //             console.log(error);
-    //     });
-    // }
+    /**
+     * Reloads and re-renders data table.
+     */
+    function reloadTable() {
+        if(vm.dtInstance){
+            vm.dtInstance.reloadData();
+            vm.dtInstance.rerender();
+        }
+    }
 }
