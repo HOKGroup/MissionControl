@@ -19,37 +19,38 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     vm.selectedRecords = [];
     vm.newFile = '';
     vm.fileWarningMsg = '';
+    vm.sharedParamWarningMsg = '';
     vm.files = [];
     vm.offices = [
-        {name: "All", code: "All"},
-        {name: "Atlanta", code: ["ATL"]},
-        {name: "Beijing", code: ["BEI"]},
-        {name: "St. Louis", code: ["BJC"]},
-        {name: "Calgary", code: ["CAL"]},
-        {name: "Chicago", code: ["CHI"]},
-        {name: "Columbus", code: ["COL"]},
-        {name: "Dallas", code: ["DAL"]},
-        {name: "Doha", code: ["DOH"]},
-        {name: "Dubai", code: ["DUB"]},
-        {name: "Hong Kong", code: ["HK"]},
-        {name: "Houston", code: ["HOU"]},
-        {name: "Kansas City", code: ["KC"]},
-        {name: "Los Angeles", code: ["LA"]},
-        {name: "London", code: ["LON"]},
-        {name: "New York", code: ["NY"]},
-        {name: "Ottawa", code: ["OTT"]},
-        {name: "Philadephia", code: ["PHI"]},
-        {name: "Seattle", code: ["SEA"]},
-        {name: "San Francisco", code: ["SF"]},
-        {name: "Shanghai", code: ["SH"]},
-        {name: "St. Louis", code: ["STL"]},
-        {name: "Toronto", code: ["TOR"]},
-        {name: "Tampa", code: ["TPA"]},
-        {name: "Washington DC", code: ["WDC"]},
-        {name: "Undefined", code: ["EMC", "SDC", "OSS", "LD", "LDC", ""]}
+        {name: 'All', code: 'All'},
+        {name: 'Atlanta', code: ['ATL']},
+        {name: 'Beijing', code: ['BEI']},
+        {name: 'St. Louis', code: ['BJC']},
+        {name: 'Calgary', code: ['CAL']},
+        {name: 'Chicago', code: ['CHI']},
+        {name: 'Columbus', code: ['COL']},
+        {name: 'Dallas', code: ['DAL']},
+        {name: 'Doha', code: ['DOH']},
+        {name: 'Dubai', code: ['DUB']},
+        {name: 'Hong Kong', code: ['HK']},
+        {name: 'Houston', code: ['HOU']},
+        {name: 'Kansas City', code: ['KC']},
+        {name: 'Los Angeles', code: ['LA']},
+        {name: 'London', code: ['LON']},
+        {name: 'New York', code: ['NY']},
+        {name: 'Ottawa', code: ['OTT']},
+        {name: 'Philadephia', code: ['PHI']},
+        {name: 'Seattle', code: ['SEA']},
+        {name: 'San Francisco', code: ['SF']},
+        {name: 'Shanghai', code: ['SH']},
+        {name: 'St. Louis', code: ['STL']},
+        {name: 'Toronto', code: ['TOR']},
+        {name: 'Tampa', code: ['TPA']},
+        {name: 'Washington DC', code: ['WDC']},
+        {name: 'Undefined', code: ['EMC', 'SDC', 'OSS', 'LD', 'LDC', '']}
     ];
     vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'BIM 360'];
-    vm.selectedOffice = { name: "All", code: "All" };
+    vm.selectedOffice = { name: 'All', code: 'All' };
     vm.selectedType = 'All';
 
     getSelectedProjectConfiguration(vm.projectId);
@@ -135,7 +136,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                     passedOffice = false;
                 } else {
                     passedOffice = (vm.selectedOffice.code.findIndex(function (item) {
-                        return item.toLowerCase() === match[1]
+                        return item.toLowerCase() === match[1];
                     }) !== -1);
                 }
             }
@@ -147,7 +148,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                     passedOffice = false;
                 } else {
                     passedOffice = (vm.selectedOffice.code.findIndex(function (item) {
-                        return item.toLowerCase() === match1[2]
+                        return item.toLowerCase() === match1[2];
                     }) !== -1);
                 }
             }
@@ -228,7 +229,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                     item.triggerRecords.forEach(function (record) {
                         record['centralPath'] = item.centralPath;
                         triggerRecords.push(record);
-                    })
+                    });
                 });
 
                 vm.selectedRecords = triggerRecords;
@@ -274,7 +275,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     vm.setTypeFilter = function (type) {
         vm.selectedType = type;
         if(type === 'BIM 360'){
-            vm.selectedOffice = { name: "All", code: "All" };
+            vm.selectedOffice = { name: 'All', code: 'All' };
         }
     };
 
@@ -495,6 +496,12 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
      * Updates current Configuration.
      */
     vm.updateConfiguration = function(){
+        if(vm.selectedConfig.sharedParamMonitor.isMonitorOn && (!vm.selectedConfig.sharedParamMonitor.filePath ||
+            vm.selectedConfig.sharedParamMonitor.filePath.length === 0)){
+                vm.sharedParamWarningMsg = 'Please specify a valid File Path to Shared Parameters file.';
+                return;
+        }
+
         ConfigFactory.updateConfiguration(vm.selectedConfig)
             .then(function(response){
                 if (response && response.status === 201){
@@ -594,7 +601,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                 if(!response || response.status !== 200) throw response;
 
                 response.data.forEach(function (file) {
-                    file['name'] = UtilityService.fileNameFromPath(file.centralPath)
+                    file['name'] = UtilityService.fileNameFromPath(file.centralPath);
                 });
                 vm.files = response.data;
             })
@@ -607,7 +614,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                     newestOnTop: true,
                     content: err.message
                 }));
-            })
+            });
     }
 
     /**
@@ -658,12 +665,12 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
         var path = config.files[0].centralPath;
         var indices = [];
         for (var i = 0; i < path.length; i++){
-            if (path[i] === "\\") indices.push(i + 1);
+            if (path[i] === '\\') indices.push(i + 1);
         }
         indices.splice(-2); // drop last two folders
         var index = indices[indices.length - 1]; // index of E-Bim folder
 
-        return path.substring(0, index) + "\\Support\\SharedParameterFileName.txt";
+        return path.substring(0, index) + '\\Support\\SharedParameterFileName.txt';
     }
 
     //endregion
