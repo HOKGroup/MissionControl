@@ -221,10 +221,10 @@ angular.module('MissionControlApp').directive('d3AreaBivariate', ['d3', function
                     if(!d1) return;
                     var d = x0 - d0.date > d1.date - x0 ? d1 : d0;
                     tooltip.attr('transform', 'translate(' + (x(d.date) + margin.left) + ',' + (y(d[scope.top]) + margin.top) + ')');
-                    tooltip.select('text.y1').text('Total: ' + d[scope.top]);
+                    tooltip.select('text.y1').text(scope.topLabel + d[scope.top]);
                     tooltip.select('.mouse-line').attr('y2', height - y(d[scope.top]));
                     tooltip2.attr('transform', 'translate(' + (x(d.date) + margin.left) + ',' + (y(d[scope.bottom]) + margin.top) + ')');
-                    tooltip2.select('text.y1').text('On Sheet: ' + d[scope.bottom]);
+                    tooltip2.select('text.y1').text(scope.bottomLabel + d[scope.bottom]);
                 }
 
                 /**

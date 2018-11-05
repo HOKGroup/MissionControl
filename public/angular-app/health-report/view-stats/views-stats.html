@@ -39,7 +39,9 @@
                     <div class="panel-body no-padding">
                         <d3-area-bivariate data="vm.ViewData.viewStats.viewStats"
                                            top="'totalViews'"
-                                           bottom="'viewsOnSheet'">
+                                           top-label="'Total: '"
+                                           bottom="'viewsOnSheet'"
+                                           bottom-label="'On Sheet: '">
                         </d3-area-bivariate>
                     </div>
                 </div>
@@ -58,7 +60,9 @@
                     <div class="panel-body no-padding" ng-if="vm.ViewData.viewStats.viewStats.length >= 2">
                         <d3-area-bivariate data="vm.ViewData.viewStats.viewStats"
                                            top="'totalSchedules'"
-                                           bottom="'schedulesOnSheet'">
+                                           top-label="'Total: '"
+                                           bottom="'schedulesOnSheet'"
+                                           bottom-label="'On Sheet: '">
                         </d3-area-bivariate>
                     </div>
                 </div>

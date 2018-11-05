@@ -55,11 +55,6 @@ text {
     fill: none;
     stroke: steelblue;
 }
-.thickLine{
-    stroke-width: 1.5;
-    fill: none;
-    stroke: black;
-}
 /*Gantt Chart tooltip style*/
 .tooltip {
     box-shadow: 0 0 5px #999999;
