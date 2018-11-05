@@ -28,19 +28,19 @@
         </div>
     </div>
     <div class="row">
-        <div class="panel-group" id="p1">
+        <div class="panel-group">
             <div class="panel panel-default">
-                <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p1" data-target="#collapseP1">
-                    <p class="pull-right textAlignMiddle"><i class="fas fa-square" style="color: #FD8D3C;"></i> Views on Sheet</p>
-                    <p class="pull-right textAlignMiddle"><i class="fas fa-square" style="color: #3182BD;"></i> Total Views</p>
+                <div class="panel-heading">
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-arrow-down"></i> Views on Sheet</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-arrow-up"></i> Total Views</p>
                     <h4 class="panel-title">Views / Views on Sheet</h4>
                 </div>
-                <div id="collapseP1" class="panel-collapse collapse in" ng-if="vm.ViewData.viewStats.viewStats.length >= 2">
+                <div class="panel-collapse" ng-if="vm.ViewData.viewStats.viewStats.length >= 2">
                     <div class="panel-body no-padding">
-                        <d3-multi-series-line-brushed data="vm.ViewData.viewStats.viewStats"
-                                                      keys="vm.ViewKeys"
-                                                      reference-line="vm.d3GoalLine">
-                        </d3-multi-series-line-brushed>
+                        <d3-area-bivariate data="vm.ViewData.viewStats.viewStats"
+                                           top="'totalViews'"
+                                           bottom="'viewsOnSheet'">
+                        </d3-area-bivariate>
                     </div>
                 </div>
             </div>
@@ -49,17 +49,17 @@
     <div class="row">
         <div class="panel-group" id="p2">
             <div class="panel panel-default">
-                <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p2" data-target="#collapseP2">
-                    <p class="pull-right textAlignMiddle"><i class="fas fa-square" style="color: #FD8D3C;"></i> Schedules on Sheet</p>
-                    <p class="pull-right textAlignMiddle"><i class="fas fa-square" style="color: #3182BD;"></i> Total Schedules</p>
+                <div class="panel-heading">
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-arrow-down"></i> Schedules on Sheet</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-arrow-up"></i> Total Schedules</p>
                     <h4 class="panel-title">Schedules / Schedules on Sheet</h4>
                 </div>
-                <div id="collapseP2" class="panel-collapse collapse in">
+                <div class="panel-collapse">
                     <div class="panel-body no-padding" ng-if="vm.ViewData.viewStats.viewStats.length >= 2">
-                        <d3-multi-series-line-brushed data="vm.ViewData.viewStats.viewStats"
-                                                      keys="vm.ScheduleKeys"
-                                                      reference-line="vm.d3GoalLine">
-                        </d3-multi-series-line-brushed>
+                        <d3-area-bivariate data="vm.ViewData.viewStats.viewStats"
+                                           top="'totalSchedules'"
+                                           bottom="'schedulesOnSheet'">
+                        </d3-area-bivariate>
                     </div>
                 </div>
             </div>

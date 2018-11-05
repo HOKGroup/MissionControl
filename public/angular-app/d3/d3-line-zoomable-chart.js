@@ -106,7 +106,6 @@ angular.module('MissionControlApp').directive('d3ZoomableLine', ['d3', function(
 
                 var id = guid();
 
-                console.log(id);
                 svg.append('defs').append('clipPath')
                     .attr('id', id)
                     .append('rect')
