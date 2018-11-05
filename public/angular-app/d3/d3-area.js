@@ -5,12 +5,12 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
     return {
         restrict: 'EA',
         scope: {
-            data: "="
+            data: '='
         },
         link: function($scope, $ele) {
             var svg = d3.select($ele[0])
-                .append("svg")
-                .attr("width", "100%");
+                .append('svg')
+                .attr('width', '100%');
 
             // on window resize, re-render d3 canvas
             window.onresize = function() {
@@ -35,7 +35,7 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                 if(!data) return;
 
                 // remove all previous items before render
-                svg.selectAll("*").remove();
+                svg.selectAll('*').remove();
 
                 // setup variables
                 var margin = {top: 30, right: 40, bottom: 110, left: 65},
@@ -47,8 +47,8 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                 // set the height based on the calculations above
                 svg.attr('height', height + margin.top + margin.bottom);
 
-                var dateFormat = d3.timeFormat("%d %b");
-                var parseTime = d3.timeParse("%Y-%m-%d");
+                var dateFormat = d3.timeFormat('%d %b');
+                var parseTime = d3.timeParse('%Y-%m-%d');
 
                 var x = d3.scaleTime().range([0, width]),
                     x2 = d3.scaleTime().range([0, width]),
@@ -58,30 +58,30 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                 // main areas
                 var area = d3.area()
                     .x(function(d) { return x(d.date); })
-                    .y0(function(d) { return y(0) })
+                    .y0(function(d) { return y(0); })
                     .y1(function(d) { return y(d.added); });
 
                 var area1 = d3.area()
                     .x(function(d) { return x(d.date); })
-                    .y0(function (d) { return y(0) })
+                    .y0(function (d) { return y(0); })
                     .y1(function(d) { return y(d.removed); });
 
                 // brushed areas
                 var area2 = d3.area()
                     .x(function(d) { return x2(d.date); })
-                    .y0(function (d) { return y2(0) })
+                    .y0(function (d) { return y2(0); })
                     .y1(function(d) { return y2(d.added); });
 
                 var area3 = d3.area()
                     .x(function(d) { return x2(d.date); })
-                    .y0(function (d) { return y2(0) })
+                    .y0(function (d) { return y2(0); })
                     .y1(function(d) { return y2(d.removed); });
 
                 data.forEach(function(d) {
                     d.date = parseTime(d.date);
                 });
 
-                var minValue = d3.min(data, function (d) { return d.removed });
+                var minValue = d3.min(data, function (d) { return d.removed; });
                 minValue = getRounded(minValue);
 
                 var maxValue = d3.max(data, function(d) { return d.added; });
@@ -104,81 +104,81 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
 
                 var brush = d3.brushX()
                     .extent([[0, 0], [width, height2]])
-                    .on("brush end", brushed);
+                    .on('brush end', brushed);
 
                 var zoom = d3.zoom()
                     .scaleExtent([1, Infinity])
                     .translateExtent([[0, 0], [width, height]])
                     .extent([[0, 0], [width, height]])
-                    .on("zoom", zoomed);
+                    .on('zoom', zoomed);
 
                 var id = guid();
 
-                svg.append("defs").append("clipPath")
-                    .attr("id", id)
-                    .append("rect")
-                    .attr("width", width)
-                    .attr("height", height);
+                svg.append('defs').append('clipPath')
+                    .attr('id', id)
+                    .append('rect')
+                    .attr('width', width)
+                    .attr('height', height);
 
-                var focus = svg.append("g")
-                    .attr("class", "focus")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                var focus = svg.append('g')
+                    .attr('class', 'focus')
+                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-                var context = svg.append("g")
-                    .attr("class", "context")
-                    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+                var context = svg.append('g')
+                    .attr('class', 'context')
+                    .attr('transform', 'translate(' + margin2.left + ',' + margin2.top + ')');
 
-                focus.append("path")
+                focus.append('path')
                     .data([data])
-                    .attr("class", "area")
-                    .attr("fill", "#d9534f")
-                    .attr("clip-path", "url(#" + id + ")")
-                    .attr("d", area);
+                    .attr('class', 'area')
+                    .attr('fill', '#d9534f')
+                    .attr('clip-path', 'url(#' + id + ')')
+                    .attr('d', area);
 
-                focus.append("path")
+                focus.append('path')
                     .data([data])
-                    .attr("class", "area1")
-                    .attr("fill", "#5cb85c")
-                    .attr("clip-path", "url(#" + id + ")")
-                    .attr("d", area1);
+                    .attr('class', 'area1')
+                    .attr('fill', '#5cb85c')
+                    .attr('clip-path', 'url(#' + id + ')')
+                    .attr('d', area1);
 
-                focus.append("g")
-                    .attr("class", "x axis")
-                    .attr("transform", "translate(0," + height + ")")
+                focus.append('g')
+                    .attr('class', 'x axis')
+                    .attr('transform', 'translate(0,' + height + ')')
                     .call(xAxis);
 
-                focus.append("g")
-                    .attr("class", "y axis")
+                focus.append('g')
+                    .attr('class', 'y axis')
                     .call(d3.axisLeft(y).tickValues(yAxisTicks));
 
                 // Add brushing area below chart.
-                context.append("path")
+                context.append('path')
                     .data([data])
-                    .attr("class", "area")
-                    .attr("fill", "#d9534f")
-                    .attr("d", area2);
+                    .attr('class', 'area')
+                    .attr('fill', '#d9534f')
+                    .attr('d', area2);
 
-                context.append("path")
+                context.append('path')
                     .data([data])
-                    .attr("class", "area1")
-                    .attr("fill", "#5cb85c")
-                    .attr("d", area3);
+                    .attr('class', 'area1')
+                    .attr('fill', '#5cb85c')
+                    .attr('d', area3);
 
-                context.append("g")
-                    .attr("class", "x axis")
-                    .attr("transform", "translate(0," + height2 + ")")
+                context.append('g')
+                    .attr('class', 'x axis')
+                    .attr('transform', 'translate(0,' + height2 + ')')
                     .call(xAxis2);
 
-                context.append("g")
-                    .attr("class", "brush")
+                context.append('g')
+                    .attr('class', 'brush')
                     .call(brush)
                     .call(brush.move, x.range());
 
-                svg.append("rect")
-                    .attr("class", "zoom")
-                    .attr("width", width)
-                    .attr("height", height)
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                svg.append('rect')
+                    .attr('class', 'zoom')
+                    .attr('width', width)
+                    .attr('height', height)
+                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
                     .call(zoom);
 
                 /**
@@ -196,13 +196,13 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                  * Handles brushing event resetting line, dots and x-axis.
                  */
                 function brushed() {
-                    if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+                    if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
                     var s = d3.event.selection || x2.range();
                     x.domain(s.map(x2.invert, x2));
-                    focus.select(".area").attr("d", area);
-                    focus.select(".area1").attr("d", area1);
-                    focus.select(".x.axis").call(d3.axisBottom(x));
-                    svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
+                    focus.select('.area').attr('d', area);
+                    focus.select('.area1').attr('d', area1);
+                    focus.select('.x.axis').call(d3.axisBottom(x));
+                    svg.select('.zoom').call(zoom.transform, d3.zoomIdentity
                         .scale(width / (s[1] - s[0]))
                         .translate(-s[0], 0));
                 }
@@ -211,13 +211,13 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                  * Handles brushing event resetting line, dots and x-axis.
                  */
                 function zoomed() {
-                    if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
+                    if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
                     var t = d3.event.transform;
                     x.domain(t.rescaleX(x2).domain());
-                    focus.select(".area").attr("d", area);
-                    focus.select(".area1").attr("d", area1);
-                    focus.select(".x.axis").call(d3.axisBottom(x));
-                    context.select(".brush").call(brush.move, x.range().map(t.invertX, t));
+                    focus.select('.area').attr('d', area);
+                    focus.select('.area1').attr('d', area1);
+                    focus.select('.x.axis').call(d3.axisBottom(x));
+                    context.select('.brush').call(brush.move, x.range().map(t.invertX, t));
                 }
 
                 /**

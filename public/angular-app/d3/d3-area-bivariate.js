@@ -1,14 +1,15 @@
 /**
- * Created by konrad.sobon on 2018-03-13.
+ * Created by konrad.sobon on 2018-11-02.
  */
-angular.module('MissionControlApp').directive('d3LineBrushedDots', ['d3', function(d3) {
+angular.module('MissionControlApp').directive('d3AreaBivariate', ['d3', function(d3) {
     return {
         restrict: 'E',
         scope: {
             data: '=',
-            excluded: '=',
-            domainY: '=', //Y
-            callbackMethod: '&formatValue'
+            top: '=',
+            topLabel: '=',
+            bottom: '=',
+            bottomLabel: '='
         },
         link: function(scope, ele) {
             var svg = d3.select(ele[0])
@@ -27,9 +28,11 @@ angular.module('MissionControlApp').directive('d3LineBrushedDots', ['d3', functi
             );
 
             // watch for data changes and re-render
-            scope.$watch('data', function(data) {
-                return scope.render(data);
-            }, true);
+            scope.$watch('data', function(newVals, oldVals) {
+                if(newVals !== oldVals){
+                    return scope.render(newVals);
+                }
+            },true);
 
             // define render function
             scope.render = function(data){
@@ -40,64 +43,59 @@ angular.module('MissionControlApp').directive('d3LineBrushedDots', ['d3', functi
 
                 // setup variables
                 var margin = {top: 30, right: 40, bottom: 110, left: 65},
-                    margin2 = {top: 330, right: 40, bottom: 30, left: 65},
+                    margin2 = {top: 430, right: 40, bottom: 30, left: 65},
                     width = d3.select(ele[0])._groups[0][0].offsetWidth - margin.left - margin.right,
-                    height = 400 - margin.top - margin.bottom,
-                    height2 = 400 - margin2.top - margin2.bottom;
+                    height = 500 - margin.top - margin.bottom,
+                    height2 = 500 - margin2.top - margin2.bottom;
 
                 // set the height based on the calculations above
                 svg.attr('height', height + margin.top + margin.bottom);
 
-                var parseDate = d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ');
-                var dateFormat = d3.timeFormat('%d %b,%H:%M');
-
-                var domainMax = 0;
-                data.forEach(function(d) {
-                    d.date = parseDate(d.createdOn);
-                    d.value = +d.value;
-                    domainMax = d.value > domainMax ? d.value : domainMax;
-                });
-
-                /*
-                 (Konrad) Data that falls over certain limit is excluded from main
-                 "data" array. We display that on a chart as a "dot" with tooltip.
-                 It helps avoiding data points that have exaggerated scale values.
-                 */
-                scope.excluded.forEach(function (d) {
-                    d.date = parseDate(d.createdOn);
-                });
+                var dateFormat = d3.timeFormat('%d %b');
+                var parseTime = d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ');
 
                 var x = d3.scaleTime().range([0, width]),
                     x2 = d3.scaleTime().range([0, width]),
-                    y = d3.scaleLinear().range([height, 1]),
-                    y2 = d3.scaleLinear().range([height2, 1]);
+                    y = d3.scaleLinear().range([height, 0]),
+                    y2 = d3.scaleLinear().range([height2, 0]);
+
+                var area = d3.area()
+                    .x(function(d) { return x(d.date); })
+                    .y0(function(d) { return y(d[scope.bottom]); })
+                    .y1(function(d) { return y(d[scope.top]); });
+
+                // brushed area
+                var area2 = d3.area()
+                    .x(function(d) { return x2(d.date); })
+                    .y0(function (d) { return y2(d[scope.bottom]); })
+                    .y1(function(d) { return y2(d[scope.top]); });
+
+                data.forEach(function(d) {
+                    d.date = parseTime(d.createdOn);
+                });
+
+                var maxValue = d3.max(data, function(d) { return d[scope.top]; });
+                maxValue = getRounded(maxValue);
 
                 x.domain(d3.extent(data, function(d) { return d.date; }));
-                if(scope.domainY){
-                    y.domain([0, scope.domainY]);
-                } else {
-                    y.domain([0, domainMax]);
-                }
+                y.domain([0, maxValue]);
                 x2.domain(x.domain());
                 y2.domain(y.domain());
 
                 var ticksNum = 10;
                 var yAxisTicks = [];
-                var yDomain;
-                if(scope.domainY){
-                    yDomain = [0, scope.domainY];
-                } else {
-                    yDomain = [0, domainMax];
-                }
+                var yDomain = [0, maxValue];
                 for (var i = 0; i < ticksNum; i++ ){
                     yAxisTicks.push((yDomain[1] - yDomain[0]) / (ticksNum - 1)* i + yDomain[0]);
                 }
 
-                var xAxis = d3.axisBottom(x).ticks(5).tickFormat(dateFormat),
-                    xAxis2 = d3.axisBottom(x2).ticks(5).tickFormat(dateFormat),
-                    yAxis = d3.axisLeft(y).tickValues(yAxisTicks).tickFormat(function(d){
-                        return scope.callbackMethod({item: d});
-                    });
+                var xAxis = d3.axisBottom(x)
+                        .ticks(5)
+                        .tickFormat(dateFormat);
+
+                var xAxis2 = d3.axisBottom(x2)
+                        .ticks(5)
+                        .tickFormat(dateFormat);
 
                 var brush = d3.brushX()
                     .extent([[0, 0], [width, height2]])
@@ -108,16 +106,6 @@ angular.module('MissionControlApp').directive('d3LineBrushedDots', ['d3', functi
                     .translateExtent([[0, 0], [width, height]])
                     .extent([[0, 0], [width, height]])
                     .on('zoom', zoomed);
-
-                var line = d3.line()
-                    .curve(d3.curveLinear)
-                    .x(function(d) { return x(d.date); })
-                    .y(function(d) { return y(d.value); });
-
-                var line2 = d3.line()
-                    .curve(d3.curveLinear)
-                    .x(function(d) { return x2(d.date); })
-                    .y(function(d) { return y2(d.value); });
 
                 var id = guid();
 
@@ -136,10 +124,11 @@ angular.module('MissionControlApp').directive('d3LineBrushedDots', ['d3', functi
                     .attr('transform', 'translate(' + margin2.left + ',' + margin2.top + ')');
 
                 focus.append('path')
-                    .datum(data)
-                    .attr('class', 'line')
+                    .data([data])
+                    .attr('class', 'area')
+                    .attr('fill', '#d9534f')
                     .attr('clip-path', 'url(#' + id + ')')
-                    .attr('d', line);
+                    .attr('d', area);
 
                 focus.append('g')
                     .attr('class', 'x axis')
@@ -148,46 +137,14 @@ angular.module('MissionControlApp').directive('d3LineBrushedDots', ['d3', functi
 
                 focus.append('g')
                     .attr('class', 'y axis')
-                    .call(yAxis);
-
-                // Add red dots/tooltips for "excluded" data;
-                var dotTooltip = svg.append('g')
-                    .attr('class', 'focus')
-                    .style('display', 'none');
-
-                dotTooltip.append('text')
-                    .attr('class', 'y1')
-                    .attr('transform', 'translate(0, -7)')
-                    .attr('text-anchor', 'middle');
-
-                dotTooltip.append('text')
-                    .attr('class', 'y2')
-                    .attr('transform', 'translate(0, -20)')
-                    .attr('text-anchor', 'middle');
-
-                focus.selectAll('circle')
-                    .data(scope.excluded)
-                    .enter()
-                    .append('circle')
-                    .attr('class', 'dot')
-                    .attr('r', 5)
-                    .attr('cx', function (d) { return x(d.date); })
-                    .attr('cy', -10)
-                    .on('mouseover', function(d) {
-                        dotTooltip.style('display', null);
-                        dotTooltip.attr('transform', 'translate(' + (x(d.date) + margin.left) + ',55)');
-                        dotTooltip.select('text.y1').text(scope.callbackMethod({item: d.value}));
-                        dotTooltip.select('text.y2').text(d.user);
-                    })
-                    .on('mouseout', function() {
-                        dotTooltip.style('display', 'none');
-                    });
+                    .call(d3.axisLeft(y).tickValues(yAxisTicks));
 
                 // Add brushing area below chart.
                 context.append('path')
-                    .datum(data)
-                    .attr('class', 'line')
-                    .attr('d', line2);
+                    .data([data])
+                    .attr('class', 'area')
+                    .attr('fill', '#d9534f')
+                    .attr('d', area2);
 
                 context.append('g')
                     .attr('class', 'x axis')
@@ -199,7 +156,7 @@ angular.module('MissionControlApp').directive('d3LineBrushedDots', ['d3', functi
                     .call(brush)
                     .call(brush.move, x.range());
 
-                // Add tooltips to the main chart.
+                // add tooltips
                 var tooltip = svg.append('g')
                     .attr('class', 'focus')
                     .style('display', 'none');
@@ -211,7 +168,7 @@ angular.module('MissionControlApp').directive('d3LineBrushedDots', ['d3', functi
 
                 tooltip.append('circle')
                     .attr('r', 5)
-                    .attr('fill', 'steelblue')
+                    .attr('fill', 'black')
                     .attr('stroke-width', '1px');
 
                 tooltip.append('text')
@@ -219,9 +176,18 @@ angular.module('MissionControlApp').directive('d3LineBrushedDots', ['d3', functi
                     .attr('transform', 'translate(0, -7)')
                     .attr('text-anchor', 'middle');
 
-                tooltip.append('text')
-                    .attr('class', 'y2')
-                    .attr('transform', 'translate(0, -20)')
+                var tooltip2 = svg.append('g')
+                    .attr('class', 'focus')
+                    .style('display', 'none');
+
+                tooltip2.append('circle')
+                    .attr('r', 5)
+                    .attr('fill', 'black')
+                    .attr('stroke-width', '1px');
+
+                tooltip2.append('text')
+                    .attr('class', 'y1')
+                    .attr('transform', 'translate(0, 17)')
                     .attr('text-anchor', 'middle');
 
                 svg.append('rect')
@@ -230,14 +196,22 @@ angular.module('MissionControlApp').directive('d3LineBrushedDots', ['d3', functi
                     .attr('height', height)
                     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
                     .call(zoom)
-                    .on('mouseover', function() { tooltip.style('display', null); })
-                    .on('mouseout', function() { tooltip.style('display', 'none'); })
+                    .on('mouseover', function() {
+                        tooltip.style('display', null);
+                        tooltip2.style('display', null);
+                    })
+                    .on('mouseout', function() {
+                        tooltip.style('display', 'none');
+                        tooltip2.style('display', 'none');
+                    })
                     .on('mousemove', mousemove);
 
                 var bisectDate = d3.bisector(function(d) { return d.date; }).left;
 
                 /**
-                 * Handles mouse move event for the tooltip.
+                 * (Konrad) This method depends on data being supplied in asc order from
+                 * earliest to latest. That sorting is originally returned from DB, but in
+                 * case that it changed, we might need to re-sort the data here.
                  */
                 function mousemove() {
                     var x0 = x.invert(d3.mouse(this)[0]),
@@ -246,10 +220,22 @@ angular.module('MissionControlApp').directive('d3LineBrushedDots', ['d3', functi
                         d1 = data[i];
                     if(!d1) return;
                     var d = x0 - d0.date > d1.date - x0 ? d1 : d0;
-                    tooltip.attr('transform', 'translate(' + (x(d.date) + margin.left) + ',' + (y(d.value) + margin.top) + ')');
-                    tooltip.select('text.y1').text(scope.callbackMethod({item: d.value}));
-                    tooltip.select('text.y2').text(d.user);
-                    tooltip.select('.mouse-line').attr('y2', height - y(d.value));
+                    tooltip.attr('transform', 'translate(' + (x(d.date) + margin.left) + ',' + (y(d[scope.top]) + margin.top) + ')');
+                    tooltip.select('text.y1').text(scope.topLabel + d[scope.top]);
+                    tooltip.select('.mouse-line').attr('y2', height - y(d[scope.top]));
+                    tooltip2.attr('transform', 'translate(' + (x(d.date) + margin.left) + ',' + (y(d[scope.bottom]) + margin.top) + ')');
+                    tooltip2.select('text.y1').text(scope.bottomLabel + d[scope.bottom]);
+                }
+
+                /**
+                 * Returns value rounded to nearest 10. Either negative or positive.
+                 * @param value
+                 * @returns {number}
+                 */
+                function getRounded(value) {
+                    return  value < 0
+                        ? (Math.ceil((Math.abs(value)+1) / 10) * 10) * -1 // round down to nearest 10
+                        : Math.ceil((value+1) / 10) * 10; // round up to nearest 10
                 }
 
                 /**
@@ -259,9 +245,8 @@ angular.module('MissionControlApp').directive('d3LineBrushedDots', ['d3', functi
                     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return; // ignore brush-by-zoom
                     var s = d3.event.selection || x2.range();
                     x.domain(s.map(x2.invert, x2));
-                    focus.select('.line').attr('d', line);
-                    focus.selectAll('.dot').attr('cx', function (d) { return x(d.date); });
-                    focus.select('.x.axis').call(xAxis);
+                    focus.select('.area').attr('d', area);
+                    focus.select('.x.axis').call(d3.axisBottom(x));
                     svg.select('.zoom').call(zoom.transform, d3.zoomIdentity
                         .scale(width / (s[1] - s[0]))
                         .translate(-s[0], 0));
@@ -274,9 +259,8 @@ angular.module('MissionControlApp').directive('d3LineBrushedDots', ['d3', functi
                     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return; // ignore zoom-by-brush
                     var t = d3.event.transform;
                     x.domain(t.rescaleX(x2).domain());
-                    focus.select('.line').attr('d', line);
-                    focus.selectAll('.dot').attr('cx', function (d) { return x(d.date); });
-                    focus.select('.x.axis').call(xAxis);
+                    focus.select('.area').attr('d', area);
+                    focus.select('.x.axis').call(d3.axisBottom(x));
                     context.select('.brush').call(brush.move, x.range().map(t.invertX, t));
                 }
 

@@ -43,9 +43,5 @@ function ViewStatsController($routeParams, HealthReportFactory, ngToast){
         vm.toggleTimeSettings = function() {
             vm.showTimeSettings = !vm.showTimeSettings;
         };
-
-        vm.ViewKeys = ["totalViews", "viewsOnSheet"]; // chart 1
-        vm.ScheduleKeys = ["totalSchedules", "schedulesOnSheet"]; // chart2
-        vm.d3GoalLine = null;
     };
 }
