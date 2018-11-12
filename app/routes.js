@@ -37,6 +37,7 @@ var users = require('./models/users');
      app.put('/api/v2/projects/:id/deleteconfig/:configid', projects.deleteConfiguration);
      app.post('/api/v2/projects/:id/deletetriggerrecords', projects.deleteTriggerRecords);
      app.delete('/api/v2/projects/:id', projects.delete);
+     app.post('/api/v2/projects/datatable', projects.datatable);
 
      var config = require('./controller/configurations');
      app.get('/api/v2/configurations/centralpath/:uri*', config.findByCentralPath);

@@ -86,6 +86,7 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
         } else {
             ModelsFactory.getByDate(queryData)
                 .then(function (response) {
+                    console.log(response);
                     if(!response || response.status !== 201) throw { message: 'Failed to get data.' };
 
                     if(response.data[0].opentimes.length === 0 && response.data[0].synchtimes.length === 0){

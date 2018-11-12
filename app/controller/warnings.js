@@ -193,8 +193,6 @@ WarningsService = {
         var centralPath = req.body['centralPath'];
 
         Warnings.find({ 'centralPath': centralPath, 'isOpen': true }, function (err, response){
-            console.log(req.body);
-
             var start = parseInt(req.body['start']);
             var length = parseInt(req.body['length']);
             var searched = req.body['search'].value !== '';

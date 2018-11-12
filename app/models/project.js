@@ -10,22 +10,35 @@ var geoSchema = new mongoose.Schema({
 	coordinates:{
 		type: Array
 	}
-},{_id: false});
+},{ _id: false });
+
+var addressSchema = new mongoose.Schema({
+    formattedAddress: { type: String, default: '' },
+    street1: { type: String, default: '' },
+    street2: { type: String, default: '' },
+    city: { type: String, default: '' },
+    state: { type: String, default: '' },
+    country: { type: String, default: '' },
+    zipCode: { type: String, default: '' },
+    placeId: { type: String, default: '' }
+}, { _id: false });
 
 var projectSchema = new mongoose.Schema({
         number: String,
         name: String,
         office: String,
-        address:{
-            formattedAddress: String,
-            street1: String,
-            street2: String,
-            city: String,
-            state: String,
-            country: String,
-            zipCode: String,
-            placeId: String //google place ID
-        },
+        address: {type: addressSchema, default: function () {
+            return {
+                formattedAddress: '',
+                street1: '',
+                street2: '',
+                city: '',
+                state: '',
+                country: '',
+                zipCode: '',
+                placeId: ''
+            };
+        }},
         geoLocation: geoSchema, //type point
         geoPolygon: geoSchema, //type MultiPolygon
         configurations: [{

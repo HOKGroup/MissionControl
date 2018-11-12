@@ -127,6 +127,7 @@ function WarningsController($routeParams, HealthReportFactory, DTOptionsBuilder,
                 return new Date(a.date) - new Date(b.date);
             }); // sort in reverse a-b
 
+
             // (Konrad) Set data for the table.
             vm.openWarnings = vm.WarningData.warningStats.filter(function (item) {
                 return item.isOpen;

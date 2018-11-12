@@ -5,29 +5,37 @@
         </div>
     </div>
     <div class="row" ng-if="vm.projects.length > 0">
-        <table datatable="ng"
+        <table id="datatable"
+               datatable=""
                dt-options="vm.dtOptions"
-               dt-column-defs="vm.dtColumnDefs"
-               class="table table-hover table-condensed datatable">
-            <thead>
-            <tr>
-                <th class="col-md-2">Project Number</th>
-                <th class="col-md-6">Project Name</th>
-                <th class="col-md-1 text-center">Office</th>
-                <th class="col-md-3">Project Address</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="x in vm.projects" ng-click="vm.go('/projects/edit/' + x._id)">
-                <td>{{ x.number }}</td>
-                <td>{{ x.name }}</td>
-                <td class="text-center">{{ x.office }}</td>
-                <td>{{ x.address.city }}, {{ x.address.state }}</td>
-                </tr>
-            </tbody>
+               dt-columns="vm.dtColumns"
+               dt-instance="vm.dtInstance"
+               class="table table-hover table-condensed datatable"
+               style="width:100%;">
         </table>
+        <!--<table datatable="ng"-->
+               <!--dt-options="vm.dtOptions"-->
+               <!--dt-column-defs="vm.dtColumnDefs"-->
+               <!--class="table table-hover table-condensed datatable">-->
+            <!--<thead>-->
+            <!--<tr>-->
+                <!--<th class="col-md-2">Project Number</th>-->
+                <!--<th class="col-md-6">Project Name</th>-->
+                <!--<th class="col-md-1 text-center">Office</th>-->
+                <!--<th class="col-md-3">Project Address</th>-->
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+            <!--<tr ng-repeat="x in vm.projects" ng-click="vm.go('/projects/edit/' + x._id)">-->
+                <!--<td>{{ x.number }}</td>-->
+                <!--<td>{{ x.name }}</td>-->
+                <!--<td class="text-center">{{ x.office }}</td>-->
+                <!--<td>{{ x.address.city }}, {{ x.address.state }}</td>-->
+                <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
     </div>
-    <div class="row" style="padding-top: 10px">
+    <div class="row" style="padding-top: 10px;">
         <a class="btn btn-primary pull-right" href="#/projects/add" style="margin-bottom:10px;"><i class="fas fa-plus"></i> New Project</a>
     </div>
 </div>
