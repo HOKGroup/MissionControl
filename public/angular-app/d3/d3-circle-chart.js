@@ -9,8 +9,8 @@ angular.module('MissionControlApp').directive('d3Circle', ['d3', function(d3) {
         },
         link: function(scope, ele) {
             var svg = d3.select(ele[0])
-                .append("svg")
-                .attr("width", "120");
+                .append('svg')
+                .attr('width', '120');
 
             // on window resize, re-render d3 canvas
             window.onresize = function() {
@@ -24,7 +24,7 @@ angular.module('MissionControlApp').directive('d3Circle', ['d3', function(d3) {
             );
 
             // watch for data changes and re-render
-            scope.$watch("data", function(newVals) {
+            scope.$watch('data', function(newVals) {
                 if(!newVals) return;
                 return scope.render(newVals);
             }, true);
@@ -34,7 +34,7 @@ angular.module('MissionControlApp').directive('d3Circle', ['d3', function(d3) {
                 if(!data) return;
 
                 // remove all previous items before render
-                svg.selectAll("*").remove();
+                svg.selectAll('*').remove();
 
                 // setup variables
                 var height = 120;
@@ -44,7 +44,7 @@ angular.module('MissionControlApp').directive('d3Circle', ['d3', function(d3) {
 
                 var color = d3.scaleLinear()
                     .domain([0, 1, 2, 3, 4, 5, 6, 7])
-                    .range(["#d9534f", "#d9534f", "#d9534f", "#f0ad4e", "#f0ad4e", "#5cb85c", "#5cb85c", "#777777"]);
+                    .range(['#d9534f', '#d9534f', '#d9534f', '#f0ad4e', '#f0ad4e', '#5cb85c', '#5cb85c', '#777777']);
 
                 /**
                  * @return {number}
@@ -57,28 +57,28 @@ angular.module('MissionControlApp').directive('d3Circle', ['d3', function(d3) {
                 // success = 5cb85c
                 // warning = f0ad4e
                 // danger = d9534f
-                svg.append("circle")
-                    .attr("cx", 60)
-                    .attr("cy", 60)
-                    .attr("r", 60)
-                    .attr("fill", color( Remap(data.passingChecks, data.newMax)));
+                svg.append('circle')
+                    .attr('cx', 60)
+                    .attr('cy', 60)
+                    .attr('r', 60)
+                    .attr('fill', color( Remap(data.passingChecks, data.newMax)));
 
-                svg.append("text")
-                    .attr("fill", "#000")
-                    .attr("y", 50)
-                    .attr("x", 60)
-                    .style("font-size", 25)
-                    .attr("alignment-baseline", "central")
-                    .attr("text-anchor", "middle")
+                svg.append('text')
+                    .attr('fill', '#000')
+                    .attr('y', 50)
+                    .attr('x', 60)
+                    .style('font-size', 25)
+                    .attr('alignment-baseline', 'central')
+                    .attr('text-anchor', 'middle')
                     .text(data.count);
 
-                svg.append("text")
-                    .attr("fill", "#000")
-                    .attr("y", 75)
-                    .attr("x", 60)
-                    .style("font-size", 12)
-                    .attr("alignment-baseline", "central")
-                    .attr("text-anchor", "middle")
+                svg.append('text')
+                    .attr('fill', '#000')
+                    .attr('y', 75)
+                    .attr('x', 60)
+                    .style('font-size', 12)
+                    .attr('alignment-baseline', 'central')
+                    .attr('text-anchor', 'middle')
                     .text(data.label);
             };
         }

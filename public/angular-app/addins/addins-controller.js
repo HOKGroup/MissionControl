@@ -9,40 +9,40 @@ function AddinsController(AddinsFactory) {
     //region Properties
 
     vm.SelectedYear = '2019';
-    vm.SelectedPlugin = "";
+    vm.SelectedPlugin = '';
     vm.UserDetails = [];
     vm.YearsAggregate = [];
-    vm.MainChartColor = "steelblue";
-    vm.UserChartColor = "#d9534f";
+    vm.MainChartColor = 'steelblue';
+    vm.UserChartColor = '#d9534f';
     vm.officeFilters = [
-        {name: "All", code: "All"},
-        {name: "Atlanta", code: ["ATL"]},
-        {name: "Beijing", code: ["BEI"]},
-        {name: "St. Louis", code: ["BJC"]},
-        {name: "Calgary", code: ["CAL"]},
-        {name: "Chicago", code: ["CHI"]},
-        {name: "Columbus", code: ["COL"]},
-        {name: "Dallas", code: ["DAL"]},
-        {name: "Doha", code: ["DOH"]},
-        {name: "Dubai", code: ["DUB"]},
-        {name: "Hong Kong", code: ["HK"]},
-        {name: "Houston", code: ["HOU"]},
-        {name: "Kansas City", code: ["KC"]},
-        {name: "Los Angeles", code: ["LA"]},
-        {name: "London", code: ["LON"]},
-        {name: "New York", code: ["NY"]},
-        {name: "Ottawa", code: ["OTT"]},
-        {name: "Philadephia", code: ["PHI"]},
-        {name: "Seattle", code: ["SEA"]},
-        {name: "San Francisco", code: ["SF"]},
-        {name: "Shanghai", code: ["SH"]},
-        {name: "St. Louis", code: ["STL"]},
-        {name: "Toronto", code: ["TOR"]},
-        {name: "Tampa", code: ["TPA"]},
-        {name: "Washington DC", code: ["WDC"]},
-        {name: "Undefined", code: ["EMC", "SDC", "OSS", "LD", "LDC", ""]}
+        {name: 'All', code: 'All'},
+        {name: 'Atlanta', code: ['ATL']},
+        {name: 'Beijing', code: ['BEI']},
+        {name: 'St. Louis', code: ['BJC']},
+        {name: 'Calgary', code: ['CAL']},
+        {name: 'Chicago', code: ['CHI']},
+        {name: 'Columbus', code: ['COL']},
+        {name: 'Dallas', code: ['DAL']},
+        {name: 'Doha', code: ['DOH']},
+        {name: 'Dubai', code: ['DUB']},
+        {name: 'Hong Kong', code: ['HK']},
+        {name: 'Houston', code: ['HOU']},
+        {name: 'Kansas City', code: ['KC']},
+        {name: 'Los Angeles', code: ['LA']},
+        {name: 'London', code: ['LON']},
+        {name: 'New York', code: ['NY']},
+        {name: 'Ottawa', code: ['OTT']},
+        {name: 'Philadephia', code: ['PHI']},
+        {name: 'Seattle', code: ['SEA']},
+        {name: 'San Francisco', code: ['SF']},
+        {name: 'Shanghai', code: ['SH']},
+        {name: 'St. Louis', code: ['STL']},
+        {name: 'Toronto', code: ['TOR']},
+        {name: 'Tampa', code: ['TPA']},
+        {name: 'Washington DC', code: ['WDC']},
+        {name: 'Undefined', code: ['EMC', 'SDC', 'OSS', 'LD', 'LDC', '']}
     ];
-    vm.SelectedOffice = "All";
+    vm.SelectedOffice = 'All';
 
     //endregion
 
@@ -67,9 +67,9 @@ function AddinsController(AddinsFactory) {
                 vm.d3HorizontalData = list;
                 vm.SelectedYear = year;
                 vm.UserDetails = [];
-                vm.SelectedPlugin = "";
+                vm.SelectedPlugin = '';
             }).catch(function (error) {
-                console.log("Error retrieving Usage Logs: ", error)
+                console.log('Error retrieving Usage Logs: ', error);
             });
     };
 
@@ -190,7 +190,7 @@ function AddinsController(AddinsFactory) {
         var list = [];
         for (var k in data){
             if(data.hasOwnProperty(k)){
-                list.push({name: k, count: data[k]})
+                list.push({name: k, count: data[k]});
             }
         }
         return list;
@@ -203,9 +203,9 @@ function AddinsController(AddinsFactory) {
      * @returns {boolean}
      */
     function isOfficeMatch(office, filter){
-        if(filter === "All") return true;
+        if(filter === 'All') return true;
         if(filter.constructor === Array){
-            return filter.indexOf(office) > -1
+            return filter.indexOf(office) > -1;
         }else {
             return office === filter;
         }

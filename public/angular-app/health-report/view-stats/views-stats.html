@@ -31,13 +31,17 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <p class="pull-right textAlignMiddle"><i class="fas fa-arrow-down"></i> Views on Sheet</p>
-                    <p class="pull-right textAlignMiddle"><i class="fas fa-arrow-up"></i> Total Views</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-chevron-up" style="color: #5cb85c;"></i> Views on Sheet</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-chevron-down" style="color: #d9534f;"></i> Total Views</p>
+                    <p class="pull-right textAlignMiddle">Working Views: <b>{{vm.workingViews}}</b></p>
                     <h4 class="panel-title">Views / Views on Sheet</h4>
                 </div>
                 <div class="panel-collapse" ng-if="vm.ViewData.viewStats.viewStats.length >= 2">
                     <div class="panel-body no-padding">
                         <d3-area-bivariate data="vm.ViewData.viewStats.viewStats"
+                                           d3-on-move="vm.moveView(item)"
+                                           d3-on-out="vm.outView()"
+                                           fill-color="vm.viewsColor"
                                            top="'totalViews'"
                                            top-label="'Total: '"
                                            bottom="'viewsOnSheet'"
@@ -52,13 +56,17 @@
         <div class="panel-group" id="p2">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <p class="pull-right textAlignMiddle"><i class="fas fa-arrow-down"></i> Schedules on Sheet</p>
-                    <p class="pull-right textAlignMiddle"><i class="fas fa-arrow-up"></i> Total Schedules</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-chevron-up" style="color: #5cb85c;"></i> Schedules on Sheet</p>
+                    <p class="pull-right textAlignMiddle"><i class="fas fa-chevron-down" style="color: #d9534f;"></i> Total Schedules</p>
+                    <p class="pull-right textAlignMiddle">Working Schedules: <b>{{vm.workingSchedules}}</b></p>
                     <h4 class="panel-title">Schedules / Schedules on Sheet</h4>
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body no-padding" ng-if="vm.ViewData.viewStats.viewStats.length >= 2">
                         <d3-area-bivariate data="vm.ViewData.viewStats.viewStats"
+                                           d3-on-move="vm.moveSchedule(item)"
+                                           d3-on-out="vm.outSchedule()"
+                                           fill-color="vm.schedulesColor"
                                            top="'totalSchedules'"
                                            top-label="'Total: '"
                                            bottom="'schedulesOnSheet'"

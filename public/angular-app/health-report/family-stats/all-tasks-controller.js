@@ -46,12 +46,12 @@ function AllFamilyTasksController($uibModalInstance, $uibModal, FamiliesFactory,
                 family.tasks.push(task);
             } else if(action === 'Update Task'){
                 var index = family.tasks.findIndex(function(item){
-                    return item._id.toString() === task._id.toString()
+                    return item._id.toString() === task._id.toString();
                 });
                 if(index !== -1) family.tasks[index] = task;
             }
         }).catch(function(){
-            console.log("All Tasks Dialog dismissed...");
+            console.log('All Tasks Dialog dismissed...');
         });
     };
 
@@ -93,11 +93,11 @@ function AllFamilyTasksController($uibModalInstance, $uibModal, FamiliesFactory,
         if (check) {
             vm.family.tasks.forEach(function (item) {
                 item.isSelected = true;
-            })
+            });
         } else {
             vm.family.tasks.forEach(function (item) {
                 item.isSelected = false;
-            })
+            });
         }
     };
 

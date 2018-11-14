@@ -26,12 +26,12 @@ function GroupStatsController($scope, DTOptionsBuilder, DTColumnBuilder){
         // set table options for dimension types
         vm.dtInstance = {};
         vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
-            return getData()
+            return getData();
         }).withPaginationType('simple_numbers')
             .withDisplayLength(10)
             .withOption('order', [0, 'asc'])
             .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
-            .withOption('rowCallback', function (row, data, index) {
+            .withOption('rowCallback', function (row, data) {
                 row.className = row.className + evaluateGroup(data);
             });
 
@@ -137,7 +137,7 @@ function GroupStatsController($scope, DTOptionsBuilder, DTColumnBuilder){
                         sourceIndex = nodes.length - 1;
                         linkIndexes[i.createdBy] = {
                             index: sourceIndex
-                        }
+                        };
                     }
 
                     // increment the value
@@ -148,13 +148,13 @@ function GroupStatsController($scope, DTOptionsBuilder, DTColumnBuilder){
                             source: sourceIndex,
                             target: targetIndex,
                             value: 1
-                        }
+                        };
                     }
                 });
 
                 for (var key in tempLinks){
                     if (tempLinks.hasOwnProperty(key)){
-                        links.push(tempLinks[key])
+                        links.push(tempLinks[key]);
                     }
                 }
             });
@@ -166,5 +166,5 @@ function GroupStatsController($scope, DTOptionsBuilder, DTColumnBuilder){
         }
 
         //endregion
-    }
+    };
 }

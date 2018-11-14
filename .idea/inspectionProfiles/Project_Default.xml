@@ -6,7 +6,7 @@
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
-          <list size="34">
+          <list size="36">
             <item index="0" class="java.lang.String" itemvalue="dt-options" />
             <item index="1" class="java.lang.String" itemvalue="dt-column-defs" />
             <item index="2" class="java.lang.String" itemvalue="item" />
@@ -41,6 +41,8 @@
             <item index="31" class="java.lang.String" itemvalue="popover-class" />
             <item index="32" class="java.lang.String" itemvalue="processed" />
             <item index="33" class="java.lang.String" itemvalue="show" />
+            <item index="34" class="java.lang.String" itemvalue="d3-on-move" />
+            <item index="35" class="java.lang.String" itemvalue="d3-on-out" />
           </list>
         </value>
       </option>
@@ -65,5 +67,6 @@
     </inspection_tool>
     <inspection_tool class="JSIgnoredPromiseFromCall" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="JSUnfilteredForInLoop" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="JSUnresolvedFunction" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
   </profile>
 </component>

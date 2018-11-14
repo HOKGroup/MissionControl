@@ -1,3 +1,6 @@
+/**
+ * Created by konrad.sobon on 2018-08-23.
+ */
 angular.module('MissionControlApp').controller('LinkStatsController', LinkStatsController);
 
 function LinkStatsController($routeParams, DTColumnDefBuilder, HealthReportFactory, ngToast){
@@ -6,8 +9,8 @@ function LinkStatsController($routeParams, DTColumnDefBuilder, HealthReportFacto
     this.$onInit = function () {
         vm.projectId = $routeParams.projectId;
         vm.LinkData = this.processed;
-        vm.StylesKeys = ["totalDwgStyles", "totalImportedStyles"];
-        vm.d3GoalLine = {name: "Goal", value: 50};
+        vm.StylesKeys = ['totalDwgStyles', 'totalImportedStyles'];
+        vm.d3GoalLine = {name: 'Goal', value: 50};
         vm.showTimeSettings = false;
         vm.loading = false;
 

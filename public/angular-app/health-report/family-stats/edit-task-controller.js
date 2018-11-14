@@ -13,13 +13,13 @@ function EditFamilyTaskController($uibModalInstance, FamiliesFactory, family, ta
     // (Konrad) Resetting these values will clear the form for new task.
     if(action === 'Add Task'){
         vm.task = {
-            assignedTo: "",
-            message: "",
+            assignedTo: '',
+            message: '',
             completedOn: null,
-            submittedBy: "webuser",
+            submittedBy: 'webuser',
             completedBy: null,
-            name: ""
-        }
+            name: ''
+        };
     }
 
     /**
@@ -39,7 +39,7 @@ function EditFamilyTaskController($uibModalInstance, FamiliesFactory, family, ta
                         familyName: vm.family.name
                     });
             }, function (err) {
-                console.log("Unable to add task: " + err);
+                console.log('Unable to add task: ' + err);
             });
         } else if (action === 'Edit Task'){
             FamiliesFactory
@@ -51,7 +51,7 @@ function EditFamilyTaskController($uibModalInstance, FamiliesFactory, family, ta
                         familyName: vm.family.name
                     });
                 }, function (err) {
-                    console.log('Unable to update task: ' + err)
+                    console.log('Unable to update task: ' + err);
                 });
         }
     };
@@ -74,7 +74,7 @@ function EditFamilyTaskController($uibModalInstance, FamiliesFactory, family, ta
                 familyName: vm.family.name
             });
         }, function (err) {
-            console.log('Unable to reopen task: ' + err)
+            console.log('Unable to reopen task: ' + err);
         });
     };
 
