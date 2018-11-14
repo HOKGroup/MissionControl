@@ -2,15 +2,15 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', '$c
     return {
         restrict: 'EA',
         scope: {
-            data: "=",
+            data: '=',
             countTotal: '=',
             marginLeft: '=',
             domainPadding: '='
         },
         link: function($scope, $ele) {
             var svg = d3.select($ele[0])
-                .append("svg")
-                .attr("width", "100%");
+                .append('svg')
+                .attr('width', '100%');
 
             // on window resize, re-render d3 canvas
             window.onresize = function() {
@@ -35,7 +35,7 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', '$c
                 if(!data) return;
 
                 // remove all previous items before render
-                svg.selectAll("*").remove();
+                svg.selectAll('*').remove();
 
                 // setup variables
                 var margin = {top: 15, right: 35, bottom: 25, left: $scope.marginLeft},
@@ -62,7 +62,7 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', '$c
 
                 var color = d3.scaleLinear()
                     .domain([0, 1, 2])
-                    .range(["#5cb85c", "#f0ad4e", "#d9534f"]); //green/orange/red
+                    .range(['#5cb85c', '#f0ad4e', '#d9534f']); //green/orange/red
 
                 var ticksNum = 10;
                 var xAxisTicks = [];
@@ -76,76 +76,76 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', '$c
                     .tickSizeInner(-(height-5))
                     .tickPadding(8);
 
-                var tooltip = d3.select("body")
-                    .append("div")
-                    .attr("class", "toolTip");
+                var tooltip = d3.select('body')
+                    .append('div')
+                    .attr('class', 'toolTip');
 
-                svg.append("g")
-                    .selectAll("bar")
+                svg.append('g')
+                    .selectAll('bar')
                     .data(data).enter()
-                    .append("rect")
-                    .attr("x", margin.left)
-                    .attr("width", 0)
-                    .attr("y", function (d) { return y(d.name) + margin.top; })
-                    .attr("fill", function (d) { return qualityChecks(d).color; })
-                    .on("mouseover", function(d){
+                    .append('rect')
+                    .attr('x', margin.left)
+                    .attr('width', 0)
+                    .attr('y', function (d) { return y(d.name) + margin.top; })
+                    .attr('fill', function (d) { return qualityChecks(d).color; })
+                    .on('mouseover', function(d){
                         var result = qualityChecks(d);
                         if(!result.message) return;
 
-                        tooltip.style("opacity", "1");
-                        var matrix = this.getScreenCTM().translate(+ this.getAttribute("x"), + this.getAttribute("y"));
+                        tooltip.style('opacity', '1');
+                        var matrix = this.getScreenCTM().translate(+ this.getAttribute('x'), + this.getAttribute('y'));
                         tooltip
-                            .style("left", (window.pageXOffset + matrix.e + x(d.count) + 45) + "px")
-                            .style("top", (window.pageYOffset + matrix.f - (y.bandwidth() / 2) - 3) + "px")
-                            .style("display", "inline-block")
+                            .style('left', (window.pageXOffset + matrix.e + x(d.count) + 45) + 'px')
+                            .style('top', (window.pageYOffset + matrix.f - (y.bandwidth() / 2) - 3) + 'px')
+                            .style('display', 'inline-block')
                             .html(result.message);
                     })
-                    .on("mouseout", function(){ tooltip.style("opacity", "0");})
-                    .attr("height", y.bandwidth())
+                    .on('mouseout', function(){ tooltip.style('opacity', '0');})
+                    .attr('height', y.bandwidth())
                     .transition()
                     .duration(1000)
-                    .attr("width", function(d){return x(d.count);});
+                    .attr('width', function(d){return x(d.count);});
 
-                svg.append("g")
-                    .attr("class", "x axisHorizontal")
-                    .attr("transform", "translate(" +  margin.left + "," + (height + margin.top)  + ")")
+                svg.append('g')
+                    .attr('class', 'x axisHorizontal')
+                    .attr('transform', 'translate(' +  margin.left + ',' + (height + margin.top)  + ')')
                     .call(xAxis);
 
-                svg.append("g")
-                    .selectAll("labels")
+                svg.append('g')
+                    .selectAll('labels')
                     .data(data).enter()
-                    .append("text")
-                    .attr("x", margin.left)
-                    .attr("y", function (d) {return (y(d.name) + (y.bandwidth() / 2)) + margin.top;})
-                    .attr("text-anchor", "end")
-                    .attr("dy", ".35em")
-                    .attr("dx", -5)
+                    .append('text')
+                    .attr('x', margin.left)
+                    .attr('y', function (d) {return (y(d.name) + (y.bandwidth() / 2)) + margin.top;})
+                    .attr('text-anchor', 'end')
+                    .attr('dy', '.35em')
+                    .attr('dx', -5)
                     .text(function(d){return d.name;})
-                    .on("mouseover", function(d){
-                        tooltip.style("opacity", "1");
-                        var matrix = this.getScreenCTM().translate(+ this.getAttribute("x"), + this.getAttribute("y"));
+                    .on('mouseover', function(d){
+                        tooltip.style('opacity', '1');
+                        var matrix = this.getScreenCTM().translate(+ this.getAttribute('x'), + this.getAttribute('y'));
                         tooltip
-                            .style("left", (window.pageXOffset + matrix.e + x(d.count) + 45) + "px")
-                            .style("top", (window.pageYOffset + matrix.f - (y.bandwidth() / 2) - 3) + "px")
-                            .style("display", "inline-block")
+                            .style('left', (window.pageXOffset + matrix.e + x(d.count) + 45) + 'px')
+                            .style('top', (window.pageYOffset + matrix.f - (y.bandwidth() / 2) - 3) + 'px')
+                            .style('display', 'inline-block')
                             .html(d.name);
                     })
-                    .on("mouseout", function(){ tooltip.style("opacity", "0");})
+                    .on('mouseout', function(){ tooltip.style('opacity', '0');})
                     .each(trim);
 
-                svg.append("g")
-                    .selectAll("valueLabels")
+                svg.append('g')
+                    .selectAll('valueLabels')
                     .data(data).enter()
-                    .append("text")
-                    .attr("x", function(d){return x(d.count) + margin.left;})
-                    .attr("y", function(d){return (y(d.name) + (y.bandwidth() / 2)) + margin.top;})
-                    .attr("dx", 5)
-                    .attr("dy", ".35em")
+                    .append('text')
+                    .attr('x', function(d){return x(d.count) + margin.left;})
+                    .attr('y', function(d){return (y(d.name) + (y.bandwidth() / 2)) + margin.top;})
+                    .attr('dx', 5)
+                    .attr('dy', '.35em')
                     .text(function(d){return d.count;})
-                    .attr("fill-opacity", 0)
+                    .attr('fill-opacity', 0)
                     .transition()
                     .duration(1500)
-                    .attr("fill-opacity", 1);
+                    .attr('fill-opacity', 1);
 
                 /**
                  * Performs quality checks on workset items.
@@ -210,7 +210,7 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChart', ['d3', '$c
                  */
                 function getPixelWidth(text){
                     var canvas = document.createElement('canvas');
-                    var ctx = canvas.getContext("2d");
+                    var ctx = canvas.getContext('2d');
                     return ctx.measureText(text).width;
                 }
             };
