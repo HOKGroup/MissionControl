@@ -1,3 +1,6 @@
+/**
+ * Created by konrad.sobon on 2018-08-23.
+ */
 angular.module('MissionControlApp').controller('ViewStatsController', ViewStatsController);
 
 function ViewStatsController($routeParams, HealthReportFactory, ngToast, $scope){
@@ -8,6 +11,7 @@ function ViewStatsController($routeParams, HealthReportFactory, ngToast, $scope)
         vm.ViewData = this.processed;
         vm.showTimeSettings = false;
         vm.loading = false;
+
         var v = vm.ViewData.viewStats.viewStats[vm.ViewData.viewStats.viewStats.length - 1];
         vm.workingViews = v.totalViews - v.viewsOnSheet;
         vm.workingSchedules = v.totalSchedules - v.schedulesOnSheet;
@@ -21,40 +25,6 @@ function ViewStatsController($routeParams, HealthReportFactory, ngToast, $scope)
             : vm.ViewData.bullets[1].bulletColor === 'badge progress-bar-warning'
                 ? '#f0ad4e'
                 : '#5cb85c';
-
-        /**
-         *
-         * @param item
-         */
-        vm.moveView = function(item) {
-            vm.workingViews = item.value;
-            $scope.$apply();
-        };
-
-        /**
-         *
-         */
-        vm.outView = function () {
-            vm.workingViews = v.totalViews - v.viewsOnSheet;
-            $scope.$apply();
-        };
-
-        /**
-         *
-         */
-        vm.outSchedule = function () {
-            vm.workingSchedules = v.totalSchedules - v.schedulesOnSheet;
-            $scope.$apply();
-        };
-
-        /**
-         *
-         * @param item
-         */
-        vm.moveSchedule = function(item) {
-            vm.workingSchedules = item.value;
-            $scope.$apply();
-        };
 
         /**
          * Callback method for Date Time Range selection.
@@ -89,6 +59,44 @@ function ViewStatsController($routeParams, HealthReportFactory, ngToast, $scope)
          */
         vm.toggleTimeSettings = function() {
             vm.showTimeSettings = !vm.showTimeSettings;
+        };
+
+        /**
+         * Callback method for view chart when mouse is moved.
+         * Adjusts a label on a div.
+         * @param item
+         */
+        vm.moveView = function(item) {
+            vm.workingViews = item.value;
+            $scope.$apply();
+        };
+
+        /**
+         * Callback method for view chart when mouse leaves the chart.
+         * Resets the label on a div to default value.
+         */
+        vm.outView = function () {
+            vm.workingViews = v.totalViews - v.viewsOnSheet;
+            $scope.$apply();
+        };
+
+        /**
+         * Callback method for schedule chart when mouse is moved.
+         * Adjusts a label on a div.
+         */
+        vm.outSchedule = function () {
+            vm.workingSchedules = v.totalSchedules - v.schedulesOnSheet;
+            $scope.$apply();
+        };
+
+        /**
+         * Callback method for schedule chart when mouse leaves the chart.
+         * Resets the label on a div to default value.
+         * @param item
+         */
+        vm.moveSchedule = function(item) {
+            vm.workingSchedules = item.value;
+            $scope.$apply();
         };
     };
 }
