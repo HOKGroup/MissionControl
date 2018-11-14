@@ -8,8 +8,42 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class=" btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
+                    <div class=" btn-group btn-group-xs pull-right" role="group" aria-hidden="true" style="padding-left: 10px;">
+                        <button type="button"
+                                ng-class="vm.disabledFilter ? 'btn btn-primary' : 'btn btn-default'"
+                                ng-click="vm.setDisabled();">
+                            Disabled
+                        </button>
                     </div>
+                    <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true" style="padding-left: 10px;">
+                        <button class="btn btn-primary dropdown-toggle scrollable-menu-centered"
+                                data-toggle="dropdown"
+                                aria-expanded="false"
+                                aria-haspopup="true">
+                            {{vm.selectedOffice.name}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu scrollable-menu" style="min-width: 50px;">
+                            <li ng-repeat="office in vm.offices">
+                                <a href="" ng-click="vm.setOffice(office)">{{office.name}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
+                        <button class="btn btn-primary dropdown-toggle"
+                                data-toggle="dropdown"
+                                aria-expanded="false"
+                                aria-haspopup="true">
+                            {{vm.selectedRevitVersion}}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu scrollable-menu" style="min-width: 50px;">
+                            <li ng-repeat="item in vm.revitVersions">
+                                <a href="" ng-click="vm.setVersion(item)">{{item}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <p class="pull-right textAlignMiddle"><b>Filters: </b></p>
                     <h4 class="panel-title">File Paths</h4>
                 </div>
                 <div class="panel-collapse">

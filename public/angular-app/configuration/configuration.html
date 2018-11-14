@@ -105,7 +105,10 @@
                                             </button>
                                             <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0;">
                                                 <li ng-repeat="office in vm.offices" style="padding-right: 5px; padding-left: 5px;">
-                                                    <a href="" ng-click="vm.selectedOffice = office" style="padding-left: 0; padding-right: 0;" ng-show="vm.selectedType !== 'BIM 360' || office.name === 'All'">
+                                                    <a href=""
+                                                       ng-click="vm.selectedOffice = office"
+                                                       style="padding-left: 0; padding-right: 0;"
+                                                       ng-show="vm.selectedType !== 'BIM 360' || office.name === 'All'">
                                                         {{office.name}}
                                                     </a>
                                                 </li>
