@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('FilePathsController', FilePathsController);
 
-function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder, ngToast, $location, $scope, $compile){
+function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder, ngToast, $location, $scope, $compile, $uibModal){
     var vm = this;
     var toasts = [];
     vm.files = [];
@@ -77,16 +77,17 @@ function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder
             .withOption('width', '8%'),
         DTColumnBuilder.newColumn('centralPath')
             .withTitle('File Path')
-            .withOption('width', '74%'),
+            .withOption('width', '70%'),
         DTColumnBuilder.newColumn('projectId')
             .withTitle('')
             .withOption('className', 'text-center')
-            .withOption('width', '10%')
+            .withOption('width', '14%')
             .renderWith(function (data, type, full) {
                 var disabled = full.projectId === null;
                 var contents = '';
                 contents += '<div>';
 
+                // (Konrad) Navigate to Configuration button.
                 if (disabled){
                     contents += '<button class="btn btn-default btn-sm pull-right disabled" type="button"><i class="fa fa-external-link-alt"></i></button>';
                 } else {
@@ -94,19 +95,48 @@ function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder
                         'ng-click="vm.go(\'' + '/projects/configurations/' + full.projectId + '\')"><i class="fa fa-external-link-alt"></i></button>';
                 }
 
+                // (Konrad) Add to Configuration button.
+                if(!full.isDisabled && full.projectId === null){
+                    contents += '<button class="btn btn-success btn-sm pull-right" style="margin-right: 10px;" ng-click="vm.addToConfiguration(\'' + full._id + '\')"><i class="fa fa-plus"></i></button>';
+                } else {
+                    contents += '<button class="btn btn-default btn-sm pull-right disabled" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>';
+                }
+
+                // (Konrad) Disable/Enable button.
                 var json = full._id + '|' + full.isDisabled;
                 if(full.isDisabled){
                     contents += '<button class="btn btn-default btn-sm pull-right" style="margin-right: 10px;" tooltip-placement="top-right" ' +
-                        'uib-tooltip="Enable. It will be available for Configurations." ng-click="vm.toggle(\'' + json + '\')"><i class="fa fa-eye"></button>';
+                        'uib-tooltip="Enable. It will be available for Configurations." ng-click="vm.toggle(\'' + json + '\')"><i class="fa fa-eye"></i></button>';
                 } else {
                     contents += '<button class="btn btn-warning btn-sm pull-right" style="margin-right: 10px;" tooltip-placement="top-right" ' +
-                        'uib-tooltip="Disable. It will not be available for Configurations." ng-click="vm.toggle(\'' + json + '\')"><i class="fa fa-eye-slash"></button>';
+                        'uib-tooltip="Disable. It will not be available for Configurations." ng-click="vm.toggle(\'' + json + '\')"><i class="fa fa-eye-slash"></i></button>';
                 }
 
                 contents += '</div>';
                 return contents;
             })
     ];
+
+    /**
+     *
+     * @param id
+     */
+    vm.addToConfiguration = function (id) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'angular-app/file-paths/add-configuration.html',
+            controller: 'AddConfigurationController as vm',
+            size: 'lg',
+            resolve: {
+                id: function () {
+                    return id;
+                }}
+        }).result.then(function(request){
+            //closed
+        }).catch(function(){
+            //if modal dismissed
+        });
+    };
 
     /**
      * Sets the disabled filter and reloads the table.
