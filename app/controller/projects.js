@@ -545,16 +545,11 @@ ProjectService = {
      */
     datatable: function (req, res) {
         // (Konrad) Process filters that can be applied directly to MongoDB search query
+        console.log(req.body);
+        
         var projectId = req.body['projectId'];
         var query = {};
-
-        console.log(req.body);
-
-        if (projectId === ''){
-            query = {};
-        } else {
-            query = { '_id': projectId };
-        }
+        if(projectId !== '') query['_id'] = projectId;
 
         Project.find(query, function (err, response){
             var start = parseInt(req.body['start']);
@@ -591,7 +586,9 @@ ProjectService = {
             var filtered = [];
             if (searched){
                 filtered = response.filter(function (item) {
-                    return item.centralPath.indexOf(req.body['search'].value) !== -1;
+                    return item.number.indexOf(req.body['search'].value) !== -1 ||
+                        item.name.indexOf(req.body['search'].value) !== -1 ||
+                        item.office.indexOf(req.body['search'].value) !== -1;
                 });
             }
 

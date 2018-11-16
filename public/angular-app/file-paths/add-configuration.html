@@ -45,29 +45,50 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title" style="padding-top: 5px;">Select Project</h4>
+                <h4 class="panel-title" style="padding-top: 5px;">
+                    Select Project
+                    <i ng-if="vm.selectedProject !== null">
+                        <i class="fas fa-check fa-sm" style="color: green;"></i>
+                    </i>
+                    <i ng-if="vm.selectedProject === null">
+                        <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+                    </i>
+                </h4>
             </div>
-            <div class="panel-body no-padding">
-                <div class="panel-collapse">
-                    <div class="panel-body">
-                        <table id="datatable"
-                               datatable=""
-                               dt-options="vm.dtOptions"
-                               dt-columns="vm.dtColumns"
-                               dt-instance="vm.dtInstance"
-                               class="table table-hover table-condensed datatable"
-                               style="width:100%;">
-                        </table>
-                    </div>
+            <div class="panel-body no-padding" ng-if="vm.filePath !== null">
+                <div class="panel-body">
+                    <table id="projectsTable"
+                           datatable=""
+                           dt-options="vm.dtOptions"
+                           dt-columns="vm.dtColumns"
+                           dt-instance="vm.dtInstance"
+                           class="table table-hover table-condensed datatable"
+                           style="width:100%;">
+                    </table>
                 </div>
             </div>
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title" style="padding-top: 5px;">Select Configuration</h4>
+                <h4 class="panel-title" style="padding-top: 5px;">
+                    Select Configuration
+                    <i ng-if="!Array.isArray(vm.selectedConfiguration) && vm.selectedConfiguration !== null">
+                        <i class="fas fa-check fa-sm" style="color: green;"></i>
+                    </i>
+                    <i ng-if="Array.isArray(vm.selectedConfiguration) || vm.selectedConfiguration === null">
+                        <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+                    </i>
+                </h4>
             </div>
-            <div class="panel-body">
-
+            <div class="panel-body" ng-if="vm.selectedConfiguration !== null">
+                <table id="configurationsTable"
+                       datatable=""
+                       dt-options="vm.dtOptions1"
+                       dt-columns="vm.dtColumns1"
+                       dt-instance="vm.dtInstance1"
+                       class="table table-hover table-condensed datatable"
+                       style="width:100%;">
+                </table>
             </div>
         </div>
     </div>

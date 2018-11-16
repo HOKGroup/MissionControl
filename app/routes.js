@@ -49,6 +49,7 @@ var users = require('./models/users');
      app.post('/api/v2/configurations/:id/deletefile', config.deleteFile);
      app.post('/api/v2/configurations/getmany', config.getMany);
      app.delete('/api/v2/configurations/:id', config.delete);
+     app.post('/api/v2/configurations/datatable', config.datatable);
 
      var triggerrecords = require('./controller/trigger-records-controller');
      app.get('/api/v2/triggerrecords/centralpath/:uri*', triggerrecords.findByCentralPath);
