@@ -15,6 +15,11 @@ function AddConfigurationController(FilePathsFactory, ProjectFactory, ConfigFact
     getFilePath(id);
     createConfigurationsTable();
 
+    //region Handlers
+
+    /**
+     * Adds selected File Path to Project/Configuration.
+     */
     vm.addToConfiguration = function () {
         var file = { centralPath: vm.filePath.centralPath };
 
@@ -38,25 +43,43 @@ function AddConfigurationController(FilePathsFactory, ProjectFactory, ConfigFact
             });
     };
 
-    //region Handlers
-
     /**
-     * Validates that all inputs needed were satisfied.
-     * @returns {boolean}
-     */
-    vm.validateButton = function () {
-        return vm.selectedProject === null ||
-            (Array.isArray(vm.selectedConfiguration) || vm.selectedConfiguration === null);
-    };
-
-    /**
-     *
+     * Filters Projects table by Project Number.
      * @param number
      */
     vm.searchProject = function (number) {
         vm.projectNumber = number;
         reloadTable('Projects');
         $('input[type="search"]').val(vm.projectNumber);
+    };
+
+    /**
+     * Sets Projects table to exactly one object, and populates Configurations table.
+     * @param id
+     */
+    vm.selectProject = function (id) {
+        vm.selectedProject = id;
+        reloadTable('Projects');
+
+        ProjectFactory.getProjectById(id)
+            .then(function (response) {
+                if(!response || response.status !== 200) return;
+
+                vm.configurations = response.data.configurations;
+                vm.selectedConfiguration = response.data.configurations;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    };
+
+    /**
+     * Sets Configurations table to exactly one object.
+     * @param id
+     */
+    vm.selectConfiguration = function (id) {
+        vm.selectedConfiguration = id;
+        reloadTable('Configurations');
     };
 
     /**
@@ -79,32 +102,12 @@ function AddConfigurationController(FilePathsFactory, ProjectFactory, ConfigFact
     };
 
     /**
-     * Sets Configurations table to exactly one object.
-     * @param id
+     * Validates that all inputs needed were satisfied.
+     * @returns {boolean}
      */
-    vm.selectConfiguration = function (id) {
-        vm.selectedConfiguration = id;
-        reloadTable('Configurations');
-    };
-
-    /**
-     * Sets Projects table to exactly one object, and populates Configurations table.
-     * @param id
-     */
-    vm.selectProject = function (id) {
-        vm.selectedProject = id;
-        reloadTable('Projects');
-
-        ProjectFactory.getProjectById(id)
-            .then(function (response) {
-                if(!response || response.status !== 200) return;
-
-                vm.configurations = response.data.configurations;
-                vm.selectedConfiguration = response.data.configurations;
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+    vm.validateButton = function () {
+        return vm.selectedProject === null ||
+            (Array.isArray(vm.selectedConfiguration) || vm.selectedConfiguration === null);
     };
 
     /**
