@@ -539,17 +539,20 @@ ProjectService = {
      *     start: '0' // index for start of data
      *     length: '15', // number of objects to be drawn on the page, end index == start + length
      *     search: {value: '', regex: 'false'} // search criteria
+     *     projectId: '' //once a Project is selected we will get an Id here to return it
+     *                  otherwise it will be an empty string, and we return all Projects.
+     *     projectNumber: '' //user can choose to search for project by its number.
      * }
      * @param req
      * @param res
      */
     datatable: function (req, res) {
         // (Konrad) Process filters that can be applied directly to MongoDB search query
-        console.log(req.body);
-        
         var projectId = req.body['projectId'];
+        var projectNumber = req.body['projectNumber'];
         var query = {};
         if(projectId !== '') query['_id'] = projectId;
+        if(projectNumber !== '') query['number'] = projectNumber;
 
         Project.find(query, function (err, response){
             var start = parseInt(req.body['start']);
@@ -562,23 +565,14 @@ ProjectService = {
             response.sort(function (a, b) {
                 switch(column){
                     case '0': //version
-                        if(order === 'asc'){
-                            return (a.number).localeCompare(b.number);
-                        } else {
-                            return (b.number).localeCompare(a.number);
-                        }
+                        if(order === 'asc') return (a.number).localeCompare(b.number);
+                        else return (b.number).localeCompare(a.number);
                     case '1': //office
-                        if(order === 'asc'){
-                            return (a.name).localeCompare(b.name);
-                        } else {
-                            return (b.name).localeCompare(a.name);
-                        }
+                        if(order === 'asc') return (a.name).localeCompare(b.name);
+                        else return (b.name).localeCompare(a.name);
                     case '2': //centralPath
-                        if(order === 'asc'){
-                            return (a.office).localeCompare(b.office);
-                        } else {
-                            return (b.office).localeCompare(a.office);
-                        }
+                        if(order === 'asc') return (a.office).localeCompare(b.office);
+                        else return (b.office).localeCompare(a.office);
                 }
             });
 
@@ -596,17 +590,12 @@ ProjectService = {
             // of the array so we must adjust that.
             var end = start + length;
             if (end > response.length) end = response.length;
-            if(searched && filtered.length < end){
-                end = filtered.length;
-            }
+            if(searched && filtered.length < end) end = filtered.length;
 
             // (Konrad) Slice the final collection by start/end.
             var data;
-            if (searched) {
-                data = filtered.slice(start, end);
-            } else {
-                data = response.slice(start, end);
-            }
+            if (searched) data = filtered.slice(start, end);
+            else data = response.slice(start, end);
 
             var result = {
                 status: 201,

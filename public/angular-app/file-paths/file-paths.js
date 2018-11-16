@@ -56,7 +56,7 @@ function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder
         .withOption('serverSide', true)
         .withPaginationType('simple_numbers')
         .withOption('stateSave', true)
-        .withOption('lengthMenu', [[15, 50, 100, -1], [15, 50, 100, 'All']])
+        .withOption('lengthMenu', [[10, 50, 100, -1], [10, 50, 100, 'All']])
         .withOption('rowCallback', function (row, data) {
             var style = ' table-info';
             if(data.isDisabled) style = ' bg-warning';
@@ -104,11 +104,14 @@ function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder
 
                 // (Konrad) Disable/Enable button.
                 var json = full._id + '|' + full.isDisabled;
+                var disabledClass = disabled ? '' : ' disabled';
                 if(full.isDisabled){
-                    contents += '<button class="btn btn-default btn-sm pull-right" style="margin-right: 10px;" tooltip-placement="top-right" ' +
+                    contents += '<button class="btn btn-default btn-sm pull-right' + disabledClass +
+                        '" style="margin-right: 10px;" tooltip-placement="top-right" ' +
                         'uib-tooltip="Enable. It will be available for Configurations." ng-click="vm.toggle(\'' + json + '\')"><i class="fa fa-eye"></i></button>';
                 } else {
-                    contents += '<button class="btn btn-warning btn-sm pull-right" style="margin-right: 10px;" tooltip-placement="top-right" ' +
+                    contents += '<button class="btn btn-warning btn-sm pull-right' + disabledClass +
+                        '" style="margin-right: 10px;" tooltip-placement="top-right" ' +
                         'uib-tooltip="Disable. It will not be available for Configurations." ng-click="vm.toggle(\'' + json + '\')"><i class="fa fa-eye-slash"></i></button>';
                 }
 
@@ -131,8 +134,8 @@ function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder
                 id: function () {
                     return id;
                 }}
-        }).result.then(function(request){
-            //closed
+        }).result.then(function(){
+            reloadTable();
         }).catch(function(){
             //if modal dismissed
         });

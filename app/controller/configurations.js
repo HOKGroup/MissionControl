@@ -251,19 +251,20 @@ ConfigurationService = {
      *     start: '0' // index for start of data
      *     length: '15', // number of objects to be drawn on the page, end index == start + length
      *     search: {value: '', regex: 'false'} // search criteria
+     *     configurationId: '' or [''] // if project was selected we will get an array here and we
+     *                      need to return multiple configurations. Once a single Configuration is
+     *                      selected we will just get a single string with its id.
      * }
      * @param req
      * @param res
      */
     datatable: function (req, res) {
         // (Konrad) Process filters that can be applied directly to MongoDB search query
-        console.log(req.body);
         var configurationId = req.body['configurationId'];
         var query = {};
         if (Array.isArray(configurationId)) query['_id'] = { $in: configurationId };
         else if (configurationId !== '') query['_id'] = configurationId;
-
-        console.log(query);
+        else return;
 
         Configuration.find(query, function (err, response){
             var start = parseInt(req.body['start']);

@@ -3,17 +3,61 @@
  */
 angular.module('MissionControlApp').controller('AddConfigurationController', AddConfigurationController);
 
-function AddConfigurationController(FilePathsFactory, ProjectFactory, $uibModalInstance, DTColumnBuilder, DTOptionsBuilder, $compile, $scope, id) {
+function AddConfigurationController(FilePathsFactory, ProjectFactory, ConfigFactory, $uibModalInstance, DTColumnBuilder,
+                                    DTOptionsBuilder, $compile, $scope, id) {
     var vm = this;
     vm.filePath = null;
     vm.selectedProject = null;
     vm.configurations = [];
     vm.selectedConfiguration = null;
+    vm.projectNumber = '';
 
     getFilePath(id);
     createConfigurationsTable();
 
+    vm.addToConfiguration = function () {
+        var file = { centralPath: vm.filePath.centralPath };
+
+        ConfigFactory.addFile(vm.selectedConfiguration, file)
+            .then(function (response) {
+                if(!response || response.status !== 202) return;
+
+                var data = {
+                    centralPath: vm.filePath.centralPath,
+                    projectId: vm.selectedProject
+                };
+                return FilePathsFactory.addToProject(data);
+            })
+            .then(function (response) {
+                if(!response || response.status !== 201) return;
+
+                $uibModalInstance.close();
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    };
+
     //region Handlers
+
+    /**
+     * Validates that all inputs needed were satisfied.
+     * @returns {boolean}
+     */
+    vm.validateButton = function () {
+        return vm.selectedProject === null ||
+            (Array.isArray(vm.selectedConfiguration) || vm.selectedConfiguration === null);
+    };
+
+    /**
+     *
+     * @param number
+     */
+    vm.searchProject = function (number) {
+        vm.projectNumber = number;
+        reloadTable('Projects');
+        $('input[type="search"]').val(vm.projectNumber);
+    };
 
     /**
      * Resets contents of the Projects table.
@@ -21,6 +65,9 @@ function AddConfigurationController(FilePathsFactory, ProjectFactory, $uibModalI
     vm.deselectProject = function () {
         vm.selectedProject = null;
         reloadTable('Projects');
+
+        vm.selectedConfiguration = null;
+        reloadTable('Configurations');
     };
 
     /**
@@ -99,6 +146,7 @@ function AddConfigurationController(FilePathsFactory, ProjectFactory, $uibModalI
                 type: 'POST',
                 data: function (d) {
                     d.projectId = vm.selectedProject;
+                    d.projectNumber = vm.projectNumber;
                 }
             })
             .withDataProp('data')
@@ -106,6 +154,12 @@ function AddConfigurationController(FilePathsFactory, ProjectFactory, $uibModalI
             .withOption('serverSide', true)
             .withPaginationType('simple_numbers')
             .withOption('lengthMenu', [[5, 10, 50, -1], [5, 10, 50, 'All']])
+            .withOption('drawCallback', function (tfoot, data, start, end, display) {
+                vm.projectNumber = '';
+            })
+            .withOption('initComplete', function() {
+
+            })
             .withOption('createdRow', function(row) {
                 // (Konrad) Recompiling so we can bind Angular directive to the datatable
                 $compile(angular.element(row).contents())($scope);

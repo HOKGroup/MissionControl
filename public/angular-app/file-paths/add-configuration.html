@@ -13,31 +13,38 @@
             <div class="panel-body">
                 <div class="form-group">
                     <!--Number-->
-                    <div class="col-md-4 no-padding">
+                    <div class="col-md-3 no-padding">
                         <div class="form-group">
                             <label for="number" class="form-control-label">Project Number:</label>
-                            <input id="number" type="text" class="form-control" value="vm.filePath.projectNumber" ng-model="vm.filePath.projectNumber" disabled>
+                            <div class="input-group">
+                                <input id="number" type="text" class="form-control input-sm" value="vm.filePath.projectNumber" ng-model="vm.filePath.projectNumber" readonly>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-default" type="button" ng-click="vm.searchProject(vm.filePath.projectNumber)">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <!--Name-->
-                    <div class="col-md-4">
+                    <div class="col-md-8">
                         <div class="form-group">
                             <label for="name" class="form-control-label">Project Name:</label>
-                            <input id="name" type="text" class="form-control" value="vm.filePath.projectName" ng-model="vm.filePath.projectName" disabled>
+                            <input id="name" type="text" class="form-control input-sm" value="vm.filePath.projectName" ng-model="vm.filePath.projectName" disabled>
                         </div>
                     </div>
                     <!--Office-->
-                    <div class="col-md-4 no-padding">
+                    <div class="col-md-1 no-padding">
                         <div class="form-group">
                             <label for="office" class="form-control-label">Office:</label>
-                            <input id="office" type="text" class="form-control" value="vm.filePath.fileLocation" ng-model="vm.filePath.fileLocation" disabled>
+                            <input id="office" type="text" class="form-control input-sm" value="vm.filePath.fileLocation" ng-model="vm.filePath.fileLocation" disabled>
                         </div>
                     </div>
                     <!--Central Path-->
                     <div class="col-md-12 no-padding">
                         <div class="form-group">
                             <label for="centralPath" class="form-control-label">Central Path:</label>
-                            <input id="centralPath" type="text" class="form-control" value="vm.filePath.centralPath" ng-model="vm.filePath.centralPath" disabled>
+                            <input id="centralPath" type="text" class="form-control input-sm" value="vm.filePath.centralPath" ng-model="vm.filePath.centralPath" disabled>
                         </div>
                     </div>
                 </div>
@@ -93,6 +100,13 @@
         </div>
     </div>
     <div class="modal-footer">
+        <button type="button"
+                class="btn btn-primary"
+                ng-click="vm.addToConfiguration()"
+                ng-disabled="vm.validateButton()">
+            <i class="fas fa-plus"></i>
+            Add To Configuration
+        </button>
         <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
     </div>
 </div>
