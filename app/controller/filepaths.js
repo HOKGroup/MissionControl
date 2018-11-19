@@ -308,15 +308,29 @@ FilePathsService = {
         var disabled = req.body['disabled'];
         var query = {};
 
-        if (revitVersion === 'All') query = {};
-        else query = { 'revitVersion': revitVersion };
+        // (Konrad) Always check if disabled.
+        query['isDisabled'] = disabled !== 'false';
 
-        // Office codes are published all lower case. Let's make sure that what we compare them to
-        // is also in lower case.
-        if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'].map(function (i) { return i.toLowerCase(); })};
-        query['isDisabled'] = disabled;
+        // (Konrad) Additional filters.
+        if (revitVersion !== 'All') query['revitVersion'] = revitVersion;
+        if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'].map(function (i) { return i.toLowerCase(); }) };
 
-        FilePaths.find(query, function (err, response){
+        // (Konrad) If we use aggregate here, then we can check for values being null. This matters because not
+        // all users would have the latest version of the plug-in on Revit side, and some values published to
+        // the database could be null.
+        FilePaths.aggregate([
+            { $match: query },
+            { $project: {
+                _id: 1,
+                centralPath: 1,
+                projectId: 1,
+                isDisabled: 1,
+                revitVersion: { $ifNull: ['$revitVersion', ''] },
+                fileLocation: { $ifNull: ['$fileLocation', ''] },
+                projectName: { $ifNull: ['$projectName', ''] },
+                projectNumber: { $ifNull: ['$projectNumber', ''] }
+            }}
+        ]).exec(function (err, response){
             var start = parseInt(req.body['start']);
             var length = parseInt(req.body['length']);
             var searched = req.body['search'].value !== '';
