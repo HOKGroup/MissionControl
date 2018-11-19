@@ -342,6 +342,7 @@ FilePathsService = {
                             return (b.fileLocation).localeCompare(a.fileLocation);
                         }
                     case '2': //centralPath
+                    default:
                         if(order === 'asc'){
                             return (a.centralPath).localeCompare(b.centralPath);
                         } else {
