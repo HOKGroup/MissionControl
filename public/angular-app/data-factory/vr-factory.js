@@ -3,10 +3,13 @@
  */
 angular.module('MissionControlApp').factory('VrFactory', VrFactory);
 
-var username = 'sobon.konrad@gmail.com';
-var password = 'Password_123456';
-var client_id = 'qK34zw1Ktnvy2R6tMfGf73wXtJca';
-var client_secret = 'eAoSUqTSLX_fiZ9r8dxyZ5uUGxMa';
+// (Konrad) Look for HOK Teams Mission Control Wiki page. It has all of these values updated.
+// Previous credentials that were used here were reset so that we don't compromise them when
+// Mission Control was open sourced. 
+var username = '';
+var password = '';
+var client_id = '';
+var client_secret = '';
 
 function VrFactory($http, $base64){
     return {
