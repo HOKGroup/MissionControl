@@ -571,6 +571,7 @@ ProjectService = {
                         if(order === 'asc') return (a.name).localeCompare(b.name);
                         else return (b.name).localeCompare(a.name);
                     case '2': //centralPath
+                    default:
                         if(order === 'asc') return (a.office).localeCompare(b.office);
                         else return (b.office).localeCompare(a.office);
                 }
