@@ -311,8 +311,9 @@ FilePathsService = {
         if (revitVersion === 'All') query = {};
         else query = { 'revitVersion': revitVersion };
 
-        // Office codes are always published in UPPER CASE ie. LON, NY
-        if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'] };
+        // Office codes are published all lower case. Let's make sure that what we compare them to
+        // is also in lower case.
+        if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'].map(function (i) { return i.toLowerCase(); })};
         query['isDisabled'] = disabled;
 
         FilePaths.find(query, function (err, response){
