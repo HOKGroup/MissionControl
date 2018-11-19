@@ -26,7 +26,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'BIM 360'];
     vm.selectedType = 'All';
     vm.searchString = '';
-    vm.pageNum = 0;
+    vm.pageNum = 1;
     vm.numItems = 5;
     vm.paginatedFiles = [];
 
@@ -608,7 +608,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     vm.filesPagination = function(page, numItems) {
         vm.pageNum = page;
         var filteredArray = vm.files.filter(vm.filterFn);
-        var start = page * numItems; 
+        var start = (page - 1) * numItems; 
         var end = start + numItems;
         var currentView = filteredArray.slice(start, end);
         console.log(currentView);
@@ -617,8 +617,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     };
 
     vm.searchFilePaths = function(string) {
-        console.log(string);
-        vm.filesPagination(0, vm.numItems);
+        vm.filesPagination(1, vm.numItems);
     };
 
     vm.fullFilesArrayCount = function() {
@@ -626,22 +625,15 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
         return filteredArray.length;
     };
 
-    // Overriding Bootstrap's data-toggle attribute
-    vm.toggleFilePicker = function(event) {
-        vm.filesPagination(0, vm.numItems);
-        $('#file-picker').parent().toggleClass('open');
+    vm.pages = function() {
+        var pageCount  = Math.ceil(vm.fullFilesArrayCount() / vm.numItems);
+        var pagesArray = [];
+        for (var i = 1; i < pageCount + 1; i++) {
+           pagesArray.push(i);
+        }
+        return pagesArray;
     };
     
-    // (Dan) Not a fan of using a click-handler here. Would like to remove if possible
-    $('body').on('click', function (e) {
-        if (!$('.scrollable-menu-centered').is(e.target) 
-            && $('.scrollable-menu-centered').has(e.target).length === 0 
-            && $('.open').has(e.target).length === 0
-        ) {
-            $('#file-picker').parent().removeClass('open');
-        }
-    });
-
     /**
      * Retrieves Project Configuration.
      * @param projectId

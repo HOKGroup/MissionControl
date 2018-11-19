@@ -107,7 +107,7 @@
                                             <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0;">
                                                 <li ng-repeat="office in vm.offices" style="padding-right: 5px; padding-left: 5px;">
                                                     <a href=""
-                                                       ng-click="vm.selectedOffice = office"
+                                                       ng-click="vm.selectedOffice = office; vm.filesPagination(1, vm.numItems)"
                                                        style="padding-left: 0; padding-right: 0;"
                                                        ng-show="vm.selectedType !== 'BIM 360' || office.name === 'All'">
                                                         {{office.name}}
@@ -131,7 +131,7 @@
                                         </div>
                                         <div class="col-md">
                                             <div class="input-group" style="padding-bottom: 10px; padding-left: 10px;">
-                                                <input id="number" type="text" class="form-control input-sm" value="" ng-model="vm.searchString">
+                                                <input id="number" type="text" class="form-control input-sm" value="" ng-keyup="vm.searchFilePaths(vm.searchString)" ng-model="vm.searchString">
                                                     <span class="input-group-btn">
                                                     <button class="btn btn-sm btn-default" type="button" ng-click="vm.searchFilePaths(vm.searchString)">
                                                         <i class="fas fa-search"></i>
@@ -142,31 +142,36 @@
                                     </div>
 
                                     <!--File selection-->
-                                    <div class="btn-group" style="width: 100%;">
-                                        <button class="btn btn-default dropdown-toggle scrollable-menu-centered" ng-click="vm.toggleFilePicker($event)">
-                                            <span class="caret"></span>
-                                            Files ({{vm.fullFilesArrayCount()}})
-                                        </button>
-                                        <ul id="file-picker" class="dropdown-menu scrollable-menu-centered" style="padding-right: 0;">
-                                            <li ng-repeat="file in vm.paginatedFiles | filter: vm.filterFn as filtered" style="padding-right: 5px; padding-left: 5px;">
-
-                                                <a href="" ng-click="vm.newFile = file.centralPath; vm.toggleFilePicker($event)" style="padding-left: 0; padding-right: 0;">
+                                    <table class="table table-hover" style="width: 100%">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">File Path ({{vm.fullFilesArrayCount()}})</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="file in vm.paginatedFiles | filter: vm.filterFn as filtered">
+                                                <td ng-click="vm.newFile = file.centralPath">
                                                     {{file.name == undefined ? '(No Project Name)' : file.name | uppercase}}
-                                                </a>
-                                                
-                                            </li>
-                                            <li style="width: 50%; display: inline-block;">
-                                                <a href="" ng-click="vm.filesPagination(vm.pageNum -1, vm.numItems)">
-                                                    <i class="fas fa-step-backward"></i>
-                                                </a>
-                                            </li>
-                                            <li style="width: 50%; display: inline-block">
-                                                <a href="" ng-click="vm.filesPagination(vm.pageNum  + 1, vm.numItems)">
-                                                    <i class="fas fa-step-forward"></i>
-                                                </a>
-                                            </li>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination">
+                                          <li>
+                                            <a href="" ng-click="vm.filesPagination(vm.pageNum - 1, vm.numItems)" aria-label="Previous">
+                                              <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                          </li>
+                                          <li ng-repeat="page in vm.pages() | limitTo: 5" ng-class="page == vm.pageNum ? 'active' : ''">
+                                              <a href="" ng-click="vm.filesPagination(page, vm.numItems)">{{page}}</a></li>
+                                          <li>
+                                            <a href="" ng-click="vm.filesPagination(vm.pageNum + 1, vm.numItems)" aria-label="Next">
+                                              <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                          </li>
                                         </ul>
-                                    </div>
+                                      </nav>
                                 </td>
                                 <td class="col-md-2 text-right">
                                     <button type="button" class="btn btn-default" ng-click="vm.addFile()">
