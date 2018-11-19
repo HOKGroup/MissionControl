@@ -308,15 +308,11 @@ FilePathsService = {
         var disabled = req.body['disabled'];
         var query = {};
 
-        if (revitVersion === 'All'){
-            query = {};
-        } else {
-            query = { 'revitVersion': revitVersion };
-        }
-        if (office['name'] !== 'All'){
-            // Office codes are always published in UPPER CASE ie. LON, NY
-            query['fileLocation'] = { $in: office['code'] };
-        }
+        if (revitVersion === 'All') query = {};
+        else query = { 'revitVersion': revitVersion };
+
+        // Office codes are always published in UPPER CASE ie. LON, NY
+        if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'] };
         query['isDisabled'] = disabled;
 
         FilePaths.find(query, function (err, response){
@@ -330,24 +326,15 @@ FilePathsService = {
             response.sort(function (a, b) {
                 switch(column){
                     case '0': //version
-                        if(order === 'asc'){
-                            return (a.revitVersion).localeCompare(b.revitVersion);
-                        } else {
-                            return (b.revitVersion).localeCompare(a.revitVersion);
-                        }
+                        if (order === 'asc') return (a.revitVersion).localeCompare(b.revitVersion);
+                        else return (b.revitVersion).localeCompare(a.revitVersion);
                     case '1': //office
-                        if(order === 'asc'){
-                            return (a.fileLocation).localeCompare(b.fileLocation);
-                        } else {
-                            return (b.fileLocation).localeCompare(a.fileLocation);
-                        }
+                        if (order === 'asc') return (a.fileLocation).localeCompare(b.fileLocation);
+                        else return (b.fileLocation).localeCompare(a.fileLocation);
                     case '2': //centralPath
                     default:
-                        if(order === 'asc'){
-                            return (a.centralPath).localeCompare(b.centralPath);
-                        } else {
-                            return (b.centralPath).localeCompare(a.centralPath);
-                        }
+                        if (order === 'asc') return (a.centralPath).localeCompare(b.centralPath);
+                        else return (b.centralPath).localeCompare(a.centralPath);
                 }
             });
 
@@ -363,17 +350,12 @@ FilePathsService = {
             // of the array so we must adjust that.
             var end = start + length;
             if (end > response.length) end = response.length;
-            if(searched && filtered.length < end){
-                end = filtered.length;
-            }
+            if (searched && filtered.length < end) end = filtered.length;
 
             // (Konrad) Slice the final collection by start/end.
             var data;
-            if (searched) {
-                data = filtered.slice(start, end);
-            } else {
-                data = response.slice(start, end);
-            }
+            if (searched) data = filtered.slice(start, end);
+            else data = response.slice(start, end);
 
             var result = {
                 status: 201,

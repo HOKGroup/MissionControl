@@ -551,8 +551,8 @@ ProjectService = {
         var projectId = req.body['projectId'];
         var projectNumber = req.body['projectNumber'];
         var query = {};
-        if(projectId !== '') query['_id'] = projectId;
-        if(projectNumber !== '') query['number'] = projectNumber;
+        if (projectId !== '') query['_id'] = projectId;
+        if (projectNumber !== '') query['number'] = projectNumber;
 
         Project.find(query, function (err, response){
             var start = parseInt(req.body['start']);
@@ -565,14 +565,14 @@ ProjectService = {
             response.sort(function (a, b) {
                 switch(column){
                     case '0': //version
-                        if(order === 'asc') return (a.number).localeCompare(b.number);
+                        if (order === 'asc') return (a.number).localeCompare(b.number);
                         else return (b.number).localeCompare(a.number);
                     case '1': //office
-                        if(order === 'asc') return (a.name).localeCompare(b.name);
+                        if (order === 'asc') return (a.name).localeCompare(b.name);
                         else return (b.name).localeCompare(a.name);
                     case '2': //centralPath
                     default:
-                        if(order === 'asc') return (a.office).localeCompare(b.office);
+                        if (order === 'asc') return (a.office).localeCompare(b.office);
                         else return (b.office).localeCompare(a.office);
                 }
             });
