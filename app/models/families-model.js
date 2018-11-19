@@ -1,4 +1,4 @@
-var mongoose = require("mongoose");
+var mongoose = require('mongoose');
 
 var familiesSchema = new mongoose.Schema({
     centralPath: String,
@@ -36,6 +36,6 @@ var familiesSchema = new mongoose.Schema({
     }]
 });
 
-familiesSchema.index({"centralPath": "text"});
+familiesSchema.index({'centralPath': 'text'});
 familiesSchema.index({'families.tasks.assignedTo': 'text'});
 mongoose.model('Families', familiesSchema);

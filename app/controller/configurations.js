@@ -17,9 +17,9 @@ ConfigurationService = {
         var isBim360 = req.params.uri.match(/bim 360:/i);
         var rgx;
         if(isRevitServer || isBim360){
-            rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
+            rgx = req.params.uri.replace(/\|/g, '/').toLowerCase();
         } else {
-            rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
+            rgx = req.params.uri.replace(/\|/g, '\\').toLowerCase();
         }
 
         Configuration
@@ -71,7 +71,7 @@ ConfigurationService = {
         var id = req.params.id;
         Configuration
             .update(
-                { "_id": id }, req.body, { upsert: true }, function (err, response){
+                { '_id': id }, req.body, { upsert: true }, function (err, response){
                     var result = {
                         status: 201,
                         message: response
@@ -186,7 +186,7 @@ ConfigurationService = {
                         result.message = err;
                     }
                     res.status(result.status).json(result.message);
-                })
+                });
     },
 
     /**
@@ -212,7 +212,7 @@ ConfigurationService = {
                         result.message = err;
                     }
                     res.status(result.status).json(result.message);
-                })
+                });
     },
 
     /**
@@ -238,7 +238,7 @@ ConfigurationService = {
                         result.message = err;
                     }
                     res.status(result.status).json(result.message);
-                })
+                });
     }
 };
 

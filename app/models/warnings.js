@@ -21,5 +21,5 @@ var warningsSchema = new mongoose.Schema(
     }
 );
 
-warningsSchema.index({"centralPath": "text"});
+warningsSchema.index({'centralPath': 'text'});
 var Warnings = mongoose.model( 'Warnings', warningsSchema );

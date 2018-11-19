@@ -3,7 +3,8 @@
  */
 angular.module('MissionControlApp').controller('ModelStatsController', ModelStatsController);
 
-function ModelStatsController($routeParams, UtilityService, DTColumnBuilder, DTOptionsBuilder, $scope, $uibModal, HealthReportFactory, ngToast){
+function ModelStatsController($routeParams, UtilityService, DTColumnBuilder, DTOptionsBuilder, $scope, $uibModal,
+                              HealthReportFactory, ngToast){
     var vm = this;
     var toasts = [];
     this.$onInit = function () {

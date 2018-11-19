@@ -28,7 +28,7 @@ module.exports = {
                 }
                 res.status(result.status).json(result.message);
             }
-        )
+        );
     },
 
     /**
@@ -50,6 +50,6 @@ module.exports = {
                 result.message = err;
             }
             res.status(result.status).json(result.message);
-        })
+        });
     }
 };

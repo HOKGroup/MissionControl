@@ -133,7 +133,7 @@ ProjectService = {
         var id = req.params.id;
         Project
             .update(
-                { "_id": id },
+                { '_id': id },
                 req.body,
                 { upsert: true }, function (err, response){
                     var result = {
@@ -204,7 +204,7 @@ ProjectService = {
                         result.message = err;
                     }
                     res.status(result.status).json(result.message);
-                })
+                });
     },
 
     /**

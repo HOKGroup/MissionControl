@@ -16,13 +16,13 @@ TriggerRecordService = {
         var isBim360 = req.params.uri.match(/bim 360:/i);
         var rgx;
         if(isRevitServer || isBim360){
-            rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
+            rgx = req.params.uri.replace(/\|/g, '/').toLowerCase();
         } else {
-            rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
+            rgx = req.params.uri.replace(/\|/g, '\\').toLowerCase();
         }
 
         TriggerRecord
-            .find({"centralPath": rgx})
+            .find({'centralPath': rgx})
             .select('_id centralPath')
             .exec(function (err, response) {
                 var result = {
@@ -37,7 +37,7 @@ TriggerRecordService = {
                     result.message = err;
                 }
                 res.status(result.status).json(result.message);
-            })
+            });
     },
 
     /**
@@ -70,7 +70,7 @@ TriggerRecordService = {
      */
     deleteMany: function (req, res) {
         var ids = req.body.map(function (item) {
-            return mongoose.Types.ObjectId(item)
+            return mongoose.Types.ObjectId(item);
         });
         TriggerRecord
             .remove(
@@ -164,8 +164,8 @@ TriggerRecordService = {
      * @param res
      */
     updateFilePath: function (req, res) {
-        var before = req.body.before.replace(/\\/g, "\\").toLowerCase();
-        var after = req.body.after.replace(/\\/g, "\\").toLowerCase();
+        var before = req.body.before.replace(/\\/g, '\\').toLowerCase();
+        var after = req.body.after.replace(/\\/g, '\\').toLowerCase();
         TriggerRecord
             .update(
                 {'centralPath': before},

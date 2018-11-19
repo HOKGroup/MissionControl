@@ -25,8 +25,8 @@ var itemCountSchema = new mongoose.Schema(
     }
 );
 
-openSynchSchema.index({"centralPath": "text"});
-itemCountSchema.index({"centralPath": "text"});
+openSynchSchema.index({'centralPath': 'text'});
+itemCountSchema.index({'centralPath': 'text'});
 var OnOpeneds = mongoose.model( 'OnOpeneds', openSynchSchema );
 var OnSyncheds = mongoose.model( 'OnSyncheds', openSynchSchema );
 var ItemCounts = mongoose.model( 'ItemCounts', itemCountSchema );

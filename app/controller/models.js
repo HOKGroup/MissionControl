@@ -27,7 +27,7 @@ module.exports = {
                 result.message = err;
             }
             res.status(result.status).json(result.message);
-        })
+        });
     },
 
     /**
@@ -49,7 +49,7 @@ module.exports = {
                 result.message = err;
             }
             res.status(result.status).json(result.message);
-        })
+        });
     },
 
     /**
@@ -71,7 +71,7 @@ module.exports = {
                 result.message = err;
             }
             res.status(result.status).json(result.message);
-        })
+        });
     },
 
     /**
@@ -108,8 +108,8 @@ module.exports = {
      * @param res
      */
     updateFilePath: function (req, res) {
-        var before = req.body.before.replace(/\\/g, "\\").toLowerCase();
-        var after = req.body.after.replace(/\\/g, "\\").toLowerCase();
+        var before = req.body.before.replace(/\\/g, '\\').toLowerCase();
+        var after = req.body.after.replace(/\\/g, '\\').toLowerCase();
         OpenTimes.update(
             { 'centralPath': before },
             { $set: { 'centralPath' : after }},

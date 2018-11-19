@@ -19,5 +19,5 @@ var viewsSchema = new mongoose.Schema(
     }
 );
 
-viewsSchema.index({"centralPath": "text"});
+viewsSchema.index({'centralPath': 'text'});
 var Views = mongoose.model( 'Views', viewsSchema );

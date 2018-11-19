@@ -11,8 +11,8 @@ angular.module('MissionControlApp').directive('d3StackedHorizontalBarChart', ['d
         },
         link: function(scope, ele) {
             var svg = d3.select(ele[0])
-                .append("svg")
-                .attr("width", "100%");
+                .append('svg')
+                .attr('width', '100%');
 
             // on window resize, re-render d3 canvas
             window.onresize = function() {
@@ -27,7 +27,7 @@ angular.module('MissionControlApp').directive('d3StackedHorizontalBarChart', ['d
             );
 
             // watch for data changes and re-render
-            scope.$watch("data", function(newVals, oldVals) {
+            scope.$watch('data', function(newVals, oldVals) {
                 if(newVals !== oldVals){
                     return scope.render(newVals);
                 }
@@ -38,7 +38,7 @@ angular.module('MissionControlApp').directive('d3StackedHorizontalBarChart', ['d
                 if(!data || data.length === 0) return;
 
                 // remove all previous items before render
-                svg.selectAll("*").remove();
+                svg.selectAll('*').remove();
 
                 // setup variables
                 var margin = {top: 25, right: 40, bottom: 25, left: scope.marginLeft};
@@ -75,81 +75,81 @@ angular.module('MissionControlApp').directive('d3StackedHorizontalBarChart', ['d
                     .tickSizeInner(-(height-5))
                     .tickPadding(8);
 
-                var tooltip = d3.select("body")
-                    .append("div")
-                    .attr("class", "toolTip");
+                var tooltip = d3.select('body')
+                    .append('div')
+                    .attr('class', 'toolTip');
 
-                g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
                 var colorStorage = {};
-                g.append("g")
-                    .selectAll("g")
+                g.append('g')
+                    .selectAll('g')
                     .data(d3.stack().keys(keys)(data))
-                    .enter().append("g")
-                    .attr("fill", function(d) { return color(d.key); })
-                    .selectAll("rect")
+                    .enter().append('g')
+                    .attr('fill', function(d) { return color(d.key); })
+                    .selectAll('rect')
                     .data(function(d) { return d; })
-                    .enter().append("rect")
-                    .attr("x", function(d) { return x(d[0]); })
-                    .attr("y", function(d) { return y(d.data.name); })
-                    .attr("height", y.bandwidth())
-                    .attr("width", function(d) { return x(d[1]) - x(d[0]); })
-                    .on("mouseover", function(d){
-                        tooltip.style("opacity", "1");
-                        var matrix = this.getScreenCTM().translate(+ this.getAttribute("x"), + this.getAttribute("y"));
+                    .enter().append('rect')
+                    .attr('x', function(d) { return x(d[0]); })
+                    .attr('y', function(d) { return y(d.data.name); })
+                    .attr('height', y.bandwidth())
+                    .attr('width', function(d) { return x(d[1]) - x(d[0]); })
+                    .on('mouseover', function(d){
+                        tooltip.style('opacity', '1');
+                        var matrix = this.getScreenCTM().translate(+ this.getAttribute('x'), + this.getAttribute('y'));
                         tooltip
-                            .style("left", (window.pageXOffset + matrix.e + x(d[1]) - x(d[0])) + "px")
-                            .style("top", (window.pageYOffset + matrix.f + (y.bandwidth() - 26)) + "px")
-                            .style("display", "inline-block")
+                            .style('left', (window.pageXOffset + matrix.e + x(d[1]) - x(d[0])) + 'px')
+                            .style('top', (window.pageYOffset + matrix.f + (y.bandwidth() - 26)) + 'px')
+                            .style('display', 'inline-block')
                             .html(d[1] - d[0]);
                         colorStorage = this.style.fill;
-                        d3.select(this).style("fill", "#d9534f");
+                        d3.select(this).style('fill', '#d9534f');
                     })
-                    .on("mouseout", function(){
-                        tooltip.style("opacity", "0");
+                    .on('mouseout', function(){
+                        tooltip.style('opacity', '0');
                         d3.select(this).style('fill', colorStorage);
                     });
 
-                g.append("g")
-                    .selectAll("valueLabels")
+                g.append('g')
+                    .selectAll('valueLabels')
                     .data(data).enter()
-                    .append("text")
-                    .attr("x", function(d){ return x(d.total); })
-                    .attr("y", function(d){ return (y(d.name) + (y.bandwidth() / 2)); })
-                    .attr("dx", 5)
-                    .attr("dy", ".35em")
+                    .append('text')
+                    .attr('x', function(d){ return x(d.total); })
+                    .attr('y', function(d){ return (y(d.name) + (y.bandwidth() / 2)); })
+                    .attr('dx', 5)
+                    .attr('dy', '.35em')
                     .text(function(d){return d.total;});
 
-                g.append("g")
-                    .attr("class", "x axisHorizontal")
-                    .attr("transform", "translate(0," + (height ? height : 0) + ")")
+                g.append('g')
+                    .attr('class', 'x axisHorizontal')
+                    .attr('transform', 'translate(0,' + (height ? height : 0) + ')')
                     .call(xAxis);
 
-                g.append("g")
-                    .attr("class", "y axis")
+                g.append('g')
+                    .attr('class', 'y axis')
                     .call(d3.axisLeft(y))
-                    .selectAll("text").remove();
+                    .selectAll('text').remove();
 
-                g.append("g")
-                    .selectAll("labels")
+                g.append('g')
+                    .selectAll('labels')
                     .data(data).enter()
-                    .append("text")
-                    .attr("x", 0)
-                    .attr("y", function (d) {return (y(d.name) + (y.bandwidth() / 2)); })
-                    .attr("text-anchor", "end")
-                    .attr("dy", ".35em")
-                    .attr("dx", -10)
+                    .append('text')
+                    .attr('x', 0)
+                    .attr('y', function (d) {return (y(d.name) + (y.bandwidth() / 2)); })
+                    .attr('text-anchor', 'end')
+                    .attr('dy', '.35em')
+                    .attr('dx', -10)
                     .text(function(d){return d.name;})
-                    .on("mouseover", function(d){
-                        tooltip.style("opacity", "1");
-                        var matrix = this.getScreenCTM().translate(+ this.getAttribute("x"), + this.getAttribute("y"));
+                    .on('mouseover', function(d){
+                        tooltip.style('opacity', '1');
+                        var matrix = this.getScreenCTM().translate(+ this.getAttribute('x'), + this.getAttribute('y'));
                         tooltip
-                            .style("left", (window.pageXOffset + matrix.e + x(d.total)) + "px")
-                            .style("top", (window.pageYOffset + matrix.f - 12) + "px")
-                            .style("display", "inline-block")
+                            .style('left', (window.pageXOffset + matrix.e + x(d.total)) + 'px')
+                            .style('top', (window.pageYOffset + matrix.f - 12) + 'px')
+                            .style('display', 'inline-block')
                             .html(d.name);
                     })
-                    .on("mouseout", function(){ tooltip.style("opacity", "0"); })
+                    .on('mouseout', function(){ tooltip.style('opacity', '0'); })
                     .each(trim);
 
                 /**
@@ -185,7 +185,7 @@ angular.module('MissionControlApp').directive('d3StackedHorizontalBarChart', ['d
                  */
                 function getPixelWidth(text){
                     var canvas = document.createElement('canvas');
-                    var ctx = canvas.getContext("2d");
+                    var ctx = canvas.getContext('2d');
                     return ctx.measureText(text).width;
                 }
             };

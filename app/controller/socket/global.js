@@ -13,9 +13,9 @@ var Global = {
             var isBim360 = uri.match(/bim 360:/i);
             var rgx;
             if(isRevitServer || isBim360){
-                rgx = uri.replace(/\|/g, "/").toLowerCase();
+                rgx = uri.replace(/\|/g, '/').toLowerCase();
             } else {
-                rgx = uri.replace(/\|/g, "\\").toLowerCase();
+                rgx = uri.replace(/\|/g, '\\').toLowerCase();
             }
 
             return rgx;

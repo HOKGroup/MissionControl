@@ -5,13 +5,13 @@ var mongoose = require( 'mongoose' );
 
 var schema = new mongoose.Schema(
     {
-        user: {type: String, default: "Unknown"},
-        machine: {type: String, default: ""}
+        user: {type: String, default: 'Unknown'},
+        machine: {type: String, default: ''}
     },
     {
         timestamps: true
     }
 );
 
-schema.index({"user": "text"});
+schema.index({'user': 'text'});
 var Users = mongoose.model( 'Users', schema );

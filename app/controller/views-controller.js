@@ -17,13 +17,13 @@ ViewsService = {
         var isBim360 = req.params.uri.match(/bim 360:/i);
         var rgx;
         if(isRevitServer || isBim360){
-            rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
+            rgx = req.params.uri.replace(/\|/g, '/').toLowerCase();
         } else {
-            rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
+            rgx = req.params.uri.replace(/\|/g, '\\').toLowerCase();
         }
         Views
             .find(
-                {"centralPath": rgx}, function (err, response){
+                {'centralPath': rgx}, function (err, response){
                     var result = {
                         status: 200,
                         message: response
@@ -36,7 +36,7 @@ ViewsService = {
                         result.message = err;
                     }
                     res.status(result.status).json(result.message);
-                })
+                });
     },
 
     /**
@@ -94,8 +94,8 @@ ViewsService = {
      * @param res
      */
     updateFilePath: function (req, res) {
-        var before = req.body.before.replace(/\\/g, "\\").toLowerCase();
-        var after = req.body.after.replace(/\\/g, "\\").toLowerCase();
+        var before = req.body.before.replace(/\\/g, '\\').toLowerCase();
+        var after = req.body.after.replace(/\\/g, '\\').toLowerCase();
         Views
             .update(
                 { 'centralPath': before },

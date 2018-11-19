@@ -13,5 +13,5 @@ var triggerRecordSchema = new mongoose.Schema(
     }
 );
 
-triggerRecordSchema.index({"centralPath": "text"});
+triggerRecordSchema.index({'centralPath': 'text'});
 module.exports = mongoose.model( 'TriggerRecord', triggerRecordSchema );
