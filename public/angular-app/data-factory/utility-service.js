@@ -9,10 +9,10 @@ function UtilityService(){
         color: function(){
             return {
                 red: 'badge progress-bar-danger',
-                orange: "badge progress-bar-warning",
-                green: "badge progress-bar-success",
-                grey: "badge"
-            }
+                orange: 'badge progress-bar-warning',
+                green: 'badge progress-bar-success',
+                grey: 'badge'
+            };
         },
 
         /**
@@ -30,7 +30,7 @@ function UtilityService(){
          * @returns {*}
          */
         formatDuration: function (ms) {
-            if (ms <= 0) return "0s";
+            if (ms <= 0) return '0s';
 
             var seconds = ms / 1000;
             var hours = parseInt(seconds / 3600).toFixed(0); // 3,600 seconds in 1 hour
@@ -38,10 +38,10 @@ function UtilityService(){
             var minutes = parseInt(seconds / 60).toFixed(0); // 60 seconds in 1 minute
             seconds = (seconds % 60).toFixed(0);
 
-            var output = "";
-            if (hours !== "0") output = hours + "h:";
-            if (minutes !== "0") output = output + minutes + "m:";
-            if (seconds !== "0") output = output + seconds + "s";
+            var output = '';
+            if (hours !== '0') output = hours + 'h:';
+            if (minutes !== '0') output = output + minutes + 'm:';
+            if (seconds !== '0') output = output + seconds + 's';
 
             return output;
         },
@@ -109,11 +109,11 @@ function UtilityService(){
 
         componentToHex: function (c) {
             var hex = c.toString(16);
-            return hex.length === 1 ? "0" + hex : hex;
+            return hex.length === 1 ? '0' + hex : hex;
         },
 
         rgbToHex : function (r, g, b) {
-            return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+            return '#' + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
         },
 
         isEmptyObject : function (obj) {
@@ -135,9 +135,9 @@ function UtilityService(){
             var isBim360 = centralPath.match(/bim 360:/i);
             var rgx;
             if(isRevitServer || isBim360){
-                rgx = centralPath.replace(/\//g, "|").toLowerCase();
+                rgx = centralPath.replace(/\//g, '|').toLowerCase();
             } else {
-                rgx = centralPath.replace(/\\/g, "|").toLowerCase();
+                rgx = centralPath.replace(/\\/g, '|').toLowerCase();
             }
             return rgx;
         },
@@ -153,6 +153,49 @@ function UtilityService(){
             var hours = date.getHours();
             newDate.setHours(hours - offset);
             return newDate;
+        },
+
+        /**
+         * Retrieves a list of all offices and their codes.
+         * @returns {[*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*]}
+         */
+        getOffices: function () {
+            return [
+                {name: 'All', code: 'All'},
+                {name: 'Atlanta', code: ['ATL']},
+                {name: 'Beijing', code: ['BEI']},
+                {name: 'St. Louis', code: ['BJC']},
+                {name: 'Calgary', code: ['CAL']},
+                {name: 'Chicago', code: ['CHI']},
+                {name: 'Columbus', code: ['COL']},
+                {name: 'Dallas', code: ['DAL']},
+                {name: 'Doha', code: ['DOH']},
+                {name: 'Dubai', code: ['DUB']},
+                {name: 'Hong Kong', code: ['HK']},
+                {name: 'Houston', code: ['HOU']},
+                {name: 'Kansas City', code: ['KC']},
+                {name: 'Los Angeles', code: ['LA']},
+                {name: 'London', code: ['LON']},
+                {name: 'New York', code: ['NY']},
+                {name: 'Ottawa', code: ['OTT']},
+                {name: 'Philadephia', code: ['PHI']},
+                {name: 'Seattle', code: ['SEA']},
+                {name: 'San Francisco', code: ['SF']},
+                {name: 'Shanghai', code: ['SH']},
+                {name: 'St. Louis', code: ['STL']},
+                {name: 'Toronto', code: ['TOR']},
+                {name: 'Tampa', code: ['TPA']},
+                {name: 'Washington DC', code: ['WDC']},
+                {name: 'Undefined', code: ['EMC', 'SDC', 'OSS', 'LD', 'LDC', '']}
+            ];
+        },
+
+        /**
+         * Retrieves a list of all Revit versions that we support.
+         * @returns {[string,string,string,string,string]}
+         */
+        getRevitVersions: function () {
+            return ['All', '2016', '2017', '2018', '2019'];
         }
-    }
+    };
 }

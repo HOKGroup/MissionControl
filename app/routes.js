@@ -37,6 +37,7 @@ var users = require('./models/users');
      app.put('/api/v2/projects/:id/deleteconfig/:configid', projects.deleteConfiguration);
      app.post('/api/v2/projects/:id/deletetriggerrecords', projects.deleteTriggerRecords);
      app.delete('/api/v2/projects/:id', projects.delete);
+     app.post('/api/v2/projects/datatable', projects.datatable);
 
      var config = require('./controller/configurations');
      app.get('/api/v2/configurations/centralpath/:uri*', config.findByCentralPath);
@@ -48,6 +49,7 @@ var users = require('./models/users');
      app.post('/api/v2/configurations/:id/deletefile', config.deleteFile);
      app.post('/api/v2/configurations/getmany', config.getMany);
      app.delete('/api/v2/configurations/:id', config.delete);
+     app.post('/api/v2/configurations/datatable', config.datatable);
 
      var triggerrecords = require('./controller/trigger-records-controller');
      app.get('/api/v2/triggerrecords/centralpath/:uri*', triggerrecords.findByCentralPath);
@@ -142,6 +144,7 @@ var users = require('./models/users');
 
      var filepaths = require('./controller/filepaths');
      app.get('/api/v2/filepaths', filepaths.getAll);
+     app.get('/api/v2/filepaths/:id', filepaths.findById);
      app.get('/api/v2/filepaths/unassigned', filepaths.getAllUnassigned);
      app.post('/api/v2/filepaths/add', filepaths.add);
      app.post('/api/v2/filepaths/addmany', filepaths.addMany);

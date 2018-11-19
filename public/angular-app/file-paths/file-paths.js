@@ -3,68 +3,72 @@
  */
 angular.module('MissionControlApp').controller('FilePathsController', FilePathsController);
 
-function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder, ngToast, $location, $scope, $compile){
+function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder, DTColumnBuilder, ngToast, $location, $scope, $compile,
+                             $uibModal){
     var vm = this;
     var toasts = [];
     vm.files = [];
+    vm.revitVersions = UtilityService.getRevitVersions();
+    vm.selectedRevitVersion = 'All';
+    vm.offices = UtilityService.getOffices();
+    vm.selectedOffice = { name: 'All', code: 'All' };
+    vm.disabledFilter = false;
 
-    vm.dtInstance = {};
-    vm.dtOptions = DTOptionsBuilder.newOptions()
-        .withOption('ajax', {
-            url: '/api/v2/filepaths/datatable',
-            type: 'POST'
-        })
-        .withDataProp('data')
-        .withOption('processing', true)
-        .withOption('serverSide', true)
-        .withPaginationType('full_numbers')
-        .withOption('lengthMenu', [[15, 50, 100, -1], [15, 50, 100, 'All']])
-        .withOption('rowCallback', function (row, data) {
-            var style = ' table-info';
-            if(data.isDisabled) style = ' bg-warning';
-            if(data.projectId !== null) style = ' bg-success';
+    createTable();
 
-            row.className = row.className + style;
-        })
-        .withOption('createdRow', function(row) {
-            // (Konrad) Recompiling so we can bind Angular directive to the DT
-            $compile(angular.element(row).contents())($scope);
+    //region Handlers
+
+    /**
+     *
+     * @param id
+     */
+    vm.addToConfiguration = function (id) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'angular-app/file-paths/add-configuration.html',
+            controller: 'AddConfigurationController as vm',
+            size: 'lg',
+            resolve: {
+                id: function () {
+                    return id;
+                }}
+        }).result.then(function(){
+            reloadTable();
+        }).catch(function(){
+            //if modal dismissed
         });
+    };
 
-    vm.dtColumns = [
-        DTColumnBuilder.newColumn('centralPath')
-            .withTitle('File Path')
-            .withOption('width', '90%'),
-        DTColumnBuilder.newColumn('projectId')
-            .withTitle('')
-            .withOption('className', 'text-center')
-            .withOption('width', '10%')
-            .renderWith(function (data, type, full) {
-                var disabled = full.projectId === null;
-                var contents = '';
-                contents += '<div>';
+    /**
+     * Sets the disabled filter and reloads the table.
+     */
+    vm.setDisabled = function () {
+        vm.disabledFilter = !vm.disabledFilter;
+        reloadTable();
+    };
 
-                if (disabled){
-                    contents += '<button class="btn btn-default btn-sm pull-right disabled" type="button"><i class="fa fa-external-link-alt"></i></button>';
-                } else {
-                    contents += '<button class="btn btn-default btn-sm pull-right" type="button" tooltip-placement="top-right" uib-tooltip="Navigate to assigned Configuration." ' +
-                        'ng-click="vm.go(\'' + '/projects/configurations/' + full.projectId + '\')"><i class="fa fa-external-link-alt"></i></button>';
-                }
+    /**
+     * Sets the office filter and reloads the table.
+     * @param office
+     */
+    vm.setOffice = function (office) {
+        vm.selectedOffice = office;
+        reloadTable();
+    };
 
-                var json = full._id + '|' + full.isDisabled;
-                if(full.isDisabled){
-                    contents += '<button class="btn btn-default btn-sm pull-right" style="margin-right: 10px;" tooltip-placement="top-right" ' +
-                        'uib-tooltip="Enable. It will be available for Configurations." ng-click="vm.toggle(\'' + json + '\')"><i class="fa fa-eye"></button>';
-                } else {
-                    contents += '<button class="btn btn-warning btn-sm pull-right" style="margin-right: 10px;" tooltip-placement="top-right" ' +
-                        'uib-tooltip="Disable. It will not be available for Configurations." ng-click="vm.toggle(\'' + json + '\')"><i class="fa fa-eye-slash"></button>';
-                }
+    /**
+     * Sets the revit version filter and reloads the table.
+     * @param version
+     */
+    vm.setVersion = function (version) {
+        vm.selectedRevitVersion = version;
+        reloadTable();
+    };
 
-                contents += '</div>';
-                return contents;
-            })
-    ];
-
+    /**
+     * Navigates to Configuration file path.
+     * @param path
+     */
     vm.go = function(path){
         $location.path(path);
     };
@@ -94,15 +98,104 @@ function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder
                 dismissOnTimeout: true,
                 timeout: 7000,
                 newestOnTop: true,
-                content: 'Successfully' + (isDisabled ? ' disabled ' : ' enabled ') + 'File Path!'
+                content: 'Successfully' + (isDisabled ? ' enabled ' : ' disabled ') + 'File Path!'
             }));
 
             reloadTable();
         });
     };
 
+    //endregion
+
+    //region Utilities
+
     /**
-     * Reloads and re-renders data table.
+     * Initiates File Paths table.
+     */
+    function createTable() {
+        vm.dtInstance = {};
+        vm.dtOptions = DTOptionsBuilder.newOptions()
+            .withOption('ajax', {
+                url: '/api/v2/filepaths/datatable',
+                type: 'POST',
+                data: function (d) {
+                    d.revitVersion = vm.selectedRevitVersion;
+                    d.office = vm.selectedOffice;
+                    d.disabled = vm.disabledFilter;
+                }
+            })
+            .withDataProp('data')
+            .withOption('processing', true)
+            .withOption('serverSide', true)
+            .withPaginationType('simple_numbers')
+            .withOption('stateSave', true)
+            .withOption('lengthMenu', [[10, 50, 100, -1], [10, 50, 100, 'All']])
+            .withOption('rowCallback', function (row, data) {
+                var style = ' table-info';
+                if(data.isDisabled) style = ' bg-warning';
+                if(data.projectId !== null) style = ' bg-success';
+                row.className = row.className + style;
+            })
+            .withOption('createdRow', function(row) {
+                // (Konrad) Recompiling so we can bind Angular directive to the DT
+                $compile(angular.element(row).contents())($scope);
+            });
+
+        vm.dtColumns = [
+            DTColumnBuilder.newColumn('revitVersion')
+                .withTitle('Version')
+                .withOption('width', '8%'),
+            DTColumnBuilder.newColumn('fileLocation')
+                .withTitle('Office')
+                .withOption('width', '8%'),
+            DTColumnBuilder.newColumn('centralPath')
+                .withTitle('File Path')
+                .withOption('width', '70%'),
+            DTColumnBuilder.newColumn('projectId')
+                .withTitle('')
+                .withOption('className', 'text-center')
+                .withOption('width', '14%')
+                .renderWith(function (data, type, full) {
+                    var disabled = full.projectId === null;
+                    var contents = '';
+                    contents += '<div>';
+
+                    // (Konrad) Navigate to Configuration button.
+                    if (disabled){
+                        contents += '<button class="btn btn-default btn-sm pull-right disabled" type="button"><i class="fa fa-external-link-alt"></i></button>';
+                    } else {
+                        contents += '<button class="btn btn-default btn-sm pull-right" type="button" tooltip-placement="top-right" uib-tooltip="Navigate to assigned Configuration." ' +
+                            'ng-click="vm.go(\'' + '/projects/configurations/' + full.projectId + '\')"><i class="fa fa-external-link-alt"></i></button>';
+                    }
+
+                    // (Konrad) Add to Configuration button.
+                    if(!full.isDisabled && full.projectId === null){
+                        contents += '<button class="btn btn-success btn-sm pull-right" style="margin-right: 10px;" ng-click="vm.addToConfiguration(\'' + full._id + '\')"><i class="fa fa-plus"></i></button>';
+                    } else {
+                        contents += '<button class="btn btn-default btn-sm pull-right disabled" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>';
+                    }
+
+                    // (Konrad) Disable/Enable button.
+                    var json = full._id + '|' + full.isDisabled;
+                    var disabledClass = disabled ? '' : ' disabled';
+                    if(full.isDisabled){
+                        contents += '<button class="btn btn-default btn-sm pull-right' + disabledClass +
+                            '" style="margin-right: 10px;" tooltip-placement="top-right" ' +
+                            'uib-tooltip="Enable. It will be available for Configurations." ng-click="vm.toggle(\'' + json + '\')"><i class="fa fa-eye"></i></button>';
+                    } else {
+                        contents += '<button class="btn btn-warning btn-sm pull-right' + disabledClass +
+                            '" style="margin-right: 10px;" tooltip-placement="top-right" ' +
+                            'uib-tooltip="Disable. It will not be available for Configurations." ng-click="vm.toggle(\'' + json + '\')"><i class="fa fa-eye-slash"></i></button>';
+                    }
+
+                    contents += '</div>';
+                    return contents;
+                })
+        ];
+    }
+
+    /**
+     * Reloads the table.
      */
     function reloadTable() {
         if(vm.dtInstance){
@@ -110,4 +203,6 @@ function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder
             vm.dtInstance.rerender();
         }
     }
+
+    //endregion
 }

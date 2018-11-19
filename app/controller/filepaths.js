@@ -11,9 +11,17 @@ FilePathsService = {
      * @param res
      */
     add: function(req, res){
+        // (Konrad) We are skipping 'projectId' and 'isDisabled' to avoid overriding them
+        // every time a file is opened. These are set from the UI in the web.
         FilePaths.updateOne(
             { 'centralPath': req.body.centralPath },
-            { $set: { 'centralPath': req.body.centralPath }},
+            { $set: {
+                'centralPath': req.body.centralPath,
+                'revitVersion': req.body.revitVersion,
+                'projectNumber': req.body.projectNumber,
+                'projectName': req.body.projectName,
+                'fileLocation': req.body.fileLocation
+            }},
             { upsert: true }, function (err, response){
                 var result = {
                     status: 201,
@@ -229,6 +237,29 @@ FilePathsService = {
     },
 
     /**
+     *
+     * @param req
+     * @param res
+     */
+    findById: function(req, res){
+        var id = req.params.id;
+        FilePaths.findById(id).exec(function (err, response){
+            var result = {
+                status: 200,
+                message: response
+            };
+            if (err){
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
+            }
+            res.status(result.status).json(result.message);
+        });
+    },
+
+    /**
      * Removes given file path object from DB.
      * @param req
      * @param res
@@ -264,23 +295,46 @@ FilePathsService = {
      *     start: '0' // index for start of data
      *     length: '15', // number of objects to be drawn on the page, end index == start + length
      *     search: {value: '', regex: 'false'} // search criteria
+     *     revitVersion: 'All' // string value for version of Revit that this file path was created with
+     *     office: {name: 'All', code: ['ATL, NY']} // json object with name and array of codes to match in a query
      * }
      * @param req
      * @param res
      */
     datatable: function (req, res) {
-        FilePaths.find({}, function (err, response){
+        // (Konrad) Process filters that can be applied directly to MongoDB search query
+        var revitVersion = req.body['revitVersion'];
+        var office = req.body['office'];
+        var disabled = req.body['disabled'];
+        var query = {};
+
+        if (revitVersion === 'All') query = {};
+        else query = { 'revitVersion': revitVersion };
+
+        // Office codes are always published in UPPER CASE ie. LON, NY
+        if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'] };
+        query['isDisabled'] = disabled;
+
+        FilePaths.find(query, function (err, response){
             var start = parseInt(req.body['start']);
             var length = parseInt(req.body['length']);
             var searched = req.body['search'].value !== '';
             var order = req.body['order'][0].dir;
+            var column = req.body['order'][0].column;
 
             // (Konrad) By default table is sorted in asc order by centralPath property.
             response.sort(function (a, b) {
-                if(order === 'asc'){
-                    return (a.centralPath).localeCompare(b.centralPath);
-                } else {
-                    return (b.centralPath).localeCompare(a.centralPath);
+                switch(column){
+                    case '0': //version
+                        if (order === 'asc') return (a.revitVersion).localeCompare(b.revitVersion);
+                        else return (b.revitVersion).localeCompare(a.revitVersion);
+                    case '1': //office
+                        if (order === 'asc') return (a.fileLocation).localeCompare(b.fileLocation);
+                        else return (b.fileLocation).localeCompare(a.fileLocation);
+                    case '2': //centralPath
+                    default:
+                        if (order === 'asc') return (a.centralPath).localeCompare(b.centralPath);
+                        else return (b.centralPath).localeCompare(a.centralPath);
                 }
             });
 
@@ -296,17 +350,12 @@ FilePathsService = {
             // of the array so we must adjust that.
             var end = start + length;
             if (end > response.length) end = response.length;
-            if(searched && filtered.length < end){
-                end = filtered.length;
-            }
+            if (searched && filtered.length < end) end = filtered.length;
 
             // (Konrad) Slice the final collection by start/end.
             var data;
-            if (searched) {
-                data = filtered.slice(start, end);
-            } else {
-                data = response.slice(start, end);
-            }
+            if (searched) data = filtered.slice(start, end);
+            else data = response.slice(start, end);
 
             var result = {
                 status: 201,

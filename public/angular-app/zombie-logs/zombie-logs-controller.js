@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('ZombieLogsController', ZombieLogsController);
 
-function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder, DTColumnBuilder, ngToast){
+function ZombieLogsController(ZombieLogsFactory, UsersFactory, UtilityService, DTOptionsBuilder, DTColumnBuilder, ngToast){
     var vm = this;
     var toasts = [];
 
@@ -13,35 +13,8 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder,
     vm.donutData = []; // data filtered for the donut chart
     vm.selectedMachines = []; // data filtered for second table
     vm.latestVersion = '0.0.0.0'; // latest version of the plugin (used to color chart)
+    vm.officeFilters = UtilityService.getOffices();
     vm.selectedOffice = { name: 'All', code: 'All' };
-    vm.officeFilters = [
-        { name: 'All', code: 'All' },
-        { name: 'Atlanta', code: ['ATL'] },
-        { name: 'Beijing', code: ['BEI'] },
-        { name: 'St. Louis', code: ['BJC'] },
-        { name: 'Calgary', code: ['CAL'] },
-        { name: 'Chicago', code: ['CHI'] },
-        { name: 'Columbus', code: ['COL'] },
-        { name: 'Dallas', code: ['DAL'] },
-        { name: 'Doha', code: ['DOH'] },
-        { name: 'Dubai', code: ['DUB'] },
-        { name: 'Hong Kong', code: ['HK'] },
-        { name: 'Houston', code: ['HOU'] },
-        { name: 'Kansas City', code: ['KC'] },
-        { name: 'Los Angeles', code: ['LA'] },
-        { name: 'London', code: ['LON'] },
-        { name: 'New York', code: ['NY'] },
-        { name: 'Ottawa', code: ['OTT'] },
-        { name: 'Philadephia', code: ['PHI'] },
-        { name: 'Seattle', code: ['SEA'] },
-        { name: 'San Francisco', code: ['SF'] },
-        { name: 'Shanghai', code: ['SH'] },
-        { name: 'St. Louis', code: ['STL'] },
-        { name: 'Toronto', code: ['TOR'] },
-        { name: 'Tampa', code: ['TPA'] },
-        { name: 'Washington DC', code: ['WDC'] },
-        { name: 'Undefined', code: ['EMC', 'SDC', 'OSS', 'LD', 'LDC', ''] }
-    ];
     vm.MainChartColor = 'steelblue';
     vm.dtFrom = new Date();
     vm.dtTo = new Date();

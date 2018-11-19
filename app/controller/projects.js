@@ -527,6 +527,95 @@ ProjectService = {
                 }
                 res.status(result.status).json(result.message);
             });
+    },
+
+    /**
+     * DataTables allow for server side processing. This method processes
+     * File Paths table requests. Request come in following format:
+     * {
+     *     draw: '1', // used for page redraws. indicates which page to set the table to.
+     *     columns: [], // info about columns specified in the table
+     *     order: [], // column specific ordering
+     *     start: '0' // index for start of data
+     *     length: '15', // number of objects to be drawn on the page, end index == start + length
+     *     search: {value: '', regex: 'false'} // search criteria
+     *     projectId: '' //once a Project is selected we will get an Id here to return it
+     *                  otherwise it will be an empty string, and we return all Projects.
+     *     projectNumber: '' //user can choose to search for project by its number.
+     * }
+     * @param req
+     * @param res
+     */
+    datatable: function (req, res) {
+        // (Konrad) Process filters that can be applied directly to MongoDB search query
+        var projectId = req.body['projectId'];
+        var projectNumber = req.body['projectNumber'];
+        var query = {};
+        if (projectId !== '') query['_id'] = projectId;
+        if (projectNumber !== '') query['number'] = projectNumber;
+
+        Project.find(query, function (err, response){
+            var start = parseInt(req.body['start']);
+            var length = parseInt(req.body['length']);
+            var searched = req.body['search'].value !== '';
+            var order = req.body['order'][0].dir;
+            var column = req.body['order'][0].column;
+
+            // (Konrad) By default table is sorted in asc order by centralPath property.
+            response.sort(function (a, b) {
+                switch(column){
+                    case '0': //version
+                        if (order === 'asc') return (a.number).localeCompare(b.number);
+                        else return (b.number).localeCompare(a.number);
+                    case '1': //office
+                        if (order === 'asc') return (a.name).localeCompare(b.name);
+                        else return (b.name).localeCompare(a.name);
+                    case '2': //centralPath
+                    default:
+                        if (order === 'asc') return (a.office).localeCompare(b.office);
+                        else return (b.office).localeCompare(a.office);
+                }
+            });
+
+            // (Konrad) Filter the results collection by search value if one was set.
+            var filtered = [];
+            if (searched){
+                filtered = response.filter(function (item) {
+                    return item.number.indexOf(req.body['search'].value) !== -1 ||
+                        item.name.indexOf(req.body['search'].value) !== -1 ||
+                        item.office.indexOf(req.body['search'].value) !== -1;
+                });
+            }
+
+            // (Konrad) Update 'end'. It might be that start + length is more than total length
+            // of the array so we must adjust that.
+            var end = start + length;
+            if (end > response.length) end = response.length;
+            if(searched && filtered.length < end) end = filtered.length;
+
+            // (Konrad) Slice the final collection by start/end.
+            var data;
+            if (searched) data = filtered.slice(start, end);
+            else data = response.slice(start, end);
+
+            var result = {
+                status: 201,
+                message: {
+                    draw: req.body['draw'],
+                    recordsTotal: response.length,
+                    recordsFiltered: filtered.length > 0 ? filtered.length : response.length,
+                    data: data
+                }
+            };
+            if (err){
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
+            }
+            res.status(result.status).json(result.message);
+        });
     }
 };
 

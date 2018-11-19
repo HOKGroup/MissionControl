@@ -8,7 +8,7 @@ function AddSheetController($uibModalInstance, UtilityService, ModelsFactory, mo
 
     // (Konrad) We can exclude 'All' from the model list.
     vm.models = models.filter(function(item){
-        return item.name !== 'All'
+        return item.name !== 'All';
     });
     vm.selectedModel = vm.models[0];
     vm.userNames = null;
@@ -38,7 +38,7 @@ function AddSheetController($uibModalInstance, UtilityService, ModelsFactory, mo
             })
             .catch(function (error) {
                 console.log(error);
-            })
+            });
     }
 
     vm.template = {
@@ -141,7 +141,7 @@ function AddSheetController($uibModalInstance, UtilityService, ModelsFactory, mo
                     templateUrl: 'prefixSuffix.html',
                     section: section
                 }
-            )
+            );
         } else if (type === 'Number Series'){
             array.push(
                 {
@@ -152,7 +152,7 @@ function AddSheetController($uibModalInstance, UtilityService, ModelsFactory, mo
                     templateUrl: 'numberSeries.html',
                     section: section
                 }
-            )
+            );
         } else if (type === 'Letter Series'){
             array.push(
                 {
@@ -163,7 +163,7 @@ function AddSheetController($uibModalInstance, UtilityService, ModelsFactory, mo
                     templateUrl: 'letterSeries.html',
                     section: section
                 }
-            )
+            );
         }
     };
 
@@ -258,7 +258,7 @@ function AddSheetController($uibModalInstance, UtilityService, ModelsFactory, mo
                         completedBy: ''
                     }]
                 }
-            )
+            );
         }
 
         $uibModalInstance.close({collectionId: vm.selectedModel.collectionId, sheets: newSheets});
