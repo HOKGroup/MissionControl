@@ -18,36 +18,9 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
     vm.HasFiles = false;
     vm.status = ' ';
     vm.files = [];
-    vm.offices = [
-        {name: 'All', code: 'All'},
-        {name: 'Atlanta', code: ['ATL']},
-        {name: 'Beijing', code: ['BEI']},
-        {name: 'St. Louis', code: ['BJC']},
-        {name: 'Calgary', code: ['CAL']},
-        {name: 'Chicago', code: ['CHI']},
-        {name: 'Columbus', code: ['COL']},
-        {name: 'Dallas', code: ['DAL']},
-        {name: 'Doha', code: ['DOH']},
-        {name: 'Dubai', code: ['DUB']},
-        {name: 'Hong Kong', code: ['HK']},
-        {name: 'Houston', code: ['HOU']},
-        {name: 'Kansas City', code: ['KC']},
-        {name: 'Los Angeles', code: ['LA']},
-        {name: 'London', code: ['LON']},
-        {name: 'New York', code: ['NY']},
-        {name: 'Ottawa', code: ['OTT']},
-        {name: 'Philadephia', code: ['PHI']},
-        {name: 'Seattle', code: ['SEA']},
-        {name: 'San Francisco', code: ['SF']},
-        {name: 'Shanghai', code: ['SH']},
-        {name: 'St. Louis', code: ['STL']},
-        {name: 'Toronto', code: ['TOR']},
-        {name: 'Tampa', code: ['TPA']},
-        {name: 'Washington DC', code: ['WDC']},
-        {name: 'Undefined', code: ['EMC', 'SDC', 'OSS', 'LD', 'LDC', '']}
-    ];
-    vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'BIM 360'];
+    vm.offices = UtilityService.getOffices();
     vm.selectedOffice = { name: 'All', code: 'All' };
+    vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'BIM 360'];
     vm.selectedType = 'All';
 
     getSelectedProject(vm.projectId);

@@ -3,41 +3,14 @@
  */
 angular.module('MissionControlApp').controller('FilePathsController', FilePathsController);
 
-function FilePathsController(FilePathsFactory, DTOptionsBuilder, DTColumnBuilder, ngToast, $location, $scope, $compile,
+function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder, DTColumnBuilder, ngToast, $location, $scope, $compile,
                              $uibModal){
     var vm = this;
     var toasts = [];
     vm.files = [];
-    vm.revitVersions = ['All', '2016', '2017', '2018', '2019'];
+    vm.revitVersions = UtilityService.getRevitVersions();
     vm.selectedRevitVersion = 'All';
-    vm.offices = [
-        {name: 'All', code: 'All'},
-        {name: 'Atlanta', code: ['ATL']},
-        {name: 'Beijing', code: ['BEI']},
-        {name: 'St. Louis', code: ['BJC']},
-        {name: 'Calgary', code: ['CAL']},
-        {name: 'Chicago', code: ['CHI']},
-        {name: 'Columbus', code: ['COL']},
-        {name: 'Dallas', code: ['DAL']},
-        {name: 'Doha', code: ['DOH']},
-        {name: 'Dubai', code: ['DUB']},
-        {name: 'Hong Kong', code: ['HK']},
-        {name: 'Houston', code: ['HOU']},
-        {name: 'Kansas City', code: ['KC']},
-        {name: 'Los Angeles', code: ['LA']},
-        {name: 'London', code: ['LON']},
-        {name: 'New York', code: ['NY']},
-        {name: 'Ottawa', code: ['OTT']},
-        {name: 'Philadephia', code: ['PHI']},
-        {name: 'Seattle', code: ['SEA']},
-        {name: 'San Francisco', code: ['SF']},
-        {name: 'Shanghai', code: ['SH']},
-        {name: 'St. Louis', code: ['STL']},
-        {name: 'Toronto', code: ['TOR']},
-        {name: 'Tampa', code: ['TPA']},
-        {name: 'Washington DC', code: ['WDC']},
-        {name: 'Undefined', code: ['EMC', 'SDC', 'OSS', 'LD', 'LDC', '']}
-    ];
+    vm.offices = UtilityService.getOffices();
     vm.selectedOffice = { name: 'All', code: 'All' };
     vm.disabledFilter = false;
 
