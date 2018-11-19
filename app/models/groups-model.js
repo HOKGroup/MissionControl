@@ -22,5 +22,5 @@ var groupsSchema = new mongoose.Schema(
     }
 );
 
-groupsSchema.index({"centralPath": "text"});
+groupsSchema.index({'centralPath': 'text'});
 var Groups = mongoose.model( 'Groups', groupsSchema );

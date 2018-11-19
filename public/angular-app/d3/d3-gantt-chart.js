@@ -6,8 +6,8 @@ angular.module('MissionControlApp').directive('d3Gantt', ['d3', function(d3) {
         },
         link: function(scope, ele) {
             var svg = d3.select(ele[0])
-                .append("svg")
-                .attr("width", "100%");
+                .append('svg')
+                .attr('width', '100%');
 
             // on window resize, re-render d3 canvas
             window.onresize = function() {
@@ -30,7 +30,7 @@ angular.module('MissionControlApp').directive('d3Gantt', ['d3', function(d3) {
                 if(!data) return;
 
                 // remove all previous items before render
-                svg.selectAll("*").remove();
+                svg.selectAll('*').remove();
 
                 // setup variables
                 var margin = {top: 10, right: 10, bottom: 100, left: 100},
@@ -52,7 +52,7 @@ angular.module('MissionControlApp').directive('d3Gantt', ['d3', function(d3) {
                 svg.attr('height', height + margin.top + margin.bottom);
 
                 var parseDate = d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ');
-                var dateFormat = d3.timeFormat("%d %b,%H:%M");
+                var dateFormat = d3.timeFormat('%d %b,%H:%M');
 
                 data.forEach(function(d) {
                     d.start = parseDate(d.from);
@@ -77,117 +77,117 @@ angular.module('MissionControlApp').directive('d3Gantt', ['d3', function(d3) {
 
                 var xAxis = d3.svg.axis()
                     .scale(x)
-                    .orient("bottom")
+                    .orient('bottom')
                     .ticks(6)
                     .tickFormat(dateFormat);
 
                 var xAxis2 = d3.svg.axis()
                     .scale(x2)
-                    .orient("bottom")
+                    .orient('bottom')
                     .ticks(6)
                     .tickFormat(dateFormat);
 
                 var yAxis = d3.svg.axis()
                     .scale(y)
-                    .orient("left");
+                    .orient('left');
 
                 var brush = d3.svg.brush()
                     .x(x2)
-                    .on("brush", doBrush);
+                    .on('brush', doBrush);
 
-                svg.append("defs")
-                    .append("clipPath")
-                    .attr("id", "clip")
-                    .append("rect")
-                    .attr("fill", "red")
-                    .attr("width", width)
-                    .attr("height", height);
+                svg.append('defs')
+                    .append('clipPath')
+                    .attr('id', 'clip')
+                    .append('rect')
+                    .attr('fill', 'red')
+                    .attr('width', width)
+                    .attr('height', height);
 
-                var focus = svg.append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-                var context = svg.append("g")
-                    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+                var focus = svg.append('g')
+                    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+                var context = svg.append('g')
+                    .attr('transform', 'translate(' + margin2.left + ',' + margin2.top + ')');
 
-                var focusRectangleGroups = focus.selectAll("g")
+                var focusRectangleGroups = focus.selectAll('g')
                     .data(data).enter()
-                    .append("g");
+                    .append('g');
 
-                focusRectangleGroups.append("rect")
-                    .attr("class", "bar")
-                    .attr("clip-path", "url(#clip)")
-                    .attr("fill", "steelblue")
-                    .attr("y", function(d) { return y(d.user); })
-                    .attr("height", y.rangeBand())
-                    .attr("x", function(d) { return x(d.start); })
-                    .attr("width", function(d) { return x(d.end) - x(d.start); });
+                focusRectangleGroups.append('rect')
+                    .attr('class', 'bar')
+                    .attr('clip-path', 'url(#clip)')
+                    .attr('fill', 'steelblue')
+                    .attr('y', function(d) { return y(d.user); })
+                    .attr('height', y.rangeBand())
+                    .attr('x', function(d) { return x(d.start); })
+                    .attr('width', function(d) { return x(d.end) - x(d.start); });
 
                 focusRectangleGroups.selectAll(null)
                     .data(function(d) {
-                        return d.synched
+                        return d.synched;
                     })
-                    .enter().append("line")
-                    .attr("class", "synchLine")
-                    .attr("clip-path", "url(#clip)")
-                    .style("stroke", "red")
-                    .attr("x1", function(d) {
+                    .enter().append('line')
+                    .attr('class', 'synchLine')
+                    .attr('clip-path', 'url(#clip)')
+                    .style('stroke', 'red')
+                    .attr('x1', function(d) {
                         return x(parseDate(d));
                     })
-                    .attr("y1", function(d) {
+                    .attr('y1', function(d) {
                         var parentDatum = d3.select(this.parentNode).datum();
                         return y(parentDatum.user) - 5;
                     })
-                    .attr("x2", function(d) {
+                    .attr('x2', function(d) {
                         return x(parseDate(d));
                     })
-                    .attr("y2", function(d) {
+                    .attr('y2', function(d) {
                         var parentDatum = d3.select(this.parentNode).datum();
                         return y(parentDatum.user) + y.rangeBand() + 5;
                     });
 
-                focus.append("g")
-                    .attr("class", "x axis")
-                    .attr("transform", "translate(0," + height + ")")
+                focus.append('g')
+                    .attr('class', 'x axis')
+                    .attr('transform', 'translate(0,' + height + ')')
                     .call(xAxis)
-                    .append("text")
-                    .attr("x", width-margin.right)
-                    .attr("dx", ".71em")
-                    .attr("dy", "-0.2em")
-                    .text("Date");
+                    .append('text')
+                    .attr('x', width-margin.right)
+                    .attr('dx', '.71em')
+                    .attr('dy', '-0.2em')
+                    .text('Date');
 
-                focus.append("g")
-                    .attr("class", "y axis")
+                focus.append('g')
+                    .attr('class', 'y axis')
                     .call(yAxis);
 
-                var contextRectangleGroups = context.selectAll("g")
+                var contextRectangleGroups = context.selectAll('g')
                     .data(data).enter()
-                    .append("g");
+                    .append('g');
 
-                contextRectangleGroups.append("rect")
-                    .attr("class", "bar")
-                    .attr("fill", "steelblue")
-                    .attr("y", function(d) { return y2(d.user); })
-                    .attr("height", y2.rangeBand())
-                    .attr("x", function(d) { return x2(d.start); })
-                    .attr("width", function(d) { return x2(d.end) - x2(d.start); })
-                    .attr("clip-path", "url(#clip)");
+                contextRectangleGroups.append('rect')
+                    .attr('class', 'bar')
+                    .attr('fill', 'steelblue')
+                    .attr('y', function(d) { return y2(d.user); })
+                    .attr('height', y2.rangeBand())
+                    .attr('x', function(d) { return x2(d.start); })
+                    .attr('width', function(d) { return x2(d.end) - x2(d.start); })
+                    .attr('clip-path', 'url(#clip)');
 
-                context.append("g")
-                    .attr("class", "x axis")
-                    .attr("transform", "translate(0," + height2 + ")")
+                context.append('g')
+                    .attr('class', 'x axis')
+                    .attr('transform', 'translate(0,' + height2 + ')')
                     .call(xAxis2);
 
-                context.append("g")
-                    .attr("class", "x brush")
+                context.append('g')
+                    .attr('class', 'x brush')
                     .call(brush)
-                    .selectAll("rect")
-                    .attr("y", -6)
-                    .attr("height", height2 + 7);
+                    .selectAll('rect')
+                    .attr('y', -6)
+                    .attr('height', height2 + 7);
 
                 function doBrush() {
                     x.domain(brush.empty() ? x2.domain() : brush.extent());
-                    focus.selectAll("rect").attr("x", function(d) { return x(d.start); });
-                    focus.selectAll("rect").attr("width", function(d) { return x(d.end) - x(d.start); });
-                    focus.select(".x.axis").call(xAxis);
+                    focus.selectAll('rect').attr('x', function(d) { return x(d.start); });
+                    focus.selectAll('rect').attr('width', function(d) { return x(d.end) - x(d.start); });
+                    focus.select('.x.axis').call(xAxis);
                 }
 
                 // svg.selectAll(".bar")
@@ -281,7 +281,7 @@ angular.module('MissionControlApp').directive('d3Gantt', ['d3', function(d3) {
                 //
                 //     return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
                 // }
-            }
+            };
         }
     };
 }]);

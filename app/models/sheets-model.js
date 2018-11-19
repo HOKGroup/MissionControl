@@ -54,5 +54,5 @@ var sheetsSchema = new mongoose.Schema(
     }
 );
 
-sheetsSchema.index({"centralPath": "text"});
+sheetsSchema.index({'centralPath': 'text'});
 var Sheets = mongoose.model( 'Sheets', sheetsSchema );

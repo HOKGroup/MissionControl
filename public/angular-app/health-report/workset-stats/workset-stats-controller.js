@@ -7,7 +7,7 @@ function WorksetsController($routeParams, UtilityService, HealthReportFactory, n
         vm.projectId = $routeParams.projectId;
         vm.WorksetData = this.processed;
         vm.UserData = [];
-        vm.d3GoalLine = {name: "Goal", value: 50}; // reference line
+        vm.d3GoalLine = {name: 'Goal', value: 50}; // reference line
         vm.showTimeSettings = false;
         vm.loading = false;
 
@@ -75,7 +75,7 @@ function WorksetsController($routeParams, UtilityService, HealthReportFactory, n
          */
         vm.d3OnClick = function(item) {
             var allData;
-            if(item.name === "onOpened") {
+            if(item.name === 'onOpened') {
                 allData = vm.WorksetData.worksetStats.onOpened;
             } else {
                 allData = vm.WorksetData.worksetStats.onSynched;
@@ -88,7 +88,7 @@ function WorksetsController($routeParams, UtilityService, HealthReportFactory, n
                         name: d.user,
                         value: (d.opened * 100) / (d.closed + d.opened),
                         createdOn: d.createdOn
-                    })
+                    });
                 }
             });
 

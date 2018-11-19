@@ -46,7 +46,7 @@ AddinsService = {
                     result.message = err;
                 }
                 res.status(result.status).json(result.message);
-            })
+            });
     },
 
     /**
@@ -69,7 +69,7 @@ AddinsService = {
                     result.message = err;
                 }
                 res.status(result.status).json(result.message);
-            })
+            });
     }
 };
 

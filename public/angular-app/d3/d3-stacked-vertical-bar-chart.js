@@ -1,7 +1,7 @@
 /**
  * Created by konrad.sobon on 2018-09-06.
  */
-angular.module('MissionControlApp').directive('d3StackedVerticalBarChart', ['d3', '$timeout', function(d3, $timeout) {
+angular.module('MissionControlApp').directive('d3StackedVerticalBarChart', ['d3', function(d3) {
     return {
         restrict: 'E',
         scope: {
@@ -14,8 +14,8 @@ angular.module('MissionControlApp').directive('d3StackedVerticalBarChart', ['d3'
             };
 
             var svg = d3.select(ele[0])
-                .append("svg")
-                .attr("width", "100%");
+                .append('svg')
+                .attr('width', '100%');
 
             // on window resize, re-render d3 canvas
             window.onresize = function() {
@@ -29,7 +29,7 @@ angular.module('MissionControlApp').directive('d3StackedVerticalBarChart', ['d3'
             );
 
             // watch for data changes and re-render
-            scope.$watch("data", function(newVals) {
+            scope.$watch('data', function(newVals) {
                 if(!newVals) return;
                 return scope.render(newVals);
             }, true);
@@ -39,7 +39,7 @@ angular.module('MissionControlApp').directive('d3StackedVerticalBarChart', ['d3'
                 if(!data) return;
 
                 // remove all previous items before render
-                svg.selectAll("*").remove();
+                svg.selectAll('*').remove();
 
                 // setup variables
                 var margin = {top: 25, right: 40, bottom: 170, left: 60};
@@ -71,35 +71,35 @@ angular.module('MissionControlApp').directive('d3StackedVerticalBarChart', ['d3'
                     yAxisTicks.push((yDomain[1] - yDomain[0]) / (ticksNum - 1)* i + yDomain[0]);
                 }
 
-                g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-                g.append("g")
-                    .selectAll("g")
+                g.append('g')
+                    .selectAll('g')
                     .data(d3.stack().keys(keys)(data))
-                    .enter().append("g")
-                    .attr("fill", function(d) { return z(d.key); })
-                    .selectAll("rect")
+                    .enter().append('g')
+                    .attr('fill', function(d) { return z(d.key); })
+                    .selectAll('rect')
                     .data(function(d) { return d; })
-                    .enter().append("rect")
-                        .attr("x", function(d) { return x(d.data.name); })
-                        .attr("y", function(d) { return y(d[1]); })
-                        .attr("height", function(d) { return y(d[0]) - y(d[1]); })
-                        .attr("width", x.bandwidth());
+                    .enter().append('rect')
+                        .attr('x', function(d) { return x(d.data.name); })
+                        .attr('y', function(d) { return y(d[1]); })
+                        .attr('height', function(d) { return y(d[0]) - y(d[1]); })
+                        .attr('width', x.bandwidth());
 
-                g.append("g")
-                    .attr("class", "x axis")
-                    .attr("transform", "translate(0," + height + ")")
+                g.append('g')
+                    .attr('class', 'x axis')
+                    .attr('transform', 'translate(0,' + height + ')')
                     .call(d3.axisBottom(x))
-                    .selectAll("text")
-                    .style("text-anchor", "end")
-                    .attr("dx", "-0.8em")
-                    .attr("dy", "0.15em")
-                    .attr("transform", function(d){
-                        return "rotate(-65)"
+                    .selectAll('text')
+                    .style('text-anchor', 'end')
+                    .attr('dx', '-0.8em')
+                    .attr('dy', '0.15em')
+                    .attr('transform', function(d){
+                        return 'rotate(-65)';
                     });
 
-                g.append("g")
-                    .attr("class", "y axis")
+                g.append('g')
+                    .attr('class', 'y axis')
                     .call(d3.axisLeft(y).tickValues(yAxisTicks));
             };
         }

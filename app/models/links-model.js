@@ -24,5 +24,5 @@ var linksSchema = new mongoose.Schema(
     }
 );
 
-linksSchema.index({"centralPath": "text"});
+linksSchema.index({'centralPath': 'text'});
 var Links = mongoose.model( 'Links', linksSchema );

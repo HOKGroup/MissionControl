@@ -3,7 +3,8 @@
  */
 angular.module('MissionControlApp').controller('ModelStatsController', ModelStatsController);
 
-function ModelStatsController($timeout, $routeParams, UtilityService, DTColumnBuilder, DTOptionsBuilder, $scope, $uibModal, HealthReportFactory, ngToast){
+function ModelStatsController($routeParams, UtilityService, DTColumnBuilder, DTOptionsBuilder, $scope, $uibModal,
+                              HealthReportFactory, ngToast){
     var vm = this;
     var toasts = [];
     this.$onInit = function () {
@@ -156,7 +157,7 @@ function ModelStatsController($timeout, $routeParams, UtilityService, DTColumnBu
                 .withDisplayLength(10)
                 .withOption('order', [0, 'asc'])
                 .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
-                .withOption('rowCallback', function (row, data, index) {
+                .withOption('rowCallback', function (row, data) {
                     if (evaluateEventTime(data)){
                         row.className = row.className + ' bg-danger';
                     } else {

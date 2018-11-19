@@ -2,7 +2,7 @@ angular.module('MissionControlApp').directive('d3DonutChart', ['d3', '$timeout',
     return {
         restrict: 'EA',
         scope: {
-            data: "=",
+            data: '=',
             latest: '=',
             onClick: '&d3OnClick'
         },
@@ -12,8 +12,8 @@ angular.module('MissionControlApp').directive('d3DonutChart', ['d3', '$timeout',
             };
 
             var svg = d3.select($ele[0])
-                .append("svg")
-                .attr("width", "100%");
+                .append('svg')
+                .attr('width', '100%');
 
             // on window resize, re-render d3 canvas
             window.onresize = function() {
@@ -38,7 +38,7 @@ angular.module('MissionControlApp').directive('d3DonutChart', ['d3', '$timeout',
                 if(!data) return;
 
                 // remove all previous items before render
-                svg.selectAll("*").remove();
+                svg.selectAll('*').remove();
 
                 // setup variables
                 var margin = {top: 5, right: 5, bottom: 5, left: 5},
@@ -56,66 +56,66 @@ angular.module('MissionControlApp').directive('d3DonutChart', ['d3', '$timeout',
                 var color = d3.scaleOrdinal(d3.schemeCategory20c);
                 var total = data.length;
 
-                var vis = svg.append("g")
-                    .attr("class", "focus")
+                var vis = svg.append('g')
+                    .attr('class', 'focus')
                     .data([data])
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom);
+                    .attr('width', width + margin.left + margin.right)
+                    .attr('height', height + margin.top + margin.bottom);
 
-                var textTop = vis.append("text")
-                    .attr("class", "donutTotal")
-                    .attr("dy", ".35em")
-                    .attr("x", (width + margin.left + margin.right) / 2)
-                    .attr("y", ((height + margin.top + margin.bottom) / 2) - (r/7)/2)
-                    .text("VERSIONS");
+                var textTop = vis.append('text')
+                    .attr('class', 'donutTotal')
+                    .attr('dy', '.35em')
+                    .attr('x', (width + margin.left + margin.right) / 2)
+                    .attr('y', ((height + margin.top + margin.bottom) / 2) - (r/7)/2)
+                    .text('VERSIONS');
 
-                var textBottom = vis.append("text")
-                    .attr("class", "donutLabel")
-                    .attr("dy", ".35em")
-                    .attr("x", (width + margin.left + margin.right) / 2)
-                    .attr("y", ((height + margin.top + margin.bottom) / 2) + (r/6)/2)
+                var textBottom = vis.append('text')
+                    .attr('class', 'donutLabel')
+                    .attr('dy', '.35em')
+                    .attr('x', (width + margin.left + margin.right) / 2)
+                    .attr('y', ((height + margin.top + margin.bottom) / 2) + (r/6)/2)
                     .text(total);
 
-                var arcs = vis.selectAll("arc")
+                var arcs = vis.selectAll('arc')
                     .data(donut.value(function(d) { return d.count; }))
-                    .enter().append("g")
-                    .attr("class", "arc")
-                    .attr("transform", "translate(" + (width + margin.left + margin.right) / 2 + "," + (height + margin.top + margin.bottom) / 2 + ")");
+                    .enter().append('g')
+                    .attr('class', 'arc')
+                    .attr('transform', 'translate(' + (width + margin.left + margin.right) / 2 + ',' + (height + margin.top + margin.bottom) / 2 + ')');
 
-                arcs.append("path")
-                    .attr("fill", function(d) { return getColor(d); })
+                arcs.append('path')
+                    .attr('fill', function(d) { return getColor(d); })
                     .transition()
                     .delay(function (d, i) { return i * 500; })
                     .duration(500)
-                    .attrTween("d", function (d) {
+                    .attrTween('d', function (d) {
                         var i = d3.interpolate(d.startAngle + 0.1, d.endAngle);
                         return function (t) {
                             d.endAngle = i(t);
-                            return arc(d)
-                        }
+                            return arc(d);
+                        };
                     })
-                    .style("stroke", "white")
-                    .style("stroke-width", 2);
+                    .style('stroke', 'white')
+                    .style('stroke-width', 2);
 
-                arcs.selectAll("path")
-                    .on("mouseover", function(d){
+                arcs.selectAll('path')
+                    .on('mouseover', function(d){
                         // d3.select(this).transition().duration(200).attr("d", arcOver);
                         // d3.select(this).style("fill", 'steelblue');
                         textTop.text(d.data.name);
                         textBottom.text(d.data.count);
-                        d3.select(this).style("cursor", "pointer");
+                        d3.select(this).style('cursor', 'pointer');
                     })
-                    .on("mouseout", function(){
+                    .on('mouseout', function(){
                         // d3.select(this).transition().duration(100).attr("d", arc);
                         // d3.select(this).style("fill", function(d) { return getColor(d); });
-                        textTop.text("VERSIONS");
+                        textTop.text('VERSIONS');
                         textBottom.text(total);
-                        d3.select(this).style("cursor", "default");
+                        d3.select(this).style('cursor', 'default');
                     })
-                    .on("click", function(d){
+                    .on('click', function(d){
                         scope.onClick({item: d.data});
-                        d3.select(".selectedBlueFill").classed("selectedBlueFill", false);
-                        d3.select(this).classed("selectedBlueFill", true);
+                        d3.select('.selectedBlueFill').classed('selectedBlueFill', false);
+                        d3.select(this).classed('selectedBlueFill', true);
                         $timeout(refreshScope, 0, false); // flush the digest cycle
                     });
 
@@ -126,9 +126,9 @@ angular.module('MissionControlApp').directive('d3DonutChart', ['d3', '$timeout',
                  * @returns {*}
                  */
                 function getColor(d) {
-                    if(scope.latest === d.data.name) return "#5cb85c";
-                    else if(d.data.name === 'Fatal') return "#d9534f";
-                    else return "#f0ad4e";
+                    if(scope.latest === d.data.name) return '#5cb85c';
+                    else if(d.data.name === 'Fatal') return '#d9534f';
+                    else return '#f0ad4e';
                 }
             };
         }

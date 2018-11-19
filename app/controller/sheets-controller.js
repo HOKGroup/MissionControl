@@ -21,14 +21,14 @@ SheetsServices = {
         var isBim360 = req.params.uri.match(/bim 360:/i);
         var rgx;
         if(isRevitServer || isBim360){
-            rgx = req.params.uri.replace(/\|/g, "/").toLowerCase();
+            rgx = req.params.uri.replace(/\|/g, '/').toLowerCase();
         } else {
-            rgx = req.params.uri.replace(/\|/g, "\\").toLowerCase();
+            rgx = req.params.uri.replace(/\|/g, '\\').toLowerCase();
         }
 
         Sheets
             .find(
-                {"centralPath": rgx}, function (err, response){
+                {'centralPath': rgx}, function (err, response){
                     var result = {
                         status: 200,
                         message: response
@@ -41,7 +41,7 @@ SheetsServices = {
                         result.message = err;
                     }
                     res.status(result.status).json(result.message);
-                })
+                });
     },
 
     /**
@@ -50,8 +50,8 @@ SheetsServices = {
      * @param res
      */
     updateFilePath: function (req, res) {
-        var before = req.body.before.replace(/\\/g, "\\").toLowerCase();
-        var after = req.body.after.replace(/\\/g, "\\").toLowerCase();
+        var before = req.body.before.replace(/\\/g, '\\').toLowerCase();
+        var after = req.body.after.replace(/\\/g, '\\').toLowerCase();
         Sheets
             .update(
                 {'centralPath': before},
@@ -113,7 +113,7 @@ SheetsServices = {
                     response.message = err;
                 } else if(!doc){
                     response.status = 404;
-                    response.message = {"message": "SheetsChanges Id not found."}
+                    response.message = {'message': 'SheetsChanges Id not found.'};
                 }
                 if(doc){
                     updateAllSheets(req, res, doc);
@@ -142,7 +142,7 @@ SheetsServices = {
                     response.message = err;
                 } else if(!doc){
                     response.status = 404;
-                    response.message = {"message": "Sheets Id not found."}
+                    response.message = {'message': 'Sheets Id not found.'};
                 }
                 if(doc){
                     addSheetTask(req, res, doc);
@@ -177,7 +177,7 @@ SheetsServices = {
                         'body': data,
                         'sheetIds': ids
                     });
-                    res.status(201).json({ 'data': data, 'newSheetIds': ids })
+                    res.status(201).json({ 'data': data, 'newSheetIds': ids });
                 }
             });
     },
@@ -201,7 +201,7 @@ SheetsServices = {
                     response.message = err;
                 } else if(!doc){
                     response.status = 404;
-                    response.message = {"message": "SheetsChanges Id not found."}
+                    response.message = {'message': 'SheetsChanges Id not found.'};
                 }
                 if(doc){
                     approveCreateNewSheet(req, res, doc);
@@ -251,7 +251,7 @@ SheetsServices = {
                     response.message = err;
                 } else if(!doc){
                     response.status = 404;
-                    response.message = {"message": "Sheets Id not found."}
+                    response.message = {'message': 'Sheets Id not found.'};
                 }
                 if(doc){
                     deleteSheetTask(req, res, doc);
@@ -280,7 +280,7 @@ SheetsServices = {
                     response.message = err;
                 } else if(!doc){
                     response.status = 404;
-                    response.message = {"message": "Sheets Id not found."}
+                    response.message = {'message': 'Sheets Id not found.'};
                 }
                 if(doc){
                     updateSheetTask(req, res, doc);
@@ -382,7 +382,7 @@ var deleteSheetTask = function (req, res, doc) {
         } else {
             global.io.sockets.in(req.body.centralPath).emit('sheetTask_deleted', {
                 'sheetId': req.body.sheetId.toString(),
-                "deletedIds": deleted });
+                'deletedIds': deleted });
             res.status(201).json(sheetsUpdated);
         }
     });

@@ -60,8 +60,8 @@ StylesService = {
      * @param res
      */
     updateFilePath: function (req, res) {
-        var before = req.body.before.replace(/\\/g, "\\").toLowerCase();
-        var after = req.body.after.replace(/\\/g, "\\").toLowerCase();
+        var before = req.body.before.replace(/\\/g, '\\').toLowerCase();
+        var after = req.body.after.replace(/\\/g, '\\').toLowerCase();
         Styles
             .update(
                 { 'centralPath': before },

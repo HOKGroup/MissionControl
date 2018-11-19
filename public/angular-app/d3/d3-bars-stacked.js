@@ -5,12 +5,12 @@ angular.module('MissionControlApp').directive('d3BarsStacked', ['d3', function(d
     return {
         restrict: 'EA',
         scope: {
-            data: "="
+            data: '='
         },
         link: function($scope, $ele) {
             var svg = d3.select($ele[0])
-                .append("svg")
-                .attr("width", "100%");
+                .append('svg')
+                .attr('width', '100%');
 
             // on window resize, re-render d3 canvas
             window.onresize = function() {
@@ -35,7 +35,7 @@ angular.module('MissionControlApp').directive('d3BarsStacked', ['d3', function(d
                 if(!data) return;
 
                 // remove all previous items before render
-                svg.selectAll("*").remove();
+                svg.selectAll('*').remove();
 
                 // setup variables
                 var margin = {top: 30, right: 40, bottom: 5, left: 60},
@@ -46,7 +46,7 @@ angular.module('MissionControlApp').directive('d3BarsStacked', ['d3', function(d
                 svg.attr('height', height + margin.top + margin.bottom);
 
                 var series = d3.stack()
-                    .keys(["added", "removed"])
+                    .keys(['added', 'removed'])
                     .offset(d3.stackOffsetDiverging)
                     (data);
 
@@ -68,27 +68,27 @@ angular.module('MissionControlApp').directive('d3BarsStacked', ['d3', function(d
                     yAxisTicks.push((yDomain[1] - yDomain[0]) / (ticksNum - 1)* i + yDomain[0]);
                 }
 
-                svg.append("g")
-                    .selectAll("g")
+                svg.append('g')
+                    .selectAll('g')
                     .data(series)
-                    .enter().append("g")
-                    .attr("fill", function(d) { return d.key === 'added' ? "#d9534f" : "#5cb85c"; })
-                    .selectAll("rect")
+                    .enter().append('g')
+                    .attr('fill', function(d) { return d.key === 'added' ? '#d9534f' : '#5cb85c'; })
+                    .selectAll('rect')
                     .data(function(d) { return d; })
-                    .enter().append("rect")
-                    .attr("width", x.bandwidth)
-                    .attr("x", function(d) { return x(d.data.date); })
-                    .attr("y", function(d) { return y(d[1]); })
-                    .attr("height", function(d) { return y(d[0]) - y(d[1]); });
+                    .enter().append('rect')
+                    .attr('width', x.bandwidth)
+                    .attr('x', function(d) { return x(d.data.date); })
+                    .attr('y', function(d) { return y(d[1]); })
+                    .attr('height', function(d) { return y(d[0]) - y(d[1]); });
 
-                svg.append("g")
-                    .attr("class", "x axis")
-                    .attr("transform", "translate(0," + y(0) + ")")
+                svg.append('g')
+                    .attr('class', 'x axis')
+                    .attr('transform', 'translate(0,' + y(0) + ')')
                     .call(d3.axisBottom(x));
 
-                svg.append("g")
-                    .attr("class", "y axis")
-                    .attr("transform", "translate(" + margin.left + ",0)")
+                svg.append('g')
+                    .attr('class', 'y axis')
+                    .attr('transform', 'translate(' + margin.left + ',0)')
                     .call(d3.axisLeft(y).tickValues(yAxisTicks));
 
                 function stackMin(series) {

@@ -9,7 +9,10 @@ angular.module('MissionControlApp').directive('d3AreaBivariate', ['d3', function
             top: '=',
             topLabel: '=',
             bottom: '=',
-            bottomLabel: '='
+            bottomLabel: '=',
+            fillColor: '=',
+            onMove: '&d3OnMove',
+            onOut: '&d3OnOut'
         },
         link: function(scope, ele) {
             var svg = d3.select(ele[0])
@@ -126,7 +129,7 @@ angular.module('MissionControlApp').directive('d3AreaBivariate', ['d3', function
                 focus.append('path')
                     .data([data])
                     .attr('class', 'area')
-                    .attr('fill', '#d9534f')
+                    .attr('fill', scope.fillColor)
                     .attr('clip-path', 'url(#' + id + ')')
                     .attr('d', area);
 
@@ -143,7 +146,7 @@ angular.module('MissionControlApp').directive('d3AreaBivariate', ['d3', function
                 context.append('path')
                     .data([data])
                     .attr('class', 'area')
-                    .attr('fill', '#d9534f')
+                    .attr('fill', scope.fillColor)
                     .attr('d', area2);
 
                 context.append('g')
@@ -166,28 +169,28 @@ angular.module('MissionControlApp').directive('d3AreaBivariate', ['d3', function
                     .attr('y1', 0)
                     .attr('y2', height);
 
-                tooltip.append('circle')
-                    .attr('r', 5)
-                    .attr('fill', 'black')
-                    .attr('stroke-width', '1px');
+                tooltip.append('path')
+                    .attr('d', d3.symbol().type(d3.symbolTriangle).size([80]))
+                    .style('fill', '#d9534f')
+                    .attr('transform', 'translate(0, -8) rotate(180)');
 
                 tooltip.append('text')
                     .attr('class', 'y1')
-                    .attr('transform', 'translate(0, -7)')
+                    .attr('transform', 'translate(0, -17)')
                     .attr('text-anchor', 'middle');
 
                 var tooltip2 = svg.append('g')
                     .attr('class', 'focus')
                     .style('display', 'none');
 
-                tooltip2.append('circle')
-                    .attr('r', 5)
-                    .attr('fill', 'black')
-                    .attr('stroke-width', '1px');
+                tooltip2.append('path')
+                    .attr('d', d3.symbol().type(d3.symbolTriangle).size([80]))
+                    .style('fill', '#5cb85c')
+                    .attr('transform', 'translate(0, 8)');
 
                 tooltip2.append('text')
                     .attr('class', 'y1')
-                    .attr('transform', 'translate(0, 17)')
+                    .attr('transform', 'translate(0, 25)')
                     .attr('text-anchor', 'middle');
 
                 svg.append('rect')
@@ -203,6 +206,7 @@ angular.module('MissionControlApp').directive('d3AreaBivariate', ['d3', function
                     .on('mouseout', function() {
                         tooltip.style('display', 'none');
                         tooltip2.style('display', 'none');
+                        scope.onOut();
                     })
                     .on('mousemove', mousemove);
 
@@ -225,6 +229,8 @@ angular.module('MissionControlApp').directive('d3AreaBivariate', ['d3', function
                     tooltip.select('.mouse-line').attr('y2', height - y(d[scope.top]));
                     tooltip2.attr('transform', 'translate(' + (x(d.date) + margin.left) + ',' + (y(d[scope.bottom]) + margin.top) + ')');
                     tooltip2.select('text.y1').text(scope.bottomLabel + d[scope.bottom]);
+
+                    scope.onMove({ item: { value: d[scope.top] - d[scope.bottom] }});
                 }
 
                 /**

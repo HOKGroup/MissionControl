@@ -52,5 +52,5 @@ var stylesSchema = new mongoose.Schema(
     }
 );
 
-stylesSchema.index({"centralPath": "text"});
+stylesSchema.index({'centralPath': 'text'});
 var Styles = mongoose.model( 'Styles', stylesSchema );
