@@ -63,7 +63,7 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="file in vm.selectedConfig.files">
-                                <td style="vertical-align: middle;">{{ file.centralPath | uppercase }}</td>
+                                <td style="vertical-align: middle;"><strong>{{ $index + 1 }}.</strong> {{ file.centralPath | uppercase }}</td>
                                 <td style="vertical-align: middle;" class="text-right">
                                     <button type="button" class="btn btn-default" ng-click="vm.editPath(file.centralPath, 'lg')">
                                         <i class="fas fa-edit" style="margin-right: 0;"></i>
@@ -96,7 +96,8 @@
                                     <p class="text-warning">{{ vm.fileWarningMsg }}</p>
 
                                     <!--Filters-->
-                                    <div>
+                                    <div class="row">
+                                        <div class="col-md-6">
                                         <b>Filters:</b>
                                         <div class="btn-group" style="padding-bottom: 10px; padding-left: 10px;">
                                             <button class="btn btn-primary btn-sm dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
@@ -121,24 +122,47 @@
                                             </button>
                                             <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0;">
                                                 <li ng-repeat="type in vm.fileTypes" style="padding-right: 5px; padding-left: 5px;">
-                                                    <a href="" ng-click="vm.setTypeFilter(type)" style="padding-left: 0; padding-right: 0;">
+                                                    <a href="" ng-click="vm.setTypeFilter(type);" style="padding-left: 0; padding-right: 0;">
                                                         {{type}}
                                                     </a>
                                                 </li>
                                             </ul>
                                         </div>
+                                        </div>
+                                        <div class="col-md">
+                                            <div class="input-group" style="padding-bottom: 10px; padding-left: 10px;">
+                                                <input id="number" type="text" class="form-control input-sm" value="" ng-model="vm.searchString">
+                                                    <span class="input-group-btn">
+                                                    <button class="btn btn-sm btn-default" type="button" ng-click="vm.searchFilePaths(vm.searchString)">
+                                                        <i class="fas fa-search"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!--File selection-->
                                     <div class="btn-group" style="width: 100%;">
-                                        <button class="btn btn-default dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
+                                        <button class="btn btn-default dropdown-toggle scrollable-menu-centered" ng-click="vm.toggleFilePicker($event)">
                                             <span class="caret"></span>
-                                            Files ({{filtered.length}})
+                                            Files ({{vm.fullFilesArrayCount()}})
                                         </button>
-                                        <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0;">
-                                            <li ng-repeat="file in vm.files | filter: vm.filterFn as filtered" style="padding-right: 5px; padding-left: 5px;">
-                                                <a href="" ng-click="vm.newFile = file.centralPath" style="padding-left: 0; padding-right: 0;">
-                                                    {{file.name | uppercase}}
+                                        <ul id="file-picker" class="dropdown-menu scrollable-menu-centered" style="padding-right: 0;">
+                                            <li ng-repeat="file in vm.paginatedFiles | filter: vm.filterFn as filtered" style="padding-right: 5px; padding-left: 5px;">
+
+                                                <a href="" ng-click="vm.newFile = file.centralPath; vm.toggleFilePicker($event)" style="padding-left: 0; padding-right: 0;">
+                                                    {{file.name == undefined ? '(No Project Name)' : file.name | uppercase}}
+                                                </a>
+                                                
+                                            </li>
+                                            <li style="width: 50%; display: inline-block;">
+                                                <a href="" ng-click="vm.filesPagination(vm.pageNum -1, vm.numItems)">
+                                                    <i class="fas fa-step-backward"></i>
+                                                </a>
+                                            </li>
+                                            <li style="width: 50%; display: inline-block">
+                                                <a href="" ng-click="vm.filesPagination(vm.pageNum  + 1, vm.numItems)">
+                                                    <i class="fas fa-step-forward"></i>
                                                 </a>
                                             </li>
                                         </ul>

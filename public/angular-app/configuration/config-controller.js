@@ -25,6 +25,10 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     vm.selectedOffice = { name: 'All', code: 'All' };
     vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'BIM 360'];
     vm.selectedType = 'All';
+    vm.searchString = '';
+    vm.pageNum = 0;
+    vm.numItems = 5;
+    vm.paginatedFiles = [];
 
     getSelectedProjectConfiguration(vm.projectId);
     getFiles();
@@ -94,6 +98,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
         var filePath = item.centralPath.toLowerCase();
         var passedOffice = false;
         var passedType = false;
+        var passedNameSearch = false;
 
         if(vm.selectedOffice.name === 'All'){
             passedOffice = true;
@@ -148,7 +153,13 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                 break;
         }
 
-        return passedType && passedOffice;
+        if (vm.searchString !== '') {
+            passedNameSearch = filePath.includes(vm.searchString);
+        } else {
+            passedNameSearch = true;
+        }
+
+        return passedType && passedOffice && passedNameSearch;
     };
 
     //endregion
@@ -577,6 +588,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                     file['name'] = UtilityService.fileNameFromPath(file.centralPath);
                 });
                 vm.files = response.data;
+                vm.filesPagination(vm.pageNum, vm.numItems);
             })
             .catch(function (err) {
                 console.log(err);
@@ -589,6 +601,46 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                 }));
             });
     }
+
+    /**
+     * 
+     */
+    vm.filesPagination = function(page, numItems) {
+        vm.pageNum = page;
+        var filteredArray = vm.files.filter(vm.filterFn);
+        var start = page * numItems; 
+        var end = start + numItems;
+        var currentView = filteredArray.slice(start, end);
+        console.log(currentView);
+        vm.paginatedFiles =  currentView;
+
+    };
+
+    vm.searchFilePaths = function(string) {
+        console.log(string);
+        vm.filesPagination(0, vm.numItems);
+    };
+
+    vm.fullFilesArrayCount = function() {
+        var filteredArray = vm.files.filter(vm.filterFn);
+        return filteredArray.length;
+    };
+
+    // Overriding Bootstrap's data-toggle attribute
+    vm.toggleFilePicker = function(event) {
+        vm.filesPagination(0, vm.numItems);
+        $('#file-picker').parent().toggleClass('open');
+    };
+    
+    // (Dan) Not a fan of using a click-handler here. Would like to remove if possible
+    $('body').on('click', function (e) {
+        if (!$('.scrollable-menu-centered').is(e.target) 
+            && $('.scrollable-menu-centered').has(e.target).length === 0 
+            && $('.open').has(e.target).length === 0
+        ) {
+            $('#file-picker').parent().removeClass('open');
+        }
+    });
 
     /**
      * Retrieves Project Configuration.
