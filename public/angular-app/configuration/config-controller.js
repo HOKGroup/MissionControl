@@ -7,7 +7,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                           DTColumnDefBuilder, UtilityService, $window, $uibModal, ngToast){
 
     //region Init
-
+    
     var vm = this;
     var toasts = [];
     vm.status = '';
@@ -28,7 +28,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     vm.searchString = '';
     vm.pageNum = 1;
     vm.numItems = 5;
-    vm.paginatedFiles = [];
+    vm.currentPagesFiles = [];
 
     getSelectedProjectConfiguration(vm.projectId);
     getFiles();
@@ -261,6 +261,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
         if(type === 'BIM 360'){
             vm.selectedOffice = { name: 'All', code: 'All' };
         }
+        vm.setFilesPage(1, vm.numItems);
     };
 
     /**
@@ -588,7 +589,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                     file['name'] = UtilityService.fileNameFromPath(file.centralPath);
                 });
                 vm.files = response.data;
-                vm.filesPagination(vm.pageNum, vm.numItems);
+                vm.setFilesPage(vm.pageNum, vm.numItems);
             })
             .catch(function (err) {
                 console.log(err);
@@ -603,29 +604,29 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     }
 
     /**
-     * 
+     *  Sets the current page of the paginated files list
      */
-    vm.filesPagination = function(page, numItems) {
-        vm.pageNum = page;
+    vm.setFilesPage = function(page, numItems) {
+        vm.pagenum = page;
         var filteredArray = vm.files.filter(vm.filterFn);
         var start = (page - 1) * numItems; 
         var end = start + numItems;
         var currentView = filteredArray.slice(start, end);
-        console.log(currentView);
-        vm.paginatedFiles =  currentView;
-
+        vm.currentPagesFiles =  currentView;
     };
 
-    vm.searchFilePaths = function(string) {
-        vm.filesPagination(1, vm.numItems);
-    };
-
+    /**
+     *  Returns the lengths of the filtered files array for using in pagination
+     */
     vm.fullFilesArrayCount = function() {
         var filteredArray = vm.files.filter(vm.filterFn);
         return filteredArray.length;
     };
 
-    vm.pages = function() {
+    /**
+     * @returns {Array} An array of the page numbers.
+     */
+    vm.getFilesPages = function() {
         var pageCount  = Math.ceil(vm.fullFilesArrayCount() / vm.numItems);
         var pagesArray = [];
         for (var i = 1; i < pageCount + 1; i++) {
