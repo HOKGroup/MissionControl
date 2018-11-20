@@ -25,12 +25,14 @@ function AddinsController(AddinsFactory, UtilityService) {
         AddinsFactory
             .getByYear(year).then(function(response){
                 if(!response || response.status !== 200) return;
-
+                /**
                 vm.AddinLogs = response.data;
                 var output = vm.AddinLogs.reduce(function(sums,entry){
                     sums[entry.pluginName] = (sums[entry.pluginName] || 0) + 1;
                     return sums;
                 },{});
+                */
+               var output = response.data;
 
                 var list = getTotals(output);
                 list.sort(function(a,b){

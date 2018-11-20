@@ -61,7 +61,7 @@ var users = require('./models/users');
 
      var addins = require('./controller/addins-controller');
      app.get('/api/v2/addins', addins.findAll);
-     app.get('/api/v2/addins/:year', addins.getByYear);
+     app.get('/api/v2/addins/:year', addins.aggregateByYear);
      app.post('/api/v2/addins', addins.add);
 
      var zombieLogs = require('./controller/zombie-logs-controller');
