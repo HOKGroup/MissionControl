@@ -41,6 +41,7 @@ angular.module('MissionControlApp').directive('d3HorizontalBarChartTimeout', ['d
             // define render function
             scope.render = function(data){
                 if(!data) return;
+                console.log(data); 
 
                 // remove all previous items before render
                 svg.selectAll('*').remove();

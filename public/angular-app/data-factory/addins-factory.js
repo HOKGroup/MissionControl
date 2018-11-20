@@ -8,6 +8,10 @@ function AddinsFactory($http){
 
         getByYear: function getByYear(year){
             return $http.get('/api/v2/addins/' + year).then(complete).catch(failed);
+        },
+
+        getUsersOfPlugin: function getUsersOfPlugin(name, year){
+            return $http.get('/api/v2/addins/' + year + '?name=' + name).then(complete).catch(failed);
         }
     };
 

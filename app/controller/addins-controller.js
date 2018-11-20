@@ -55,23 +55,33 @@ AddinsService = {
      * @param res 
      */
     aggregateByYear: function(req, res){
+        var matchFilter = {
+            $match: {
+                'revitVersion': req.params.year
+            }
+        };
+        var groupByColumn = '$pluginName';
+        if (req.query.name) {
+            console.log(req.query.name);
+            matchFilter.$match['pluginName'] = req.query.name;
+            // Remove this, just for testing;
+            groupByColumn = '$user';
+        }
         Addins
             .aggregate([
-                { 
-                    $match: {
-                        'revitVersion': req.params.year
-                    }
-                },
+                matchFilter,
                 { 
                     $group: { 
-                        _id: '$pluginName',
+                        _id: groupByColumn,
                         count: { $sum: 1 }
                     }
                 }
             ], function (err, response){
                 var data = response.map(function(addin) { 
                     addin['name'] = addin['_id']; 
-                    return addin;
+                    return {name: addin['_id'],
+                     count: addin['count']
+                    };
                 });
                 var result = {
                     status: 200,

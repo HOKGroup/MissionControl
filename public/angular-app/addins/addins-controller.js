@@ -32,9 +32,9 @@ function AddinsController(AddinsFactory, UtilityService) {
                     return sums;
                 },{});
                 */
-               var output = response.data;
+               var list = response.data;
 
-                var list = getTotals(output);
+                // var list = getTotals(output);
                 list.sort(function(a,b){
                     return a.count - b.count;
                 }).reverse(); // sorted by count
@@ -75,81 +75,92 @@ function AddinsController(AddinsFactory, UtilityService) {
         // Used for Bar Chart
         var addinManagerDetails = {};
         var users = [];
-        var output = vm.AddinLogs.reduceRight(function (sums, entry) {
-            if(item.name === 'AddinManager')
-            {
-                // (Konrad) This plugin publishes extra information we can use to make a normalized bar chart.
-                // The idea here is that for each tool we create a normalized bar, that shows how many users
-                // have given tool set to Always. Never and InSessionOnly. Each user is logged only once. Last
-                // set of data published by user is used (reduceRight iterates from end to get most recent).
-                if(entry.pluginName === item.name
-                    && entry.revitVersion === vm.SelectedYear
-                    && isOfficeMatch(entry.office, vm.SelectedOffice)){
+        AddinsFactory.
+            getUsersOfPlugin(item.name, vm.SelectedYear).then(function(response){
+                var totals = response.data;
+                totals.sort(function(a,b){
+                    return a.count - b.count;
+                }).reverse(); // sorted by count
 
-                    sums[entry.user] = (sums[entry.user] || 0) + 1; // data needed by user specific chart.
-                    if(entry.detailInfo.length > 0 && users.indexOf(entry.user) === -1) // log exists and wasn't added yet
-                    {
-                        users.push(entry.user); // store user
-                        for(var i = 0; i < entry.detailInfo.length; i++){
-                            var detailItem = entry.detailInfo[i];
-                            if(addinManagerDetails.hasOwnProperty(detailItem.name))
-                            {
-                                switch (detailItem.value){
-                                    case 'Never':
-                                        addinManagerDetails[detailItem.name].never += 1;
-                                        break;
-                                    case 'Always':
-                                        addinManagerDetails[detailItem.name].always += 1;
-                                        break;
-                                    case 'ThisSessionOnly':
-                                        addinManagerDetails[detailItem.name].thisSessionOnly += 1;
-                                        break;
-                                }
-                            } else {
-                                var pluginDetail = {
-                                    name: detailItem.name,
-                                    never: 0,
-                                    always: 0,
-                                    thisSessionOnly: 0
-                                };
-                                switch (detailItem.value){
-                                    case 'Never':
-                                        pluginDetail.never = 1;
-                                        break;
-                                    case 'Always':
-                                        pluginDetail.always = 1;
-                                        break;
-                                    case 'ThisSessionOnly':
-                                        pluginDetail.thisSessionOnly = 1;
-                                        break;
-                                }
-                                addinManagerDetails[detailItem.name] = pluginDetail;
-                            }
-                        }
-                    }
-                }
-                return sums;
-            } else {
-                if(entry.pluginName === item.name
-                    && entry.revitVersion === vm.SelectedYear
-                    && isOfficeMatch(entry.office, vm.SelectedOffice)){
-                    sums[entry.user] = (sums[entry.user] || 0) + 1;
-                }
-                return sums;
-            }
-        }, {});
+                vm.UserDetails = totals;
+                vm.SelectedPlugin = item.name;
+            });
+
+        // var output = vm.AddinLogs.reduceRight(function (sums, entry) {
+        //     if(item.name === 'AddinManager')
+        //     {
+        //         // (Konrad) This plugin publishes extra information we can use to make a normalized bar chart.
+        //         // The idea here is that for each tool we create a normalized bar, that shows how many users
+        //         // have given tool set to Always. Never and InSessionOnly. Each user is logged only once. Last
+        //         // set of data published by user is used (reduceRight iterates from end to get most recent).
+        //         if(entry.pluginName === item.name
+        //             && entry.revitVersion === vm.SelectedYear
+        //             && isOfficeMatch(entry.office, vm.SelectedOffice)){
+
+        //             sums[entry.user] = (sums[entry.user] || 0) + 1; // data needed by user specific chart.
+        //             if(entry.detailInfo.length > 0 && users.indexOf(entry.user) === -1) // log exists and wasn't added yet
+        //             {
+        //                 users.push(entry.user); // store user
+        //                 for(var i = 0; i < entry.detailInfo.length; i++){
+        //                     var detailItem = entry.detailInfo[i];
+        //                     if(addinManagerDetails.hasOwnProperty(detailItem.name))
+        //                     {
+        //                         switch (detailItem.value){
+        //                             case 'Never':
+        //                                 addinManagerDetails[detailItem.name].never += 1;
+        //                                 break;
+        //                             case 'Always':
+        //                                 addinManagerDetails[detailItem.name].always += 1;
+        //                                 break;
+        //                             case 'ThisSessionOnly':
+        //                                 addinManagerDetails[detailItem.name].thisSessionOnly += 1;
+        //                                 break;
+        //                         }
+        //                     } else {
+        //                         var pluginDetail = {
+        //                             name: detailItem.name,
+        //                             never: 0,
+        //                             always: 0,
+        //                             thisSessionOnly: 0
+        //                         };
+        //                         switch (detailItem.value){
+        //                             case 'Never':
+        //                                 pluginDetail.never = 1;
+        //                                 break;
+        //                             case 'Always':
+        //                                 pluginDetail.always = 1;
+        //                                 break;
+        //                             case 'ThisSessionOnly':
+        //                                 pluginDetail.thisSessionOnly = 1;
+        //                                 break;
+        //                         }
+        //                         addinManagerDetails[detailItem.name] = pluginDetail;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //         return sums;
+        //     } else {
+        //         if(entry.pluginName === item.name
+        //             && entry.revitVersion === vm.SelectedYear
+        //             && isOfficeMatch(entry.office, vm.SelectedOffice)){
+        //             sums[entry.user] = (sums[entry.user] || 0) + 1;
+        //         }
+        //         return sums;
+        //     }
+        // }, {});
 
         vm.AddinManagerStats = Object.keys(addinManagerDetails).map(function (item) {
             return addinManagerDetails[item];
         });
 
-        var totals = getTotals(output);
-        totals.sort(function(a,b){
-            return a.count - b.count;
-        }).reverse(); // sorted by count
+        // var totals = getTotals(output);
+        // totals.sort(function(a,b){
+        //     return a.count - b.count;
+        // }).reverse(); // sorted by count
 
-        vm.UserDetails = totals;
-        vm.SelectedPlugin = item.name;
+        // vm.UserDetails = totals;
+        // vm.SelectedPlugin = item.name;
     };
 
     //endregion
