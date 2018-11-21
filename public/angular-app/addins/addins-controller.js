@@ -86,6 +86,59 @@ function AddinsController(AddinsFactory, UtilityService) {
                 vm.SelectedPlugin = item.name;
             });
 
+        if (item.name === 'AddinManager') {
+        AddinsFactory.
+            getAddinManagerDetails(vm.SelectedYear).then(function(response){ 
+                var addinManagerDetails = {};
+                response.data
+                    .reduce(function(acc, item) { return acc.concat(item.userData); }, [])
+                    .map(function(item) { {delete item._id; return item;}})
+                    .forEach(function(detailItem) { 
+                        if (addinManagerDetails.hasOwnProperty(detailItem.name)) {
+                                switch (detailItem.value){
+                                    case 'Never':
+                                        addinManagerDetails[detailItem.name].never += 1;
+                                        break;
+                                    case 'Always':
+                                        addinManagerDetails[detailItem.name].always += 1;
+                                        break;
+                                    case 'ThisSessionOnly':
+                                        addinManagerDetails[detailItem.name].thisSessionOnly += 1;
+                                        break;
+                                }
+                            } else {
+                                var pluginDetail = {
+                                    name: detailItem.name,
+                                    never: 0,
+                                    always: 0,
+                                    thisSessionOnly: 0
+                                };
+                                switch (detailItem.value){
+                                    case 'Never':
+                                        pluginDetail.never = 1;
+                                        break;
+                                    case 'Always':
+                                        pluginDetail.always = 1;
+                                        break;
+                                    case 'ThisSessionOnly':
+                                        pluginDetail.thisSessionOnly = 1;
+                                        break;
+                                }
+                                addinManagerDetails[detailItem.name] = pluginDetail;
+ 
+                        }
+                        // addins[`${x.name} - ${x.value}`] = (addins[`${x.name} - ${x.value}`] || 0) + 1
+                    });
+                vm.addinManagerDetails = addinManagerDetails;
+                console.log(vm.addinManagerDetails);
+                vm.AddinManagerStats = Object.keys(vm.addinManagerDetails).map(function (item) {
+                    return vm.addinManagerDetails[item];
+                });
+            });
+            
+
+        }
+
         // var output = vm.AddinLogs.reduceRight(function (sums, entry) {
         //     if(item.name === 'AddinManager')
         //     {
@@ -105,37 +158,7 @@ function AddinsController(AddinsFactory, UtilityService) {
         //                     var detailItem = entry.detailInfo[i];
         //                     if(addinManagerDetails.hasOwnProperty(detailItem.name))
         //                     {
-        //                         switch (detailItem.value){
-        //                             case 'Never':
-        //                                 addinManagerDetails[detailItem.name].never += 1;
-        //                                 break;
-        //                             case 'Always':
-        //                                 addinManagerDetails[detailItem.name].always += 1;
-        //                                 break;
-        //                             case 'ThisSessionOnly':
-        //                                 addinManagerDetails[detailItem.name].thisSessionOnly += 1;
-        //                                 break;
-        //                         }
-        //                     } else {
-        //                         var pluginDetail = {
-        //                             name: detailItem.name,
-        //                             never: 0,
-        //                             always: 0,
-        //                             thisSessionOnly: 0
-        //                         };
-        //                         switch (detailItem.value){
-        //                             case 'Never':
-        //                                 pluginDetail.never = 1;
-        //                                 break;
-        //                             case 'Always':
-        //                                 pluginDetail.always = 1;
-        //                                 break;
-        //                             case 'ThisSessionOnly':
-        //                                 pluginDetail.thisSessionOnly = 1;
-        //                                 break;
-        //                         }
-        //                         addinManagerDetails[detailItem.name] = pluginDetail;
-        //                     }
+       //                     }
         //                 }
         //             }
         //         }
@@ -150,9 +173,7 @@ function AddinsController(AddinsFactory, UtilityService) {
         //     }
         // }, {});
 
-        vm.AddinManagerStats = Object.keys(addinManagerDetails).map(function (item) {
-            return addinManagerDetails[item];
-        });
+
 
         // var totals = getTotals(output);
         // totals.sort(function(a,b){

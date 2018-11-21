@@ -12,6 +12,9 @@ function AddinsFactory($http){
 
         getUsersOfPlugin: function getUsersOfPlugin(name, year){
             return $http.get('/api/v2/addins/' + year + '?name=' + name).then(complete).catch(failed);
+        },
+        getAddinManagerDetails: function getAddinManagerDetails(year){
+            return $http.get('/api/v2/addins/' + year  + '/addinmanager').then(complete).catch(failed); 
         }
     };
 
