@@ -133,7 +133,7 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
             .withOption('rowCallback', function (row, data) {
                 var style = ' table-info';
                 if(data.isDisabled) style = ' bg-warning';
-                if(data.projectId !== null) style = ' bg-success';
+                if(data.hasOwnProperty('projectId') && data.projectId !== null) style = ' bg-success';
                 row.className = row.className + style;
             })
             .withOption('createdRow', function(row) {
@@ -147,7 +147,10 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
                 .withOption('width', '8%'),
             DTColumnBuilder.newColumn('fileLocation')
                 .withTitle('Office')
-                .withOption('width', '8%'),
+                .withOption('width', '8%')
+                .renderWith(function (data, type, full) {
+                    return full.fileLocation.toUpperCase();
+                }),
             DTColumnBuilder.newColumn('centralPath')
                 .withTitle('File Path')
                 .withOption('width', '70%'),
@@ -156,7 +159,7 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
                 .withOption('className', 'text-center')
                 .withOption('width', '14%')
                 .renderWith(function (data, type, full) {
-                    var disabled = full.projectId === null;
+                    var disabled = !full.hasOwnProperty('projectId') || full.projectId === null;
                     var contents = '';
                     contents += '<div>';
 
@@ -169,7 +172,7 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
                     }
 
                     // (Konrad) Add to Configuration button.
-                    if(!full.isDisabled && full.projectId === null){
+                    if(!full.isDisabled && (!full.hasOwnProperty('projectId') || full.projectId === null)){
                         contents += '<button class="btn btn-success btn-sm pull-right" style="margin-right: 10px;" ng-click="vm.addToConfiguration(\'' + full._id + '\')"><i class="fa fa-plus"></i></button>';
                     } else {
                         contents += '<button class="btn btn-default btn-sm pull-right disabled" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>';
