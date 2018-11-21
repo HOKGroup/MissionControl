@@ -288,6 +288,8 @@ FilePathsService = {
         var revitVersion = req.body['revitVersion'];
         var office = req.body['office'];
         var disabled = req.body['disabled'];
+        var unassigned = req.body['unassigned'];
+        var fileType = req.body['fileType'];
         var query = {};
 
         // (Konrad) Always check if disabled.
@@ -296,6 +298,7 @@ FilePathsService = {
         // (Konrad) Additional filters.
         if (revitVersion !== 'All') query['revitVersion'] = revitVersion;
         if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'].map(function (i) { return i.toLowerCase(); }) };
+        if (unassigned == 'true') query['projectId'] = null;
 
         // (Konrad) If we use aggregate here, then we can check for values being null. This matters because not
         // all users would have the latest version of the plug-in on Revit side, and some values published to
@@ -316,6 +319,7 @@ FilePathsService = {
             var start = parseInt(req.body['start']);
             var length = parseInt(req.body['length']);
             var searched = req.body['search'].value !== '';
+            var typeFiltered = fileType !== 'All';
             var order = req.body['order'][0].dir;
             var column = req.body['order'][0].column;
 
@@ -343,15 +347,36 @@ FilePathsService = {
                 });
             }
 
+            // (Dan) Filter the results collection by file type if one was set.
+            if (typeFiltered) {
+                var dataToFilter = searched ? filtered : response; 
+                filtered =  dataToFilter.filter(function(item){
+                    var filePath = item.centralPath.toLowerCase();
+                    switch(fileType){
+                        case 'Local': 
+                            var isLocal = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
+                            return isLocal;
+                        case 'BIM 360':
+                            var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
+                            return isBim360;
+                        case 'Revit Server':
+                            var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
+                            return isRevitServer;
+                        default: // Do not filter
+                            return true;
+                    }
+                });
+            }
+
             // (Konrad) Update 'end'. It might be that start + length is more than total length
             // of the array so we must adjust that.
             var end = start + length;
             if (end > response.length) end = response.length;
-            if (searched && filtered.length < end) end = filtered.length;
+            if ((searched || typeFiltered) && filtered.length < end) end = filtered.length;
 
             // (Konrad) Slice the final collection by start/end.
             var data;
-            if (searched) data = filtered.slice(start, end);
+            if (searched || typeFiltered) data = filtered.slice(start, end);
             else data = response.slice(start, end);
 
             var result = {
