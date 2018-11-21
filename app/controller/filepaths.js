@@ -197,30 +197,12 @@ FilePathsService = {
      * @param req
      * @param res
      */
-    getAllUnassigned: function (req, res) {
-        FilePaths.find({ 'projectId': null, 'isDisabled': false }, function (err, response){
-            var result = {
-                status: 200,
-                message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
-            }
-            res.status(result.status).json(result.message);
-        });
-    },
-
-    /**
-     *
-     * @param req
-     * @param res
-     */
     getAll: function (req, res) {
-        FilePaths.find({}, function (err, response){
+        var filter = {};
+        if (req.query.unassigned === 'true') {
+            filter = { 'projectId': null, 'isDisabled': false };
+        }
+        FilePaths.find(filter, function (err, response){
             var result = {
                 status: 200,
                 message: response
