@@ -98,6 +98,54 @@ AddinsService = {
             });
     },
 
+
+    addinManagerDetails: function(req, res) {
+        Addins
+            .aggregate([
+                { 
+                    $match : {
+                        'revitVersion' : req.params.year, 
+                        'pluginName' : 'AddinManager', 
+                        'detailInfo' : {
+                            $exists : true
+                        }, 
+                        'detailInfo.1' : {
+                            $exists : true
+                        }
+                    }
+                }, 
+                { 
+                    $sort : {
+                        'createdOn' : -1
+                    }
+                }, 
+                { 
+                    $group : {
+                        '_id' : '$user', 
+                        'userData' : {
+                            $first : '$detailInfo'
+                        }, 
+                        count : {
+                            $sum : 1
+                        }
+                    }
+                }
+            ], function(err, response) {
+                var result = {
+                    status: 200,
+                    message: response
+                };
+                if (err){
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response){
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+        });
+    },
+
     /**
      *
      * @param req
