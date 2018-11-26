@@ -656,8 +656,12 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
         }
 
     }
-
-    function addSlashes( str ) {
+    
+    /**
+     * Adds escape slashes to a string for encoding file paths to HTML attributes.
+     * @param str
+     */
+    function addSlashes(str) {
         return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
     }
 
