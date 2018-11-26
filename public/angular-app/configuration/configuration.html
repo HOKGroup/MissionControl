@@ -97,37 +97,50 @@
 
                                     <!-- Filters -->
                                     <div class="row" id="filterWrapper">
-                                        <div class="col-md-4" id="filters">
-                                        <b>Filters:</b>
-                                        <div class="btn-group" style="padding-bottom: 10px; padding-left: 10px;">
-                                            <button class="btn btn-primary btn-sm dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
-                                                <span class="caret"></span>
-                                                {{vm.selectedOffice.name}}
-                                            </button>
-                                            <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0;">
-                                                <li ng-repeat="office in vm.offices" style="padding-right: 5px; padding-left: 5px;">
-                                                    <a href=""
-                                                       ng-click="vm.setOffice(office)"
-                                                       style="padding-left: 0; padding-right: 0;"
-                                                       ng-show="vm.selectedType !== 'BIM 360' || office.name === 'All'">
-                                                        {{office.name}}
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="btn-group" style="padding-bottom: 10px; padding-left: 10px;">
-                                            <button class="btn btn-primary btn-sm dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
-                                                <span class="caret"></span>
-                                                {{vm.selectedType}}
-                                            </button>
-                                            <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0;">
-                                                <li ng-repeat="type in vm.fileTypes" style="padding-right: 5px; padding-left: 5px;">
-                                                    <a href="" ng-click="vm.setType(type)" style="padding-left: 0; padding-right: 0;">
-                                                        {{type}}
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        <div class="col-md-5" id="filters">
+                                            <b>Filters:</b>
+                                            <div class="btn-group" style="padding-bottom: 10px; padding-left: 10px;">
+                                                <button class="btn btn-primary btn-sm dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                    {{vm.selectedRevitVersion}}
+                                                </button>
+                                                <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0;">
+                                                    <li ng-repeat="year in vm.revitVersions" style="padding-right: 5px; padding-left: 5px;">
+                                                        <a href="" ng-click="vm.setVersion(year)" style="padding-left: 0; padding-right: 0;">
+                                                            {{year}}
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="btn-group" style="padding-bottom: 10px; padding-left: 10px;">
+                                                <button class="btn btn-primary btn-sm dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                    {{vm.selectedOffice.name}}
+                                                </button>
+                                                <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0;">
+                                                    <li ng-repeat="office in vm.offices" style="padding-right: 5px; padding-left: 5px;">
+                                                        <a href=""
+                                                        ng-click="vm.setOffice(office)"
+                                                        style="padding-left: 0; padding-right: 0;"
+                                                        ng-show="vm.selectedType !== 'BIM 360' || office.name === 'All'">
+                                                            {{office.name}}
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="btn-group" style="padding-bottom: 10px; padding-left: 10px;">
+                                                <button class="btn btn-primary btn-sm dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                    {{vm.selectedType}}
+                                                </button>
+                                                <ul class="dropdown-menu scrollable-menu-centered" style="padding-right: 0;">
+                                                    <li ng-repeat="type in vm.fileTypes" style="padding-right: 5px; padding-left: 5px;">
+                                                        <a href="" ng-click="vm.setType(type)" style="padding-left: 0; padding-right: 0;">
+                                                            {{type}}
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div> 
                                </td>

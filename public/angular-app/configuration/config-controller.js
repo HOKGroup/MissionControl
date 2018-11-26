@@ -26,6 +26,8 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     vm.selectedOffice = { name: 'All', code: 'All' };
     vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'BIM 360'];
     vm.selectedType = 'All';
+    vm.revitVersions = UtilityService.getRevitVersions();
+    vm.selectedRevitVersion = 'All';
     vm.searchString = '';
 
     getSelectedProjectConfiguration(vm.projectId);
@@ -574,8 +576,8 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
             .withOption('initComplete', function() {
                 $('#files_datatable_wrapper').prepend('<div class="row" id="files_datatable_row1">');
                 $('#files_datatable_row1')
-                    .append( $('#files_datatable_length').addClass('col-md-4'))
-                    .append( $('#files_datatable_wrapper > .dt-buttons').addClass('col-md-4').css({'padding-left': '5px'}))
+                    .append( $('#files_datatable_length').addClass('col-md-3'))
+                    .append( $('#files_datatable_wrapper > .dt-buttons').addClass('col-md-5').css({'padding-left': '5px'}))
                     .append( $('#files_datatable_filter').addClass('col-md-4'));
 
                 $('#filters').insertAfter($('#files_datatable_row1 > div').first());
@@ -630,6 +632,15 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
      */
     vm.setType = function (type) {
         vm.selectedType = type;
+        reloadTable();
+    };
+
+    /**
+     * Sets the revit version filter and reloads the table.
+     * @param version
+     */
+    vm.setVersion = function (version) {
+        vm.selectedRevitVersion = version;
         reloadTable();
     };
 
