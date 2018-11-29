@@ -582,7 +582,6 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
 
                 $('#filters').insertAfter($('#files_datatable_row1 > div').first());
             });
-            
 
         vm.dtColumns = [
             DTColumnBuilder.newColumn('revitVersion')
@@ -596,22 +595,18 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                 }),
             DTColumnBuilder.newColumn('centralPath')
                 .withTitle('File Path')
-                .withOption('width', '60%')
-                .renderWith(function (data, type, full) {
-                    return UtilityService.fileNameFromPath(full.centralPath).toUpperCase();
-                }),
+                .withOption('width', '60%'),
             DTColumnBuilder.newColumn('projectId')
                 .withTitle('')
                 .withOption('className', 'text-center')
                 .withOption('width', '14%')
                 .renderWith(function (data, type, full) {
-                    central = addSlashes(full.centralPath);
-                    var contents = '<div>'
+                    var central = addSlashes(full.centralPath);
+                    return '<div>'
                             + '<button class="btn btn-success btn-sm pull-right" style="margin-right: 10px;" ng-click="vm.newFile = \'' + central + '\'">'
                             +    '<i class="fa fa-plus"></i>'
                             + '</button>'
                             +'</div>';
-                    return contents;
                 })
         ];
     }
@@ -628,7 +623,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
 
     /**
      * Sets the revit version filter and reloads the table.
-     * @param version
+     * @param type
      */
     vm.setType = function (type) {
         vm.selectedType = type;
@@ -652,9 +647,11 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
         if(vm.dtInstance){
             vm.dtInstance.reloadData();
             vm.dtInstance.rerender();
+
+            // (Dan) This depends on initDataTable to trigger which doesn't happen on reload
+            // hence we are inserting the filters back into the table manually.
             filtersElement.appendTo('#filterWrapper');
         }
-
     }
     
     /**

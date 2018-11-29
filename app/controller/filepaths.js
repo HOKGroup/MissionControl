@@ -279,6 +279,9 @@ FilePathsService = {
      *     search: {value: '', regex: 'false'} // search criteria
      *     revitVersion: 'All' // string value for version of Revit that this file path was created with
      *     office: {name: 'All', code: ['ATL, NY']} // json object with name and array of codes to match in a query
+     *     fileType:
+     *     disabled:
+     *     unassigned:
      * }
      * @param req
      * @param res
@@ -298,7 +301,7 @@ FilePathsService = {
         // (Konrad) Additional filters.
         if (revitVersion !== 'All') query['revitVersion'] = revitVersion;
         if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'].map(function (i) { return i.toLowerCase(); }) };
-        if (unassigned == 'true') query['projectId'] = null;
+        if (unassigned === 'true') query['projectId'] = null;
 
         // (Konrad) If we use aggregate here, then we can check for values being null. This matters because not
         // all users would have the latest version of the plug-in on Revit side, and some values published to
@@ -343,7 +346,9 @@ FilePathsService = {
             var filtered = [];
             if (searched){
                 filtered = response.filter(function (item) {
-                    return item.centralPath.indexOf(req.body['search'].value) !== -1;
+                    return item.centralPath.indexOf(req.body['search'].value) !== -1 ||
+                            item.revitVersion.indexOf(req.body['search'].value) !== -1 ||
+                            item.fileLocation.indexOf(req.body['search'].value) !== -1;
                 });
             }
 
@@ -354,14 +359,11 @@ FilePathsService = {
                     var filePath = item.centralPath.toLowerCase();
                     switch(fileType){
                         case 'Local': 
-                            var isLocal = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
-                            return isLocal;
+                            return filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
                         case 'BIM 360':
-                            var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
-                            return isBim360;
+                            return filePath.lastIndexOf('bim 360://', 0) === 0;
                         case 'Revit Server':
-                            var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
-                            return isRevitServer;
+                            return filePath.lastIndexOf('rsn://', 0) === 0;
                         default: // Do not filter
                             return true;
                     }

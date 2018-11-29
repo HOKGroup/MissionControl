@@ -8,6 +8,8 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
 
     //region Init
 
+    //TODO: Dan, can you copy paste that filtering and table stuff from configuration?
+
     var vm = this;
     var toasts = [];
     vm.projectId = $routeParams.projectId;
