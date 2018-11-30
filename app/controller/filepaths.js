@@ -197,30 +197,12 @@ FilePathsService = {
      * @param req
      * @param res
      */
-    getAllUnassigned: function (req, res) {
-        FilePaths.find({ 'projectId': null, 'isDisabled': false }, function (err, response){
-            var result = {
-                status: 200,
-                message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
-            }
-            res.status(result.status).json(result.message);
-        });
-    },
-
-    /**
-     *
-     * @param req
-     * @param res
-     */
     getAll: function (req, res) {
-        FilePaths.find({}, function (err, response){
+        var filter = {};
+        if (req.query.unassigned === 'true') {
+            filter = { 'projectId': null, 'isDisabled': false };
+        }
+        FilePaths.find(filter, function (err, response){
             var result = {
                 status: 200,
                 message: response
@@ -297,6 +279,9 @@ FilePathsService = {
      *     search: {value: '', regex: 'false'} // search criteria
      *     revitVersion: 'All' // string value for version of Revit that this file path was created with
      *     office: {name: 'All', code: ['ATL, NY']} // json object with name and array of codes to match in a query
+     *     fileType:
+     *     disabled:
+     *     unassigned:
      * }
      * @param req
      * @param res
@@ -306,6 +291,8 @@ FilePathsService = {
         var revitVersion = req.body['revitVersion'];
         var office = req.body['office'];
         var disabled = req.body['disabled'];
+        var unassigned = req.body['unassigned'];
+        var fileType = req.body['fileType'];
         var query = {};
 
         // (Konrad) Always check if disabled.
@@ -314,6 +301,7 @@ FilePathsService = {
         // (Konrad) Additional filters.
         if (revitVersion !== 'All') query['revitVersion'] = revitVersion;
         if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'].map(function (i) { return i.toLowerCase(); }) };
+        if (unassigned === 'true') query['projectId'] = null;
 
         // (Konrad) If we use aggregate here, then we can check for values being null. This matters because not
         // all users would have the latest version of the plug-in on Revit side, and some values published to
@@ -334,6 +322,7 @@ FilePathsService = {
             var start = parseInt(req.body['start']);
             var length = parseInt(req.body['length']);
             var searched = req.body['search'].value !== '';
+            var typeFiltered = fileType !== 'All';
             var order = req.body['order'][0].dir;
             var column = req.body['order'][0].column;
 
@@ -357,7 +346,27 @@ FilePathsService = {
             var filtered = [];
             if (searched){
                 filtered = response.filter(function (item) {
-                    return item.centralPath.indexOf(req.body['search'].value) !== -1;
+                    return item.centralPath.indexOf(req.body['search'].value) !== -1 ||
+                            item.revitVersion.indexOf(req.body['search'].value) !== -1 ||
+                            item.fileLocation.indexOf(req.body['search'].value) !== -1;
+                });
+            }
+
+            // (Dan) Filter the results collection by file type if one was set.
+            if (typeFiltered) {
+                var dataToFilter = searched ? filtered : response; 
+                filtered =  dataToFilter.filter(function(item){
+                    var filePath = item.centralPath.toLowerCase();
+                    switch(fileType){
+                        case 'Local': 
+                            return filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
+                        case 'BIM 360':
+                            return filePath.lastIndexOf('bim 360://', 0) === 0;
+                        case 'Revit Server':
+                            return filePath.lastIndexOf('rsn://', 0) === 0;
+                        default: // Do not filter
+                            return true;
+                    }
                 });
             }
 
@@ -365,11 +374,11 @@ FilePathsService = {
             // of the array so we must adjust that.
             var end = start + length;
             if (end > response.length) end = response.length;
-            if (searched && filtered.length < end) end = filtered.length;
+            if ((searched || typeFiltered) && filtered.length < end) end = filtered.length;
 
             // (Konrad) Slice the final collection by start/end.
             var data;
-            if (searched) data = filtered.slice(start, end);
+            if (searched || typeFiltered) data = filtered.slice(start, end);
             else data = response.slice(start, end);
 
             var result = {

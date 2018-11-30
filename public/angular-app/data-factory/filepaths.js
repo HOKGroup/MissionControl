@@ -18,7 +18,7 @@ function FilePathsFactory($http){
         },
 
         getAllUnassigned: function () {
-            return $http.get('/api/v2/filepaths/unassigned').then(complete).catch(failed);
+            return $http.get('/api/v2/filepaths?unassigned=true').then(complete).catch(failed);
         },
 
         addToProject: function (data) {
