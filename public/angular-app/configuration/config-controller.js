@@ -622,7 +622,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     };
 
     /**
-     * Sets the revit version filter and reloads the table.
+     * Sets the Revit file type filter and reloads the table.
      * @param type
      */
     vm.setType = function (type) {

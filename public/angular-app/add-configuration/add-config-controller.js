@@ -3,44 +3,35 @@
  */
 angular.module('MissionControlApp').controller('AddConfigController', AddConfigController);
 
-function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePathsFactory, UtilityService, $window,
-                             $uibModal, ngToast){
+function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePathsFactory, UtilityService,
+                             DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $uibModal, $window,
+                             $compile, $scope, ngToast){
 
     //region Init
 
-    //TODO: Dan, can you copy paste that filtering and table stuff from configuration?
-
     var vm = this;
     var toasts = [];
+    vm.status = ' ';
     vm.projectId = $routeParams.projectId;
     vm.selectedProject = {};
     vm.newConfig = {};
     vm.newFile = '';
     vm.fileWarningMsg = '';
     vm.HasFiles = false;
-    vm.status = ' ';
     vm.files = [];
     vm.offices = UtilityService.getOffices();
     vm.selectedOffice = { name: 'All', code: 'All' };
     vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'BIM 360'];
     vm.selectedType = 'All';
+    vm.revitVersions = UtilityService.getRevitVersions();
+    vm.selectedRevitVersion = 'All';
+    vm.searchString = '';
 
     getSelectedProject(vm.projectId);
     setDefaultConfig();
-    getFiles();
+    createTable();
 
     //endregion
-
-    /**
-     *
-     * @param type
-     */
-    vm.setTypeFilter = function (type) {
-        vm.selectedType = type;
-        if(type === 'BIM 360'){
-            vm.selectedOffice = { name: 'All', code: 'All' };
-        }
-    };
 
     /**
      * Adds new file to the Configuration, but first it verifies that it doesn't
@@ -79,15 +70,14 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
         }
 
         // (Konrad) Let's make sure file is not already in other configurations
-        var centralPath = filePath.replace(/\\/g, '|');
-        ConfigFactory.getByCentralPath(centralPath)
+        var uri = UtilityService.getHttpSafeFilePath(filePath);
+        ConfigFactory.getByCentralPath(uri)
             .then(function(response){
                 if(!response || response.status !== 200) throw response;
 
                 var configFound = response.data;
                 var configNames = '';
                 var configMatched = false;
-
                 if(configFound.length > 0){
                     for(var i = 0; i < configFound.length; i++) {
                         var config = configFound[i];
@@ -220,73 +210,6 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
         });
     };
 
-    /**
-     * Method used by the files dropdown to filter out results.
-     * @param item
-     * @returns {boolean}
-     */
-    vm.filterFn = function(item)
-    {
-        var filePath = item.centralPath.toLowerCase();
-        var passedOffice = false;
-        var passedType = false;
-
-        if(vm.selectedOffice.name === 'All'){
-            passedOffice = true;
-        } else {
-            var isLocal = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
-            var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
-            var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
-
-            if(isLocal){
-                var regx = /^\\\\group\\hok\\(.+?(?=\\))|^\\\\(.{2,3})-\d{2}svr(\.group\.hok\.com)?\\/g;
-                var match = regx.exec(filePath);
-                if(match === null || match[1] === null){
-                    passedOffice = false;
-                } else {
-                    passedOffice = (vm.selectedOffice.code.findIndex(function (item) {
-                        return item.toLowerCase() === match[1];
-                    }) !== -1);
-                }
-            }
-
-            if(isRevitServer){
-                var regx1 = /(rsn:\/\/)(\w*)/g;
-                var match1 = regx1.exec(filePath);
-                if(match1 === null || match1[2] === null){
-                    passedOffice = false;
-                } else {
-                    passedOffice = (vm.selectedOffice.code.findIndex(function (item) {
-                        return item.toLowerCase() === match1[2];
-                    }) !== -1);
-                }
-            }
-
-            // (Konrad) BIM 360 files are not being stored with proper office designations
-            // so we can just ignore them when filtering for office.
-            if(isBim360){
-                passedOffice = true;
-            }
-        }
-
-        switch(vm.selectedType){
-            case 'All':
-                passedType = true;
-                break;
-            case 'Local':
-                passedType = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
-                break;
-            case 'Revit Server':
-                passedType = filePath.lastIndexOf('rsn://', 0) === 0;
-                break;
-            case 'BIM 360':
-                passedType = filePath.lastIndexOf('bim 360://', 0) === 0;
-                break;
-        }
-
-        return passedType && passedOffice;
-    };
-
     //region Family Name Overrides
 
     vm.familyNameCheckTag = null;
@@ -342,34 +265,25 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
 
     //endregion
 
+    //region DataTable Setup
+
+    vm.dtRecordsOptions = {
+        paginationType: 'simple_numbers',
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
+        stateSave: false,
+        deferRender: true
+    };
+
+    vm.dtRecordsColumnDefs = [
+        DTColumnDefBuilder.newColumnDef(0), //file name
+        DTColumnDefBuilder.newColumnDef(1), //category
+        DTColumnDefBuilder.newColumnDef(2), //edited on
+        DTColumnDefBuilder.newColumnDef(3) //edited by
+    ];
+
+    //endregion
+
     //region Utilities
-
-    /**
-     * Retrieves all central model file paths that were not yet assigned
-     * to any configurations.
-     */
-    function getFiles(){
-        FilePathsFactory.getAll()
-            .then(function (response) {
-                if(!response || response.status !== 200) throw response;
-
-                response.data.forEach(function (file) {
-                    file['name'] = UtilityService.fileNameFromPath(file.centralPath);
-                });
-                vm.files = response.data;
-            })
-            .catch(function (err) {
-                console.log(err);
-                toasts.push(ngToast.danger({
-                    dismissButton: true,
-                    dismissOnTimeout: true,
-                    timeout: 4000,
-                    newestOnTop: true,
-                    content: err.message
-                }));
-            });
-    }
-
     /**
      * Retrieves Project from MongoDB.
      * @param projectId
@@ -521,6 +435,125 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
             sharedParamMonitor: monitor_sharedParameters,
             updaters: [updater_dtm, updater_ca, updater_sheet, monitor_linkUnload, updater_healthRecords]
         };
+    }
+
+    /**
+     * Initiates File Paths table.
+     */
+    function createTable() {
+        vm.dtInstance = {};
+        vm.dtOptions = DTOptionsBuilder.newOptions()
+            .withOption('ajax', {
+                url: '/api/v2/filepaths/datatable',
+                type: 'POST',
+                data: function (d) {
+                    d.revitVersion = vm.selectedRevitVersion;
+                    d.office = vm.selectedOffice;
+                    d.fileType  = vm.selectedType;
+                    d.disabled = false;
+                    d.unassigned = true;
+                }
+            })
+            .withDataProp('data')
+            .withOption('processing', true)
+            .withOption('serverSide', true)
+            .withPaginationType('simple_numbers')
+            .withOption('stateSave', true)
+            .withOption('lengthMenu', [[5, 10, 50, -1], [5, 10, 50, 'All']])
+            
+            // (Konrad) We need to style the columns ourselves otherwise they look .net-ish
+            .withOption('initComplete', function() {
+                $('#files_datatable_wrapper')
+                    .addClass('col-md-offset-3')
+                    .prepend('<div class="row" id="files_datatable_row1">');
+                $('#files_datatable_row1')
+                    .append( $('#files_datatable_length').addClass('col-md-3'))
+                    .append( $('#files_datatable_wrapper > .dt-buttons').addClass('col-md-5').css({'padding-left': '5px'}))
+                    .append( $('#files_datatable_filter').addClass('col-md-4'));
+
+                $('#filters').insertAfter($('#files_datatable_row1 > div').first());
+            })
+            .withOption('createdRow', function(row) {
+                // (Konrad) Recompiling so we can bind Angular directive to the DT
+                $compile(angular.element(row).contents())($scope);
+            });
+
+        vm.dtColumns = [
+            DTColumnBuilder.newColumn('revitVersion')
+                .withTitle('Version')
+                .withOption('width', '13%'),
+            DTColumnBuilder.newColumn('fileLocation')
+                .withTitle('Office')
+                .withOption('width', '13%')
+                .renderWith(function (data, type, full) {
+                    return full.fileLocation.toUpperCase();
+                }),
+            DTColumnBuilder.newColumn('centralPath')
+                .withTitle('File Path')
+                .withOption('width', '60%'),
+            DTColumnBuilder.newColumn('projectId')
+                .withTitle('')
+                .withOption('className', 'text-center')
+                .withOption('width', '14%')
+                .renderWith(function (data, type, full) {
+                    var central = addSlashes(full.centralPath);
+                    return '<div>'
+                            + '<button class="btn btn-success btn-sm pull-right" style="margin-right: 10px;" ng-click="vm.newFile = \'' + central + '\'; vm.addFile();">'
+                            +    '<i class="fa fa-plus"></i>'
+                            + '</button>'
+                            +'</div>';
+                })
+        ];
+    }
+
+    /**
+     * Sets the office filter and reloads the table.
+     * @param office
+     */
+    vm.setOffice = function (office) {
+        vm.selectedOffice = office;
+        reloadTable();
+    };
+
+    /**
+     * Sets the Revit file type filter and reloads the table.
+     * @param type
+     */
+    vm.setType = function (type) {
+        vm.selectedType = type;
+        reloadTable();
+    };
+
+    /**
+     * Sets the revit version filter and reloads the table.
+     * @param version
+     */
+    vm.setVersion = function (version) {
+        vm.selectedRevitVersion = version;
+        reloadTable();
+    };
+
+    /**
+     * Reloads the table.
+     */
+    function reloadTable() {
+        var filtersElement = $('#filters').detach();
+        if(vm.dtInstance){
+            vm.dtInstance.reloadData();
+            vm.dtInstance.rerender();
+
+            // (Dan) This depends on initDataTable to trigger which doesn't happen on reload
+            // hence we are inserting the filters back into the table manually.
+            filtersElement.appendTo('#filterWrapper');
+        }
+    }
+    
+    /**
+     * Adds escape slashes to a string for encoding file paths to HTML attributes.
+     * @param str
+     */
+    function addSlashes(str) {
+        return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
     }
 
     //endregion
