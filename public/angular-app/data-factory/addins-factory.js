@@ -13,7 +13,7 @@ function AddinsFactory($http){
         getUsersOfPlugin: function getUsersOfPlugin(name, year, office){
             var officeFilter = '';
             if (office !== undefined) {
-                var officeCodes = office.reduce(function (accumulator, value) { return accumulator = accumulator + '|' + value });
+                var officeCodes = office.reduce(function (accumulator, value) { return accumulator = accumulator + '|' + value; });
                 officeFilter += '&office=' + officeCodes;
             }
             return $http.get('/api/v2/addins/' + year + '?name=' + name  + officeFilter).then(complete).catch(failed);
@@ -22,7 +22,7 @@ function AddinsFactory($http){
         getAddinManagerDetails: function getAddinManagerDetails(year, office){
             var officeFilter = '';
             if (office !== undefined) {
-                var officeCodes = office.reduce(function (accumulator, value) { return accumulator = accumulator + '|' + value });
+                var officeCodes = office.reduce(function (accumulator, value) { return accumulator = accumulator + '|' + value; });
                 officeFilter += '?office=' + officeCodes;
             }
             return $http.get('/api/v2/addins/' + year  + '/addinmanager' +  officeFilter).then(complete).catch(failed); 
