@@ -27,29 +27,6 @@ AddinsService = {
     },
 
     /**
-     *
-     * @param req
-     * @param res
-     */
-    getByYear: function(req, res){
-        Addins
-            .find({'revitVersion': req.params.year}, function (err, response){
-                var result = {
-                    status: 200,
-                    message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
-                }
-                res.status(result.status).json(result.message);
-            });
-    },
-
-    /**
      * 
      * @param req 
      * @param res 
@@ -112,7 +89,7 @@ AddinsService = {
             'detailInfo.1' : {
                 $exists : true
             }
-        }
+        };
         if (req.query.office) {
             var officeCodes = req.query.office.split('|');
             matchFilter['office'] = { $in: officeCodes};
