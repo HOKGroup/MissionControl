@@ -28,7 +28,6 @@ function AddinsController(AddinsFactory, UtilityService) {
                 if(!response || response.status !== 200) return;
                var list = response.data;
 
-                // var list = getTotals(output);
                 list.sort(function(a,b){
                     return a.count - b.count;
                 }).reverse(); // sorted by count
@@ -52,9 +51,9 @@ function AddinsController(AddinsFactory, UtilityService) {
         // (Konrad) First we need to get just plugins that match the name/year filters per user
         // Used for Bar Chart
         var office;
-            if (vm.SelectedOffice !== 'All') {
-                office = vm.officeFilters.find(function (filter) { return filter.name == vm.SelectedOffice; }).code;
-            }
+        if (vm.SelectedOffice !== 'All') {
+            office = vm.officeFilters.find(function (filter) { return filter.name == vm.SelectedOffice; }).code;
+        }
         AddinsFactory.
             getUsersOfPlugin(item.name, vm.SelectedYear, office).then(function(response){
                 var totals = response.data;
