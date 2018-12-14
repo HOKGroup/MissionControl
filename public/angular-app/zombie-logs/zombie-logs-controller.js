@@ -31,6 +31,7 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, UtilityService, D
     vm.popup2 = { opened: false };
 
     getUsers();
+    getLogData();
 
     //endregion
 
@@ -57,67 +58,83 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, UtilityService, D
     }
 
     //region Table
+    function getLogData() {
 
-    // set table options for zombielogs
-    vm.dtInstance = {};
-    vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
-        return ZombieLogsFactory.get()
-            .then(function (response) {
-                if(!response || response.status !== 200) return;
+        // set table options for zombielogs
+        vm.dtInstance = {};
+        // vm.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
+        //     return ZombieLogsFactory.get()
+        //         .then(function (response) {
+        //             if(!response || response.status !== 200) return;
 
-                processTableData(response.data);
+        //             processTableData(response.data);
 
-                return vm.logs;
+        //             return vm.logs;
+        //         })
+        //         .catch(function (err) {
+        //             console.log('Unable to load project data: ' + err.message);
+        //         });
+        vm.dtOptions = DTOptionsBuilder.newOptions()
+            .withOption('ajax', {
+                url: '/api/v2/zombielogs/datatable',
+                type: 'POST',
+                data: function (d) {
+                    d.from = vm.dtFrom;
+                    d.to = vm.dtTo;
+                    d.office = vm.selectedOffice;
+                    d.search = { value: '' };
+                }
             })
-            .catch(function (err) {
-                console.log('Unable to load project data: ' + err.message);
+            .withDataProp('data')
+            .withOption('processing', true)
+            .withOption('serverSide', true)
+            .withPaginationType('simple_numbers')
+            .withDisplayLength(10)
+            .withOption('order', [0, 'desc'])
+            .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
+            .withOption('rowCallback', function (row, data, index) {
+                switch(data.level){
+                    case 'Info':
+                        row.className = row.className + ' table-info';
+                        break;
+                    case 'Error':
+                        row.className = row.className + ' bg-warning';
+                        break;
+                    case 'Fatal':
+                        row.className = row.className + ' bg-danger';
+                        break;
+                    default:
+                        row.className = row.className + ' table-info';
+                        break;
+                }
             });
-    }).withPaginationType('simple_numbers')
-        .withDisplayLength(10)
-        .withOption('order', [0, 'desc'])
-        .withOption('lengthMenu', [[10, 25, 50, 100, -1],[10, 25, 50, 100, 'All']])
-        .withOption('rowCallback', function (row, data, index) {
-            switch(data.level){
-                case 'Info':
-                    row.className = row.className + ' table-info';
-                    break;
-                case 'Error':
-                    row.className = row.className + ' bg-warning';
-                    break;
-                case 'Fatal':
-                    row.className = row.className + ' bg-danger';
-                    break;
-                default:
-                    row.className = row.className + ' table-info';
-                    break;
-            }
-        });
 
-    vm.dtColumns = [
-        DTColumnBuilder.newColumn('createdAt')
-            .withTitle('Date/Time')
-            .withOption('width', '12%')
-            // .withOption('orderData', 0)
-            .renderWith(parseDateTime),
-        DTColumnBuilder.newColumn('machine')
-            .withTitle('Location')
-            .withOption('width', '8%')
-            .withOption('className', 'text-center')
-            .renderWith(parseLocation),
-        DTColumnBuilder.newColumn('machine')
-            .withTitle('Machine')
-            .withOption('className', 'text-center')
-            .withOption('width', '10%')
-            .renderWith(parseMachine),
-        DTColumnBuilder.newColumn('machine')
-            .withTitle('User')
-            .withOption('className', 'text-center')
-            .withOption('width', '15%')
-            .renderWith(parseUsername),
-        DTColumnBuilder.newColumn('message')
-            .withTitle('Message')
-            .withOption('width', '55%')
-    ];
+        vm.dtColumns = [
+            DTColumnBuilder.newColumn('createdAt')
+                .withTitle('Date/Time')
+                .withOption('width', '12%')
+                // .withOption('orderData', 0)
+                .renderWith(parseDateTime),
+            DTColumnBuilder.newColumn('machine')
+                .withTitle('Location')
+                .withOption('width', '8%')
+                .withOption('className', 'text-center')
+                .renderWith(parseLocation),
+            DTColumnBuilder.newColumn('machine')
+                .withTitle('Machine')
+                .withOption('className', 'text-center')
+                .withOption('width', '10%')
+                .renderWith(parseMachine),
+            DTColumnBuilder.newColumn('machine')
+                .withTitle('User')
+                .withOption('className', 'text-center')
+                .withOption('width', '15%')
+                .renderWith(parseUsername),
+            DTColumnBuilder.newColumn('message')
+                .withTitle('Message')
+                .withOption('width', '55%')
+        ];
+    }
 
     // set table options for zombielogs
     vm.dtInstance1 = {};
@@ -412,27 +429,30 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, UtilityService, D
      */
     vm.filterDate = function () {
         vm.loading = true;
-        var data = {
-            from: vm.dtFrom,
-            to: vm.dtTo,
-            office: vm.selectedOffice
-        };
-
         vm.dtInstance.changeData(function () {
-            return ZombieLogsFactory.getFiltered(data)
-                .then(function (response) {
-                    if(!response || response.status !== 201) return;
-
-                    processTableData(response.data);
-                    vm.loading = false;
-
-                    return vm.logs;
-                })
-                .catch(function (err) {
-                    vm.loading = false;
-                    console.log(err);
-                });
+            return getLogData();
         });
+        // var data = {
+        //     from: vm.dtFrom,
+        //     to: vm.dtTo,
+        //     office: vm.selectedOffice
+        // };
+
+        // vm.dtInstance.changeData(function () {
+        //     return ZombieLogsFactory.getFiltered(data)
+        //         .then(function (response) {
+        //             if(!response || response.status !== 201) return;
+
+        //             processTableData(response.data);
+        //             vm.loading = false;
+
+        //             return vm.logs;
+        //         })
+        //         .catch(function (err) {
+        //             vm.loading = false;
+        //             console.log(err);
+        //         });
+        // });
     };
 
     /**

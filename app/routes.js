@@ -68,6 +68,7 @@ var users = require('./models/users');
      app.get('/api/v2/zombielogs', zombieLogs.get);
      app.post('/api/v2/zombielogs', zombieLogs.add);
      app.post('/api/v2/zombielogs/filter', zombieLogs.getByDate);
+     app.post('/api/v2/zombielogs/datatable', zombieLogs.datatable);
 
      var families = require('./controller/families-controller');
      app.get('/api/v2/families/centralpath/:uri*', families.findByCentralPath);
