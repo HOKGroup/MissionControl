@@ -44,7 +44,7 @@ AddinsService = {
         }
         if (req.query.office) {
             var officeCodes = req.query.office.split('|');
-            matchFilter.$match['office'] = { $in: officeCodes};
+            matchFilter.$match['office'] = { $in: officeCodes };
         }
         Addins
             .aggregate([
@@ -67,10 +67,10 @@ AddinsService = {
                     status: 200,
                     message: data
                 };
-                if (err){
+                if (err) {
                     result.status = 500;
                     result.message = err;
-                } else if (!response){
+                } else if (!response) {
                     result.status = 404;
                     result.message = err;
                 }
@@ -92,27 +92,17 @@ AddinsService = {
         };
         if (req.query.office) {
             var officeCodes = req.query.office.split('|');
-            matchFilter['office'] = { $in: officeCodes};
+            matchFilter['office'] = { $in: officeCodes };
         }
         Addins
             .aggregate([
+                { $match: matchFilter }, 
+                { $sort: { 'createdOn' : -1 } }, 
                 { 
-                    $match : matchFilter 
-                }, 
-                { 
-                    $sort : {
-                        'createdOn' : -1
-                    }
-                }, 
-                { 
-                    $group : {
+                    $group: {
                         '_id' : '$user', 
-                        'userData' : {
-                            $first : '$detailInfo'
-                        }, 
-                        count : {
-                            $sum : 1
-                        }
+                        'userData' : { $first : '$detailInfo' }, 
+                        count: { $sum: 1 }
                     }
                 }
             ], function(err, response) {
@@ -162,10 +152,10 @@ AddinsService = {
                     status: 200,
                     message: addinManagerStats
                 };
-                if (err){
+                if (err) {
                     result.status = 500;
                     result.message = err;
-                } else if (!response){
+                } else if (!response) {
                     result.status = 404;
                     result.message = err;
                 }
