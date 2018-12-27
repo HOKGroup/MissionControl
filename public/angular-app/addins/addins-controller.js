@@ -21,18 +21,18 @@ function AddinsController(AddinsFactory, UtilityService) {
 
     // region Methods
 
+    /**
+     * Handles user selecting a year filter for all plugin stats.
+     * @param year
+     * @constructor
+     */
     vm.ProcessData = function (year){
-        AddinsFactory
-            .getByYear(year).then(function(response){
-                if(!response || response.status !== 200) return;
+        vm.AddinManagerStats = [];
+        AddinsFactory.getByYear(year)
+            .then(function(response){
+                if(!response || response.status !== 200) throw response;
 
-                vm.AddinLogs = response.data;
-                var output = vm.AddinLogs.reduce(function(sums,entry){
-                    sums[entry.pluginName] = (sums[entry.pluginName] || 0) + 1;
-                    return sums;
-                },{});
-
-                var list = getTotals(output);
+                var list = response.data;
                 list.sort(function(a,b){
                     return a.count - b.count;
                 }).reverse(); // sorted by count
@@ -41,148 +41,67 @@ function AddinsController(AddinsFactory, UtilityService) {
                 vm.SelectedYear = year;
                 vm.UserDetails = [];
                 vm.SelectedPlugin = '';
-            }).catch(function (error) {
+            })
+            .catch(function (error) {
                 console.log('Error retrieving Usage Logs: ', error);
             });
     };
 
+    /**
+     * Handles user selecting an office specific filter for user stats.
+     * @param office
+     * @constructor
+     */
     vm.SetOfficeFilter = function (office) {
         vm.SelectedOffice = office.name;
-
-        // (Konrad) First we need to get just plugins that match the name/year filters per user
-        // Used for Bar Chart
-        var output = vm.AddinLogs.reduce(function (sums, entry) {
-            if(entry.pluginName === vm.SelectedPlugin
-                && entry.revitVersion === vm.SelectedYear
-                && isOfficeMatch(entry.office, office.code)){
-                sums[entry.user] = (sums[entry.user] || 0) + 1;
-            }
-            return sums;
-        }, {});
-
-        var totals = getTotals(output);
-        totals.sort(function(a,b){
-            return a.count - b.count;
-        }).reverse(); // sorted by count
-
-        vm.UserDetails = totals;
+        var plugin = vm.d3HorizontalData.find(function (item) { return item.name === vm.SelectedPlugin; });
+        vm.OnClick(plugin);
     };
 
-    vm.OnClick = function(item){
+    /**
+     * Handles user clicking on the bar object in the `Plugin Use Frequency` chart.
+     * @param item
+     * @constructor
+     */
+    vm.OnClick = function(item) {
         // (Konrad) First we need to get just plugins that match the name/year filters per user
         // Used for Bar Chart
-        var addinManagerDetails = {};
-        var users = [];
-        var output = vm.AddinLogs.reduceRight(function (sums, entry) {
-            if(item.name === 'AddinManager')
-            {
-                // (Konrad) This plugin publishes extra information we can use to make a normalized bar chart.
-                // The idea here is that for each tool we create a normalized bar, that shows how many users
-                // have given tool set to Always. Never and InSessionOnly. Each user is logged only once. Last
-                // set of data published by user is used (reduceRight iterates from end to get most recent).
-                if(entry.pluginName === item.name
-                    && entry.revitVersion === vm.SelectedYear
-                    && isOfficeMatch(entry.office, vm.SelectedOffice)){
+        var office;
+        if (vm.SelectedOffice !== 'All') {
+            var matchedOffice = vm.officeFilters.find(function (filter) { return filter.name === vm.SelectedOffice; });
+            office = matchedOffice.code;
+        }
 
-                    sums[entry.user] = (sums[entry.user] || 0) + 1; // data needed by user specific chart.
-                    if(entry.detailInfo.length > 0 && users.indexOf(entry.user) === -1) // log exists and wasn't added yet
-                    {
-                        users.push(entry.user); // store user
-                        for(var i = 0; i < entry.detailInfo.length; i++){
-                            var detailItem = entry.detailInfo[i];
-                            if(addinManagerDetails.hasOwnProperty(detailItem.name))
-                            {
-                                switch (detailItem.value){
-                                    case 'Never':
-                                        addinManagerDetails[detailItem.name].never += 1;
-                                        break;
-                                    case 'Always':
-                                        addinManagerDetails[detailItem.name].always += 1;
-                                        break;
-                                    case 'ThisSessionOnly':
-                                        addinManagerDetails[detailItem.name].thisSessionOnly += 1;
-                                        break;
-                                }
-                            } else {
-                                var pluginDetail = {
-                                    name: detailItem.name,
-                                    never: 0,
-                                    always: 0,
-                                    thisSessionOnly: 0
-                                };
-                                switch (detailItem.value){
-                                    case 'Never':
-                                        pluginDetail.never = 1;
-                                        break;
-                                    case 'Always':
-                                        pluginDetail.always = 1;
-                                        break;
-                                    case 'ThisSessionOnly':
-                                        pluginDetail.thisSessionOnly = 1;
-                                        break;
-                                }
-                                addinManagerDetails[detailItem.name] = pluginDetail;
-                            }
-                        }
-                    }
-                }
-                return sums;
-            } else {
-                if(entry.pluginName === item.name
-                    && entry.revitVersion === vm.SelectedYear
-                    && isOfficeMatch(entry.office, vm.SelectedOffice)){
-                    sums[entry.user] = (sums[entry.user] || 0) + 1;
-                }
-                return sums;
-            }
-        }, {});
+        AddinsFactory.getUsersOfPlugin(item.name, vm.SelectedYear, office)
+            .then(function(response){
+                if(!response || response.status !== 200) throw response;
 
-        vm.AddinManagerStats = Object.keys(addinManagerDetails).map(function (item) {
-            return addinManagerDetails[item];
-        });
+                var totals = response.data;
+                totals.sort(function(a,b){
+                    return a.count - b.count;
+                }).reverse(); // sorted by count
 
-        var totals = getTotals(output);
-        totals.sort(function(a,b){
-            return a.count - b.count;
-        }).reverse(); // sorted by count
+                vm.UserDetails = totals;
+                vm.SelectedPlugin = item.name;
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
 
-        vm.UserDetails = totals;
-        vm.SelectedPlugin = item.name;
+        if (item.name === 'AddinManager') {
+            AddinsFactory.getAddinManagerDetails(vm.SelectedYear, office)
+                .then(function(response){
+                    if(!response || response.status !== 200) throw response;
+
+                    vm.AddinManagerStats = response.data;
+                })
+                .catch(function (err) {
+                    console.log(err);
+                });
+        } else {
+            vm.AddinManagerStats = [];
+        }
     };
-
-    //endregion
-
-    //region Utilities
-
-    /**
-     * Utility used to convert data totals to proper format
-     * @param data
-     * @returns {Array}
-     */
-    function getTotals(data){
-        var list = [];
-        for (var k in data){
-            if(data.hasOwnProperty(k)){
-                list.push({name: k, count: data[k]});
-            }
-        }
-        return list;
-    }
-
-    /**
-     *
-     * @param office
-     * @param filter
-     * @returns {boolean}
-     */
-    function isOfficeMatch(office, filter){
-        if(filter === 'All') return true;
-        if(filter.constructor === Array){
-            return filter.indexOf(office) > -1;
-        }else {
-            return office === filter;
-        }
-    }
 
     //endregion
 
