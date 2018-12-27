@@ -21,13 +21,18 @@ function AddinsController(AddinsFactory, UtilityService) {
 
     // region Methods
 
+    /**
+     * Handles user selecting a year filter for all plugin stats.
+     * @param year
+     * @constructor
+     */
     vm.ProcessData = function (year){
         vm.AddinManagerStats = [];
-        AddinsFactory
-            .getByYear(year).then(function(response){
-                if(!response || response.status !== 200) return;
-                var list = response.data;
+        AddinsFactory.getByYear(year)
+            .then(function(response){
+                if(!response || response.status !== 200) throw response;
 
+                var list = response.data;
                 list.sort(function(a,b){
                     return a.count - b.count;
                 }).reverse(); // sorted by count
@@ -36,40 +41,65 @@ function AddinsController(AddinsFactory, UtilityService) {
                 vm.SelectedYear = year;
                 vm.UserDetails = [];
                 vm.SelectedPlugin = '';
-            }).catch(function (error) {
+            })
+            .catch(function (error) {
                 console.log('Error retrieving Usage Logs: ', error);
             });
     };
 
+    /**
+     * Handles user selecting an office specific filter for user stats.
+     * @param office
+     * @constructor
+     */
     vm.SetOfficeFilter = function (office) {
         vm.SelectedOffice = office.name;
-        var plugin = vm.d3HorizontalData.find(function (item) { return item.name == vm.SelectedPlugin; });
+        var plugin = vm.d3HorizontalData.find(function (item) { return item.name === vm.SelectedPlugin; });
         vm.OnClick(plugin);
     };
 
+    /**
+     * Handles user clicking on the bar object in the `Plugin Use Frequency` chart.
+     * @param item
+     * @constructor
+     */
     vm.OnClick = function(item) {
         // (Konrad) First we need to get just plugins that match the name/year filters per user
         // Used for Bar Chart
         var office;
         if (vm.SelectedOffice !== 'All') {
-            var matchedOffice = vm.officeFilters.find(function (filter) { return filter.name == vm.SelectedOffice; });
+            var matchedOffice = vm.officeFilters.find(function (filter) { return filter.name === vm.SelectedOffice; });
             office = matchedOffice.code;
         }
-        AddinsFactory.
-            getUsersOfPlugin(item.name, vm.SelectedYear, office).then(function(response){
+
+        AddinsFactory.getUsersOfPlugin(item.name, vm.SelectedYear, office)
+            .then(function(response){
+                if(!response || response.status !== 200) throw response;
+
                 var totals = response.data;
                 totals.sort(function(a,b){
                     return a.count - b.count;
                 }).reverse(); // sorted by count
+
                 vm.UserDetails = totals;
                 vm.SelectedPlugin = item.name;
+            })
+            .catch(function (err) {
+                console.log(err);
             });
 
         if (item.name === 'AddinManager') {
             AddinsFactory.getAddinManagerDetails(vm.SelectedYear, office)
-                .then(function(response){ 
-                    vm.AddinManagerStats = response.data; 
+                .then(function(response){
+                    if(!response || response.status !== 200) throw response;
+
+                    vm.AddinManagerStats = response.data;
+                })
+                .catch(function (err) {
+                    console.log(err);
                 });
+        } else {
+            vm.AddinManagerStats = [];
         }
     };
 

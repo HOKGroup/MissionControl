@@ -3,30 +3,6 @@ var Addins = mongoose.model('Addins');
 
 AddinsService = {
     /**
-     *
-     * @param req
-     * @param res
-     */
-    findAll: function(req, res){
-        Addins
-            .find()
-            .exec(function(err, response){
-                var result = {
-                    status: 200,
-                    message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
-                }
-                res.status(result.status).json(result.message);
-            });
-    },
-
-    /**
      * 
      * @param req 
      * @param res 
@@ -58,9 +34,10 @@ AddinsService = {
                 }
             ], function (err, response){
                 var data = response.map(function(addin) { 
-                    return {name: addin['_id'],
-                    office: addin['office'],
-                     count: addin['count']
+                    return {
+                        name: addin['_id'],
+                        office: addin['office'],
+                        count: addin['count']
                     };
                 });
                 var result = {
@@ -78,7 +55,11 @@ AddinsService = {
             });
     },
 
-
+    /**
+     *
+     * @param req
+     * @param res
+     */
     addinManagerDetails: function(req, res) {
         var matchFilter = {
             'revitVersion' : req.params.year, 
