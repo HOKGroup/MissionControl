@@ -488,6 +488,25 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
         });
     };
 
+    /**
+     * Launches Forge Audit, removing unplaced views.
+     * @param filePath
+     */
+    vm.launchAuditWindow = function (filePath) {
+        window.confirm(`Do you want to run an audit on ${filePath}`);
+        // $uibModal.open({
+        //     animation: true,
+        //     templateUrl: 'angular-app/configuration/file-path-help.html',
+        //     controller: 'FilePathHelpController as vm',
+        //     size: size
+        // }).result.then(function(request){
+        //     //model closed
+        //
+        // }).catch(function(){
+        //     //if modal dismissed
+        // });
+    };
+
     //region Utilities
     /**
      * Retrieves Project Configuration.
