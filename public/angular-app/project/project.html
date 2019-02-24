@@ -12,7 +12,8 @@
             <thead>
             <tr>
                 <th class="col-md-2">Project Number</th>
-                <th class="col-md-6">Project Name</th>
+                <th class="col-md-4">Project Name</th>
+                <th class="col-md-2">QC Status</th>
                 <th class="col-md-1 text-center">Office</th>
                 <th class="col-md-3">Project Address</th>
             </tr>
@@ -21,6 +22,16 @@
             <tr ng-repeat="x in vm.projects" ng-click="vm.go('/projects/edit/' + x._id)">
                 <td>{{ x.number }}</td>
                 <td>{{ x.name }}</td>
+                <td>
+                    <div style="display: flex;">
+                        <div style="flex: 2;">
+                            {{ (100 * (x.totalViews - x.viewsOnSheet)) / x.totalViews}}%
+                        </div>
+                        <button style="flex: 1;">
+                            Audit
+                        </button>
+                    </div>
+                </td>
                 <td class="text-center">{{ x.office }}</td>
                 <td>{{ x.address.city }}, {{ x.address.state }}</td>
                 </tr>

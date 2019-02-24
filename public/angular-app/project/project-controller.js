@@ -48,8 +48,9 @@ function ProjectController(ProjectFactory, $location, DTColumnDefBuilder){
         vm.dtColumnDefs = [
             DTColumnDefBuilder.newColumnDef(0), //number
             DTColumnDefBuilder.newColumnDef(1), //name
-            DTColumnDefBuilder.newColumnDef(2), //office
-            DTColumnDefBuilder.newColumnDef(3) //address
+            DTColumnDefBuilder.newColumnDef(2), //QC Status
+            DTColumnDefBuilder.newColumnDef(3), //office
+            DTColumnDefBuilder.newColumnDef(4) //address
         ];
     }
 
