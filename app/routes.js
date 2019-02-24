@@ -157,4 +157,7 @@ var users = require('./models/users');
      var users = require('./controller/users');
      app.post('/api/v2/users/add', users.add);
      app.get('/api/v2/users', users.getAll);
+
+   var faker = require('./controller/faker');
+   app.post('/api/v2/faker/add', faker.add);
   };
