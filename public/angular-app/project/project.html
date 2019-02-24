@@ -13,7 +13,7 @@
             <tr>
                 <th class="col-md-2">Project Number</th>
                 <th class="col-md-4">Project Name</th>
-                <th class="col-md-2">QC Status</th>
+                <th class="col-md-1">QC Status</th>
                 <th class="col-md-1 text-center">Office</th>
                 <th class="col-md-3">Project Address</th>
             </tr>
@@ -30,9 +30,6 @@
                         <div style="flex: 2;" ng-click="vm.setCurrent(x._id)">
                             {{(100 * (x.totalViews - x.viewsOnSheet) / x.totalViews)| number:0}}%
                         </div>
-                        <button style="width: 50px;">
-                            Audit
-                        </button>
                     </div>
                     <div ng-if="vm.selectedProject_id === x._id" style="cursor: auto; margin-top: 15px; margin-left: -100px;">
                         <div ng-repeat="y in x.history">
