@@ -28,7 +28,7 @@
 
                     <div style="display: flex;">
                         <div style="flex: 2;">
-                            {{ (100 * (x.totalViews - x.viewsOnSheet)) / x.totalViews}}%
+                            {{(100 * (x.totalViews - x.viewsOnSheet) / x.totalViews)| number:0}}%
                         </div>
                         <button style="flex: 1;">
                             Audit
