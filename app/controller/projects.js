@@ -63,6 +63,9 @@ ProjectService = {
           history: {
             $push: {
               centralPath: '$centralPath',
+              percent: {$divide: [{$subtract: ['$totalViews', '$viewsOnSheet']}, '$totalViews']},
+              totalViews: '$totalViews',
+              viewsOnSheet: '$viewsOnSheet',
               //This limits how many records for each file we're going to hold. Increase for a better graph, decrease for speed.
               data: {$slice: ['$history', 25]}}}
         }},
@@ -72,6 +75,9 @@ ProjectService = {
       .exec(function (err, response){
         console.log("ERR", err)
         console.log("RES", response)
+        if(Array.isArray(response)){
+          response.forEach(val1=>{val1.history.sort((a,b)=>b.percent - a.percent)});
+        }
         var result = {
           status: 200,
           message: response

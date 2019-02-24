@@ -19,10 +19,13 @@
             </tr>
             </thead>
             <tbody>
+
+
             <tr ng-repeat="x in vm.projects" ng-click="vm.go('/projects/edit/' + x._id)">
                 <td>{{ x.number }}</td>
                 <td>{{ x.name }}</td>
-                <td>
+                <td ng-click="$event.stopPropagation(); vm.setCurrent(x._id)">
+
                     <div style="display: flex;">
                         <div style="flex: 2;">
                             {{ (100 * (x.totalViews - x.viewsOnSheet)) / x.totalViews}}%
@@ -30,6 +33,19 @@
                         <button style="flex: 1;">
                             Audit
                         </button>
+                    </div>
+                    <div ng-if="vm.selectedProject_id === x._id">
+                        <div ng-repeat="y in x.history">
+
+                            <div style="display: flex;">
+                                <div style="flex: auto;">
+
+                                </div>
+                                <div style="width: 50px;">
+                                    {{ (100 * y.percent)}}%
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </td>
                 <td class="text-center">{{ x.office }}</td>
