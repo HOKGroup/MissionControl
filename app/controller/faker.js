@@ -46,7 +46,7 @@ module.exports = {
 
 function createConfiguration(path){
   const newConfigurations = Configuration.create({
-    name: '',
+    name: faker.random.words(),
     files: [{centralPath: path}], //revit projects
     sheetDatabase: '', //sheet database
     sharedParamMonitor: {
