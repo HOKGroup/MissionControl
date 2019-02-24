@@ -46,7 +46,7 @@ namespace MissionControl.DesignAutomation
         {
             // get all the views in the project
             FilteredElementCollector collector = new FilteredElementCollector(doc).OfClass(typeof(View));
-            List<Element> views = collector.Where(v => v.LookupParameter("Sheet Number").AsString() == "").ToList();
+            List<Element> views = collector.Where(v => v.LookupParameter("Sheet Number").AsString() == "---").ToList();
 
             // start a transaction
             using (Transaction t = new Transaction(doc))
