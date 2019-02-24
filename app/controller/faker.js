@@ -16,24 +16,30 @@ module.exports = {
    * @param res
    */
   add: function (req, res) {
-    Project.deleteMany({});
-    Configuration.deleteMany({});
-    Views.deleteMany({});
+    // Project.deleteMany({});
+    // Configuration.deleteMany({});
+    // Views.deleteMany({});
 
-
-    for(let i = 0; i < 5; i++){
+    for(let q = 0; q < 5; q++){
       const configArr = [];
+      const fakeFiles = []
       for(let e = 0; e < 5; e++){
         const fakeFile = faker.fake("BIM360//somepath/{{random.words}}.rvt");
-        const config_id = createConfiguration(fakeFile)
         const blah = createViews(fakeFile)
 
-        configArr.push(config_id);
+        fakeFiles.push(fakeFile);
       }
-      createProject(configArr);
-      console.log(configArr);
 
-      res.status(200).json(configArr);
+      Promise.all(fakeFiles.map(val=>{
+        return createConfiguration(val);
+    }))
+    .then(result=>{
+      const arr = result.map(val=>val._id);
+        createProject(arr);
+      console.log("RESULT", arr);
+    })
+
+      // res.status(200).json(configArr);
     }
   }
 };
@@ -53,7 +59,7 @@ function createConfiguration(path){
     }, // shared param file path monitor
     updaters: []
   });
-  return newConfigurations._id;
+  return newConfigurations;
 }
 function createViews(path){
 
