@@ -26,9 +26,12 @@
                 <td>{{ x.name }}</td>
                 <td ng-click="$event.stopPropagation(); ">
 
-                    <div style="display: flex;">
-                        <div style="flex: 2;" ng-click="vm.setCurrent(x._id)">
-                            {{(100 * (x.totalViews - x.viewsOnSheet) / x.totalViews)| number:0}}%
+                    <div ng-click="vm.setCurrent(x._id)" style="display: flex; background-color: {{vm.getBackgroundColor(x.maxPercent)}}; color: {{vm.getColor(x.maxPercent)}}; border-radius: 5px; padding: 3px 8px;">
+                        <div style="flex: 1;" >
+                            {{100 * x.maxPercent| number:0}}%
+                        </div>
+                        <div style="flex: 1; text-align: right; color: {{vm.getFadedColor(x.maxPercent)}};">
+                            ({{(100 * (x.totalViews - x.viewsOnSheet) / x.totalViews)| number:0}}%)
                         </div>
                     </div>
                     <div ng-if="vm.selectedProject_id === x._id" style="cursor: auto; margin-top: 15px; margin-left: -100px;">

@@ -23,6 +23,25 @@ function ProjectController(ProjectFactory, $location, DTColumnDefBuilder){
     console.log("Project", vm.selectedProject_id);
   }
 
+  vm.getBackgroundColor = function(percent){
+    const scale = chroma.scale(['#0f0', 'yellow', '#f00']).mode('lrgb');
+    const color = scale(percent).hex();
+    console.log("CHroma..", color);
+    return color;
+  }
+
+  vm.getColor = function(percent){
+    const scale = chroma.scale(['#0f0', 'yellow', '#f00']).mode('lrgb');
+    const color = scale(percent).luminance() > 0.4 ? chroma("#000").hex() : chroma("#fff").hex();
+    return color;
+  }
+
+  vm.getFadedColor = function(percent){
+    const scale = chroma.scale(['#0f0', 'yellow', '#f00']).mode('lrgb');
+    const color = scale(percent).luminance() > 0.4 ? chroma("#555").hex() : chroma("#ddd").hex();
+    return color;
+  }
+
 //region Utilities
 
   /**

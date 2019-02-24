@@ -72,7 +72,7 @@ ProjectService = {
               //This limits how many records for each file we're going to hold. Increase for a better graph, decrease for speed.
               data: {$slice: ['$history', 25]}}}
         }},
-
+      {$addFields: {maxPercent: {$max: '$history.percent'}}}
     ])
       .sort({ number: 1 })
       .exec(function (err, response){
