@@ -74,7 +74,7 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
       })
 
       //show configuration
-      .when('/projects/configurations/:projectId', {
+      .when('/projects/configurations/:projectId/:configurationId?', {
         templateUrl: 'angular-app/configuration/configuration.html',
         controller: 'ConfigController',
         controllerAs: 'vm'

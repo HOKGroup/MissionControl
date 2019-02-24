@@ -19,10 +19,11 @@ ProjectService = {
       {$unwind: {path: '$config.files', preserveNullAndEmptyArrays: true}},
       {$lookup: {from: 'views', localField: 'config.files.centralPath', foreignField: 'centralPath', as: 'view'}},
       {$unwind: {path: '$view', preserveNullAndEmptyArrays: true}},
-      {$addFields: {project_id: '$_id'}},
+      {$addFields: {project_id: '$_id', config_id: '$config._id'}},
       {$project: {
           _id: 1,
           project_id: 1,
+          config_id: 1,
           name: 1,
           number: 1,
           address: 1,
@@ -43,6 +44,7 @@ ProjectService = {
           address: {$first: '$address'},
           office: {$first: '$office'},
 
+          config_id: {$first: '$config_id'},
           centralPath: {$first: '$view.centralPath'},
           totalViews: {$first: '$view.viewStats.totalViews'},
           viewsOnSheet: {$first: '$view.viewStats.viewsOnSheet'},
@@ -63,6 +65,7 @@ ProjectService = {
           history: {
             $push: {
               centralPath: '$centralPath',
+              config_id: '$config_id',
               percent: {$divide: [{$subtract: ['$totalViews', '$viewsOnSheet']}, '$totalViews']},
               totalViews: '$totalViews',
               viewsOnSheet: '$viewsOnSheet',
