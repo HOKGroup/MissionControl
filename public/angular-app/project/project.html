@@ -26,7 +26,7 @@
                 <td>{{ x.name }}</td>
                 <td ng-click="$event.stopPropagation(); ">
 
-                    <div ng-click="vm.setCurrent(x._id)" style="display: flex; background-color: {{vm.getBackgroundColor(x.maxPercent)}}; color: {{vm.getColor(x.maxPercent)}}; border-radius: 5px; padding: 3px 8px;">
+                    <div class="brighten" ng-click="vm.setCurrent(x._id)" style="display: flex; background-color: {{vm.getBackgroundColor(x.maxPercent)}}; color: {{vm.getColor(x.maxPercent)}}; border-radius: 5px; padding: 3px 8px;">
                         <div style="flex: 1;" >
                             {{100 * x.maxPercent| number:0}}%
                         </div>
