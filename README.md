@@ -7,6 +7,9 @@ This web application will allow for users to control modeling behaviors followin
 Install Mongo, NPM, Visual Studio Code, Github Desktop and Fork this repository
 Start with "mongod" and then "Npm run serve"
 
+The Clean-up Revit Code is the **View Folder** together with the Keras Python code in order to Prepare the JSON Format.
+
+
 ## Presentations
 Here you can have a look of some presentation where mission control appeared.
 
