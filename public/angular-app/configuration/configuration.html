@@ -49,7 +49,7 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th class="col-md-9">
+                                <th class="col-md-10">
                                     Revit Files Added:
                                     <button class="fa-wrapper" ng-if="vm.selectedConfig.files.length">
                                         <i class="fas fa-check fa-sm" style="color: green;"></i>
@@ -58,17 +58,13 @@
                                         <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
                                     </button>
                                 </th>
-                                <th class="col-md-3 text-right"></th>
+                                <th class="col-md-2 text-right"></th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="file in vm.selectedConfig.files">
                                 <td style="vertical-align: middle;"><strong>{{ $index + 1 }}.</strong> {{ file.centralPath | uppercase }}</td>
                                 <td style="vertical-align: middle;" class="text-right">
-                                    <button type="button" class="btn btn-warning" ng-click="vm.launchAuditWindow(file.centralPath, 'lg')">
-                                        Audit
-                                    </button>
-                                    |
                                     <button type="button" class="btn btn-default" ng-click="vm.editPath(file.centralPath, 'lg')">
                                         <i class="fas fa-edit" style="margin-right: 0;"></i>
                                     </button>
