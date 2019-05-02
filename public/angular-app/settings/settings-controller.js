@@ -3,21 +3,35 @@
  */
 angular.module('MissionControlApp').controller('SettingsController', SettingsController);
 
-function SettingsController(SettingsFactory, ngToast){
+function SettingsController(SettingsFactory, ngToast, $route){
     var vm = this;
     var toasts = [];
     vm.settings = null;
 
     getSettings();
 
+    vm.verifyForm = function () {
+        // TODO: Handle form validation.
+    };
+
+    vm.update = function () {
+        // TODO: Handle update routine.
+    };
+
     /**
-     * Retrieves projects from the DB.
+     * Reloads current page discarding any changes.
+     */
+    vm.cancel = function () {
+        $route.reload();
+    };
+
+    /**
+     * Retrieves Mission Control Settings from the DB.
      */
     function getSettings() {
         SettingsFactory.get()
             .then(function (response) {
-                console.log(response);
-                if(!response || response.status !== 200) throw { message: 'Unable to delete Project.'};
+                if(!response || response.status !== 200) throw { message: 'Unable to retrieve the Settings.'};
 
                 vm.settings = response.data;
             })

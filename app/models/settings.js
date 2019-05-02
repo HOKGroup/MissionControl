@@ -11,10 +11,18 @@ var settingsSchema = new mongoose.Schema(
             default: 'Settings',
             set: function (val) { return 'Settings'; }
         },
-        websiteLink: String
+        httpAddress: {
+            type: String,
+            default: 'http://missioncontrol.hok.com'
+        }
     }
 );
 
+/**
+ * Static function for either finding the settings instance or creating a new one.
+ * There should always be just one for Mission Control, and we can get it by name
+ * since name is set to be read only. 
+ */
 settingsSchema.statics.findOneOrCreate = function findOneOrCreate(condition, callback) {
     var self = this;
     self.findOne(condition, function(err, result) {
