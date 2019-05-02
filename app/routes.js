@@ -14,8 +14,12 @@ var zombieLogs = require('./models/zombie-logs-model');
 var filePaths = require('./models/filepaths');
 var models = require('./models/models');
 var users = require('./models/users');
+var settings = require('./models/settings');
 
  module.exports = function(app) {
+     var settings = require('./controller/settings');
+     app.get('/api/v2/settings', settings.get);
+
      var projects = require('./controller/projects');
      app.get('/api/v2/projects/sort', projects.findAndSort);
      app.get('/api/v2/projects/:id', projects.findById);
