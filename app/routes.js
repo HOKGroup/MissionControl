@@ -19,6 +19,7 @@ var settings = require('./models/settings');
  module.exports = function(app) {
      var settings = require('./controller/settings');
      app.get('/api/v2/settings', settings.get);
+     app.put('/api/v2/settings/:id', settings.update);
 
      var projects = require('./controller/projects');
      app.get('/api/v2/projects/sort', projects.findAndSort);

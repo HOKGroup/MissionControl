@@ -15,7 +15,27 @@ function SettingsController(SettingsFactory, ngToast, $route){
     };
 
     vm.update = function () {
-        // TODO: Handle update routine.
+        SettingsFactory.update(vm.settings)
+            .then(function(response){
+                if(!response || response.status !== 201) throw { message: 'Unable to update Settings.' };
+
+                toasts.push(ngToast.success({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: 'Successfully updated Settings.'
+                }));
+            })
+            .catch(function (err) {
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
+            });
     };
 
     /**
