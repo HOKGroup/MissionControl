@@ -74,11 +74,11 @@
 							</label>
 							<div class="col-sm-9 no-padding-right">
 								<div class="btn-group" style="width:100%;">
-									<button class="btn btn-default dropdown-toggle scrollable-menu-centered" data-toggle="dropdown">
+									<button class="btn btn-default dropdown-toggle scrollable-menu-left" data-toggle="dropdown">
 										{{vm.newProject.office}}
 										<span class="caret pull-right" style="margin-top: 8px; margin-bottom: 8px;"></span>
 									</button>
-									<ul class="dropdown-menu scrollable-menu-centered">
+									<ul class="dropdown-menu scrollable-menu-left">
 										<li ng-repeat="office in vm.settings.offices">
 											<a href="" ng-click="vm.setOffice(office)" class="no-padding-left no-padding-right">
 												{{office}}

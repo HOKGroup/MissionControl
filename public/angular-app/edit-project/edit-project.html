@@ -65,6 +65,32 @@
 								</button>
 							</label>
 							<div class="col-sm-9 no-padding-right">
+								<div class="btn-group" style="width:100%;">
+									<button class="btn btn-default dropdown-toggle scrollable-menu-left" data-toggle="dropdown">
+										{{vm.selectedProject.office}}
+										<span class="caret pull-right" style="margin-top: 8px; margin-bottom: 8px;"></span>
+									</button>
+									<ul class="dropdown-menu scrollable-menu-left">
+										<li ng-repeat="office in vm.settings.offices">
+											<a href="" ng-click="vm.setOffice(office)" class="no-padding-left no-padding-right">
+												{{office}}
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</fieldset>
+						<!-- <fieldset class="form-group">
+							<label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="formOfficeSelect">
+								Office
+								<button class="fa-wrapper" ng-if="vm.selectedProject.office">
+									<i class="fas fa-check fa-sm" style="color: green;"></i>
+								</button>
+								<button class="fa-wrapper" ng-if="!vm.selectedProject.office">
+									<i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+								</button>
+							</label>
+							<div class="col-sm-9 no-padding-right">
 								<select class="form-control" id="formOfficeSelect" ng-model="vm.selectedProject.office">
 									<option value="ATL">Atlanta</option>
 									<option value="BEI">Beijing</option>
@@ -91,7 +117,7 @@
 									<option value="WDC">Washington, D.C</option>
 								</select>
 							</div>
-						</fieldset>
+						</fieldset> -->
 						<fieldset class="form-group">
 							<label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="formStreet">Street Address</label>
 							<div class="col-sm-9 no-padding-right">
