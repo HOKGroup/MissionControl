@@ -53,7 +53,7 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
      * 
      */
     vm.setOffice = function(office) {
-        vm.selectedProject.office = office;
+        vm.selectedProject.office = office.name;
     };
 
     /**

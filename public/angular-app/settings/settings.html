@@ -36,7 +36,7 @@
                        </fieldset>
                        
                        <fieldset class="form-group">
-                        <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="offices">
+                        <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="officeName">
                             Office Locations
                             <button class="fa-wrapper" ng-if="vm.settings.offices.length > 0">
                                 <i class="fas fa-check fa-sm" style="color: green;"></i>
@@ -47,27 +47,36 @@
                         </label>
                         <div class="col-sm-9 no-padding-right">
                             <div class="col-md-3 no-padding-left">
+                                <input id="officeName"
+                                       type="text"
+                                       placeholder="Add Office Location..."
+                                       class="form-control input-sm"
+                                       ng-model="vm.office.name"
+                                       ng-keypress="vm.onEnter($event, vm.settings.offices, 'Office')">
+                            </div>
+                            <div class="col-md-3 no-padding-left">
                                 <div class="input-group">
-                                    <input id="offices"
+                                    <input id="officeCode"
                                            type="text"
-                                           placeholder="Add Office..."
+                                           placeholder="Add Office Code..."
                                            class="form-control input-sm"
-                                           ng-model="vm.office"
-                                           ng-keypress="vm.onEnter($event, vm.settings.offices, 'OfficeName')">
+                                           ng-model="vm.office.code"
+                                           ng-keypress="vm.onEnter($event, vm.settings.offices, 'Office')">
                                     <span class="input-group-btn">
                                         <button class="btn btn-default btn-sm"
-                                            type="button"
-                                            ng-click="vm.AddOfficeName(vm.settings.offices)">
+                                                type="button"
+                                                ng-click="vm.AddOfficeName(vm.settings.offices)">
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-md-7">
+                            <div class="col-md-6">
                                     <span ng-repeat="office in vm.settings.offices track by $index"
+                                          ng-if="office.name != 'All'"
                                           class="btn btn-default btn-sm"
-                                          ng-click="vm.RemoveName(vm.settings.offices, $index)">
-                                        {{office}}
+                                          ng-click="vm.Remove(vm.settings.offices, $index)">
+                                        {{office.name}} - [{{office.code.join(",")}}]
                                     </span>
                             </div>
                         </div>

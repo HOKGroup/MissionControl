@@ -44,7 +44,7 @@ function AddProjectController(ProjectFactory, SettingsFactory, $window, ngToast)
      * 
      */
     vm.setOffice = function(office) {
-        vm.newProject.office = office;
+        vm.newProject.office = office.name;
     };
 
     /**

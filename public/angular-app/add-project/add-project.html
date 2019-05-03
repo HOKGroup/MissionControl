@@ -79,9 +79,9 @@
 										<span class="caret pull-right" style="margin-top: 8px; margin-bottom: 8px;"></span>
 									</button>
 									<ul class="dropdown-menu scrollable-menu-left">
-										<li ng-repeat="office in vm.settings.offices">
+										<li ng-repeat="office in vm.settings.offices" ng-if="office.name != 'All'">
 											<a href="" ng-click="vm.setOffice(office)" class="no-padding-left no-padding-right">
-												{{office}}
+												{{office.name}}
 											</a>
 										</li>
 									</ul>

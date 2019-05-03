@@ -7,7 +7,7 @@ function SettingsController(SettingsFactory, ngToast, $route){
     var vm = this;
     var toasts = [];
     vm.settings = null;
-    vm.office = null;
+    vm.office = { name: null, code: null };
 
     getSettings();
 
@@ -16,11 +16,11 @@ function SettingsController(SettingsFactory, ngToast, $route){
      * @param arr
      * @constructor
      */
-    vm.AddOfficeName = function (arr) {
-        if(vm.office === null) return;
+    vm.AddOffice = function (arr) {
+        if(vm.office.name === null || vm.office.code === null) return;
 
-        arr.push(vm.office);
-        vm.office = null;
+        arr.push({name: vm.office.name, code: vm.office.code.split(',')});
+        vm.office = { name: null, code: null };
     };
 
     /**
@@ -33,8 +33,8 @@ function SettingsController(SettingsFactory, ngToast, $route){
         if(event.which !== 13) return;
 
         switch (action){
-            case 'OfficeName':
-                vm.AddOfficeName(arr);
+            case 'Office':
+                vm.AddOffice(arr);
                 break;
         }
     };
@@ -45,21 +45,27 @@ function SettingsController(SettingsFactory, ngToast, $route){
      * @param index
      * @constructor
      */
-    vm.RemoveName = function (arr, index) {
+    vm.Remove = function (arr, index) {
         arr.splice(index, 1);
     };
 
     /**
-     * 
+     * Makes sure that all fields that are required are filled in. 
      */
     vm.verifyForm = function () {
-        // TODO: Handle form validation.
+        return vm.settings === null || vm.settings.offices.length <= 1;
     };
 
     /**
      * 
      */
     vm.update = function () {
+        // (Konrad) For the filtering purposes we will always need the "All" item.
+        // It will be ignored in some dropdowns like the EditProject, NewProject etc.
+        if (vm.settings.offices.find(function(item) { return item.name === 'All'; }) === undefined) {
+            vm.settings.offices.push({ name:'All', code:['All'] });
+        }
+
         SettingsFactory.update(vm.settings)
             .then(function(response){
                 if(!response || response.status !== 201) throw { message: 'Unable to update Settings.' };
