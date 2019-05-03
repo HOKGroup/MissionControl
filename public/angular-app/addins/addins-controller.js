@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('AddinsController', AddinsController);
 
-function AddinsController(AddinsFactory, UtilityService, SettingsFactory, ngToast) {
+function AddinsController(AddinsFactory, SettingsFactory, ngToast) {
     var vm = this;
 
     //region Properties

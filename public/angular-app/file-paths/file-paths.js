@@ -4,16 +4,17 @@
 angular.module('MissionControlApp').controller('FilePathsController', FilePathsController);
 
 function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder, DTColumnBuilder, ngToast, $location, $scope, $compile,
-                             $uibModal){
+                             $uibModal, SettingsFactory){
     var vm = this;
     var toasts = [];
     vm.files = [];
     vm.revitVersions = UtilityService.getRevitVersions();
     vm.selectedRevitVersion = 'All';
-    vm.offices = UtilityService.getOffices();
+    vm.settings = null;
     vm.selectedOffice = { name: 'All', code: 'All' };
     vm.disabledFilter = false;
 
+    getSettings();
     createTable();
 
     //region Handlers
@@ -108,6 +109,27 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
     //endregion
 
     //region Utilities
+
+    /**
+     * Retrieves Mission Control Settings from the DB.
+     */
+    function getSettings() {
+        SettingsFactory.get()
+            .then(function (response) {
+                if(!response || response.status !== 200) throw { message: 'Unable to retrieve the Settings.'};
+
+                vm.settings = response.data;
+            })
+            .catch(function (err) {
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
+            });
+    }
 
     /**
      * Initiates File Paths table.
