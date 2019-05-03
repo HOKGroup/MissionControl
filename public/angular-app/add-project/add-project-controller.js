@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('AddProjectController', AddProjectController);
 
-function AddProjectController(ProjectFactory, $window, ngToast){
+function AddProjectController(ProjectFactory, SettingsFactory, $window, ngToast){
     var vm = this;
     var toasts = [];
     vm.status = '';
@@ -14,6 +14,37 @@ function AddProjectController(ProjectFactory, $window, ngToast){
         name: '',
         number: '',
         office: ''
+    };
+    vm.settings = null;
+
+    getSettings();
+
+    /**
+     * Retrieves Mission Control Settings from the DB.
+     */
+    function getSettings() {
+        SettingsFactory.get()
+            .then(function (response) {
+                if(!response || response.status !== 200) throw { message: 'Unable to retrieve the Settings.'};
+
+                vm.settings = response.data;
+            })
+            .catch(function (err) {
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
+            });
+    }
+
+    /**
+     * 
+     */
+    vm.setOffice = function(office) {
+        vm.newProject.office = office;
     };
 
     /**

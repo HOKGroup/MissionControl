@@ -7,13 +7,58 @@ function SettingsController(SettingsFactory, ngToast, $route){
     var vm = this;
     var toasts = [];
     vm.settings = null;
+    vm.office = null;
 
     getSettings();
 
+    /**
+     * Adds Office Location to the list.
+     * @param arr
+     * @constructor
+     */
+    vm.AddOfficeName = function (arr) {
+        if(vm.office === null) return;
+
+        arr.push(vm.office);
+        vm.office = null;
+    };
+
+    /**
+     * Triggers AddOfficeName function on Enter key.
+     * @param event
+     * @param arr
+     * @param action
+     */
+    vm.onEnter = function (event, arr, action) {
+        if(event.which !== 13) return;
+
+        switch (action){
+            case 'OfficeName':
+                vm.AddOfficeName(arr);
+                break;
+        }
+    };
+
+    /**
+     * Removes office name from the list.
+     * @param arr
+     * @param index
+     * @constructor
+     */
+    vm.RemoveName = function (arr, index) {
+        arr.splice(index, 1);
+    };
+
+    /**
+     * 
+     */
     vm.verifyForm = function () {
         // TODO: Handle form validation.
     };
 
+    /**
+     * 
+     */
     vm.update = function () {
         SettingsFactory.update(vm.settings)
             .then(function(response){

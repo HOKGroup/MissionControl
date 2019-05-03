@@ -14,6 +14,10 @@ var settingsSchema = new mongoose.Schema(
         httpAddress: {
             type: String,
             default: 'http://missioncontrol.hok.com'
+        },
+        offices: {
+            type: [String],
+            default: ['New York', 'Chicago']
         }
     }
 );
