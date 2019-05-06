@@ -5,7 +5,7 @@ angular.module('MissionControlApp').controller('AddConfigController', AddConfigC
 
 function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePathsFactory, UtilityService,
                              DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $uibModal, $window,
-                             $compile, $scope, ngToast){
+                             $compile, $scope, ngToast, SettingsFactory){
 
     //region Init
 
@@ -19,7 +19,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
     vm.fileWarningMsg = '';
     vm.HasFiles = false;
     vm.files = [];
-    vm.offices = UtilityService.getOffices();
+    vm.settings = null;
     vm.selectedOffice = { name: 'All', code: 'All' };
     vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'BIM 360'];
     vm.selectedType = 'All';
@@ -27,6 +27,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
     vm.selectedRevitVersion = 'All';
     vm.searchString = '';
 
+    getSettings();
     getSelectedProject(vm.projectId);
     setDefaultConfig();
     createTable();
@@ -284,6 +285,28 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
     //endregion
 
     //region Utilities
+
+    /**
+     * Retrieves Mission Control Settings from the DB.
+     */
+    function getSettings() {
+        SettingsFactory.get()
+            .then(function (response) {
+                if(!response || response.status !== 200) throw { message: 'Unable to retrieve the Settings.'};
+
+                vm.settings = response.data;
+            })
+            .catch(function (err) {
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
+            });
+    }
+
     /**
      * Retrieves Project from MongoDB.
      * @param projectId

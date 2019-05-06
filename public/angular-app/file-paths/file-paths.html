@@ -24,7 +24,7 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu scrollable-menu" style="min-width: 50px;">
-                            <li ng-repeat="office in vm.offices">
+                            <li ng-repeat="office in vm.settings.offices">
                                 <a href="" ng-click="vm.setOffice(office)">{{office.name}}</a>
                             </li>
                         </ul>

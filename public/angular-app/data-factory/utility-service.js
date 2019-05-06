@@ -156,40 +156,6 @@ function UtilityService(){
         },
 
         /**
-         * Retrieves a list of all offices and their codes.
-         * @returns {[*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*]}
-         */
-        getOffices: function () {
-            return [
-                {name: 'All', code: 'All'},
-                {name: 'Atlanta', code: ['ATL']},
-                {name: 'Beijing', code: ['BEI']},
-                {name: 'Calgary', code: ['CAL']},
-                {name: 'Chicago', code: ['CHI']},
-                {name: 'Columbus', code: ['COL']},
-                {name: 'Dallas', code: ['DAL']},
-                {name: 'Doha', code: ['DOH']},
-                {name: 'Dubai', code: ['DUB']},
-                {name: 'Hong Kong', code: ['HK']},
-                {name: 'Houston', code: ['HOU']},
-                {name: 'Kansas City', code: ['KC']},
-                {name: 'Los Angeles', code: ['LA']},
-                {name: 'London', code: ['LON']},
-                {name: 'New York', code: ['NY']},
-                {name: 'Ottawa', code: ['OTT']},
-                {name: 'Philadephia', code: ['PHI']},
-                {name: 'Seattle', code: ['SEA']},
-                {name: 'San Francisco', code: ['SF']},
-                {name: 'Shanghai', code: ['SH']},
-                {name: 'St. Louis', code: ['STL', 'BJC']},
-                {name: 'Toronto', code: ['TOR']},
-                {name: 'Tampa', code: ['TPA']},
-                {name: 'Washington DC', code: ['WDC']},
-                {name: 'Undefined', code: ['EMC', 'SDC', 'OSS', 'LD', 'LDC', '']}
-            ];
-        },
-
-        /**
          * Retrieves a list of all Revit versions that we support.
          * @returns {[string,string,string,string,string]}
          */

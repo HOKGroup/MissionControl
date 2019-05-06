@@ -4,7 +4,7 @@
 angular.module('MissionControlApp').controller('ConfigController', ConfigController);
 
 function ConfigController($routeParams, FilePathsFactory, ConfigFactory, ProjectFactory, TriggerRecordsFactory,
-                          DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, UtilityService, $window, $uibModal, 
+                          DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, SettingsFactory, UtilityService, $window, $uibModal, 
                           $compile, $scope, ngToast){
 
     //region Init
@@ -22,7 +22,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     vm.fileWarningMsg = '';
     vm.sharedParamWarningMsg = '';
     vm.files = [];
-    vm.offices = UtilityService.getOffices();
+    vm.settings = null;
     vm.selectedOffice = { name: 'All', code: 'All' };
     vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'BIM 360'];
     vm.selectedType = 'All';
@@ -30,6 +30,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     vm.selectedRevitVersion = 'All';
     vm.searchString = '';
 
+    getSettings();
     getSelectedProjectConfiguration(vm.projectId);
     createTable();
 
@@ -487,6 +488,27 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
             //if modal dismissed
         });
     };
+
+    /**
+     * Retrieves Mission Control Settings from the DB.
+     */
+    function getSettings() {
+        SettingsFactory.get()
+            .then(function (response) {
+                if(!response || response.status !== 200) throw { message: 'Unable to retrieve the Settings.'};
+
+                vm.settings = response.data;
+            })
+            .catch(function (err) {
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
+            });
+    }
 
     //region Utilities
     /**

@@ -65,31 +65,19 @@
 								</button>
 							</label>
 							<div class="col-sm-9 no-padding-right">
-								<select class="form-control" id="formOfficeSelect" ng-model="vm.selectedProject.office">
-									<option value="ATL">Atlanta</option>
-									<option value="BEI">Beijing</option>
-									<option value="CHI">Chicago</option>
-									<option value="CAL">Calgary</option>
-									<option value="COL">Columbus</option>
-									<option value="DAL">Dallas</option>
-									<option value="DOH">Doha</option>
-									<option value="DUB">Dubai</option>
-									<option value="HK">Hong Kong</option>
-									<option value="HOU">Houston</option>
-									<option value="KC">Kansas City</option>
-									<option value="LA">Los Angeles</option>
-									<option value="LON">London</option>
-									<option value="NY">New York</option>
-									<option value="OTT">Ottawa</option>
-									<option value="PHI">Philadelphia</option>
-									<option value="SEA">Seattle</option>
-									<option value="SF">San Francisco</option>
-									<option value="SH">Shanghai</option>
-									<option value="STL">St. Louis</option>
-									<option value="TOR">Toronto</option>
-									<option value="TPA">Tampa</option>
-									<option value="WDC">Washington, D.C</option>
-								</select>
+								<div class="btn-group" style="width:100%;">
+									<button class="btn btn-default dropdown-toggle scrollable-menu-left" data-toggle="dropdown">
+										{{vm.selectedProject.office}}
+										<span class="caret pull-right" style="margin-top: 8px; margin-bottom: 8px;"></span>
+									</button>
+									<ul class="dropdown-menu scrollable-menu-left">
+										<li ng-repeat="office in vm.settings.offices" ng-if="office.name != 'All'">
+											<a href="" ng-click="vm.setOffice(office)" class="no-padding-left no-padding-right">
+												{{office.name}}
+											</a>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</fieldset>
 						<fieldset class="form-group">
