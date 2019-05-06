@@ -17,7 +17,7 @@ function SettingsController(SettingsFactory, ngToast, $route){
      * @constructor
      */
     vm.AddOffice = function (arr) {
-        if(vm.office.name === null || vm.office.code === null) return;
+        if(!vm.office.name.trim() || !vm.office.code.trim()) return;
 
         arr.push({name: vm.office.name, code: vm.office.code.split(',')});
         vm.office = { name: null, code: null };
@@ -53,7 +53,7 @@ function SettingsController(SettingsFactory, ngToast, $route){
      * Makes sure that all fields that are required are filled in. 
      */
     vm.verifyForm = function () {
-        return vm.settings === null || vm.settings.offices.length <= 1;
+        return !vm.settings || vm.settings.offices.length <= 1;
     };
 
     /**
@@ -62,7 +62,7 @@ function SettingsController(SettingsFactory, ngToast, $route){
     vm.update = function () {
         // (Konrad) For the filtering purposes we will always need the "All" item.
         // It will be ignored in some dropdowns like the EditProject, NewProject etc.
-        if (vm.settings.offices.find(function(item) { return item.name === 'All'; }) === undefined) {
+        if (!vm.settings.offices.some(function(item) { return item.name === 'All'; })) {
             vm.settings.offices.push({ name:'All', code:['All'] });
         }
 
