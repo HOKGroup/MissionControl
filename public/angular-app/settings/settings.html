@@ -12,7 +12,7 @@
                </div>
                <div class="panel-body">
                    <form class ="form-horizontal">
-                       <fieldset class="form-group">
+                        <fieldset class="form-group">
                            <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="httpAddress">
                                Website Address
                                <button class="fa-wrapper" ng-if="vm.settings.httpAddress">
@@ -33,9 +33,8 @@
                                    <div ng-show="form.link.$error.required" class="text-danger">(*) Website Address is required.</div>
                                </div>
                            </div>
-                       </fieldset>
-                       
-                       <fieldset class="form-group">
+                        </fieldset>
+                        <fieldset class="form-group">
                         <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="officeName">
                             Office Locations
                             <button class="fa-wrapper" ng-if="vm.settings.offices.length > 0">
@@ -81,7 +80,45 @@
                                     </span>
                             </div>
                         </div>
-                    </fieldset>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="stateName">
+                                States
+                                <button class="fa-wrapper" ng-if="vm.settings.states.length > 0">
+                                    <i class="fas fa-check fa-sm" style="color: green;"></i>
+                                </button>
+                                <button class="fa-wrapper" ng-if="!vm.settings.states.length > 0">
+                                    <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+                                </button>
+                            </label>
+                            <div class="col-sm-9 no-padding-right">
+                                <div class="col-md-6 no-padding-left">
+                                    <div class="input-group">
+                                        <input id="stateName"
+                                               type="text"
+                                               placeholder="Add State..."
+                                               class="form-control input-sm"
+                                               ng-model="vm.state"
+                                               ng-keypress="vm.onEnter($event, vm.settings.states, 'State')">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-sm"
+                                                    type="button"
+                                                    ng-click="vm.AddState(vm.settings.states)">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 no-padding">
+                                    <span ng-repeat="state in vm.settings.states track by $index"
+                                          class="btn btn-default btn-sm"
+                                          style="margin-left: 1px; margin-right: 1px; margin-bottom: 2px;"
+                                          ng-click="vm.Remove(vm.settings.states, $index)">
+                                        {{state}}
+                                    </span>
+                                </div>
+                            </div>
+                            </fieldset>
                    </form>
                    <button id="submitButton"
                            type="submit"

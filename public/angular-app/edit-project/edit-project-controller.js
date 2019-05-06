@@ -57,6 +57,13 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
     };
 
     /**
+     * Sets the selected State to address propety on a Project.
+     */
+    vm.setState = function(state) {
+        vm.selectedProject.address.state = state;
+    };
+
+    /**
      * Filter for activity chart that queries additional data by date range.
      * @param item
      */
