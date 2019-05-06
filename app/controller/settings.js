@@ -31,7 +31,7 @@ SettingsService = {
      */
     update: function(req, res) {
         var id = req.params.id;
-        Settings.update({ '_id': id }, req.body, { upsert: true }, function (err, response){
+        Settings.updateOne({ '_id': id }, req.body, { upsert: true }, function (err, response){
             var result = {
                 status: 201,
                 message: response
