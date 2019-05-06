@@ -8,6 +8,7 @@ function SettingsController(SettingsFactory, ngToast, $route){
     var toasts = [];
     vm.settings = null;
     vm.office = { name: null, code: null };
+    vm.state = null;
 
     getSettings();
 
@@ -24,6 +25,16 @@ function SettingsController(SettingsFactory, ngToast, $route){
     };
 
     /**
+     * 
+     */
+    vm.AddState = function (arr) {
+        if(vm.state === null) return;
+
+        arr.push(vm.state);
+        vm.state = null;
+    };
+
+    /**
      * Triggers AddOfficeName function on Enter key.
      * @param event
      * @param arr
@@ -35,6 +46,9 @@ function SettingsController(SettingsFactory, ngToast, $route){
         switch (action){
             case 'Office':
                 vm.AddOffice(arr);
+                break;
+            case 'State':
+                vm.AddState(arr);
                 break;
         }
     };

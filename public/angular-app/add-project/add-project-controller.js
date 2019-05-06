@@ -41,10 +41,17 @@ function AddProjectController(ProjectFactory, SettingsFactory, $window, ngToast)
     }
 
     /**
-     * 
+     * Sets the selected Office Location to property on a Project.
      */
     vm.setOffice = function(office) {
         vm.newProject.office = office.name;
+    };
+
+    /**
+     * Sets the selected State to address propety on a Project.
+     */
+    vm.setState = function(state) {
+        vm.newProject.address.state = state;
     };
 
     /**
