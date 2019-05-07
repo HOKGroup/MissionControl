@@ -14,8 +14,8 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
     vm.selectedOffice = { name: 'All', code: 'All' };
     vm.disabledFilter = false;
 
-    getSettings();
     createTable();
+    getSettings();
 
     //region Handlers
 
@@ -120,6 +120,11 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
 
                 vm.settings = response.data;
             })
+            .then(function () {
+                // Only after vm.settings were set we can properly load all file paths.
+                // We should refresh the table at this point.
+                reloadTable();
+            })
             .catch(function (err) {
                 toasts.push(ngToast.danger({
                     dismissButton: true,
@@ -144,6 +149,7 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
                     d.revitVersion = vm.selectedRevitVersion;
                     d.office = vm.selectedOffice;
                     d.disabled = vm.disabledFilter;
+                    d.localPathRgx = !vm.settings ? null : vm.settings.localPathRgx;
                 }
             })
             .withDataProp('data')

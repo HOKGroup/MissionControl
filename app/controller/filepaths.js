@@ -293,6 +293,7 @@ FilePathsService = {
         var disabled = req.body['disabled'];
         var unassigned = req.body['unassigned'];
         var fileType = req.body['fileType'];
+        var localPathRgx = req.body['localPathRgx'];
         var query = {};
 
         // (Konrad) Always check if disabled.
@@ -359,7 +360,10 @@ FilePathsService = {
                     var filePath = item.centralPath.toLowerCase();
                     switch(fileType){
                         case 'Local': 
-                            return filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
+                            return localPathRgx.some(function(pattern) { 
+                                var rgx = new RegExp(pattern, 'i');
+                                return rgx.test(filePath); 
+                            });
                         case 'BIM 360':
                             return filePath.lastIndexOf('bim 360://', 0) === 0;
                         case 'Revit Server':
