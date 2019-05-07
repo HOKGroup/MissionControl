@@ -6,6 +6,7 @@ angular.module('MissionControlApp').controller('SettingsController', SettingsCon
 function SettingsController(SettingsFactory, ngToast, $route){
     var vm = this;
     var toasts = [];
+    
     vm.settings = null;
     vm.office = { name: null, code: null };
     vm.state = null;
@@ -14,35 +15,29 @@ function SettingsController(SettingsFactory, ngToast, $route){
     getSettings();
 
     /**
-     * Adds Office Location to the list.
-     * @param arr
-     * @constructor
+     * 
      */
-    vm.AddOffice = function (arr) {
-        if(!vm.office.name.trim() || !vm.office.code.trim()) return;
+    vm.addValue = function (arr, action) {
+        switch (action){
+            case 'Office':
+                if(!vm.office.name.trim() || !vm.office.code.trim()) return;
 
-        arr.push({name: vm.office.name, code: vm.office.code.split(',')});
-        vm.office = { name: null, code: null };
-    };
+                arr.push({name: vm.office.name, code: vm.office.code.split(',')});
+                vm.office = { name: null, code: null };
+                break;
+            case 'State':
+                if(!vm.state.trim()) return;
 
-    /**
-     * Adds State/Region name to the list.
-     */
-    vm.AddState = function (arr) {
-        if(!vm.state.trim()) return;
+                arr.push(vm.state);
+                vm.state = null;
+                break;
+            case 'LocalFilePath':
+                if(!vm.localFilePath.trim()) return;
 
-        arr.push(vm.state);
-        vm.state = null;
-    };
-
-    /**
-     * Adds Local File Path Regex to the list.
-     */
-    vm.AddLocalFile = function (arr) {
-        if(!vm.localFilePath.trim()) return;
-
-        arr.push(vm.localFilePath);
-        vm.localFilePath = null;
+                arr.push(vm.localFilePath);
+                vm.localFilePath = null;
+                break;
+        }
     };
 
     /**
@@ -54,16 +49,7 @@ function SettingsController(SettingsFactory, ngToast, $route){
     vm.onEnter = function (event, arr, action) {
         if(event.which !== 13) return;
 
-        switch (action){
-            case 'Office':
-                vm.AddOffice(arr);
-                break;
-            case 'State':
-                vm.AddState(arr);
-                break;
-            case 'LocalFilePath':
-                vm.AddLocalFilePath
-        }
+        vm.addValue(arr, action);
     };
 
     /**

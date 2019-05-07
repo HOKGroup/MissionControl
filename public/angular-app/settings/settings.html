@@ -42,7 +42,7 @@
                                     <span class="input-group-btn">
                                         <button class="btn btn-default btn-sm"
                                                 type="button"
-                                                ng-click="vm.AddOffice(vm.settings.offices)">
+                                                ng-click="vm.addValue(vm.settings.offices, 'Office')">
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </span>
@@ -81,7 +81,7 @@
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-sm"
                                                     type="button"
-                                                    ng-click="vm.AddState(vm.settings.states)">
+                                                    ng-click="vm.addValue(vm.settings.states, 'State')">
                                                 <i class="fas fa-plus"></i>
                                             </button>
                                         </span>
@@ -119,7 +119,7 @@
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-sm"
                                                     type="button"
-                                                    ng-click="vm.AddLocalFile(vm.settings.localPathRgx)">
+                                                    ng-click="vm.addValue(vm.settings.localPathRgx, 'LocalFilePath')">
                                                 <i class="fas fa-plus"></i>
                                             </button>
                                         </span>
