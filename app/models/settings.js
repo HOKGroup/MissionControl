@@ -21,10 +21,6 @@ var settingsSchema = new mongoose.Schema(
             default: 'Settings',
             set: function () { return 'Settings'; }
         },
-        httpAddress: {
-            type: String,
-            default: 'http://missioncontrol.hok.com'
-        },
         offices: {
             type: [officeSchema],
             default: [
@@ -46,7 +42,8 @@ var settingsSchema = new mongoose.Schema(
                 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia',
                 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
             ]
-        }
+        },
+        localPathRgx: [String]
     }
 );
 

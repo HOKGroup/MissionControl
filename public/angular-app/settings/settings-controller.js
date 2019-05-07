@@ -9,6 +9,7 @@ function SettingsController(SettingsFactory, ngToast, $route){
     vm.settings = null;
     vm.office = { name: null, code: null };
     vm.state = null;
+    vm.localFilePath = null;
 
     getSettings();
 
@@ -25,13 +26,23 @@ function SettingsController(SettingsFactory, ngToast, $route){
     };
 
     /**
-     * 
+     * Adds State/Region name to the list.
      */
     vm.AddState = function (arr) {
-        if(vm.state === null) return;
+        if(!vm.state.trim()) return;
 
         arr.push(vm.state);
         vm.state = null;
+    };
+
+    /**
+     * Adds Local File Path Regex to the list.
+     */
+    vm.AddLocalFile = function (arr) {
+        if(!vm.localFilePath.trim()) return;
+
+        arr.push(vm.localFilePath);
+        vm.localFilePath = null;
     };
 
     /**
@@ -50,6 +61,8 @@ function SettingsController(SettingsFactory, ngToast, $route){
             case 'State':
                 vm.AddState(arr);
                 break;
+            case 'LocalFilePath':
+                vm.AddLocalFilePath
         }
     };
 

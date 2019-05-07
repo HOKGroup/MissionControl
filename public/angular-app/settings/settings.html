@@ -13,28 +13,6 @@
                <div class="panel-body">
                    <form class ="form-horizontal">
                         <fieldset class="form-group">
-                           <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="httpAddress">
-                               Website Address
-                               <button class="fa-wrapper" ng-if="vm.settings.httpAddress">
-                                   <i class="fas fa-check fa-sm" style="color: green;"></i>
-                               </button>
-                               <button class="fa-wrapper" ng-if="!vm.settings.httpAddress">
-                                   <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
-                               </button>
-                           </label>
-                           <div class="col-sm-9 no-padding-right">
-                               <input type="text"
-                                   name="link"
-                                   class="form-control"
-                                   id="httpAddress"
-                                   placeholder="www.missioncontrol.com"
-                                   ng-model="vm.settings.httpAddress" required>
-                               <div ng-show="form.$submitted || form.link.$touched">
-                                   <div ng-show="form.link.$error.required" class="text-danger">(*) Website Address is required.</div>
-                               </div>
-                           </div>
-                        </fieldset>
-                        <fieldset class="form-group">
                         <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="officeName">
                             Office Locations
                             <button class="fa-wrapper" ng-if="vm.settings.offices.length > 0">
@@ -118,7 +96,45 @@
                                     </span>
                                 </div>
                             </div>
-                            </fieldset>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="localPath">
+                                Local File Path Regex
+                                <button class="fa-wrapper" ng-if="vm.settings.localPathRgx.length > 0">
+                                    <i class="fas fa-check fa-sm" style="color: green;"></i>
+                                </button>
+                                <button class="fa-wrapper" ng-if="!vm.settings.localPathRgx.length > 0">
+                                    <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+                                </button>
+                            </label>
+                            <div class="col-sm-9 no-padding-right">
+                                <div class="col-md-6 no-padding-left">
+                                    <div class="input-group">
+                                        <input id="localPath"
+                                               type="text"
+                                               placeholder="Add Local File Path Regex..."
+                                               class="form-control input-sm"
+                                               ng-model="vm.localFilePath"
+                                               ng-keypress="vm.onEnter($event, vm.settings.localPathRgx, 'LocalFilePath')">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-sm"
+                                                    type="button"
+                                                    ng-click="vm.AddLocalFile(vm.settings.localPathRgx)">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 no-padding">
+                                    <span ng-repeat="path in vm.settings.localPathRgx track by $index"
+                                          class="btn btn-default btn-sm"
+                                          style="margin-left: 1px; margin-right: 1px; margin-bottom: 2px;"
+                                          ng-click="vm.Remove(vm.settings.localPathRgx, $index)">
+                                        {{path}}
+                                    </span>
+                                </div>
+                            </div>
+                        </fieldset>
                    </form>
                    <button id="submitButton"
                            type="submit"
