@@ -46,11 +46,14 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
 
         // (Konrad) Everything is lower case to make matching easier.
         // Checks if file path is one of the three (3) approved types.
-        var isLocal = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
+        var isLocal = vm.settings.localPathRgx.some(function(pattern) { 
+            var rgx = new RegExp(pattern, 'i');
+            return rgx.test(filePath); 
+        });
         var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
         var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
 
-        if(!isLocal && !isBim360 && !isRevitServer){
+        if(!isLocal && !isBim360 && !isRevitServer) {
             vm.fileWarningMsg = 'File Path must be either Local, BIM 360 or Revit Server.';
             return;
         }
@@ -59,13 +62,13 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
         var matchingFiles = vm.newConfig.files.find(function (item) {
             return item.centralPath === filePath;
         });
-        if(matchingFiles !== undefined){
+        if(matchingFiles !== undefined) {
             vm.fileWarningMsg = 'Warning! File already added to current configuration.';
             return;
         }
 
         // (Konrad) Let's make sure we have a valid, non empty name
-        if(!filePath || !filePath.length || !filePath.includes('.rvt')){
+        if(!filePath || !filePath.length || !filePath.includes('.rvt')) {
             vm.fileWarningMsg = 'Warning! File name is not valid. Must be non-empty and include *.rvt';
             return;
         }
@@ -94,6 +97,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
                 }
                 if(configMatched) {
                     vm.fileWarningMsg = 'Warning! File already exists in other configurations.\n' + configNames;
+                    throw { message: 'File already exists in other configurations.\n' + configNames };
                 } else {
                     var file1 = { centralPath: filePath };
                     vm.newConfig.files.push(file1);
@@ -107,7 +111,6 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
                 }
             })
             .catch(function (err) {
-                console.log(err);
                 toasts.push(ngToast.danger({
                     dismissButton: true,
                     dismissOnTimeout: true,
@@ -475,6 +478,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
                     d.fileType  = vm.selectedType;
                     d.disabled = false;
                     d.unassigned = true;
+                    d.localPathRgx = !vm.settings ? null : vm.settings.localPathRgx;
                 }
             })
             .withDataProp('data')

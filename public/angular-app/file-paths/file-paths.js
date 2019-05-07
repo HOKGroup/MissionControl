@@ -120,11 +120,6 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
 
                 vm.settings = response.data;
             })
-            .then(function () {
-                // Only after vm.settings were set we can properly load all file paths.
-                // We should refresh the table at this point.
-                reloadTable();
-            })
             .catch(function (err) {
                 toasts.push(ngToast.danger({
                     dismissButton: true,
