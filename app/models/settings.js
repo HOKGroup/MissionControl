@@ -4,7 +4,7 @@
 var mongoose = require( 'mongoose' );
 
 var UserLocationSources = Object.freeze({
-    MachineName: 'Machine Name'
+    MachineName: 'MachineName'
 });
 
 var userLocationSchema = new mongoose.Schema(
@@ -64,7 +64,7 @@ var settingsSchema = new mongoose.Schema(
         userLocation: {
             type: userLocationSchema,
             default: {
-                source: 'Machine Name', 
+                source: 'MachineName',
                 pattern: '-(\\w+)-',
                 group: 1
             }
