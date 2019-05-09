@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('SettingsController', SettingsController);
 
-function SettingsController(SettingsFactory, ngToast, $route){
+function SettingsController(SettingsFactory, ngToast, $route, UtilityService){
     var vm = this;
     var toasts = [];
     
@@ -11,8 +11,16 @@ function SettingsController(SettingsFactory, ngToast, $route){
     vm.office = { name: null, code: null };
     vm.state = null;
     vm.localFilePath = null;
+    vm.userLocationsOptions = UtilityService.userLocationsOptions();
 
     getSettings();
+
+    /**
+     * 
+     */
+    vm.setLocationSource = function(o) {
+        vm.settings.userLocation.source = o;
+    };
 
     /**
      * 
