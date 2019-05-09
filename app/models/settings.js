@@ -7,6 +7,34 @@ var UserLocationSources = Object.freeze({
     MachineName: 'MachineName'
 });
 
+var ProjectInfoSources = Object.freeze({
+    FilePath: 'FilePath',
+    //TODO: Add ProjectInfo so that we allow user to extract name, number, location 
+    //from Revit's Project Info class.
+});
+
+var projectInfoSchema = new mongoose.Schema(
+    {
+        source: {
+            type: String,
+            enum: Object.values(ProjectInfoSources)
+        },
+        projectName: {
+            type: Map,
+            of: mongoose.Schema.Types.Mixed
+        },
+        projectNumber: {
+            type: Map,
+            of: mongoose.Schema.Types.Mixed
+        },
+        projectLocation: {
+            type: Map,
+            of: mongoose.Schema.Types.Mixed
+        }
+    },
+    { _id: false }
+);
+
 var userLocationSchema = new mongoose.Schema(
     {
         source: {
@@ -67,6 +95,29 @@ var settingsSchema = new mongoose.Schema(
                 source: 'MachineName',
                 pattern: '-(\\w+)-',
                 group: 1
+            }
+        },
+        projectInfo: {
+            type: projectInfoSchema,
+            default: {
+                source: 'FilePath',
+                projectName: {
+                    local: { pattern: '', group: 1 },
+                    revitServer: { pattern: '', group: 1 },
+                    bimThreeSixty: { pattern: '', group: 1 }
+                    //TODO: If we add ProjectInfo as the source we can use the following schema:
+                    //param: name: '' where 'name' is the name of the parameter that holds the info. 
+                },
+                projectNumber: {
+                    local: { pattern: '', group: 1 },
+                    revitServer: { pattern: '', group: 1 },
+                    bimThreeSixty: { pattern: '', group: 1 }
+                },
+                projectLocation: {
+                    local: { pattern: '', group: 1 },
+                    revitServer: { pattern: '', group: 1 },
+                    bimThreeSixty: { pattern: '', group: 1 }
+                }
             }
         }
     }

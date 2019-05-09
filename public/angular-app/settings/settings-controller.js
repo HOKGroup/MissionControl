@@ -126,6 +126,8 @@ function SettingsController(SettingsFactory, ngToast, $route, UtilityService){
                 if(!response || response.status !== 200) throw { message: 'Unable to retrieve the Settings.'};
 
                 vm.settings = response.data;
+
+                console.log(response.data);
             })
             .catch(function (err) {
                 toasts.push(ngToast.danger({
