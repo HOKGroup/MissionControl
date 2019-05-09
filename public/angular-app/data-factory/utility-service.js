@@ -7,7 +7,7 @@ function UtilityService(){
          * This should match what we have in Settings Schema/Mongoose.
          */
         userLocationsOptions: function() {
-            return ['Machine Name'];
+            return ['MachineName'];
         },
 
         /**
