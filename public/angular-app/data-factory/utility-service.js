@@ -1,20 +1,27 @@
 angular.module('MissionControlApp').factory('UtilityService', UtilityService);
 
-function UtilityService(){
+function UtilityService() {
     return {
         /**
          * Method for obtaining an array of available User Location options. 
          * This should match what we have in Settings Schema/Mongoose.
          */
-        userLocationsOptions: function() {
+        userLocationsOptions: function () {
             return ['MachineName'];
+        },
+
+        /**
+         * 
+         */
+        projectInfoSources: function () {
+            return ['FilePath'];
         },
 
         /**
          * Used for color formatting by all badge objects in health reports.
          * @returns {{red: string, orange: string, green: string, grey: string}}
          */
-        color: function(){
+        color: function () {
             return {
                 red: 'badge progress-bar-danger',
                 orange: 'badge progress-bar-warning',
@@ -78,13 +85,13 @@ function UtilityService(){
          * @param path
          */
         fileNameFromPath: function (path) {
-            if(!path) return;
+            if (!path) return;
 
             // (Konrad) We retrieve a file name with extension,
             // then remove the last 12 chars (_central.rvt)
             var fileName = path.replace(/^.*[\\\/]/, '');
             var hasCentral = fileName.match(/central/i);
-            if(hasCentral){
+            if (hasCentral) {
                 // let's slice -central.rvt
                 return fileName.slice(0, -12);
             } else {
@@ -101,17 +108,17 @@ function UtilityService(){
             return range;
         },
 
-        charRange: function(start, step, count){
+        charRange: function (start, step, count) {
             var data = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
             var startIndex = data.indexOf(start);
             var range = [];
-            for (var i = 0; i < count; i++){
+            for (var i = 0; i < count; i++) {
                 range.push(data[startIndex + (i * step)]);
             }
             return range;
         },
 
-        move: function(array, from, to) {
+        move: function (array, from, to) {
             array.splice(to, 0, array.splice(from, 1)[0]);
         },
 
@@ -120,12 +127,12 @@ function UtilityService(){
             return hex.length === 1 ? '0' + hex : hex;
         },
 
-        rgbToHex : function (r, g, b) {
+        rgbToHex: function (r, g, b) {
             return '#' + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
         },
 
-        isEmptyObject : function (obj) {
-            for(var prop in obj) {
+        isEmptyObject: function (obj) {
+            for (var prop in obj) {
                 if (Object.prototype.hasOwnProperty.call(obj, prop)) {
                     return false;
                 }
@@ -138,11 +145,11 @@ function UtilityService(){
          * @param centralPath
          * @returns {*}
          */
-        getHttpSafeFilePath : function (centralPath){
+        getHttpSafeFilePath: function (centralPath) {
             var isRevitServer = centralPath.match(/rsn:/i);
             var isBim360 = centralPath.match(/bim 360:/i);
             var rgx;
-            if(isRevitServer || isBim360){
+            if (isRevitServer || isBim360) {
                 rgx = centralPath.replace(/\//g, '|').toLowerCase();
             } else {
                 rgx = centralPath.replace(/\\/g, '|').toLowerCase();
@@ -155,8 +162,8 @@ function UtilityService(){
          * @param date
          * @returns {Date}
          */
-        convertUTCDateToLocalDate : function convertUTCDateToLocalDate(date) {
-            var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
+        convertUTCDateToLocalDate: function convertUTCDateToLocalDate(date) {
+            var newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
             var offset = date.getTimezoneOffset() / 60;
             var hours = date.getHours();
             newDate.setHours(hours - offset);

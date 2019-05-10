@@ -4,41 +4,50 @@
             <h1>Settings</h1>
         </div>
     </div>
-	<div class="row">
-        <form name="form" class="css-form" novalidate>
-           <div class="panel panel-default" style="margin-top:10px;">
-               <div class="panel-heading">
-                   <h3 class="panel-title">Project Info</h3>
-               </div>
-               <div class="panel-body">
-                   <form class ="form-horizontal">
+    <div class="row">
+        <form name="form"
+              class="css-form"
+              novalidate>
+            <div class="panel panel-default"
+                 style="margin-top:10px;">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Project Info</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal">
                         <fieldset class="form-group">
-                            <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="officeName">
+                            <label class="control-label col-sm-3 text-right"
+                                   style="margin-top: 8px;"
+                                   for="officeName">
                                 Office Locations
-                                <button class="fa-wrapper" ng-if="vm.settings.offices.length > 0">
-                                    <i class="fas fa-check fa-sm" style="color: green;"></i>
+                                <button class="fa-wrapper"
+                                        ng-if="vm.settings.offices.length > 0">
+                                    <i class="fas fa-check fa-sm"
+                                       style="color: green;"></i>
                                 </button>
-                                <button class="fa-wrapper" ng-if="!vm.settings.offices.length > 0">
-                                    <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+                                <button class="fa-wrapper"
+                                        ng-if="!vm.settings.offices.length > 0">
+                                    <i class="fas fa-asterisk fa-sm"
+                                       style="color: red;"></i>
                                 </button>
                             </label>
                             <div class="col-sm-9 no-padding-right">
                                 <div class="col-md-3 no-padding-left">
                                     <input id="officeName"
-                                        type="text"
-                                        placeholder="Add Office Location..."
-                                        class="form-control input-sm"
-                                        ng-model="vm.office.name"
-                                        ng-keypress="vm.onEnter($event, vm.settings.offices, 'Office')">
+                                           type="text"
+                                           placeholder="Add Office Location..."
+                                           class="form-control input-sm"
+                                           ng-model="vm.office.name"
+                                           ng-keypress="vm.onEnter($event, vm.settings.offices, 'Office')">
                                 </div>
                                 <div class="col-md-3 no-padding-left">
                                     <div class="input-group">
                                         <input id="officeCode"
-                                            type="text"
-                                            placeholder="Add Office Code..."
-                                            class="form-control input-sm"
-                                            ng-model="vm.office.code"
-                                            ng-keypress="vm.onEnter($event, vm.settings.offices, 'Office')">
+                                               type="text"
+                                               placeholder="Add Office Code..."
+                                               class="form-control input-sm"
+                                               ng-model="vm.office.code"
+                                               ng-keypress="vm.onEnter($event, vm.settings.offices, 'Office')">
                                         <span class="input-group-btn">
                                             <button class="btn btn-default btn-sm"
                                                     type="button"
@@ -49,24 +58,30 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 no-padding">
-                                        <span ng-repeat="office in vm.settings.offices track by $index"
-                                            ng-if="office.name != 'All'"
-                                            class="btn btn-default btn-sm"
-                                            style="margin-left: 1px; margin-right: 1px; margin-bottom: 2px;"
-                                            ng-click="vm.Remove(vm.settings.offices, $index)">
-                                            {{office.name}} - [{{office.code.join(",")}}]
-                                        </span>
+                                    <span ng-repeat="office in vm.settings.offices track by $index"
+                                          ng-if="office.name != 'All'"
+                                          class="btn btn-default btn-sm"
+                                          style="margin-left: 1px; margin-right: 1px; margin-bottom: 2px;"
+                                          ng-click="vm.Remove(vm.settings.offices, $index)">
+                                        {{office.name}} - [{{office.code.join(",")}}]
+                                    </span>
                                 </div>
                             </div>
                         </fieldset>
                         <fieldset class="form-group">
-                            <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="stateName">
+                            <label class="control-label col-sm-3 text-right"
+                                   style="margin-top: 8px;"
+                                   for="stateName">
                                 States
-                                <button class="fa-wrapper" ng-if="vm.settings.states.length > 0">
-                                    <i class="fas fa-check fa-sm" style="color: green;"></i>
+                                <button class="fa-wrapper"
+                                        ng-if="vm.settings.states.length > 0">
+                                    <i class="fas fa-check fa-sm"
+                                       style="color: green;"></i>
                                 </button>
-                                <button class="fa-wrapper" ng-if="!vm.settings.states.length > 0">
-                                    <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+                                <button class="fa-wrapper"
+                                        ng-if="!vm.settings.states.length > 0">
+                                    <i class="fas fa-asterisk fa-sm"
+                                       style="color: red;"></i>
                                 </button>
                             </label>
                             <div class="col-sm-9 no-padding-right">
@@ -98,13 +113,19 @@
                             </div>
                         </fieldset>
                         <fieldset class="form-group">
-                            <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="localPath">
+                            <label class="control-label col-sm-3 text-right"
+                                   style="margin-top: 8px;"
+                                   for="localPath">
                                 Local File Path Regex
-                                <button class="fa-wrapper" ng-if="vm.settings.localPathRgx.length > 0">
-                                    <i class="fas fa-check fa-sm" style="color: green;"></i>
+                                <button class="fa-wrapper"
+                                        ng-if="vm.settings.localPathRgx.length > 0">
+                                    <i class="fas fa-check fa-sm"
+                                       style="color: green;"></i>
                                 </button>
-                                <button class="fa-wrapper" ng-if="!vm.settings.localPathRgx.length > 0">
-                                    <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+                                <button class="fa-wrapper"
+                                        ng-if="!vm.settings.localPathRgx.length > 0">
+                                    <i class="fas fa-asterisk fa-sm"
+                                       style="color: red;"></i>
                                 </button>
                             </label>
                             <div class="col-sm-9 no-padding-right">
@@ -136,25 +157,36 @@
                             </div>
                         </fieldset>
                         <fieldset class="form-group">
-                            <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="userLocation">
+                            <label class="control-label col-sm-3 text-right"
+                                   style="margin-top: 8px;"
+                                   for="userLocation">
                                 User Office Location Source
-                                <button class="fa-wrapper" ng-if="vm.settings.userLocation">
-                                    <i class="fas fa-check fa-sm" style="color: green;"></i>
+                                <button class="fa-wrapper"
+                                        ng-if="vm.settings.userLocation">
+                                    <i class="fas fa-check fa-sm"
+                                       style="color: green;"></i>
                                 </button>
-                                <button class="fa-wrapper" ng-if="!vm.settings.userLocation">
-                                    <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+                                <button class="fa-wrapper"
+                                        ng-if="!vm.settings.userLocation">
+                                    <i class="fas fa-asterisk fa-sm"
+                                       style="color: red;"></i>
                                 </button>
                             </label>
                             <div class="col-sm-9 no-padding-right">
                                 <div class="col-md-6 no-padding-left">
-                                    <div class="btn-group" style="width:100%;">
-                                        <button class="btn btn-default btn-sm dropdown-toggle scrollable-menu-left" data-toggle="dropdown">
+                                    <div class="btn-group"
+                                         style="width:100%;">
+                                        <button class="btn btn-default btn-sm dropdown-toggle scrollable-menu-left"
+                                                data-toggle="dropdown">
                                             {{vm.settings.userLocation.source}}
-                                            <span class="caret pull-right" style="margin-top: 6px; margin-bottom: 6px;"></span>
+                                            <span class="caret pull-right"
+                                                  style="margin-top: 6px; margin-bottom: 6px;"></span>
                                         </button>
                                         <ul class="dropdown-menu scrollable-menu-left">
                                             <li ng-repeat="o in vm.userLocationsOptions">
-                                                <a href="" ng-click="vm.setLocationSource(o)" class="no-padding-left no-padding-right">
+                                                <a href=""
+                                                   ng-click="vm.setLocationSource(o)"
+                                                   class="no-padding-left no-padding-right">
                                                     {{o}}
                                                 </a>
                                             </li>
@@ -169,7 +201,14 @@
                                                class="form-control input-sm"
                                                ng-model="vm.settings.userLocation.pattern">
                                     </div>
-                                    <div class="col-md-6 no-padding-left">
+                                    <div class="col-md-3 no-padding-left">
+                                        <input id="officeLocationMatch"
+                                               type="number"
+                                               placeholder="Pattern Match Number"
+                                               class="form-control input-sm"
+                                               ng-model="vm.settings.userLocation.match">
+                                    </div>
+                                    <div class="col-md-3 no-padding-left">
                                         <input id="officeLocationGroup"
                                                type="number"
                                                placeholder="Pattern Group Number"
@@ -179,24 +218,168 @@
                                 </div>
                             </div>
                         </fieldset>
-                   </form>
-                   <button id="submitButton"
-                           type="submit"
-                           class="btn btn-primary pull-right"
-                           ng-click="vm.update()"
-                           style="margin:5px;"
-                           ng-disabled="vm.verifyForm()">
-                           <i class="fas fa-check"></i>
+                        <fieldset class="form-group">
+                            <label class="col-sm-3 control-label text-right"
+                                   style="margin-top: 8px;"
+                                   for="userLocation">
+                                File Office Location Source
+                                <button class="fa-wrapper"
+                                        ng-if="vm.settings.projectInfo">
+                                    <i class="fas fa-check fa-sm"
+                                       style="color: green;"></i>
+                                </button>
+                                <button class="fa-wrapper"
+                                        ng-if="!vm.settings.projectInfo">
+                                    <i class="fas fa-asterisk fa-sm"
+                                       style="color: red;"></i>
+                                </button>
+                            </label>
+                            <div class="col-sm-9 no-padding-right">
+                                <div class="col-md-6 no-padding-left">
+                                    <div class="btn-group"
+                                         style="width:100%;">
+                                        <button class="btn btn-default btn-sm dropdown-toggle scrollable-menu-left"
+                                                data-toggle="dropdown">
+                                            {{vm.settings.projectInfo.source}}
+                                            <span class="caret pull-right"
+                                                  style="margin-top: 6px; margin-bottom: 6px;"></span>
+                                        </button>
+                                        <ul class="dropdown-menu scrollable-menu-left">
+                                            <li ng-repeat="o in vm.projectInfoSources">
+                                                <a href=""
+                                                   ng-click="vm.setProjectInfoSource(o, 'Location')"
+                                                   class="no-padding-left no-padding-right">
+                                                    {{o}}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-9 no-padding-right">
+                                <div class="col-md-3 no-padding-left">
+                                    <label class="control-label text-right pull-right"
+                                           style="margin-top: 8px;"
+                                           for="userLocation">
+                                        Local
+                                    </label>
+                                </div>
+                                <div class="col-md-9 no-padding">
+                                    <div class="col-md-6 no-padding-left">
+                                        <input id="infoLocationPattern"
+                                               type="text"
+                                               placeholder="Add Office Location Regex..."
+                                               class="form-control input-sm"
+                                               ng-model="vm.settings.projectInfo.projectName.local.pattern">
+                                    </div>
+                                    <div class="col-md-3 no-padding-left">
+                                        <input id="infoLocationMatch"
+                                               type="number"
+                                               placeholder="Pattern Match Number"
+                                               class="form-control input-sm"
+                                               ng-model="vm.settings.projectInfo.projectName.local.match">
+                                    </div>
+                                    <div class="col-md-3 no-padding-left">
+                                        <input id="infoLocationGroup"
+                                               type="number"
+                                               placeholder="Pattern Group Number"
+                                               class="form-control input-sm"
+                                               ng-model="vm.settings.projectInfo.projectName.local.group">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-9 no-padding-right">
+                                <div class="col-md-3 no-padding-left">
+                                    <label class="control-label text-right pull-right"
+                                           style="margin-top: 8px;"
+                                           for="userLocation">
+                                        Revit Server
+                                    </label>
+                                </div>
+                                <div class="col-md-9 no-padding">
+                                    <div class="col-md-6 no-padding-left">
+                                        <input id="infoLocationPattern"
+                                               type="text"
+                                               placeholder="Add Location Regex..."
+                                               class="form-control input-sm"
+                                               ng-model="vm.settings.projectInfo.projectName.revitServer.pattern">
+                                    </div>
+                                    <div class="col-md-3 no-padding-left">
+                                        <input id="infoLocationMatch"
+                                               type="number"
+                                               placeholder="Pattern Match Number"
+                                               class="form-control input-sm"
+                                               ng-model="vm.settings.projectInfo.projectName.revitServer.match">
+                                    </div>
+                                    <div class="col-md-3 no-padding-left">
+                                        <input id="infoLocationGroup"
+                                               type="number"
+                                               placeholder="Pattern Group Number"
+                                               class="form-control input-sm"
+                                               ng-model="vm.settings.projectInfo.projectName.revitServer.group">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-9 no-padding-right">
+                                <div class="col-md-3 no-padding-left">
+                                    <label class="control-label text-right pull-right"
+                                           style="margin-top: 8px;"
+                                           for="userLocation">
+                                        BIM 360
+                                    </label>
+                                </div>
+                                <div class="col-md-9 no-padding">
+                                    <div class="col-md-6 no-padding-left">
+                                        <input id="infoLocationPattern"
+                                               type="text"
+                                               placeholder="Add Location Regex..."
+                                               class="form-control input-sm"
+                                               ng-model="vm.settings.projectInfo.projectName.bimThreeSixty.pattern">
+                                    </div>
+                                    <div class="col-md-3 no-padding-left">
+                                        <input id="infoLocationMatch"
+                                               type="number"
+                                               placeholder="Pattern Match Number"
+                                               class="form-control input-sm"
+                                               ng-model="vm.settings.projectInfo.projectName.bimThreeSixty.match">
+                                    </div>
+                                    <div class="col-md-3 no-padding-left">
+                                        <input id="infoLocationGroup"
+                                               type="number"
+                                               placeholder="Pattern Group Number"
+                                               class="form-control input-sm"
+                                               ng-model="vm.settings.projectInfo.projectName.bimThreeSixty.group">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                    <button id="submitButton"
+                            type="submit"
+                            class="btn btn-primary pull-right"
+                            ng-click="vm.update()"
+                            style="margin:5px;"
+                            ng-disabled="vm.verifyForm()">
+                        <i class="fas fa-check"></i>
                         Update
-                   </button>
-                   <button class="btn btn-secondary pull-right" 
-                           type="button"
-                           ng-click="vm.cancel()"
-                           style="margin:5px;">
-                       Cancel
-                   </button>
-               </div>
-           </div>
-       </form>
-   </div>
+                    </button>
+                    <button class="btn btn-secondary pull-right"
+                            type="button"
+                            ng-click="vm.cancel()"
+                            style="margin:5px;">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>

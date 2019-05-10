@@ -3,22 +3,41 @@
  */
 angular.module('MissionControlApp').controller('SettingsController', SettingsController);
 
-function SettingsController(SettingsFactory, ngToast, $route, UtilityService){
+function SettingsController(SettingsFactory, ngToast, $route, UtilityService) {
     var vm = this;
     var toasts = [];
-    
+
     vm.settings = null;
-    vm.office = { name: null, code: null };
+    vm.office = {
+        name: null,
+        code: null
+    };
     vm.state = null;
     vm.localFilePath = null;
     vm.userLocationsOptions = UtilityService.userLocationsOptions();
+    vm.projectInfoSources = UtilityService.projectInfoSources();
 
     getSettings();
 
     /**
      * 
      */
-    vm.setLocationSource = function(o) {
+    vm.setProjectInfoSource = function (o, action) {
+        switch (action) {
+            case 'Location':
+                vm.settings.projectInfo.source = o;
+                break;
+            case 'Name':
+                break;
+            case 'Number':
+                break;
+        }
+    },
+
+    /**
+     * 
+     */
+    vm.setLocationSource = function (o) {
         vm.settings.userLocation.source = o;
     };
 
@@ -26,21 +45,27 @@ function SettingsController(SettingsFactory, ngToast, $route, UtilityService){
      * 
      */
     vm.addValue = function (arr, action) {
-        switch (action){
+        switch (action) {
             case 'Office':
-                if(!vm.office.name.trim() || !vm.office.code.trim()) return;
+                if (!vm.office.name.trim() || !vm.office.code.trim()) return;
 
-                arr.push({name: vm.office.name, code: vm.office.code.split(',')});
-                vm.office = { name: null, code: null };
+                arr.push({
+                    name: vm.office.name,
+                    code: vm.office.code.split(',')
+                });
+                vm.office = {
+                    name: null,
+                    code: null
+                };
                 break;
             case 'State':
-                if(!vm.state.trim()) return;
+                if (!vm.state.trim()) return;
 
                 arr.push(vm.state);
                 vm.state = null;
                 break;
             case 'LocalFilePath':
-                if(!vm.localFilePath.trim()) return;
+                if (!vm.localFilePath.trim()) return;
 
                 arr.push(vm.localFilePath);
                 vm.localFilePath = null;
@@ -55,7 +80,7 @@ function SettingsController(SettingsFactory, ngToast, $route, UtilityService){
      * @param action
      */
     vm.onEnter = function (event, arr, action) {
-        if(event.which !== 13) return;
+        if (event.which !== 13) return;
 
         vm.addValue(arr, action);
     };
@@ -83,13 +108,20 @@ function SettingsController(SettingsFactory, ngToast, $route, UtilityService){
     vm.update = function () {
         // (Konrad) For the filtering purposes we will always need the "All" item.
         // It will be ignored in some dropdowns like the EditProject, NewProject etc.
-        if (!vm.settings.offices.some(function(item) { return item.name === 'All'; })) {
-            vm.settings.offices.push({ name:'All', code:['All'] });
+        if (!vm.settings.offices.some(function (item) {
+                return item.name === 'All';
+            })) {
+            vm.settings.offices.push({
+                name: 'All',
+                code: ['All']
+            });
         }
 
         SettingsFactory.update(vm.settings)
-            .then(function(response){
-                if(!response || response.status !== 201) throw { message: 'Unable to update Settings.' };
+            .then(function (response) {
+                if (!response || response.status !== 201) throw {
+                    message: 'Unable to update Settings.'
+                };
 
                 toasts.push(ngToast.success({
                     dismissButton: true,
@@ -123,7 +155,9 @@ function SettingsController(SettingsFactory, ngToast, $route, UtilityService){
     function getSettings() {
         SettingsFactory.get()
             .then(function (response) {
-                if(!response || response.status !== 200) throw { message: 'Unable to retrieve the Settings.'};
+                if (!response || response.status !== 200) throw {
+                    message: 'Unable to retrieve the Settings.'
+                };
 
                 vm.settings = response.data;
 
