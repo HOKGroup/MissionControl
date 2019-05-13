@@ -16,6 +16,22 @@ function SettingsController(SettingsFactory, ngToast, $route, UtilityService){
     getSettings();
 
     /**
+     * Utility method for validating input Regex pattern.
+     */
+    vm.isValidUserLocation = function() {
+        if (vm.settings === null) return false;
+
+        var isValidPattern = true;
+        try {
+            new RegExp(vm.settings.userLocation.pattern);
+        } catch(err) {
+            isValidPattern = false;
+        }
+    
+        return vm.settings && vm.settings.userLocation && isValidPattern;
+    };
+
+    /**
      * 
      */
     vm.setLocationSource = function(o) {
