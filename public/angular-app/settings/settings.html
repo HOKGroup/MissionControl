@@ -138,10 +138,10 @@
                         <fieldset class="form-group">
                             <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="userLocation">
                                 User Office Location Source
-                                <button class="fa-wrapper" ng-if="vm.settings.userLocation">
+                                <button class="fa-wrapper" ng-if="vm.isValidUserLocation()">
                                     <i class="fas fa-check fa-sm" style="color: green;"></i>
                                 </button>
-                                <button class="fa-wrapper" ng-if="!vm.settings.userLocation">
+                                <button class="fa-wrapper" ng-if="!vm.isValidUserLocation()">
                                     <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
                                 </button>
                             </label>
