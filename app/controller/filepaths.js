@@ -325,7 +325,7 @@ FilePathsService = {
 
         // (Konrad) Additional filters.
         if (revitVersion !== 'All') query['revitVersion'] = revitVersion;
-        if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'].map(function (i) { return i.toLowerCase(); }) };
+        if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'].map(function (i) { return new RegExp(i, 'i'); }) };
         if (unassigned === 'true') query['projectId'] = null;
 
         // (Konrad) If we use aggregate here, then we can check for values being null. This matters because not
