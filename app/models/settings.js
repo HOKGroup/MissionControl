@@ -3,14 +3,28 @@
  */
 var mongoose = require( 'mongoose' );
 
+var UserLocationSources = Object.freeze({
+    MachineName: 'MachineName'
+});
+
+var userLocationSchema = new mongoose.Schema(
+    {
+        source: {
+            type: String,
+            enum: Object.values(UserLocationSources)
+        },
+        pattern: String,
+        group: Number
+    },
+    { _id: false }
+);
+
 var officeSchema = new mongoose.Schema(
     {
         name: String,
         code: [String]
     },
-    {
-        _id: false
-    }
+    { _id: false }
 );
 
 var settingsSchema = new mongoose.Schema(
@@ -43,7 +57,18 @@ var settingsSchema = new mongoose.Schema(
                 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
             ]
         },
-        localPathRgx: [String]
+        localPathRgx: {
+            type: [String],
+            default: ['^(C:\\\\Users\\\\ksobon)']
+        },
+        userLocation: {
+            type: userLocationSchema,
+            default: {
+                source: 'MachineName',
+                pattern: '-(\\w+)-',
+                group: 1
+            }
+        }
     }
 );
 
@@ -58,5 +83,7 @@ settingsSchema.statics.findOneOrCreate = function findOneOrCreate(condition, cal
         return result ? callback(err, result) : self.create(condition, function(err, result) { return callback(err, result); });
     });
 };
+
+Object.assign(settingsSchema.statics, UserLocationSources);
 
 mongoose.model( 'Settings', settingsSchema );

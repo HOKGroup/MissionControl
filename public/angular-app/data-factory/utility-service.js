@@ -3,6 +3,14 @@ angular.module('MissionControlApp').factory('UtilityService', UtilityService);
 function UtilityService(){
     return {
         /**
+         * Method for obtaining an array of available User Location options. 
+         * This should match what we have in Settings Schema/Mongoose.
+         */
+        userLocationsOptions: function() {
+            return ['MachineName'];
+        },
+
+        /**
          * Used for color formatting by all badge objects in health reports.
          * @returns {{red: string, orange: string, green: string, grey: string}}
          */

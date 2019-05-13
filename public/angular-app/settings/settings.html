@@ -13,51 +13,51 @@
                <div class="panel-body">
                    <form class ="form-horizontal">
                         <fieldset class="form-group">
-                        <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="officeName">
-                            Office Locations
-                            <button class="fa-wrapper" ng-if="vm.settings.offices.length > 0">
-                                <i class="fas fa-check fa-sm" style="color: green;"></i>
-                            </button>
-                            <button class="fa-wrapper" ng-if="!vm.settings.offices.length > 0">
-                                <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
-                            </button>
-                        </label>
-                        <div class="col-sm-9 no-padding-right">
-                            <div class="col-md-3 no-padding-left">
-                                <input id="officeName"
-                                       type="text"
-                                       placeholder="Add Office Location..."
-                                       class="form-control input-sm"
-                                       ng-model="vm.office.name"
-                                       ng-keypress="vm.onEnter($event, vm.settings.offices, 'Office')">
-                            </div>
-                            <div class="col-md-3 no-padding-left">
-                                <div class="input-group">
-                                    <input id="officeCode"
-                                           type="text"
-                                           placeholder="Add Office Code..."
-                                           class="form-control input-sm"
-                                           ng-model="vm.office.code"
-                                           ng-keypress="vm.onEnter($event, vm.settings.offices, 'Office')">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default btn-sm"
-                                                type="button"
-                                                ng-click="vm.addValue(vm.settings.offices, 'Office')">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                    </span>
+                            <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="officeName">
+                                Office Locations
+                                <button class="fa-wrapper" ng-if="vm.settings.offices.length > 0">
+                                    <i class="fas fa-check fa-sm" style="color: green;"></i>
+                                </button>
+                                <button class="fa-wrapper" ng-if="!vm.settings.offices.length > 0">
+                                    <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+                                </button>
+                            </label>
+                            <div class="col-sm-9 no-padding-right">
+                                <div class="col-md-3 no-padding-left">
+                                    <input id="officeName"
+                                        type="text"
+                                        placeholder="Add Office Location..."
+                                        class="form-control input-sm"
+                                        ng-model="vm.office.name"
+                                        ng-keypress="vm.onEnter($event, vm.settings.offices, 'Office')">
+                                </div>
+                                <div class="col-md-3 no-padding-left">
+                                    <div class="input-group">
+                                        <input id="officeCode"
+                                            type="text"
+                                            placeholder="Add Office Code..."
+                                            class="form-control input-sm"
+                                            ng-model="vm.office.code"
+                                            ng-keypress="vm.onEnter($event, vm.settings.offices, 'Office')">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default btn-sm"
+                                                    type="button"
+                                                    ng-click="vm.addValue(vm.settings.offices, 'Office')">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 no-padding">
+                                        <span ng-repeat="office in vm.settings.offices track by $index"
+                                            ng-if="office.name != 'All'"
+                                            class="btn btn-default btn-sm"
+                                            style="margin-left: 1px; margin-right: 1px; margin-bottom: 2px;"
+                                            ng-click="vm.Remove(vm.settings.offices, $index)">
+                                            {{office.name}} - [{{office.code.join(",")}}]
+                                        </span>
                                 </div>
                             </div>
-                            <div class="col-md-6 no-padding">
-                                    <span ng-repeat="office in vm.settings.offices track by $index"
-                                          ng-if="office.name != 'All'"
-                                          class="btn btn-default btn-sm"
-                                          style="margin-left: 1px; margin-right: 1px; margin-bottom: 2px;"
-                                          ng-click="vm.Remove(vm.settings.offices, $index)">
-                                        {{office.name}} - [{{office.code.join(",")}}]
-                                    </span>
-                            </div>
-                        </div>
                         </fieldset>
                         <fieldset class="form-group">
                             <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="stateName">
@@ -132,6 +132,50 @@
                                           ng-click="vm.Remove(vm.settings.localPathRgx, $index)">
                                         {{path}}
                                     </span>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label class="control-label col-sm-3 text-right" style="margin-top: 8px;" for="userLocation">
+                                User Office Location Source
+                                <button class="fa-wrapper" ng-if="vm.isValidUserLocation()">
+                                    <i class="fas fa-check fa-sm" style="color: green;"></i>
+                                </button>
+                                <button class="fa-wrapper" ng-if="!vm.isValidUserLocation()">
+                                    <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+                                </button>
+                            </label>
+                            <div class="col-sm-9 no-padding-right">
+                                <div class="col-md-6 no-padding-left">
+                                    <div class="btn-group" style="width:100%;">
+                                        <button class="btn btn-default btn-sm dropdown-toggle scrollable-menu-left" data-toggle="dropdown">
+                                            {{vm.settings.userLocation.source}}
+                                            <span class="caret pull-right" style="margin-top: 6px; margin-bottom: 6px;"></span>
+                                        </button>
+                                        <ul class="dropdown-menu scrollable-menu-left">
+                                            <li ng-repeat="o in vm.userLocationsOptions">
+                                                <a href="" ng-click="vm.setLocationSource(o)" class="no-padding-left no-padding-right">
+                                                    {{o}}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 no-padding">
+                                    <div class="col-md-6 no-padding-left">
+                                        <input id="officeLocationPattern"
+                                               type="text"
+                                               placeholder="Add Office Location Regex..."
+                                               class="form-control input-sm"
+                                               ng-model="vm.settings.userLocation.pattern">
+                                    </div>
+                                    <div class="col-md-6 no-padding-left">
+                                        <input id="officeLocationGroup"
+                                               type="number"
+                                               placeholder="Pattern Group Number"
+                                               class="form-control input-sm"
+                                               ng-model="vm.settings.userLocation.group">
+                                    </div>
                                 </div>
                             </div>
                         </fieldset>
