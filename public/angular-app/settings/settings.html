@@ -162,12 +162,12 @@
                                    for="userLocation">
                                 User Office Location Source
                                 <button class="fa-wrapper"
-                                        ng-if="vm.isValidUserLocation()">
+                                        ng-if="vm.isValidRegex(vm.settings.userLocation.pattern)">
                                     <i class="fas fa-check fa-sm"
                                        style="color: green;"></i>
                                 </button>
                                 <button class="fa-wrapper"
-                                        ng-if="!vm.isValidUserLocation()">
+                                        ng-if="!vm.isValidRegex(vm.settings.userLocation.pattern)">
                                     <i class="fas fa-asterisk fa-sm"
                                        style="color: red;"></i>
                                 </button>
@@ -282,6 +282,16 @@
                                            style="margin-top: 8px;"
                                            for="userLocation">
                                         Local
+                                        <button class="fa-wrapper"
+                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectLocation.local.pattern)">
+                                            <i class="fas fa-check fa-sm"
+                                               style="color: green;"></i>
+                                        </button>
+                                        <button class="fa-wrapper"
+                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectLocation.local.pattern)">
+                                            <i class="fas fa-asterisk fa-sm"
+                                               style="color: red;"></i>
+                                        </button>
                                     </label>
                                 </div>
                                 <div class="col-md-9 no-padding">
@@ -317,6 +327,16 @@
                                            style="margin-top: 8px;"
                                            for="userLocation">
                                         Revit Server
+                                        <button class="fa-wrapper"
+                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectLocation.revitServer.pattern)">
+                                            <i class="fas fa-check fa-sm"
+                                               style="color: green;"></i>
+                                        </button>
+                                        <button class="fa-wrapper"
+                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectLocation.revitServer.pattern)">
+                                            <i class="fas fa-asterisk fa-sm"
+                                               style="color: red;"></i>
+                                        </button>
                                     </label>
                                 </div>
                                 <div class="col-md-9 no-padding">
@@ -352,6 +372,16 @@
                                            style="margin-top: 8px;"
                                            for="userLocation">
                                         BIM 360
+                                        <button class="fa-wrapper"
+                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectLocation.bimThreeSixty.pattern)">
+                                            <i class="fas fa-check fa-sm"
+                                               style="color: green;"></i>
+                                        </button>
+                                        <button class="fa-wrapper"
+                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectLocation.bimThreeSixty.pattern)">
+                                            <i class="fas fa-asterisk fa-sm"
+                                               style="color: red;"></i>
+                                        </button>
                                     </label>
                                 </div>
                                 <div class="col-md-9 no-padding">
@@ -427,6 +457,16 @@
                                            style="margin-top: 8px;"
                                            for="userLocation">
                                         Local
+                                        <button class="fa-wrapper"
+                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectName.local.pattern)">
+                                            <i class="fas fa-check fa-sm"
+                                               style="color: green;"></i>
+                                        </button>
+                                        <button class="fa-wrapper"
+                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectName.local.pattern)">
+                                            <i class="fas fa-asterisk fa-sm"
+                                               style="color: red;"></i>
+                                        </button>
                                     </label>
                                 </div>
                                 <div class="col-md-9 no-padding">
@@ -462,6 +502,16 @@
                                            style="margin-top: 8px;"
                                            for="userLocation">
                                         Revit Server
+                                        <button class="fa-wrapper"
+                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectName.revitServer.pattern)">
+                                            <i class="fas fa-check fa-sm"
+                                               style="color: green;"></i>
+                                        </button>
+                                        <button class="fa-wrapper"
+                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectName.revitServer.pattern)">
+                                            <i class="fas fa-asterisk fa-sm"
+                                               style="color: red;"></i>
+                                        </button>
                                     </label>
                                 </div>
                                 <div class="col-md-9 no-padding">
@@ -497,6 +547,16 @@
                                            style="margin-top: 8px;"
                                            for="userLocation">
                                         BIM 360
+                                        <button class="fa-wrapper"
+                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectName.bimThreeSixty.pattern)">
+                                            <i class="fas fa-check fa-sm"
+                                               style="color: green;"></i>
+                                        </button>
+                                        <button class="fa-wrapper"
+                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectName.bimThreeSixty.pattern)">
+                                            <i class="fas fa-asterisk fa-sm"
+                                               style="color: red;"></i>
+                                        </button>
                                     </label>
                                 </div>
                                 <div class="col-md-9 no-padding">
@@ -572,6 +632,16 @@
                                            style="margin-top: 8px;"
                                            for="userLocation">
                                         Local
+                                        <button class="fa-wrapper"
+                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectNumber.local.pattern)">
+                                            <i class="fas fa-check fa-sm"
+                                               style="color: green;"></i>
+                                        </button>
+                                        <button class="fa-wrapper"
+                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectNumber.local.pattern)">
+                                            <i class="fas fa-asterisk fa-sm"
+                                               style="color: red;"></i>
+                                        </button>
                                     </label>
                                 </div>
                                 <div class="col-md-9 no-padding">
@@ -607,6 +677,16 @@
                                            style="margin-top: 8px;"
                                            for="userLocation">
                                         Revit Server
+                                        <button class="fa-wrapper"
+                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectNumber.revitServer.pattern)">
+                                            <i class="fas fa-check fa-sm"
+                                               style="color: green;"></i>
+                                        </button>
+                                        <button class="fa-wrapper"
+                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectNumber.revitServer.pattern)">
+                                            <i class="fas fa-asterisk fa-sm"
+                                               style="color: red;"></i>
+                                        </button>
                                     </label>
                                 </div>
                                 <div class="col-md-9 no-padding">
@@ -642,6 +722,16 @@
                                            style="margin-top: 8px;"
                                            for="userLocation">
                                         BIM 360
+                                        <button class="fa-wrapper"
+                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectNumber.bimThreeSixty.pattern)">
+                                            <i class="fas fa-check fa-sm"
+                                               style="color: green;"></i>
+                                        </button>
+                                        <button class="fa-wrapper"
+                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectNumber.bimThreeSixty.pattern)">
+                                            <i class="fas fa-asterisk fa-sm"
+                                               style="color: red;"></i>
+                                        </button>
                                     </label>
                                 </div>
                                 <div class="col-md-9 no-padding">
