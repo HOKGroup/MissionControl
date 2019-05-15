@@ -95,7 +95,7 @@ var settingsSchema = new mongoose.Schema(
             default: {
                 source: 'MachineName',
                 pattern: '-(\\w+)-',
-                match: 1,
+                match: 0,
                 group: 1
             }
         },
@@ -104,21 +104,21 @@ var settingsSchema = new mongoose.Schema(
             default: {
                 source: 'FilePath',
                 projectName: {
-                    local: { pattern: '', match: 1, group: 1 },
-                    revitServer: { pattern: '', match: 1, group: 1 },
-                    bimThreeSixty: { pattern: '', match: 1, group: 1 }
+                    local: { pattern: '', match: 0, group: 1 },
+                    revitServer: { pattern: '', match: 0, group: 1 },
+                    bimThreeSixty: { pattern: '', match: 0, group: 1 }
                     //TODO: If we add ProjectInfo as the source we can use the following schema:
                     //param: name: '' where 'name' is the name of the parameter that holds the info. 
                 },
                 projectNumber: {
-                    local: { pattern: '', match: 1, group: 1 },
-                    revitServer: { pattern: '', match: 1, group: 1 },
-                    bimThreeSixty: { pattern: '', match: 1, group: 1 }
+                    local: { pattern: '', match: 0, group: 1 },
+                    revitServer: { pattern: '', match: 0, group: 1 },
+                    bimThreeSixty: { pattern: '', match: 0, group: 1 }
                 },
                 projectLocation: {
-                    local: { pattern: '', match: 1, group: 1 },
-                    revitServer: { pattern: '', match: 1, group: 1 },
-                    bimThreeSixty: { pattern: '', match: 1, group: 1 }
+                    local: { pattern: '', match: 0, group: 1 },
+                    revitServer: { pattern: '', match: 0, group: 1 },
+                    bimThreeSixty: { pattern: '', match: 0, group: 1 }
                 }
             }
         }
