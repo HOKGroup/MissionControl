@@ -20,6 +20,14 @@ function SettingsController(SettingsFactory, ngToast, $route, UtilityService) {
     getSettings();
 
     /**
+     * Utility method for converting camelCase property names to Sentence Case. 
+     */
+    vm.processPropertyName = function(name) {
+        var result = name.replace( /([A-Z])/g, ' $1');
+        return result.charAt(0).toUpperCase() + result.slice(1);
+    };
+
+    /**
      * Utility method for validating input Regex pattern.
      */
     vm.isValidRegex = function(pattern) {
