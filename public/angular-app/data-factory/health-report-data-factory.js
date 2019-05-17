@@ -127,7 +127,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         },
                         {
                             title: 'Misnamed Families',
-                            description: 'It\'s considered good practice to use your compan\'s created and curated families. ' +
+                            description: 'It\'s considered good practice to use your company\'s created and curated families. ' +
                             'These families will typically have a name containing ' + nameCheckValues.join(', ') + ' in it. Family naming has no ' +
                             'performance impact, but is good practice that should be followed. Less than 10 misnamed families is green, more ' +
                             'than 10 but less than 20 is orange while more than 20 is red.',
