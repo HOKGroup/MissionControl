@@ -26,6 +26,9 @@
 ## File-based project format:
 *.iws
 
+## Ignore Environmental Variables Config File
+*.env
+
 ## Plugin-specific files:
 
 # IntelliJ
