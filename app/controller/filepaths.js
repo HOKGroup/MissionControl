@@ -268,6 +268,30 @@ FilePathsService = {
     },
 
     /**
+     * Updates File Path properties.
+     * @param req
+     * @param res
+     */
+    update: function (req, res) {
+        var id = mongoose.Types.ObjectId(req.params.id);
+        FilePaths.updateOne(
+            { '_id': id }, req.body, function (err, response) {
+                var result = {
+                    status: 201,
+                    message: response
+                };
+                if (err) {
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response) {
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
+    },
+
+    /**
      * DataTables allow for server side processing. This method processes
      * File Paths table requests. Request come in following format:
      * {
@@ -301,7 +325,7 @@ FilePathsService = {
 
         // (Konrad) Additional filters.
         if (revitVersion !== 'All') query['revitVersion'] = revitVersion;
-        if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'].map(function (i) { return i.toLowerCase(); }) };
+        if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'].map(function (i) { return new RegExp(i, 'i'); }) };
         if (unassigned === 'true') query['projectId'] = null;
 
         // (Konrad) If we use aggregate here, then we can check for values being null. This matters because not

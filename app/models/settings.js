@@ -7,6 +7,34 @@ var UserLocationSources = Object.freeze({
     MachineName: 'MachineName'
 });
 
+var ProjectInfoSources = Object.freeze({
+    FilePath: 'FilePath',
+    //TODO: Add ProjectInfo so that we allow user to extract name, number, location 
+    //from Revit's Project Info class.
+});
+
+var projectInfoSchema = new mongoose.Schema(
+    {
+        source: {
+            type: String,
+            enum: Object.values(ProjectInfoSources)
+        },
+        projectName: {
+            type: Map,
+            of: mongoose.Schema.Types.Mixed
+        },
+        projectNumber: {
+            type: Map,
+            of: mongoose.Schema.Types.Mixed
+        },
+        projectLocation: {
+            type: Map,
+            of: mongoose.Schema.Types.Mixed
+        }
+    },
+    { _id: false }
+);
+
 var userLocationSchema = new mongoose.Schema(
     {
         source: {
@@ -14,6 +42,7 @@ var userLocationSchema = new mongoose.Schema(
             enum: Object.values(UserLocationSources)
         },
         pattern: String,
+        match: Number,
         group: Number
     },
     { _id: false }
@@ -66,7 +95,31 @@ var settingsSchema = new mongoose.Schema(
             default: {
                 source: 'MachineName',
                 pattern: '-(\\w+)-',
+                match: 0,
                 group: 1
+            }
+        },
+        projectInfo: {
+            type: projectInfoSchema,
+            default: {
+                source: 'FilePath',
+                projectName: {
+                    local: { pattern: '', match: 0, group: 1 },
+                    revitServer: { pattern: '', match: 0, group: 1 },
+                    bimThreeSixty: { pattern: '', match: 0, group: 1 }
+                    //TODO: If we add ProjectInfo as the source we can use the following schema:
+                    //param: name: '' where 'name' is the name of the parameter that holds the info. 
+                },
+                projectNumber: {
+                    local: { pattern: '', match: 0, group: 1 },
+                    revitServer: { pattern: '', match: 0, group: 1 },
+                    bimThreeSixty: { pattern: '', match: 0, group: 1 }
+                },
+                projectLocation: {
+                    local: { pattern: '', match: 0, group: 1 },
+                    revitServer: { pattern: '', match: 0, group: 1 },
+                    bimThreeSixty: { pattern: '', match: 0, group: 1 }
+                }
             }
         }
     }
