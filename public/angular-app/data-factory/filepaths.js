@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').factory('FilePathsFactory', FilePathsFactory);
 
-function FilePathsFactory($http){
+function FilePathsFactory($http) {
     return {
         getAll: function () {
             return $http.get('/api/v2/filepaths').then(complete).catch(failed);
@@ -15,6 +15,10 @@ function FilePathsFactory($http){
 
         disable: function (data) {
             return $http.put('/api/v2/filepaths/' + data._id + '/disable', data).then(complete).catch(failed);
+        },
+
+        update: function (data) {
+            return $http.put('/api/v2/filepaths/' + data._id + '/update', data).then(complete).catch(failed);
         },
 
         getAllUnassigned: function () {
