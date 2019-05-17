@@ -234,12 +234,13 @@
                 </div>
                 <div class="panel-body">
                     <form class="form-horizontal">
-                        <!--PROJECT LOCATION SOURCE-->
-                        <fieldset class="form-group">
+                        <fieldset class="form-group"
+                                  ng-repeat="(key, value) in vm.settings.projectInfo"
+                                  ng-if="key != 'source'">
                             <label class="col-sm-3 control-label text-right"
                                    style="margin-top: 8px;"
                                    for="userLocation">
-                                Project Location Source
+                                {{vm.processPropertyName(key)}} Source
                                 <button class="fa-wrapper"
                                         ng-if="vm.settings.projectInfo">
                                     <i class="fas fa-check fa-sm"
@@ -273,488 +274,50 @@
                                     </div>
                                 </div>
                             </div>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-9 no-padding-right">
-                                <div class="col-md-3 no-padding-left">
-                                    <label class="control-label text-right pull-right"
-                                           style="margin-top: 8px;"
-                                           for="userLocation">
-                                        Local
-                                        <button class="fa-wrapper"
-                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectLocation.local.pattern)">
-                                            <i class="fas fa-check fa-sm"
-                                               style="color: green;"></i>
-                                        </button>
-                                        <button class="fa-wrapper"
-                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectLocation.local.pattern)">
-                                            <i class="fas fa-asterisk fa-sm"
-                                               style="color: red;"></i>
-                                        </button>
-                                    </label>
-                                </div>
-                                <div class="col-md-9 no-padding">
-                                    <div class="col-md-6 no-padding-left">
-                                        <input id="infoLocationPattern"
-                                               type="text"
-                                               placeholder="Location Regex"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectLocation.local.pattern">
-                                    </div>
+                            <div class="col-sm-12"
+                                 style="margin-top: 10px;"
+                                 ng-repeat="(key1, value1) in value">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-9 no-padding-right">
                                     <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationMatch"
-                                               type="number"
-                                               placeholder="Pattern 'Match' Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectLocation.local.match">
+                                        <label class="control-label text-right pull-right"
+                                               style="margin-top: 8px;"
+                                               for="userLocation">
+                                            {{vm.processPropertyName(key1)}}
+                                            <button class="fa-wrapper"
+                                                    ng-if="vm.isValidRegex(value1.pattern)">
+                                                <i class="fas fa-check fa-sm"
+                                                   style="color: green;"></i>
+                                            </button>
+                                            <button class="fa-wrapper"
+                                                    ng-if="!vm.isValidRegex(value1.pattern)">
+                                                <i class="fas fa-asterisk fa-sm"
+                                                   style="color: red;"></i>
+                                            </button>
+                                        </label>
                                     </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationGroup"
-                                               type="number"
-                                               placeholder="Pattern 'Group' Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectLocation.local.group">
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-9 no-padding-right">
-                                <div class="col-md-3 no-padding-left">
-                                    <label class="control-label text-right pull-right"
-                                           style="margin-top: 8px;"
-                                           for="userLocation">
-                                        Revit Server
-                                        <button class="fa-wrapper"
-                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectLocation.revitServer.pattern)">
-                                            <i class="fas fa-check fa-sm"
-                                               style="color: green;"></i>
-                                        </button>
-                                        <button class="fa-wrapper"
-                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectLocation.revitServer.pattern)">
-                                            <i class="fas fa-asterisk fa-sm"
-                                               style="color: red;"></i>
-                                        </button>
-                                    </label>
-                                </div>
-                                <div class="col-md-9 no-padding">
-                                    <div class="col-md-6 no-padding-left">
-                                        <input id="infoLocationPattern"
-                                               type="text"
-                                               placeholder="Location Regex"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectLocation.revitServer.pattern">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationMatch"
-                                               type="number"
-                                               placeholder="Pattern 'Match' Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectLocation.revitServer.match">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationGroup"
-                                               type="number"
-                                               placeholder="Pattern 'Group' Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectLocation.revitServer.group">
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-9 no-padding-right">
-                                <div class="col-md-3 no-padding-left">
-                                    <label class="control-label text-right pull-right"
-                                           style="margin-top: 8px;"
-                                           for="userLocation">
-                                        BIM 360
-                                        <button class="fa-wrapper"
-                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectLocation.bimThreeSixty.pattern)">
-                                            <i class="fas fa-check fa-sm"
-                                               style="color: green;"></i>
-                                        </button>
-                                        <button class="fa-wrapper"
-                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectLocation.bimThreeSixty.pattern)">
-                                            <i class="fas fa-asterisk fa-sm"
-                                               style="color: red;"></i>
-                                        </button>
-                                    </label>
-                                </div>
-                                <div class="col-md-9 no-padding">
-                                    <div class="col-md-6 no-padding-left">
-                                        <input id="infoLocationPattern"
-                                               type="text"
-                                               placeholder="Location Regex"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectLocation.bimThreeSixty.pattern">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationMatch"
-                                               type="number"
-                                               placeholder="Pattern 'Match' Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectLocation.bimThreeSixty.match">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationGroup"
-                                               type="number"
-                                               placeholder="Pattern 'Group' Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectLocation.bimThreeSixty.group">
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <!--PROJECT NAME SOURCE-->
-                        <fieldset class="form-group">
-                            <label class="col-sm-3 control-label text-right"
-                                   style="margin-top: 8px;"
-                                   for="userLocation">
-                                Project Name Source
-                                <button class="fa-wrapper"
-                                        ng-if="vm.settings.projectInfo">
-                                    <i class="fas fa-check fa-sm"
-                                       style="color: green;"></i>
-                                </button>
-                                <button class="fa-wrapper"
-                                        ng-if="!vm.settings.projectInfo">
-                                    <i class="fas fa-asterisk fa-sm"
-                                       style="color: red;"></i>
-                                </button>
-                            </label>
-                            <div class="col-sm-9 no-padding-right">
-                                <div class="col-md-6 no-padding-left">
-                                    <div class="btn-group"
-                                         style="width:100%;">
-                                        <button class="btn btn-default btn-sm dropdown-toggle scrollable-menu-left"
-                                                data-toggle="dropdown">
-                                            {{vm.settings.projectInfo.source}}
-                                            <span class="caret pull-right"
-                                                  style="margin-top: 6px; margin-bottom: 6px;"></span>
-                                        </button>
-                                        <ul class="dropdown-menu scrollable-menu-left">
-                                            <li ng-repeat="o in vm.projectInfoSources">
-                                                <a href=""
-                                                   ng-click="vm.setProjectInfoSource(o, 'Name')"
-                                                   class="no-padding-left no-padding-right">
-                                                    {{o}}
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-9 no-padding-right">
-                                <div class="col-md-3 no-padding-left">
-                                    <label class="control-label text-right pull-right"
-                                           style="margin-top: 8px;"
-                                           for="userLocation">
-                                        Local
-                                        <button class="fa-wrapper"
-                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectName.local.pattern)">
-                                            <i class="fas fa-check fa-sm"
-                                               style="color: green;"></i>
-                                        </button>
-                                        <button class="fa-wrapper"
-                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectName.local.pattern)">
-                                            <i class="fas fa-asterisk fa-sm"
-                                               style="color: red;"></i>
-                                        </button>
-                                    </label>
-                                </div>
-                                <div class="col-md-9 no-padding">
-                                    <div class="col-md-6 no-padding-left">
-                                        <input id="infoLocationPattern"
-                                               type="text"
-                                               placeholder="Location Regex"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectName.local.pattern">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationMatch"
-                                               type="number"
-                                               placeholder="Pattern 'Match' Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectName.local.match">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationGroup"
-                                               type="number"
-                                               placeholder="Pattern 'Group' Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectName.local.group">
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-9 no-padding-right">
-                                <div class="col-md-3 no-padding-left">
-                                    <label class="control-label text-right pull-right"
-                                           style="margin-top: 8px;"
-                                           for="userLocation">
-                                        Revit Server
-                                        <button class="fa-wrapper"
-                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectName.revitServer.pattern)">
-                                            <i class="fas fa-check fa-sm"
-                                               style="color: green;"></i>
-                                        </button>
-                                        <button class="fa-wrapper"
-                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectName.revitServer.pattern)">
-                                            <i class="fas fa-asterisk fa-sm"
-                                               style="color: red;"></i>
-                                        </button>
-                                    </label>
-                                </div>
-                                <div class="col-md-9 no-padding">
-                                    <div class="col-md-6 no-padding-left">
-                                        <input id="infoLocationPattern"
-                                               type="text"
-                                               placeholder="Add Location Regex..."
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectName.revitServer.pattern">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationMatch"
-                                               type="number"
-                                               placeholder="Pattern Match Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectName.revitServer.match">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationGroup"
-                                               type="number"
-                                               placeholder="Pattern Group Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectName.revitServer.group">
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-9 no-padding-right">
-                                <div class="col-md-3 no-padding-left">
-                                    <label class="control-label text-right pull-right"
-                                           style="margin-top: 8px;"
-                                           for="userLocation">
-                                        BIM 360
-                                        <button class="fa-wrapper"
-                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectName.bimThreeSixty.pattern)">
-                                            <i class="fas fa-check fa-sm"
-                                               style="color: green;"></i>
-                                        </button>
-                                        <button class="fa-wrapper"
-                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectName.bimThreeSixty.pattern)">
-                                            <i class="fas fa-asterisk fa-sm"
-                                               style="color: red;"></i>
-                                        </button>
-                                    </label>
-                                </div>
-                                <div class="col-md-9 no-padding">
-                                    <div class="col-md-6 no-padding-left">
-                                        <input id="infoLocationPattern"
-                                               type="text"
-                                               placeholder="Add Location Regex..."
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectName.bimThreeSixty.pattern">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationMatch"
-                                               type="number"
-                                               placeholder="Pattern Match Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectName.bimThreeSixty.match">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationGroup"
-                                               type="number"
-                                               placeholder="Pattern Group Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectName.bimThreeSixty.group">
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <!--PROJECT NUMBER SOURCE-->
-                        <fieldset class="form-group">
-                            <label class="col-sm-3 control-label text-right"
-                                   style="margin-top: 8px;"
-                                   for="userLocation">
-                                Project Number Source
-                                <button class="fa-wrapper"
-                                        ng-if="vm.settings.projectInfo">
-                                    <i class="fas fa-check fa-sm"
-                                       style="color: green;"></i>
-                                </button>
-                                <button class="fa-wrapper"
-                                        ng-if="!vm.settings.projectInfo">
-                                    <i class="fas fa-asterisk fa-sm"
-                                       style="color: red;"></i>
-                                </button>
-                            </label>
-                            <div class="col-sm-9 no-padding-right">
-                                <div class="col-md-6 no-padding-left">
-                                    <div class="btn-group"
-                                         style="width:100%;">
-                                        <button class="btn btn-default btn-sm dropdown-toggle scrollable-menu-left"
-                                                data-toggle="dropdown">
-                                            {{vm.settings.projectInfo.source}}
-                                            <span class="caret pull-right"
-                                                  style="margin-top: 6px; margin-bottom: 6px;"></span>
-                                        </button>
-                                        <ul class="dropdown-menu scrollable-menu-left">
-                                            <li ng-repeat="o in vm.projectInfoSources">
-                                                <a href=""
-                                                   ng-click="vm.setProjectInfoSource(o, 'Number')"
-                                                   class="no-padding-left no-padding-right">
-                                                    {{o}}
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-9 no-padding-right">
-                                <div class="col-md-3 no-padding-left">
-                                    <label class="control-label text-right pull-right"
-                                           style="margin-top: 8px;"
-                                           for="userLocation">
-                                        Local
-                                        <button class="fa-wrapper"
-                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectNumber.local.pattern)">
-                                            <i class="fas fa-check fa-sm"
-                                               style="color: green;"></i>
-                                        </button>
-                                        <button class="fa-wrapper"
-                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectNumber.local.pattern)">
-                                            <i class="fas fa-asterisk fa-sm"
-                                               style="color: red;"></i>
-                                        </button>
-                                    </label>
-                                </div>
-                                <div class="col-md-9 no-padding">
-                                    <div class="col-md-6 no-padding-left">
-                                        <input id="infoLocationPattern"
-                                               type="text"
-                                               placeholder="Location Regex"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectNumber.local.pattern">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationMatch"
-                                               type="number"
-                                               placeholder="Pattern 'Match' Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectNumber.local.match">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationGroup"
-                                               type="number"
-                                               placeholder="Pattern 'Group' Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectNumber.local.group">
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-9 no-padding-right">
-                                <div class="col-md-3 no-padding-left">
-                                    <label class="control-label text-right pull-right"
-                                           style="margin-top: 8px;"
-                                           for="userLocation">
-                                        Revit Server
-                                        <button class="fa-wrapper"
-                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectNumber.revitServer.pattern)">
-                                            <i class="fas fa-check fa-sm"
-                                               style="color: green;"></i>
-                                        </button>
-                                        <button class="fa-wrapper"
-                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectNumber.revitServer.pattern)">
-                                            <i class="fas fa-asterisk fa-sm"
-                                               style="color: red;"></i>
-                                        </button>
-                                    </label>
-                                </div>
-                                <div class="col-md-9 no-padding">
-                                    <div class="col-md-6 no-padding-left">
-                                        <input id="infoLocationPattern"
-                                               type="text"
-                                               placeholder="Location Regex"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectNumber.revitServer.pattern">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationMatch"
-                                               type="number"
-                                               placeholder="Pattern 'Match' Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectNumber.revitServer.match">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationGroup"
-                                               type="number"
-                                               placeholder="Pattern 'Group' Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectNumber.revitServer.group">
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset class="form-group">
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-9 no-padding-right">
-                                <div class="col-md-3 no-padding-left">
-                                    <label class="control-label text-right pull-right"
-                                           style="margin-top: 8px;"
-                                           for="userLocation">
-                                        BIM 360
-                                        <button class="fa-wrapper"
-                                                ng-if="vm.isValidRegex(vm.settings.projectInfo.projectNumber.bimThreeSixty.pattern)">
-                                            <i class="fas fa-check fa-sm"
-                                               style="color: green;"></i>
-                                        </button>
-                                        <button class="fa-wrapper"
-                                                ng-if="!vm.isValidRegex(vm.settings.projectInfo.projectNumber.bimThreeSixty.pattern)">
-                                            <i class="fas fa-asterisk fa-sm"
-                                               style="color: red;"></i>
-                                        </button>
-                                    </label>
-                                </div>
-                                <div class="col-md-9 no-padding">
-                                    <div class="col-md-6 no-padding-left">
-                                        <input id="infoLocationPattern"
-                                               type="text"
-                                               placeholder="Location Regex"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectNumber.bimThreeSixty.pattern">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationMatch"
-                                               type="number"
-                                               placeholder="Pattern 'Match' Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectNumber.bimThreeSixty.match">
-                                    </div>
-                                    <div class="col-md-3 no-padding-left">
-                                        <input id="infoLocationGroup"
-                                               type="number"
-                                               placeholder="Pattern 'Group' Number"
-                                               class="form-control input-sm"
-                                               ng-model="vm.settings.projectInfo.projectNumber.bimThreeSixty.group">
+                                    <div class="col-md-9 no-padding">
+                                        <div class="col-md-6 no-padding-left">
+                                            <input id="infoLocationPattern"
+                                                   type="text"
+                                                   placeholder="{{vm.processPropertyName(key)}} Regex"
+                                                   class="form-control input-sm"
+                                                   ng-model="value1.pattern">
+                                        </div>
+                                        <div class="col-md-3 no-padding-left">
+                                            <input id="infoLocationMatch"
+                                                   type="number"
+                                                   placeholder="Pattern 'Match' Number"
+                                                   class="form-control input-sm"
+                                                   ng-model="value1.match">
+                                        </div>
+                                        <div class="col-md-3 no-padding-left">
+                                            <input id="infoLocationGroup"
+                                                   type="number"
+                                                   placeholder="Pattern 'Group' Number"
+                                                   class="form-control input-sm"
+                                                   ng-model="value1.group">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
