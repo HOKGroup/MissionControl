@@ -185,7 +185,7 @@
                                         <ul class="dropdown-menu scrollable-menu-left">
                                             <li ng-repeat="o in vm.userLocationsOptions">
                                                 <a href=""
-                                                   ng-click="vm.setLocationSource(o)"
+                                                   ng-click="vm.setLocationSource(o, 'Office')"
                                                    class="no-padding-left no-padding-right">
                                                     {{o}}
                                                 </a>
@@ -216,6 +216,92 @@
                                                ng-model="vm.settings.userLocation.group">
                                     </div>
                                 </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <form name="form"
+              class="css-form"
+              novalidate>
+            <div class="panel panel-default"
+                 style="margin-top:10px;">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Temp Location Info</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal">
+                        <fieldset class="form-group">
+                            <label class="control-label col-sm-3 text-right"
+                                   style="margin-top: 8px;"
+                                   for="userLocation">
+                                Citrix Machine Identifier Source
+                                <button class="fa-wrapper"
+                                        ng-if="vm.isValidRegex(vm.settings.tempLocation.pattern)">
+                                    <i class="fas fa-check fa-sm"
+                                       style="color: green;"></i>
+                                </button>
+                                <button class="fa-wrapper"
+                                        ng-if="!vm.isValidRegex(vm.settings.tempLocation.pattern)">
+                                    <i class="fas fa-asterisk fa-sm"
+                                       style="color: red;"></i>
+                                </button>
+                            </label>
+                            <div class="col-sm-9 no-padding-right">
+                                <div class="col-md-6 no-padding-left">
+                                    <div class="btn-group"
+                                         style="width:100%;">
+                                        <button class="btn btn-default btn-sm dropdown-toggle scrollable-menu-left"
+                                                data-toggle="dropdown">
+                                            {{vm.settings.tempLocation.source}}
+                                            <span class="caret pull-right"
+                                                  style="margin-top: 6px; margin-bottom: 6px;"></span>
+                                        </button>
+                                        <ul class="dropdown-menu scrollable-menu-left">
+                                            <li ng-repeat="o in vm.tempLocationsOptions">
+                                                <a href=""
+                                                   ng-click="vm.setLocationSource(o, 'Temp')"
+                                                   class="no-padding-left no-padding-right">
+                                                    {{o}}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 no-padding-left">
+                                    <input id="officeLocationPattern"
+                                           type="text"
+                                           placeholder="Temp Location Regex."
+                                           class="form-control input-sm"
+                                           ng-model="vm.settings.tempLocation.pattern">
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <label class="control-label col-sm-3 text-right"
+                                   style="margin-top: 8px;"
+                                   for="userLocation">
+                                Citrix Machine Temp Folder Path
+                                <button class="fa-wrapper"
+                                        ng-if="vm.settings.tempLocation.tempPath">
+                                    <i class="fas fa-check fa-sm"
+                                       style="color: green;"></i>
+                                </button>
+                                <button class="fa-wrapper"
+                                        ng-if="!vm.settings.tempLocation.tempPath">
+                                    <i class="fas fa-asterisk fa-sm"
+                                       style="color: red;"></i>
+                                </button>
+                            </label>
+                            <div class="col-sm-9">
+                                <input id="officeLocationPattern"
+                                       type="text"
+                                       placeholder="Temp Folder Location."
+                                       class="form-control input-sm"
+                                       ng-model="vm.settings.tempLocation.tempPath">
                             </div>
                         </fieldset>
                     </form>

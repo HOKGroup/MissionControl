@@ -15,6 +15,7 @@ function SettingsController(SettingsFactory, ngToast, $route, UtilityService) {
     vm.state = null;
     vm.localFilePath = null;
     vm.userLocationsOptions = UtilityService.userLocationsOptions();
+    vm.tempLocationsOptions = UtilityService.tempLocationsOptions();
     vm.projectInfoSources = UtilityService.projectInfoSources();
 
     getSettings();
@@ -61,8 +62,15 @@ function SettingsController(SettingsFactory, ngToast, $route, UtilityService) {
     /**
      * 
      */
-    vm.setLocationSource = function (o) {
-        vm.settings.userLocation.source = o;
+    vm.setLocationSource = function (source, action) {
+        switch (action) {
+            case 'Office':
+                vm.settings.userLocation.source = source;
+                break;
+            case 'Temp':
+                vm.settings.tempLocationsOptions = source;
+                break;
+        }
     };
 
     /**
