@@ -18,6 +18,7 @@
         stroke: #fff;
         shape-rendering: crispEdges;
     }
+
     .axis line,
     .axis path {
         fill: none;
@@ -53,18 +54,26 @@
             </div>
         </div>
     </div>
-    <div class="row" ng-if="vm.pcoordinatesData.length > 0">
+    <div class="row"
+         ng-if="vm.pcoordinatesData.length > 0">
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class=" btn-group btn-group-xs pull-right" role="group" aria-hidden="true">
-                        <button type="button" ng-class="vm.SelectedYear === '2016' ? 'btn btn-primary' : 'btn btn-primary'" ng-click="vm.FilterTable()">Filter</button>
+                    <div class=" btn-group btn-group-xs pull-right"
+                         role="group"
+                         aria-hidden="true">
+                        <button type="button"
+                                ng-class="vm.SelectedYear === '2016' ? 'btn btn-primary' : 'btn btn-primary'"
+                                ng-click="vm.FilterTable()">Filter</button>
                     </div>
-                    <h4 class="panel-title" style="padding-top: 5px;">Select: Filter Families by Multiple Parameters.</h4>
+                    <h4 class="panel-title"
+                        style="padding-top: 5px;">Select: Filter Families by Multiple Parameters.</h4>
                 </div>
                 <div class="panel-collapse">
                     <div class="panel-body">
-                        <d3-parallel-coordinates data="vm.pcoordinatesData" format-value="vm.formatValue(item)" d3-on-brush="vm.OnBrush(item)"></d3-parallel-coordinates>
+                        <d3-parallel-coordinates data="vm.pcoordinatesData"
+                                                 format-value="vm.formatValue(item)"
+                                                 d3-on-brush="vm.OnBrush(item)"></d3-parallel-coordinates>
                     </div>
                 </div>
             </div>
@@ -72,14 +81,21 @@
     </div>
 
     <div class="row">
-        <div class="panel-group" id="p1">
+        <div class="panel-group"
+             id="p1">
             <div class="panel panel-default">
-                <div class="panel-heading panel-heading-clickable" data-toggle="collapse" data-parent="#p1" data-target="#collapseP1">
-                    <p class="pull-right textAlignMiddle"><span class="fas fa-square" style="color: #F0AD4E;"></span> 2/3 Fail</p>
-                    <p class="pull-right textAlignMiddle"><span class="fas fa-square" style="color: #D9534F;"></span> All checks Fail</p>
+                <div class="panel-heading panel-heading-clickable"
+                     data-toggle="collapse"
+                     data-parent="#p1"
+                     data-target="#collapseP1">
+                    <p class="pull-right textAlignMiddle"><span class="fas fa-square"
+                              style="color: #F0AD4E;"></span> 2/3 Fail</p>
+                    <p class="pull-right textAlignMiddle"><span class="fas fa-square"
+                              style="color: #D9534F;"></span> All checks Fail</p>
                     <h4 class="panel-title">Family Checks: no placed instances, >1MB size, misnamed</h4>
                 </div>
-                <div id="collapseP1" class="panel-collapse collapse in">
+                <div id="collapseP1"
+                     class="panel-collapse collapse in">
                     <div class="panel-body">
                         <table id="table1"
                                datatable="ng"
@@ -88,56 +104,56 @@
                                dt-instance="vm.dtInstance"
                                class="table table-hover table-condensed datatable">
                             <thead>
-                            <tr>
-                                <th class="col-md-1 text-center">#</th>
-                                <th class="col-md-8">Name</th>
-                                <th class="col-md-1 text-center">Task</th>
-                                <th>Task Count</th>
-                                <th class="col-md-1 text-center">Qty.</th>
-                                <th class="col-md-1 text-center">Size</th>
-                                <th>Size Value</th>
-                            </tr>
+                                <tr>
+                                    <th class="col-md-1 text-center">#</th>
+                                    <th class="col-md-8">Name</th>
+                                    <th class="col-md-1 text-center">Task</th>
+                                    <th>Task Count</th>
+                                    <th class="col-md-1 text-center">Qty.</th>
+                                    <th class="col-md-1 text-center">Size</th>
+                                    <th>Size Value</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="i in vm.AllFamilies | orderBy: 'name' : false"
-                                ng-class="vm.evaluateFamily(i) == 3 ? 'bg-danger' : vm.evaluateFamily(i) == 2 ? 'bg-warning' : 'table-info'">
-                                <td class="text-center">{{$index}}</td>
-                                <td>
-                                    <p ng-class="vm.evaluateName(i) ? 'normal' : 'thick'"
-                                       ng-mouseenter="onHover = true"
-                                       ng-mouseleave="onHover = false">
-                                        {{i.name}}
-                                    </p>
-                                </td>
-                                <td class="text-center"
-                                    ng-mouseenter="onHover = true"
-                                    ng-mouseleave="onHover = false">
-                                    <button class="fa-button"
-                                            ng-if="i.tasks.length === 0 && onHover"
-                                            ng-style="vm.evaluateTasks(i)"
-                                            ng-click="vm.launchEditor(i, vm.FamilyData.userNames)">
-                                        <i class="fas fa-plus text-primary"></i>
-                                    </button>
-                                    <button class="fa-button"
-                                            ng-show="i.tasks.length > 0"
-                                            ng-style="vm.evaluateTasks(i)"
-                                            ng-click="vm.launchEditor(i, vm.FamilyData.userNames)">
-                                        <i class="fas fa-tasks text-primary"></i>
-                                    </button>
-                                </td>
-                                <td>{{i.tasks.length}}</td>
-                                <td class="text-center">
-                                    <p ng-class="vm.evaluateInstances(i) ? 'normal' : 'thick'">
-                                        {{i.instances}}
-                                    </p>
-                                </td>
-                                <td class="text-center">
-                                    <p ng-class="vm.evaluateSize(i) ? 'normal' : 'thick'">
-                                        {{i.size}}
-                                    </p>
-                                </td>
-                                <td>{{i.sizeValue}}</td>
-                            </tr>
+                                <tr ng-repeat="i in vm.AllFamilies | orderBy: 'name' : false"
+                                    ng-class="vm.evaluateFamily(i) == 3 ? 'bg-danger' : vm.evaluateFamily(i) == 2 ? 'bg-warning' : 'table-info'">
+                                    <td class="text-center">{{$index}}</td>
+                                    <td>
+                                        <p ng-class="vm.evaluateName(i) ? 'normal' : 'thick'"
+                                           ng-mouseenter="onHover = true"
+                                           ng-mouseleave="onHover = false">
+                                            {{i.name}}
+                                        </p>
+                                    </td>
+                                    <td class="text-center"
+                                        ng-mouseenter="onHover = true"
+                                        ng-mouseleave="onHover = false">
+                                        <button class="fa-button"
+                                                ng-if="i.tasks.length === 0 && onHover"
+                                                ng-style="vm.evaluateTasks(i)"
+                                                ng-click="vm.launchEditor(i, vm.FamilyData.userNames)">
+                                            <i class="fas fa-plus text-primary"></i>
+                                        </button>
+                                        <button class="fa-button"
+                                                ng-show="i.tasks.length > 0"
+                                                ng-style="vm.evaluateTasks(i)"
+                                                ng-click="vm.launchEditor(i, vm.FamilyData.userNames)">
+                                            <i class="fas fa-tasks text-primary"></i>
+                                        </button>
+                                    </td>
+                                    <td>{{i.tasks.length}}</td>
+                                    <td class="text-center">
+                                        <p ng-class="vm.evaluateInstances(i) ? 'normal' : 'thick'">
+                                            {{i.instances}}
+                                        </p>
+                                    </td>
+                                    <td class="text-center">
+                                        <p ng-class="vm.evaluateSize(i) ? 'normal' : 'thick'">
+                                            {{i.size}}
+                                        </p>
+                                    </td>
+                                    <td>{{i.sizeValue}}</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>

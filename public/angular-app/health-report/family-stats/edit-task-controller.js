@@ -11,7 +11,7 @@ function EditFamilyTaskController($uibModalInstance, FamiliesFactory, family, ta
     vm.userNames = userNames; // names of user that ever opened the model
 
     // (Konrad) Resetting these values will clear the form for new task.
-    if(action === 'Add Task'){
+    if (action === 'Add Task') {
         vm.task = {
             assignedTo: '',
             message: '',
@@ -29,22 +29,22 @@ function EditFamilyTaskController($uibModalInstance, FamiliesFactory, family, ta
         vm.task.isSelected = false; // never submit a task with selection on
         vm.task.submittedOn = Date.now();
         vm.task['centralPath'] = vm.family.centralPath;
-        if(action === 'Add Task'){
+        if (action === 'Add Task') {
             FamiliesFactory
                 .addTask(vm.family.collectionId, vm.family.name, vm.task).then(function (response) {
-                    if (!response)return;
+                    if (!response) return;
 
                     $uibModalInstance.close({
                         response: response,
                         familyName: vm.family.name
                     });
-            }, function (err) {
-                console.log('Unable to add task: ' + err);
-            });
-        } else if (action === 'Edit Task'){
+                }, function (err) {
+                    console.log('Unable to add task: ' + err);
+                });
+        } else if (action === 'Edit Task') {
             FamiliesFactory
-                .updateTask(vm.family, vm.task).then(function(response){
-                    if(!response) return;
+                .updateTask(vm.family, vm.task).then(function (response) {
+                    if (!response) return;
 
                     $uibModalInstance.close({
                         response: response,
@@ -59,23 +59,23 @@ function EditFamilyTaskController($uibModalInstance, FamiliesFactory, family, ta
     /**
      * If task was already marked as completed it resets its state.
      */
-    vm.reopen = function (){
+    vm.reopen = function () {
         vm.task.isSelected = false;
         vm.task.submittedOn = Date.now();
         vm.task.completedBy = null;
         vm.task.completedOn = null;
 
         FamiliesFactory
-            .updateTask(vm.family, vm.task).then(function(response){
-            if(!response) return;
+            .updateTask(vm.family, vm.task).then(function (response) {
+                if (!response) return;
 
-            $uibModalInstance.close({
-                response: response,
-                familyName: vm.family.name
+                $uibModalInstance.close({
+                    response: response,
+                    familyName: vm.family.name
+                });
+            }, function (err) {
+                console.log('Unable to reopen task: ' + err);
             });
-        }, function (err) {
-            console.log('Unable to reopen task: ' + err);
-        });
     };
 
     /**
