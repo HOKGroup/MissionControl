@@ -15,7 +15,7 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
          * By watching this variable we can detect when user selected to see this page.
          */
         $scope.$watch('vm.FamilyData.show.value', function (newValue) {
-            if(newValue) reloadTable();
+            if (newValue) reloadTable();
         });
 
         /**
@@ -23,7 +23,7 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
          * @constructor
          */
         vm.FilterTable = function () {
-            if(vm.dtInstance) {vm.dtInstance.reloadData(false);}
+            if (vm.dtInstance) { vm.dtInstance.reloadData(false); }
         };
 
         /**
@@ -31,11 +31,11 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
          * @param item
          * @constructor
          */
-        vm.OnBrush = function(item){
-            vm.AllFamilies = vm.FamilyData.familyStats.families.filter(function(family){
+        vm.OnBrush = function (item) {
+            vm.AllFamilies = vm.FamilyData.familyStats.families.filter(function (family) {
                 var found = false;
-                for (var i = 0; i < item.length; i++){
-                    if(item[i].name === family.name){
+                for (var i = 0; i < item.length; i++) {
+                    if (item[i].name === family.name) {
                         found = true;
                         break;
                     }
@@ -49,7 +49,7 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
          * @param item
          * @returns {string|*}
          */
-        vm.formatValue = function(item){
+        vm.formatValue = function (item) {
             return UtilityService.formatNumber(item);
         };
 
@@ -59,12 +59,12 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
          * @returns {*}
          */
         vm.evaluateTasks = function (f) {
-            if(f.tasks.length === 0) return;
+            if (f.tasks.length === 0) return;
 
             var open = f.tasks.find(function (item) {
                 return !!item.completedBy;
             });
-            return !!open ? {'color': '#5cb85c'} : {'color': '#D9534F'};
+            return !!open ? { 'color': '#5cb85c' } : { 'color': '#D9534F' };
         };
 
         /**
@@ -73,18 +73,18 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
          * @returns {number}
          */
         vm.evaluateFamily = function (f) {
-            if(f.tasks.length > 0){
-                var override = f.tasks.find(function(item){
+            if (f.tasks.length > 0) {
+                var override = f.tasks.find(function (item) {
                     return item.completedBy !== null;
                 });
-                if(override !== null) return 0;
+                if (override !== null) return 0;
             }
 
             var score = 0;
             if (f.sizeValue > 1000000) score++;
             if (!vm.FamilyData.nameCheckValues.some(function (x) {
-                    return f.name.indexOf(x) !== -1;
-                })) score++;
+                return f.name.indexOf(x) !== -1;
+            })) score++;
             if (f.instances === 0) score++;
 
             return score;
@@ -95,12 +95,12 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
          * @param f
          * @returns {boolean}
          */
-        vm.evaluateName = function(f){
-            if(f.tasks.length > 0){
-                var override = f.tasks.find(function(item){
+        vm.evaluateName = function (f) {
+            if (f.tasks.length > 0) {
+                var override = f.tasks.find(function (item) {
                     return item.completedBy !== null;
                 });
-                if(override) return true;
+                if (override) return true;
             }
 
             return vm.FamilyData.nameCheckValues.some(function (x) {
@@ -113,12 +113,12 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
          * @param f
          * @returns {boolean}
          */
-        vm.evaluateInstances = function(f){
-            if(f.tasks.length > 0){
-                var override = f.tasks.find(function(item){
+        vm.evaluateInstances = function (f) {
+            if (f.tasks.length > 0) {
+                var override = f.tasks.find(function (item) {
                     return item.completedBy !== null;
                 });
-                if(override) return true;
+                if (override) return true;
             }
 
             return f.instances > 0;
@@ -129,12 +129,12 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
          * @param f
          * @returns {boolean}
          */
-        vm.evaluateSize = function(f){
-            if(f.tasks.length > 0){
-                var override = f.tasks.find(function(item){
+        vm.evaluateSize = function (f) {
+            if (f.tasks.length > 0) {
+                var override = f.tasks.find(function (item) {
                     return item.completedBy !== null;
                 });
-                if(override) return true;
+                if (override) return true;
             }
 
             return f.sizeValue < 1000000;
@@ -146,7 +146,7 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
          * @param userNames
          */
         vm.launchEditor = function (family, userNames) {
-            if(family.tasks.length > 0){
+            if (family.tasks.length > 0) {
                 openAllTasks('lg', family, userNames);
             } else {
                 openEditTask('lg', family, null, 'Add Task', userNames);
@@ -166,24 +166,25 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
                 controller: 'AllFamilyTasksController as vm',
                 size: size,
                 resolve: {
-                    family: function (){
+                    family: function () {
                         return family;
                     },
-                    userNames: function(){
+                    userNames: function () {
                         return userNames;
-                    }}
-            }).result.then(function(request){
-                if(!request) return;
-                if(request.action === 'Delete Family Task'){
+                    }
+                }
+            }).result.then(function (request) {
+                if (!request) return;
+                if (request.action === 'Delete Family Task') {
                     // (Konrad) We clear the tasks array to update UI, without reloading the page
                     request.deletedIds.forEach(function (id) {
                         var index = family.tasks.findIndex(function (x) {
                             return x._id.toString() === id.toString();
                         });
-                        if(index !== -1) family.tasks.splice(index, 1);
+                        if (index !== -1) family.tasks.splice(index, 1);
                     });
                 }
-            }).catch(function(){
+            }).catch(function () {
                 console.log('All Tasks Dialog dismissed...');
             });
         };
@@ -203,29 +204,30 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
                 controller: 'EditFamilyTaskController as vm',
                 size: size,
                 resolve: {
-                    family: function (){
+                    family: function () {
                         return family;
                     },
-                    task: function(){
+                    task: function () {
                         return task;
                     },
-                    action: function(){
+                    action: function () {
                         return action;
                     },
-                    userNames: function(){
+                    userNames: function () {
                         return userNames;
-                    }}
-            }).result.then(function(request){
-                if(!request) return;
+                    }
+                }
+            }).result.then(function (request) {
+                if (!request) return;
 
                 // (Konrad) This can only return "Add Task".
                 // Otherwise the all tasks menu would come up and
                 // return value will be handled by that controller.
-                if(action === 'Add Task'){
+                if (action === 'Add Task') {
                     var newTask = request.response.data;
                     family.tasks.push(newTask);
                 }
-            }).catch(function(){
+            }).catch(function () {
                 console.log('All Tasks Dialog dismissed...');
             });
         };
@@ -238,7 +240,7 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
         function processData() {
             vm.AllFamilies = [];
             vm.FamilyData.familyStats.families.forEach(function (item) {
-                if(!item.isDeleted && item.isFailingChecks){
+                if (!item.isDeleted && item.isFailingChecks) {
                     item['collectionId'] = vm.FamilyData.familyStats._id;
                     item['centralPath'] = vm.FamilyData.familyStats.centralPath;
                     vm.AllFamilies.push(item);
@@ -246,7 +248,7 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
             });
 
             vm.pcoordinatesData = [];
-            vm.AllFamilies.forEach(function(item){
+            vm.AllFamilies.forEach(function (item) {
                 vm.pcoordinatesData.push({
                     name: item.name,
                     'Size': item.sizeValue,
@@ -266,8 +268,8 @@ function FamilyStatsController($routeParams, $uibModal, $scope, DTColumnDefBuild
          * Method to recalculate data table contents and reload it.
          */
         function reloadTable() {
-            if(vm.dtInstance) {vm.dtInstance.reloadData(false);}
-            if(vm.dtInstance) {vm.dtInstance.rerender();}
+            if (vm.dtInstance) { vm.dtInstance.reloadData(false); }
+            if (vm.dtInstance) { vm.dtInstance.rerender(); }
         }
 
         /**
