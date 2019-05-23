@@ -6,6 +6,14 @@ function UtilityService() {
          * Method for obtaining an array of available User Location options. 
          * This should match what we have in Settings Schema/Mongoose.
          */
+        tempLocationsOptions: function () {
+            return ['MachineName'];
+        },
+
+        /**
+         * Method for obtaining an array of available User Location options. 
+         * This should match what we have in Settings Schema/Mongoose.
+         */
         userLocationsOptions: function () {
             return ['MachineName'];
         },
