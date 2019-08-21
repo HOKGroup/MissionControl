@@ -296,7 +296,8 @@ FilePathsService = {
         var query = {};
 
         // (Konrad) Always check if disabled.
-        query['isDisabled'] = disabled !== 'false';
+        query['isDisabled'] = disabled !== 'false' ? true : { $ne: true };
+        // query['$or'] = [{ isDisabled: disabled !== 'false' }, { isDisabled: { $exists: false } }];
 
         // (Konrad) Additional filters.
         if (revitVersion !== 'All') query['revitVersion'] = revitVersion;
