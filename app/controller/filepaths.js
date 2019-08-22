@@ -295,8 +295,8 @@ FilePathsService = {
         var fileType = req.body['fileType'];
         var query = {};
 
-        // (Konrad) Always check if disabled.
-        query['isDisabled'] = disabled !== 'false';
+        // (Dan) Always check if disabled. Account for null or missing values.
+        query['isDisabled'] = disabled !== 'false' ? true : { $ne: true };
 
         // (Konrad) Additional filters.
         if (revitVersion !== 'All') query['revitVersion'] = revitVersion;
