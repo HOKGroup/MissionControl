@@ -38,7 +38,7 @@
     "angular-animate": "^1.7.2",
     "angular-sanitize": "^1.7.2",
     "chalk": "^2.4.1",
-    "grunt": "^1.0.3",
+    "grunt": "^1.0.4",
     "grunt-coffeelintr": "^1.1.0",
     "grunt-contrib-coffee": "^2.0.0",
     "grunt-contrib-concat": "^1.0.1",
