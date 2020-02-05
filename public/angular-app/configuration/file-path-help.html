@@ -15,24 +15,31 @@
                     <div class="list-group-item small">
                         <ul class="list-group list-group-flush" style="margin-top: 15px">
                             <li class="list-group-item" style="color: black">
-                                <b>Local:</b> <span style="color: red;">\\GROUP\HOK\LON\PROJECTS\2018\18.33032.00 KPMG\E-DESIGN\E6-MODELS\REVIT\KPMGWR-HOK-ID-CENTRAL.RVT</span>
+                                <b>Local:</b> <span style="color: red;">\\DFS_NAME\OFFICE\PROJECTS\YEAR\PROJECT_NUMBER+NAME\FOLDER\SUBFOLDER\MODEL_NAME_CENTRAL.RVT</span><br>
+                                <b>Local:</b> <span style="color: red;">C:\OFFICE\PROJECTS\YEAR\PROJECT_NUMBER+NAME\FOLDER\SUBFOLDER\MODEL_NAME_CENTRAL.RVT</span>
                                 <p><br>Notes:
-                                    <br> - must use DFS(Distributed File System) path. <b>\\GROUP\</b> instead of letter drives.
-                                    <br> - must have .RVT file extension
+                                    <br> - some companies prefer to use DFS(Distributed File System) path over a specific letter drive designation. 
+                                        Ex. <b>\\GROUP\</b> instead of <b>C:\</b>.
+                                    <br> - whichever method you decide to use, please make sure that it is compliant with the <b>Local File Path Regex</b> settings.
+                                        Each file path will have to pass/match at least one Regex pattern specified in Settings in order to be posted to MC.
+                                    <img src="images/file-paths/local-file-settings.png" class="img-responsive center-block" style="margin-top: 10px;" alt="">
+                                    <br> - You can define multiple different Regex patterns in settings that will be used to verify a file path. 
+                                        Only one has to pass for the file to be designated as "valid"
+                                    <br> - file path must have <b>.RVT</b> file extension
                                 </p>
                             </li>
                             <li class="list-group-item" style="color: black">
-                                <b>Revit Server:</b> <span style="color: red;">RSN://NY-28SVR/13.07051.00 LAGUARDIA TERMINAL B/AR/A12801375-3D-CACOR_CENTRAL.RVT</span>
+                                <b>Revit Server:</b> <span style="color: red;">RSN://SERVER_NAME/PROJECT_NAME/DISCIPLINE/MODEL_NAME_CENTRAL.RVT</span>
                                 <p><br>Notes:
-                                    <br> - must start with <b>RSN://</b>
-                                    <br> - must have .RVT file extension
+                                    <br> - file path must start with <b>RSN://</b>
+                                    <br> - file path must have .RVT file extension
                                 </p>
                             </li>
                             <li class="list-group-item" style="color: black">
-                                <b>BIM 360:</b> <span style="color: red;">BIM 360://SLCTRP - SLCNCP PROJECT HUB/_TEST-HOST-AUTOLINK.RVT</span>
+                                <b>BIM 360:</b> <span style="color: red;">BIM 360://FOLDER/MODEL_NAME.RVT</span>
                                 <p><br>Notes:
-                                    <br> - must start with <b>BIM 360://</b>
-                                    <br> - must have .RVT file extension
+                                    <br> - file path must start with <b>BIM 360://</b>
+                                    <br> - file path must have .RVT file extension
                                 </p>
                             </li>
                         </ul>

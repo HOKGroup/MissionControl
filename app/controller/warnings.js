@@ -29,7 +29,6 @@ WarningsService = {
                             $setOnInsert: {
                                 'createdBy': 'Unknown', // override this to unknown
                                 'createdAt': Date.now(),
-                                'updatedAt': Date.now(),
                                 'descriptionText': item.descriptionText,
                                 'closedBy': item.closedBy,
                                 'closedAt': item.closedAt,

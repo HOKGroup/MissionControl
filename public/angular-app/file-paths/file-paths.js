@@ -4,19 +4,39 @@
 angular.module('MissionControlApp').controller('FilePathsController', FilePathsController);
 
 function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder, DTColumnBuilder, ngToast, $location, $scope, $compile,
-                             $uibModal){
+    $uibModal, SettingsFactory) {
     var vm = this;
     var toasts = [];
     vm.files = [];
     vm.revitVersions = UtilityService.getRevitVersions();
     vm.selectedRevitVersion = 'All';
-    vm.offices = UtilityService.getOffices();
+    vm.settings = null;
     vm.selectedOffice = { name: 'All', code: 'All' };
     vm.disabledFilter = false;
+    vm.editingOffice = false;
 
     createTable();
+    getSettings();
 
     //region Handlers
+
+    vm.edit = function (id) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'angular-app/file-paths/edit-file-path.html',
+            controller: 'EditFilePathController as vm',
+            size: 'lg',
+            resolve: {
+                id: function () {
+                    return id;
+                }
+            }
+        }).result.then(function () {
+            reloadTable();
+        }).catch(function () {
+            //if modal dismissed
+        });
+    };
 
     /**
      *
@@ -31,10 +51,11 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
             resolve: {
                 id: function () {
                     return id;
-                }}
-        }).result.then(function(){
+                }
+            }
+        }).result.then(function () {
             reloadTable();
-        }).catch(function(){
+        }).catch(function () {
             //if modal dismissed
         });
     };
@@ -69,7 +90,7 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
      * Navigates to Configuration file path.
      * @param path
      */
-    vm.go = function(path){
+    vm.go = function (path) {
         $location.path(path);
     };
 
@@ -81,8 +102,8 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
         var id = item.split('|')[0];
         var isDisabled = item.split('|')[1] === 'true';
 
-        FilePathsFactory.disable({_id: id, isDisabled: isDisabled}).then(function (response) {
-            if(!response || response.status !== 201){
+        FilePathsFactory.disable({ _id: id, isDisabled: isDisabled }).then(function (response) {
+            if (!response || response.status !== 201) {
                 toasts.push(ngToast.danger({
                     dismissButton: true,
                     dismissOnTimeout: true,
@@ -110,6 +131,27 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
     //region Utilities
 
     /**
+     * Retrieves Mission Control Settings from the DB.
+     */
+    function getSettings() {
+        SettingsFactory.get()
+            .then(function (response) {
+                if (!response || response.status !== 200) throw { message: 'Unable to retrieve the Settings.' };
+
+                vm.settings = response.data;
+            })
+            .catch(function (err) {
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
+            });
+    }
+
+    /**
      * Initiates File Paths table.
      */
     function createTable() {
@@ -122,6 +164,7 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
                     d.revitVersion = vm.selectedRevitVersion;
                     d.office = vm.selectedOffice;
                     d.disabled = vm.disabledFilter;
+                    d.localPathRgx = !vm.settings ? null : vm.settings.localPathRgx;
                 }
             })
             .withDataProp('data')
@@ -132,11 +175,11 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
             .withOption('lengthMenu', [[10, 50, 100, -1], [10, 50, 100, 'All']])
             .withOption('rowCallback', function (row, data) {
                 var style = ' table-info';
-                if(data.isDisabled) style = ' bg-warning';
-                if(data.hasOwnProperty('projectId') && data.projectId !== null) style = ' bg-success';
+                if (data.isDisabled) style = ' bg-warning';
+                if (data.hasOwnProperty('projectId') && data.projectId !== null) style = ' bg-success';
                 row.className = row.className + style;
             })
-            .withOption('createdRow', function(row) {
+            .withOption('createdRow', function (row) {
                 // (Konrad) Recompiling so we can bind Angular directive to the DT
                 $compile(angular.element(row).contents())($scope);
             });
@@ -157,14 +200,15 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
             DTColumnBuilder.newColumn('projectId')
                 .withTitle('')
                 .withOption('className', 'text-center')
-                .withOption('width', '14%')
+                .withOption('width', '18%')
                 .renderWith(function (data, type, full) {
                     var disabled = !full.hasOwnProperty('projectId') || full.projectId === null;
                     var contents = '';
                     contents += '<div>';
-
+                    contents += '<button class="btn btn-default btn-sm pull-right" style="margin-left: 10px;" ng-click="vm.edit(\'' + full._id + '\')"><i class="fa fa-edit"></i></button>';
+                    
                     // (Konrad) Navigate to Configuration button.
-                    if (disabled){
+                    if (disabled) {
                         contents += '<button class="btn btn-default btn-sm pull-right disabled" type="button"><i class="fa fa-external-link-alt"></i></button>';
                     } else {
                         contents += '<button class="btn btn-default btn-sm pull-right" type="button" tooltip-placement="top-right" uib-tooltip="Navigate to assigned Configuration." ' +
@@ -172,7 +216,7 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
                     }
 
                     // (Konrad) Add to Configuration button.
-                    if(!full.isDisabled && (!full.hasOwnProperty('projectId') || full.projectId === null)){
+                    if (!full.isDisabled && (!full.hasOwnProperty('projectId') || full.projectId === null)) {
                         contents += '<button class="btn btn-success btn-sm pull-right" style="margin-right: 10px;" ng-click="vm.addToConfiguration(\'' + full._id + '\')"><i class="fa fa-plus"></i></button>';
                     } else {
                         contents += '<button class="btn btn-default btn-sm pull-right disabled" style="margin-right: 10px;"><i class="fa fa-plus"></i></button>';
@@ -181,7 +225,7 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
                     // (Konrad) Disable/Enable button.
                     var json = full._id + '|' + full.isDisabled;
                     var disabledClass = disabled ? '' : ' disabled';
-                    if(full.isDisabled){
+                    if (full.isDisabled) {
                         contents += '<button class="btn btn-default btn-sm pull-right' + disabledClass +
                             '" style="margin-right: 10px;" tooltip-placement="top-right" ' +
                             'uib-tooltip="Enable. It will be available for Configurations." ng-click="vm.toggle(\'' + json + '\')"><i class="fa fa-eye"></i></button>';
@@ -201,7 +245,7 @@ function FilePathsController(FilePathsFactory, UtilityService, DTOptionsBuilder,
      * Reloads the table.
      */
     function reloadTable() {
-        if(vm.dtInstance){
+        if (vm.dtInstance) {
             vm.dtInstance.reloadData();
             vm.dtInstance.rerender();
         }

@@ -1,38 +1,57 @@
 <div class="modal-content">
     <div class="modal-header">
         <h5 class="modal-title pull-left">Edit Tasks</h5>
-        <button type="button" class="close pull-right" ng-click="vm.cancel()">
+        <button type="button"
+                class="close pull-right"
+                ng-click="vm.cancel()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
         <div class="panel panel-default">
-            <div class="panel-heading" style="padding-top: 10px; padding-bottom: 5px;">
-                <p class="pull-right textAlignMiddle"><i class="fas fa-times-circle" style="color: red;"></i> Incomplete</p>
-                <p class="pull-right textAlignMiddle"><i class="fas fa-check-circle" style="color: green;"></i> Complete</p>
-                <input type="checkbox" value="Name:" id="mainCheckbox" ng-model="check" ng-change="vm.selectAll(check)">
+            <div class="panel-heading"
+                 style="padding-top: 10px; padding-bottom: 5px;">
+                <p class="pull-right textAlignMiddle"><i class="fas fa-times-circle"
+                       style="color: red;"></i> Incomplete</p>
+                <p class="pull-right textAlignMiddle"><i class="fas fa-check-circle"
+                       style="color: green;"></i> Complete</p>
+                <input type="checkbox"
+                       value="Name:"
+                       id="mainCheckbox"
+                       ng-model="check"
+                       ng-change="vm.selectAll(check)">
                 <label style="padding-left: 10px;">Name:</label>
             </div>
             <ul class="list-group">
-                <li class="list-group-item" ng-repeat="task in vm.family.tasks | orderBy: task.name : false">
+                <li class="list-group-item"
+                    ng-repeat="task in vm.family.tasks | orderBy: task.name : false">
                     <div class="checkbox">
-                        <input type="checkbox" ng-attr-id="{{'checkbox' + $index}}" ng-model="task.isSelected"/>
-                        <label style="padding-left: 5px;" ng-attr-for="{{'checkbox' + $index}}">{{task.name}}</label>
+                        <input type="checkbox"
+                               ng-attr-id="{{'checkbox' + $index}}"
+                               ng-model="task.isSelected" />
+                        <label style="padding-left: 5px;"
+                               ng-attr-for="{{'checkbox' + $index}}">{{task.name}}</label>
                     </div>
                     <div class="pull-right action-buttons">
-                        <button class="fa-wrapper" ng-if="task.completedBy != null">
-                            <i class="fas fa-check-circle" style="color: green;"></i>
+                        <button class="fa-wrapper"
+                                ng-if="task.completedBy != null">
+                            <i class="fas fa-check-circle"
+                               style="color: green;"></i>
                         </button>
-                        <button class="fa-wrapper" ng-if="task.completedBy == null">
-                            <i class="fas fa-times-circle" style="color: red;"></i>
+                        <button class="fa-wrapper"
+                                ng-if="task.completedBy == null">
+                            <i class="fas fa-times-circle"
+                               style="color: red;"></i>
                         </button>
-                        <button class="fa-button" ng-click="vm.editTask('lg', vm.family, task, 'Edit Task', vm.userNames)">
+                        <button class="fa-button"
+                                ng-click="vm.editTask('lg', vm.family, task, 'Edit Task', vm.userNames)">
                             <i class="fas fa-edit text-primary"></i>
                         </button>
                     </div>
                 </li>
             </ul>
-            <div class="panel-footer" style="padding-top: 5px; padding-bottom: 5px;">
+            <div class="panel-footer"
+                 style="padding-top: 5px; padding-bottom: 5px;">
                 <div class="row">
                     <div class="col-md-6">
                         <h6>
@@ -44,8 +63,12 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger pull-left" ng-click="vm.delete()"><i class="fas fa-trash"></i> Delete</button>
-        <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
+        <button type="button"
+                class="btn btn-danger pull-left"
+                ng-click="vm.delete()"><i class="fas fa-trash"></i> Delete</button>
+        <button type="button"
+                class="btn btn-secondary"
+                ng-click="vm.cancel()">Close</button>
         <button type="button"
                 class="btn btn-primary"
                 ng-click="vm.editTask('lg', vm.family, null, 'Add Task', vm.userNames)">

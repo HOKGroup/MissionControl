@@ -5,7 +5,7 @@ angular.module('MissionControlApp').controller('AddConfigController', AddConfigC
 
 function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePathsFactory, UtilityService,
                              DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $uibModal, $window,
-                             $compile, $scope, ngToast){
+                             $compile, $scope, ngToast, SettingsFactory){
 
     //region Init
 
@@ -19,7 +19,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
     vm.fileWarningMsg = '';
     vm.HasFiles = false;
     vm.files = [];
-    vm.offices = UtilityService.getOffices();
+    vm.settings = null;
     vm.selectedOffice = { name: 'All', code: 'All' };
     vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'BIM 360'];
     vm.selectedType = 'All';
@@ -27,6 +27,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
     vm.selectedRevitVersion = 'All';
     vm.searchString = '';
 
+    getSettings();
     getSelectedProject(vm.projectId);
     setDefaultConfig();
     createTable();
@@ -45,11 +46,14 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
 
         // (Konrad) Everything is lower case to make matching easier.
         // Checks if file path is one of the three (3) approved types.
-        var isLocal = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
+        var isLocal = vm.settings.localPathRgx.some(function(pattern) { 
+            var rgx = new RegExp(pattern, 'i');
+            return rgx.test(filePath); 
+        });
         var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
         var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
 
-        if(!isLocal && !isBim360 && !isRevitServer){
+        if(!isLocal && !isBim360 && !isRevitServer) {
             vm.fileWarningMsg = 'File Path must be either Local, BIM 360 or Revit Server.';
             return;
         }
@@ -58,13 +62,13 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
         var matchingFiles = vm.newConfig.files.find(function (item) {
             return item.centralPath === filePath;
         });
-        if(matchingFiles !== undefined){
+        if(matchingFiles !== undefined) {
             vm.fileWarningMsg = 'Warning! File already added to current configuration.';
             return;
         }
 
         // (Konrad) Let's make sure we have a valid, non empty name
-        if(!filePath || !filePath.length || !filePath.includes('.rvt')){
+        if(!filePath || !filePath.length || !filePath.includes('.rvt')) {
             vm.fileWarningMsg = 'Warning! File name is not valid. Must be non-empty and include *.rvt';
             return;
         }
@@ -93,6 +97,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
                 }
                 if(configMatched) {
                     vm.fileWarningMsg = 'Warning! File already exists in other configurations.\n' + configNames;
+                    throw { message: 'File already exists in other configurations.\n' + configNames };
                 } else {
                     var file1 = { centralPath: filePath };
                     vm.newConfig.files.push(file1);
@@ -106,7 +111,6 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
                 }
             })
             .catch(function (err) {
-                console.log(err);
                 toasts.push(ngToast.danger({
                     dismissButton: true,
                     dismissOnTimeout: true,
@@ -284,6 +288,28 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
     //endregion
 
     //region Utilities
+
+    /**
+     * Retrieves Mission Control Settings from the DB.
+     */
+    function getSettings() {
+        SettingsFactory.get()
+            .then(function (response) {
+                if(!response || response.status !== 200) throw { message: 'Unable to retrieve the Settings.'};
+
+                vm.settings = response.data;
+            })
+            .catch(function (err) {
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
+            });
+    }
+
     /**
      * Retrieves Project from MongoDB.
      * @param projectId
@@ -452,6 +478,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
                     d.fileType  = vm.selectedType;
                     d.disabled = false;
                     d.unassigned = true;
+                    d.localPathRgx = !vm.settings ? null : vm.settings.localPathRgx;
                 }
             })
             .withDataProp('data')

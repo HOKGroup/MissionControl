@@ -14,8 +14,13 @@ var zombieLogs = require('./models/zombie-logs-model');
 var filePaths = require('./models/filepaths');
 var models = require('./models/models');
 var users = require('./models/users');
+var settings = require('./models/settings');
 
  module.exports = function(app) {
+     var settings = require('./controller/settings');
+     app.get('/api/v2/settings', settings.get);
+     app.put('/api/v2/settings/:id', settings.update);
+
      var projects = require('./controller/projects');
      app.get('/api/v2/projects/sort', projects.findAndSort);
      app.get('/api/v2/projects/:id', projects.findById);
@@ -152,6 +157,7 @@ var users = require('./models/users');
      app.put('/api/v2/filepaths/removemany', filepaths.removeManyFromProject);
      app.put('/api/v2/filepaths/change', filepaths.changeFilePath);
      app.put('/api/v2/filepaths/:id/disable', filepaths.disable);
+     app.put('/api/v2/filepaths/:id/update', filepaths.update);
      app.post('/api/v2/filepaths/datatable', filepaths.datatable);
 
      var users = require('./controller/users');

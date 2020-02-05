@@ -159,6 +159,17 @@ p.normal {
   transform: translate(-50%, 0);
 }
 
+.scrollable-menu-left{
+  height: auto;
+  max-height: 195px;
+  overflow-x: hidden;
+  width:100%;
+  right: auto;
+  text-align: left;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 /*Scrollable menu for long lists*/
 .scrollable-menu {
   height: auto;

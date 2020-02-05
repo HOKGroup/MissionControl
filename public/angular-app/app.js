@@ -31,6 +31,12 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
                 templateUrl: 'angular-app/home/home.html'
             })
 
+            .when('/settings', {
+                templateUrl: 'angular-app/settings/settings.html',
+                controller: 'SettingsController',
+                controllerAs: 'vm'
+            })
+
             // project page
             .when('/projects', {
                 templateUrl: 'angular-app/project/project.html',

@@ -1,25 +1,36 @@
 <div class="modal-content">
     <div class="modal-header">
         <h5 class="modal-title pull-left">Add to Configuration</h5>
-        <button type="button" class="close pull-right" ng-click="vm.cancel()">
+        <button type="button"
+                class="close pull-right"
+                ng-click="vm.cancel()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title" style="padding-top: 5px;">File Path Info</h4>
+                <h4 class="panel-title"
+                    style="padding-top: 5px;">File Path Info</h4>
             </div>
             <div class="panel-body">
                 <div class="form-group">
                     <!--Number-->
                     <div class="col-md-3 no-padding">
                         <div class="form-group">
-                            <label for="number" class="form-control-label">Project Number:</label>
+                            <label for="number"
+                                   class="form-control-label">Project Number:</label>
                             <div class="input-group">
-                                <input id="number" type="text" class="form-control input-sm" value="vm.filePath.projectNumber" ng-model="vm.filePath.projectNumber" readonly>
+                                <input id="number"
+                                       type="text"
+                                       class="form-control input-sm"
+                                       value="vm.filePath.projectNumber"
+                                       ng-model="vm.filePath.projectNumber"
+                                       readonly>
                                 <span class="input-group-btn">
-                                    <button class="btn btn-sm btn-default" type="button" ng-click="vm.searchProject(vm.filePath.projectNumber)">
+                                    <button class="btn btn-sm btn-default"
+                                            type="button"
+                                            ng-click="vm.searchProject(vm.filePath.projectNumber)">
                                         <i class="fas fa-search"></i>
                                     </button>
                                 </span>
@@ -29,22 +40,40 @@
                     <!--Name-->
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label for="name" class="form-control-label">Project Name:</label>
-                            <input id="name" type="text" class="form-control input-sm" value="vm.filePath.projectName" ng-model="vm.filePath.projectName" disabled>
+                            <label for="name"
+                                   class="form-control-label">Project Name:</label>
+                            <input id="name"
+                                   type="text"
+                                   class="form-control input-sm"
+                                   value="vm.filePath.projectName"
+                                   ng-model="vm.filePath.projectName"
+                                   disabled>
                         </div>
                     </div>
                     <!--Office-->
                     <div class="col-md-1 no-padding">
                         <div class="form-group">
-                            <label for="office" class="form-control-label">Office:</label>
-                            <input id="office" type="text" class="form-control input-sm" value="vm.filePath.fileLocation" ng-model="vm.filePath.fileLocation" disabled>
+                            <label for="office"
+                                   class="form-control-label">Office:</label>
+                            <input id="office"
+                                   type="text"
+                                   class="form-control input-sm"
+                                   value="vm.filePath.fileLocation"
+                                   ng-model="vm.filePath.fileLocation"
+                                   disabled>
                         </div>
                     </div>
                     <!--Central Path-->
                     <div class="col-md-12 no-padding">
                         <div class="form-group">
-                            <label for="centralPath" class="form-control-label">Central Path:</label>
-                            <input id="centralPath" type="text" class="form-control input-sm" value="vm.filePath.centralPath" ng-model="vm.filePath.centralPath" disabled>
+                            <label for="centralPath"
+                                   class="form-control-label">Central Path:</label>
+                            <input id="centralPath"
+                                   type="text"
+                                   class="form-control input-sm"
+                                   value="vm.filePath.centralPath"
+                                   ng-model="vm.filePath.centralPath"
+                                   disabled>
                         </div>
                     </div>
                 </div>
@@ -52,17 +81,21 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title" style="padding-top: 5px;">
+                <h4 class="panel-title"
+                    style="padding-top: 5px;">
                     Select Project
                     <i ng-if="vm.selectedProject !== null">
-                        <i class="fas fa-check fa-sm" style="color: green;"></i>
+                        <i class="fas fa-check fa-sm"
+                           style="color: green;"></i>
                     </i>
                     <i ng-if="vm.selectedProject === null">
-                        <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+                        <i class="fas fa-asterisk fa-sm"
+                           style="color: red;"></i>
                     </i>
                 </h4>
             </div>
-            <div class="panel-body no-padding" ng-if="vm.filePath !== null">
+            <div class="panel-body no-padding"
+                 ng-if="vm.filePath !== null">
                 <div class="panel-body">
                     <table id="projectsTable"
                            datatable=""
@@ -77,17 +110,21 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title" style="padding-top: 5px;">
+                <h4 class="panel-title"
+                    style="padding-top: 5px;">
                     Select Configuration
                     <i ng-if="!Array.isArray(vm.selectedConfiguration) && vm.selectedConfiguration !== null">
-                        <i class="fas fa-check fa-sm" style="color: green;"></i>
+                        <i class="fas fa-check fa-sm"
+                           style="color: green;"></i>
                     </i>
                     <i ng-if="Array.isArray(vm.selectedConfiguration) || vm.selectedConfiguration === null">
-                        <i class="fas fa-asterisk fa-sm" style="color: red;"></i>
+                        <i class="fas fa-asterisk fa-sm"
+                           style="color: red;"></i>
                     </i>
                 </h4>
             </div>
-            <div class="panel-body" ng-if="vm.selectedConfiguration !== null">
+            <div class="panel-body"
+                 ng-if="vm.selectedConfiguration !== null">
                 <table id="configurationsTable"
                        datatable=""
                        dt-options="vm.dtOptions1"
@@ -107,6 +144,8 @@
             <i class="fas fa-plus"></i>
             Add To Configuration
         </button>
-        <button type="button" class="btn btn-secondary" ng-click="vm.cancel()">Close</button>
+        <button type="button"
+                class="btn btn-secondary"
+                ng-click="vm.cancel()">Close</button>
     </div>
 </div>
