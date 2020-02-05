@@ -503,7 +503,13 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                 vm.selectedProject = response.data;
                 vm.configurations = response.data.configurations;
                 if (vm.configurations.length > 0){
-                    vm.selectedConfig = vm.configurations[0];
+                    if($routeParams.configurationId){
+                        vm.selectedConfig = vm.configurations.reduce((acc, val)=>{
+                            return val._id === $routeParams.configurationId ? val : acc;
+                        }, {})
+                    } else {
+                      vm.selectedConfig = vm.configurations[0];
+                    }
                     vm.PlaceholderSharedParameterLocation = GetSharedParamLocation(vm.selectedConfig);
 
                     vm.filterDate();

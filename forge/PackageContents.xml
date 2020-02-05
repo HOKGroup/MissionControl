@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ApplicationPackage>
+  <Components Description="Mission Control">
+    <RuntimeRequirements 
+      OS="Win64" 
+      Platform="Revit" 
+      SeriesMin="R2019"
+      SeriesMax="R2019" />
+    <ComponentEntry 
+      AppName="DesignAutomation" 
+      version="0.0.1" 
+      ModuleName="./Contents/MissionControl.DesignAutomation.addin" 
+      AppDescription="Deletes unused views"
+      LoadOnCommandInvocation="False"
+      LoadOnRevitStartup="True"/>
+  </Components>
+</ApplicationPackage>

@@ -12,15 +12,42 @@
             <thead>
             <tr>
                 <th class="col-md-2">Project Number</th>
-                <th class="col-md-6">Project Name</th>
+                <th class="col-md-4">Project Name</th>
+                <th class="col-md-1">QC Status</th>
                 <th class="col-md-1 text-center">Office</th>
                 <th class="col-md-3">Project Address</th>
             </tr>
             </thead>
             <tbody>
+
+
             <tr ng-repeat="x in vm.projects" ng-click="vm.go('/projects/edit/' + x._id)">
                 <td>{{ x.number }}</td>
                 <td>{{ x.name }}</td>
+                <td ng-click="$event.stopPropagation(); ">
+
+                    <div class="brighten" ng-click="vm.setCurrent(x._id)" style="display: flex; background-color: {{vm.getBackgroundColor(x.maxPercent)}}; color: {{vm.getColor(x.maxPercent)}}; border-radius: 5px; padding: 3px 8px;">
+                        <div style="flex: 1;" >
+                            {{100 * x.maxPercent| number:0}}%
+                        </div>
+                        <div style="flex: 1; text-align: right; color: {{vm.getFadedColor(x.maxPercent)}};">
+                            ({{(100 * (x.totalViews - x.viewsOnSheet) / x.totalViews)| number:0}}%)
+                        </div>
+                    </div>
+                    <div ng-if="vm.selectedProject_id === x._id" style="cursor: auto; margin-top: 15px; margin-left: -100px;">
+                        <div ng-repeat="y in x.history">
+
+                            <div style="display: flex; border-top: 1px solid lightgrey;">
+                                <div style="flex: 1; font-style: italic; overflow: hidden; text-overflow: ellipsis;">
+                                    <a href="#/projects/configurations/{{x._id}}/{{y.config_id}}">{{y.centralPath.split('/').pop()}}</a>
+                                </div>
+                                <div style="width: 50px; text-align: center;">
+                                    {{ (100 * y.percent)| number:0}}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
                 <td class="text-center">{{ x.office }}</td>
                 <td>{{ x.address.city }}, {{ x.address.state }}</td>
                 </tr>

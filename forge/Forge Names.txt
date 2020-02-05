@@ -1,0 +1,10 @@
+MissionControl
+Nickname: MC
+
+Appbundle:
+id:MissionControl
+nickname:MCApp
+
+Activity:
+id:MissionControl
+nickname:MCActivity
