@@ -888,10 +888,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         } else {
                             callback(process(response.data));
                         }
-                    });
+                    }); 
             } else {
                 var uri = UtilityService.getHttpSafeFilePath(data.centralPath);
-                WarningsFactory.getByCentralPath(uri).then(function (response) {
+                WarningsFactory.getByCentralPathOpenCount(uri).then(function (response) {
                     if(!response || response.status !== 200){
                         callback(null);
                         return;
@@ -902,7 +902,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             centralPath: data.centralPath
                         });
                     } else {
-                        callback(process(response.data));
+                        callback(process({
+                            responseData: response.data,
+                            centralPath: data.centralPath
+                        }));
                     }
                 }).catch(function (error) {
                     console.log(error);
@@ -916,10 +919,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
              */
             function process(data) {
                 var passingChecks = 0;
-
-                var openWarnings = data.filter(function (item) {
-                    return item.isOpen;
-                }).length;
+                var openWarnings = data.responseData;
                 var warningsColor = UtilityService.color().red;
 
                 if (openWarnings <= 15){
@@ -965,12 +965,35 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                     modelScore: passingChecks,
                     description: desc,
                     name: 'Warnings',
-                    warningStats: data,
+                    warningStats: null,
                     bullets: bullets,
                     show: {name: 'warnings', value: false},
-                    color: color
+                    color: color,
+                    centralPath: data.centralPath
                 };
             }
+        },
+
+
+        /**
+         *
+         * @param data
+         * @param callback
+         */
+        processFullWarningStats: function(data, callback){
+            var uri = UtilityService.getHttpSafeFilePath(data.centralPath);
+            WarningsFactory.getByCentralPathTimeline(uri).then(function (response) {
+                if(!response || response.status !== 200){
+                    callback(null);
+                    return;
+                }
+                callback({
+                    warningStats: response.data,
+                    centralPath: data.centralPath
+                });
+            }).catch(function (error) {
+                console.log(error);
+            });
         },
 
         /**

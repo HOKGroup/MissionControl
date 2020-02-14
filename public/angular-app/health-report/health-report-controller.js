@@ -199,12 +199,17 @@ function HealthReportController($routeParams, ProjectFactory, HealthReportFactor
         });
 
         HealthReportFactory.processWarningStats(data, function (result) {
-            if(result && result.warningStats.length > 0){
+            if(result){
                 vm.noData = false;
                 vm.WarningData = result;
                 vm.AllData.splice(0, 0, result);
             }
             vm.SelectionChanged('main');
+            HealthReportFactory.processFullWarningStats(data, function (result) {
+                if(result){
+                    vm.WarningData.warningStats = result.warningStats;
+                }
+            });
         });
     };
 }
