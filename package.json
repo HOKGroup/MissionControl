@@ -18,7 +18,7 @@
     "express": "^4.14.0",
     "jade": "^1.11.0",
     "method-override": "^3.0.0",
-    "mongoose": "^5.2.14",
+    "mongoose": "^5.8.11",
     "mongoose-geojson-schema": "^2.1.1",
     "morgan": "^1.9.1",
     "nodemon": "^1.19.0",
