@@ -17,7 +17,7 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                 return $scope.$apply();
             };
             $scope.$watch(function(){
-                    return angular.element(window)[0].innerWidth;
+                    return d3.select($ele[0])._groups[0][0].offsetWidth || 0;
                 }, function(){
                     return $scope.render($scope.data);
                 }
@@ -44,6 +44,7 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                     height = 500 - margin.top - margin.bottom,
                     height2 = 500 - margin2.top - margin2.bottom;
 
+                if (width < 0) return;
                 // set the height based on the calculations above
                 svg.attr('height', height + margin.top + margin.bottom);
 
@@ -57,28 +58,28 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
 
                 // main areas
                 var area = d3.area()
-                    .x(function(d) { return x(d.date); })
+                    .x(function(d) { return x(d.parsedDate); })
                     .y0(function(d) { return y(0); })
                     .y1(function(d) { return y(d.added); });
 
                 var area1 = d3.area()
-                    .x(function(d) { return x(d.date); })
+                    .x(function(d) { return x(d.parsedDate); })
                     .y0(function (d) { return y(0); })
                     .y1(function(d) { return y(d.removed); });
 
                 // brushed areas
                 var area2 = d3.area()
-                    .x(function(d) { return x2(d.date); })
+                    .x(function(d) { return x2(d.parsedDate); })
                     .y0(function (d) { return y2(0); })
                     .y1(function(d) { return y2(d.added); });
 
                 var area3 = d3.area()
-                    .x(function(d) { return x2(d.date); })
+                    .x(function(d) { return x2(d.parsedDate); })
                     .y0(function (d) { return y2(0); })
                     .y1(function(d) { return y2(d.removed); });
 
                 data.forEach(function(d) {
-                    d.date = parseTime(d.date);
+                    d.parsedDate = parseTime(d.date);
                 });
 
                 var minValue = d3.min(data, function (d) { return d.removed; });
@@ -87,7 +88,7 @@ angular.module('MissionControlApp').directive('d3Area', ['d3', function(d3) {
                 var maxValue = d3.max(data, function(d) { return d.added; });
                 maxValue = getRounded(maxValue);
 
-                x.domain(d3.extent(data, function(d) { return d.date; }));
+                x.domain(d3.extent(data, function(d) { return d.parsedDate; }));
                 y.domain([minValue, maxValue]);
                 x2.domain(x.domain());
                 y2.domain(y.domain());
