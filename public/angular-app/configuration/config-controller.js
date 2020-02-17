@@ -488,6 +488,25 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
         });
     };
 
+    /**
+     * Launches Forge Audit, removing unplaced views.
+     * @param filePath
+     */
+    vm.launchAuditWindow = function (filePath) {
+        window.confirm(`Do you want to run an audit on ${filePath}`);
+        // $uibModal.open({
+        //     animation: true,
+        //     templateUrl: 'angular-app/configuration/file-path-help.html',
+        //     controller: 'FilePathHelpController as vm',
+        //     size: size
+        // }).result.then(function(request){
+        //     //model closed
+        //
+        // }).catch(function(){
+        //     //if modal dismissed
+        // });
+    };
+
     //region Utilities
     /**
      * Retrieves Project Configuration.
@@ -503,7 +522,13 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                 vm.selectedProject = response.data;
                 vm.configurations = response.data.configurations;
                 if (vm.configurations.length > 0){
-                    vm.selectedConfig = vm.configurations[0];
+                    if($routeParams.configurationId){
+                        vm.selectedConfig = vm.configurations.reduce((acc, val)=>{
+                            return val._id === $routeParams.configurationId ? val : acc;
+                        }, {})
+                    } else {
+                      vm.selectedConfig = vm.configurations[0];
+                    }
                     vm.PlaceholderSharedParameterLocation = GetSharedParamLocation(vm.selectedConfig);
 
                     vm.filterDate();

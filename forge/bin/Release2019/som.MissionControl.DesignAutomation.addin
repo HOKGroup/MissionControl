@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="DBApplication">
+    <Name>MissionControl.DesignAutomation</Name>
+    <Assembly>.\MissionControl.DesignAutomation.dll</Assembly>
+    <FullClassName>MissionControl.DesignAutomation.Command</FullClassName>
+    <AddInId>df3fe0de-b65b-4d9a-82b1-5b6bfede182c</AddInId>
+    <VendorId>MissionControl</VendorId>
+    <VendorDescription>Silicon Valley Hackathon Mission Control Team</VendorDescription>
+  </AddIn>
+</RevitAddIns>

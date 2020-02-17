@@ -276,3 +276,11 @@ a {
     outline:none;
     cursor: default;
 }
+
+.brighten:hover {
+  filter: brightness(90%);
+}
+
+.brighten:active {
+  filter: brightness(80%);
+}

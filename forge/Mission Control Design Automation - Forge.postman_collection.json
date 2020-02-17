@@ -1,0 +1,359 @@
+{
+	"info": {
+		"_postman_id": "6957c682-5345-4ec2-b006-bcf66adf4c20",
+		"name": "Mission Control Design Automation - Forge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "#1 Get Authentication Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "359f3230-b71d-4eb2-97c9-d4a04ed28149",
+						"exec": [
+							"try {",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    postman.setEnvironmentVariable(\"AccessToken\", jsonData.access_token);",
+							"    tests[\"Access token request\"] = true;",
+							"} catch (ex) {",
+							"    tests[\"Access token request\"] = false;",
+							"    ",
+							"     // Stop workflow",
+							"    postman.setNextRequest(null);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "xW9zhAyyGAsdsGpjkLHRj5vU9bnxwcHz",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "QCttag5fIaOwmB70",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "code:all",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://developer.api.autodesk.com/authentication/v1/authenticate",
+					"protocol": "https",
+					"host": [
+						"developer",
+						"api",
+						"autodesk",
+						"com"
+					],
+					"path": [
+						"authentication",
+						"v1",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "#2 Create AppBundle",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6Imp3dF9zeW1tZXRyaWNfa2V5In0.eyJjbGllbnRfaWQiOiJ4Vzl6aEF5eUdBc2RzR3Bqa0xIUmo1dlU5Ym54d2NIeiIsImV4cCI6MTU1MDk2NTAwMCwic2NvcGUiOlsiY29kZTphbGwiXSwiYXVkIjoiaHR0cHM6Ly9hdXRvZGVzay5jb20vYXVkL2p3dGV4cDYwIiwianRpIjoiVWkzQVd3UDhDV2xXaGZVZWxXQ3VzNTZIeUlURTFQc1pTNFhjQ0czUGJiSVdlQm9TbWx4N0RvR21KcUdVbnY3eiJ9.MFrUsr9d7i-jxRubBGW_QgJlhWQtkkqAurUtcN9xa5w"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": \"MissionControlDesignAutomation\",\n  \"engine\": \"Autodesk.Revit+2019\",\n  \"description\": \"Delete views not on sheets.\"\n}"
+				},
+				"url": {
+					"raw": "https://developer.api.autodesk.com/da/us-east/v3/appbundles",
+					"protocol": "https",
+					"host": [
+						"developer",
+						"api",
+						"autodesk",
+						"com"
+					],
+					"path": [
+						"da",
+						"us-east",
+						"v3",
+						"appbundles"
+					]
+				},
+				"description": "Create the App Bundle"
+			},
+			"response": []
+		},
+		{
+			"name": "#3 Upload to AWS",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cache-Control",
+						"value": "no-cache"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "key",
+							"value": "apps/xW9zhAyyGAsdsGpjkLHRj5vU9bnxwcHz/MissionControlDesignAutomation/1",
+							"type": "text"
+						},
+						{
+							"key": "content-type",
+							"value": "application/octet-stream",
+							"type": "text"
+						},
+						{
+							"key": "policy",
+							"value": "eyJleHBpcmF0aW9uIjoiMjAxOS0wMi0yNFQwMDowNToyNS42NTc3NjA2WiIsImNvbmRpdGlvbnMiOlt7ImtleSI6ImFwcHMveFc5emhBeXlHQXNkc0dwamtMSFJqNXZVOWJueHdjSHovTWlzc2lvbkNvbnRyb2xEZXNpZ25BdXRvbWF0aW9uLzEifSx7ImJ1Y2tldCI6ImRhc3Byb2Qtc3RvcmUifSx7InN1Y2Nlc3NfYWN0aW9uX3N0YXR1cyI6IjIwMCJ9LFsic3RhcnRzLXdpdGgiLCIkc3VjY2Vzc19hY3Rpb25fcmVkaXJlY3QiLCIiXSxbInN0YXJ0cy13aXRoIiwiJGNvbnRlbnQtVHlwZSIsImFwcGxpY2F0aW9uL29jdGV0LXN0cmVhbSJdLHsieC1hbXotc2VydmVyLXNpZGUtZW5jcnlwdGlvbiI6IkFFUzI1NiJ9LFsiY29udGVudC1sZW5ndGgtcmFuZ2UiLCIwIiwiMTA0ODU3NjAwIl0seyJ4LWFtei1jcmVkZW50aWFsIjoiQVNJQVRHVkpaS00zTjUyRkdHWk4vMjAxOTAyMjMvdXMtZWFzdC0xL3MzL2F3czRfcmVxdWVzdC8ifSx7IngtYW16LWFsZ29yaXRobSI6IkFXUzQtSE1BQy1TSEEyNTYifSx7IngtYW16LWRhdGUiOiIyMDE5MDIyM1QyMzA1MjVaIn0seyJ4LWFtei1zZWN1cml0eS10b2tlbiI6IkZRb0daWEl2WVhkekVIY2FERkVQM0pTSmF0YnM2alpPYmlMdkFaTDVIWnJOWW12ZkZiL1FLdDFBV2NsMHB3L1JEYzFtOWdRS3BMeGNDNmJOek43dkxPNm9USEtreUVtWGtzazlNMXJNNEdqWEtDWDA1UjBLckhCTnpVRCtyblkvZ1p1UVpIbmR6VEZ6NXFGQ01VRVBPNmY5Z2ZtdjRFUVNxYnR0YjNOaEhuWGc4ZWNXajBTTU85S1dVZDlDSU9OSjdtYUZONkViMGplVmFtemc1endEbVFkV2UzVFU0NG85UDlHdW85WXA0RytlWWt0YmsxSU0ybDRibFhpOUZ0NEZZTnpqdEZ4MWxOT3VZRUFKREN2b2h4NHkvUmRyZEF6K0Jva0xnQUVMbFBFc0d6d3F5ZlpBaEhPMjhQZjFqRllndVR6ZUI4YW1PVTBCdmVuWHRDMjRKbVpjdDhKVGxNYkJPVmhLS01pRHgrTUYifV19",
+							"type": "text"
+						},
+						{
+							"key": "success_action_status",
+							"value": "200",
+							"type": "text"
+						},
+						{
+							"key": "success_action_redirect",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "x-amz-signature",
+							"value": "fbd76e646022f8daff27973f0ada601e11ffe3d52dd89a760b5d9de181ec1480",
+							"type": "text"
+						},
+						{
+							"key": "x-amz-credential",
+							"value": "ASIATGVJZKM3N52FGGZN/20190223/us-east-1/s3/aws4_request/",
+							"type": "text"
+						},
+						{
+							"key": "x-amz-algorithm",
+							"value": "AWS4-HMAC-SHA256",
+							"type": "text"
+						},
+						{
+							"key": "x-amz-date",
+							"value": "20190223T230525Z",
+							"type": "text"
+						},
+						{
+							"key": "x-amz-server-side-encryption",
+							"value": "AES256",
+							"type": "text"
+						},
+						{
+							"key": "x-amz-security-token",
+							"value": "FQoGZXIvYXdzEHcaDFEP3JSJatbs6jZObiLvAZL5HZrNYmvfFb/QKt1AWcl0pw/RDc1m9gQKpLxcC6bNzN7vLO6oTHKkyEmXksk9M1rM4GjXKCX05R0KrHBNzUD+rnY/gZuQZHndzTFz5qFCMUEPO6f9gfmv4EQSqbttb3NhHnXg8ecWj0SMO9KWUd9CIONJ7maFN6Eb0jeVamzg5zwDmQdWe3TU44o9P9Guo9Yp4G+eYktbk1IM2l4blXi9Ft4FYNzjtFx1lNOuYEAJDCvohx4y/RdrdAz+BokLgAELlPEsGzwqyfZAhHO28Pf1jFYguTzeB8amOU0BvenXtC24JmZct8JTlMbBOVhKKMiDx+MF",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"value": "C:\\Users\\dennis.eldridge\\source\\repos\\MissionControl.DesignAutomation\\MissionControl.DesignAutomation\\bin\\MissionControl.DesignAutomation.zip",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://dasprod-store.s3.amazonaws.com",
+					"protocol": "https",
+					"host": [
+						"dasprod-store",
+						"s3",
+						"amazonaws",
+						"com"
+					]
+				},
+				"description": "Upload file to AWS"
+			},
+			"response": []
+		},
+		{
+			"name": "#4 Nickname for AppBundle",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6Imp3dF9zeW1tZXRyaWNfa2V5In0.eyJjbGllbnRfaWQiOiJ4Vzl6aEF5eUdBc2RzR3Bqa0xIUmo1dlU5Ym54d2NIeiIsImV4cCI6MTU1MDk2NTAwMCwic2NvcGUiOlsiY29kZTphbGwiXSwiYXVkIjoiaHR0cHM6Ly9hdXRvZGVzay5jb20vYXVkL2p3dGV4cDYwIiwianRpIjoiVWkzQVd3UDhDV2xXaGZVZWxXQ3VzNTZIeUlURTFQc1pTNFhjQ0czUGJiSVdlQm9TbWx4N0RvR21KcUdVbnY3eiJ9.MFrUsr9d7i-jxRubBGW_QgJlhWQtkkqAurUtcN9xa5w"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n      \"version\": 1,\n      \"id\": \"MissionControlDesignAutomation\"\n    }"
+				},
+				"url": {
+					"raw": "https://developer.api.autodesk.com/da/us-east/v3/appbundles/DeleteWallsApp/aliases",
+					"protocol": "https",
+					"host": [
+						"developer",
+						"api",
+						"autodesk",
+						"com"
+					],
+					"path": [
+						"da",
+						"us-east",
+						"v3",
+						"appbundles",
+						"DeleteWallsApp",
+						"aliases"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "#5 Create Activity",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6Imp3dF9zeW1tZXRyaWNfa2V5In0.eyJjbGllbnRfaWQiOiJ4Vzl6aEF5eUdBc2RzR3Bqa0xIUmo1dlU5Ym54d2NIeiIsImV4cCI6MTU1MDk2OTc5NCwic2NvcGUiOlsiY29kZTphbGwiXSwiYXVkIjoiaHR0cHM6Ly9hdXRvZGVzay5jb20vYXVkL2p3dGV4cDYwIiwianRpIjoiZG9DeXQwY1FTeVdWRWJPT2ZRbVhGYmRqM1ROYkRSS040RG5rSGRFM3ZMbWlBanAwNk5Td2laNEhPN0s2VXhGRyJ9.SUjB6Fxnk0d19_-yAeRGamLnIDd7IQ39b4g8zKstrI8"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n            \"id\": \"MissionControlDesignAutomation\",\n            \"commandLine\": [ \"$(engine.path)\\\\\\\\revitcoreconsole.exe /i $(args[rvtFile].path) /al $(appbundles[MissionControlDesignAutomation].path)\" ],\n            \"parameters\": {\n              \"rvtFile\": {\n                \"zip\": false,\n                \"ondemand\": false,\n                \"verb\": \"get\",\n                \"description\": \"Input Revit model\",\n                \"required\": true,\n                \"localName\": \"$(rvtFile)\"\n              },\n              \"result\": {\n                \"zip\": false,\n                \"ondemand\": false,\n                \"verb\": \"put\",\n                \"description\": \"Results\",\n                \"required\": true,\n                \"localName\": \"result.rvt\"\n              }\n            },\n            \"engine\": \"Autodesk.Revit+2018\",\n            \"appbundles\": [ \"MissionControlDesignAutomation.MissionControlDesignAutomation+MissionControlDesignAutomation\" ],\n            \"description\": \"Delete views not on sheets.\"\n    }"
+				},
+				"url": {
+					"raw": "https://developer.api.autodesk.com/da/us-east/v3/activities",
+					"protocol": "https",
+					"host": [
+						"developer",
+						"api",
+						"autodesk",
+						"com"
+					],
+					"path": [
+						"da",
+						"us-east",
+						"v3",
+						"activities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "#6 Activity Nickname",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6Imp3dF9zeW1tZXRyaWNfa2V5In0.eyJjbGllbnRfaWQiOiJ4Vzl6aEF5eUdBc2RzR3Bqa0xIUmo1dlU5Ym54d2NIeiIsImV4cCI6MTU1MDk2OTc5NCwic2NvcGUiOlsiY29kZTphbGwiXSwiYXVkIjoiaHR0cHM6Ly9hdXRvZGVzay5jb20vYXVkL2p3dGV4cDYwIiwianRpIjoiZG9DeXQwY1FTeVdWRWJPT2ZRbVhGYmRqM1ROYkRSS040RG5rSGRFM3ZMbWlBanAwNk5Td2laNEhPN0s2VXhGRyJ9.SUjB6Fxnk0d19_-yAeRGamLnIDd7IQ39b4g8zKstrI8"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n      \"version\": 1,\n      \"id\": \"MissionControlDesignAutomation\"\n    }"
+				},
+				"url": {
+					"raw": "https://developer.api.autodesk.com/da/us-east/v3/activities/MissionControlDesignAutomation/aliases",
+					"protocol": "https",
+					"host": [
+						"developer",
+						"api",
+						"autodesk",
+						"com"
+					],
+					"path": [
+						"da",
+						"us-east",
+						"v3",
+						"activities",
+						"MissionControlDesignAutomation",
+						"aliases"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Last Step - Mission Control Send Task to Forge",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6Imp3dF9zeW1tZXRyaWNfa2V5In0.eyJjbGllbnRfaWQiOiJ4Vzl6aEF5eUdBc2RzR3Bqa0xIUmo1dlU5Ym54d2NIeiIsImV4cCI6MTU1MDk3NDM3NSwic2NvcGUiOlsiY29kZTphbGwiXSwiYXVkIjoiaHR0cHM6Ly9hdXRvZGVzay5jb20vYXVkL2p3dGV4cDYwIiwianRpIjoiQ3hCOWpxY0ZiSUhvd3BrUjdlYUR1UG5ieHk2OW9sVVlMNTNjY2lIbXpWS2pRTFJEckFhQ2dGcWJoNnNzbDRkOCJ9.G_35Xt5cQiZdGiCt2rkoPnOasUSngw6bPIqgRIw5dZQ"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"activityId\": \"MissionControl.MissionControl+MissionControl\",\n        \"arguments\": {\n          \"rvtFile\": {\n            \"url\": \"https://s3-us-west-2.amazonaws.com/revitio-dev/test-data/DeleteWalls.rvt\"\n          },\n          \"result\": {\n            \"verb\": \"put\",\n            \"url\": \"http://localhost:3000/mycallback\"\n          }\n        }\n      }"
+				},
+				"url": {
+					"raw": "https://developer.api.autodesk.com/da/us-east/v3/workitems",
+					"protocol": "https",
+					"host": [
+						"developer",
+						"api",
+						"autodesk",
+						"com"
+					],
+					"path": [
+						"da",
+						"us-east",
+						"v3",
+						"workitems"
+					]
+				},
+				"description": "This will request that forge runs the task"
+			},
+			"response": []
+		}
+	]
+}
