@@ -10,6 +10,7 @@
     "serve": "nodemon server.js"
   },
   "dependencies": {
+    "@azure/msal-angularjs": "^0.1.1",
     "app-root-path": "^2.1.0",
     "body-parser": "^1.15.2",
     "bower": "^1.8.4",
