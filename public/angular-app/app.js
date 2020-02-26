@@ -1,10 +1,11 @@
-angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'datatables', 'datatables.buttons', 'ngSanitize', 'ngToast'])
-    .config(['ngToastProvider', '$routeProvider', '$locationProvider', '$httpProvider', function( ngToast, $routeProvider, $locationProvider, $httpProvider){
+angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'datatables', 'datatables.buttons', 'ngSanitize', 'ngToast', 'MsalAngular'])
+    .config(['ngToastProvider', '$routeProvider', '$locationProvider', '$httpProvider', 'msalAuthenticationServiceProvider', function( ngToast, $routeProvider, $locationProvider, $httpProvider, $msalProvider){
         // ngRoute - used for routing below
         // ui.bootstrap - used by modal dialog
         // ngAnimate - used by modal dialog
         // datatables - used by all tables
         // ngToast - used by zombie logs
+        // MsalAngular - used to authenticate using Azure AD
 
         // (Konrad) Browser caching has been a pain for some of the pages like Configurations
         // Users would create a new Configuration and it will not show, since cache kicks in
@@ -34,7 +35,8 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
             .when('/settings', {
                 templateUrl: 'angular-app/settings/settings.html',
                 controller: 'SettingsController',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                requireLogin: true
             })
 
             // project page
@@ -104,4 +106,21 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
                 controller: 'SheetsController',
                 controllerAs: 'vm'
             });
+
+
+        // var applicationConfig  = require('./config/azure-ad.json');
+        fetch('./config/azure-ad.json').then(function (response) {
+            window.applicationConfig = response; 
+            
+            $msalProvider.init({
+                clientID: window.applicationConfig.clientID,
+                authority: 'https://login.microsoftonline.com/' + window.applicationConfig.tenantID + '/',
+                tokenReceivedCallback: function (errorDesc, token, error, tokenType) {
+                    if (error) console.log(error, errorDesc);
+                }
+            });
+
+            $httpProvider.interceptors.push('ProtectedRouteInterceptor');
+
+        });
 }]);
