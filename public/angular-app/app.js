@@ -32,6 +32,12 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
                 templateUrl: 'angular-app/home/home.html'
             })
 
+            .when('/error', {
+                templateUrl: 'angular-app/error/error.html',
+                controller: 'ErrorController',
+                controllerAs: 'vm'
+            })
+
             .when('/settings', {
                 templateUrl: 'angular-app/settings/settings.html',
                 controller: 'SettingsController',
@@ -107,20 +113,17 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
                 controllerAs: 'vm'
             });
 
-
-        // var applicationConfig  = require('./config/azure-ad.json');
-        fetch('./config/azure-ad.json').then(function (response) {
-            window.applicationConfig = response; 
-            
             $msalProvider.init({
                 clientID: window.applicationConfig.clientID,
                 authority: 'https://login.microsoftonline.com/' + window.applicationConfig.tenantID + '/',
                 tokenReceivedCallback: function (errorDesc, token, error, tokenType) {
-                    if (error) console.log(error, errorDesc);
+                    if (error) {
+                        console.error(error, errorDesc);
+                        window.location.href = `http://localhost:3000/#/error?error=${error}&error_desc=${errorDesc}`;
+                    }
+
                 }
             });
 
             $httpProvider.interceptors.push('ProtectedRouteInterceptor');
-
-        });
 }]);
