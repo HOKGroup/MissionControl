@@ -3,7 +3,6 @@ angular.module('MissionControlApp').factory('ProtectedRouteInterceptor', ['msalA
 function ProtectedRouteInterceptor(authService, $q, $rootScope) { 
     return {
         request: function (config) {
-            console.log(config);
             if (config) {
                 config.headers = config.headers || {};
                 var protectedRoutes = [
