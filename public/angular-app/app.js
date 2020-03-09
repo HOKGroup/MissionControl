@@ -113,7 +113,15 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
                 controllerAs: 'vm'
             });
 
-            $msalProvider.init({
+        $msalProvider.init({
+                /* 
+                Application config set by config/azure-ad.js as follows:
+
+                    window.applicationConfig = {
+                        clientID: '<your Azure AD app client ID',
+                        tenantID: '<your Azure AD tenant ID'
+                    }
+                */
                 clientID: window.applicationConfig.clientID,
                 authority: 'https://login.microsoftonline.com/' + window.applicationConfig.tenantID + '/',
                 tokenReceivedCallback: function (errorDesc, token, error, tokenType) {
@@ -125,5 +133,5 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
                 }
             });
 
-            $httpProvider.interceptors.push('ProtectedRouteInterceptor');
+        $httpProvider.interceptors.push('ProtectedRouteInterceptor');
 }]);
