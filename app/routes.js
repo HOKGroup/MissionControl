@@ -15,11 +15,12 @@ var filePaths = require('./models/filepaths');
 var models = require('./models/models');
 var users = require('./models/users');
 var settings = require('./models/settings');
+var auth = require('./auth/azure-ad');
 
  module.exports = function(app) {
      var settings = require('./controller/settings');
      app.get('/api/v2/settings', settings.get);
-     app.put('/api/v2/settings/:id', settings.update);
+     app.put('/api/v2/settings/:id', auth.protected, settings.update);
 
      var projects = require('./controller/projects');
      app.get('/api/v2/projects/sort', projects.findAndSort);
@@ -46,8 +47,8 @@ var settings = require('./models/settings');
 
      var config = require('./controller/configurations');
      app.get('/api/v2/configurations/centralpath/:uri*', config.findByCentralPath);
-     app.put('/api/v2/configurations/:id', config.update);
-     app.put('/api/v2/configurations/:id/updatefilepath', config.updateFilePath);
+     app.put('/api/v2/configurations/:id', auth.protected, config.update);
+     app.put('/api/v2/configurations/:id/updatefilepath', auth.protected, config.updateFilePath);
      app.post('/api/v2/configurations', config.add);
      app.post('/api/v2/configurations/deletemany', config.deleteMany);
      app.post('/api/v2/configurations/:id/addfile', config.addFile);

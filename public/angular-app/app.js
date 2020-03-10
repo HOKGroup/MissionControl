@@ -1,10 +1,11 @@
-angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'datatables', 'datatables.buttons', 'ngSanitize', 'ngToast'])
-    .config(['ngToastProvider', '$routeProvider', '$locationProvider', '$httpProvider', function( ngToast, $routeProvider, $locationProvider, $httpProvider){
+angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'datatables', 'datatables.buttons', 'ngSanitize', 'ngToast', 'MsalAngular'])
+    .config(['ngToastProvider', '$routeProvider', '$locationProvider', '$httpProvider', 'msalAuthenticationServiceProvider', function( ngToast, $routeProvider, $locationProvider, $httpProvider, $msalProvider){
         // ngRoute - used for routing below
         // ui.bootstrap - used by modal dialog
         // ngAnimate - used by modal dialog
         // datatables - used by all tables
         // ngToast - used by zombie logs
+        // MsalAngular - used to authenticate using Azure AD
 
         // (Konrad) Browser caching has been a pain for some of the pages like Configurations
         // Users would create a new Configuration and it will not show, since cache kicks in
@@ -31,10 +32,17 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
                 templateUrl: 'angular-app/home/home.html'
             })
 
+            .when('/error', {
+                templateUrl: 'angular-app/error/error.html',
+                controller: 'ErrorController',
+                controllerAs: 'vm'
+            })
+
             .when('/settings', {
                 templateUrl: 'angular-app/settings/settings.html',
                 controller: 'SettingsController',
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                requireLogin: true
             })
 
             // project page
@@ -104,4 +112,32 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
                 controller: 'SheetsController',
                 controllerAs: 'vm'
             });
+
+        if (window.applicationConfig && window.applicationConfig.AZURE_AD_AUTH_ENABLED) {
+            $msalProvider.init({
+                    /* 
+                    Application config set by config/azure-ad.js as follows:
+
+                        window.applicationConfig = {
+                            url: '<your Mission Control URL>',
+                            clientID: '<your Azure AD app client ID',
+                            tenantID: '<your Azure AD tenant ID'
+                            protectedRoutes: [
+                                {url: <Regex of protected endpoint>, method: <HTTP method to protect>}
+                            ]
+                        }
+                    */
+                    clientID: window.applicationConfig.clientID,
+                    authority: 'https://login.microsoftonline.com/' + window.applicationConfig.tenantID + '/',
+                    tokenReceivedCallback: function (errorDesc, token, error, tokenType) {
+                        if (error) {
+                            console.error(error, errorDesc);
+                            window.location.href = `${window.applicationConfig.url}/#/error?error=${error}&error_desc=${errorDesc}`;
+                        }
+
+                    }
+                });
+
+            $httpProvider.interceptors.push('ProtectedRouteInterceptor');
+            }
 }]);

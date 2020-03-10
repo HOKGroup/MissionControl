@@ -417,7 +417,7 @@
                 class="btn btn-primary pull-right"
                 ng-click="vm.update()"
                 style="margin:5px;"
-                ng-disabled="vm.verifyForm()">
+                ng-disabled="vm.verifyForm() || (!vm.authorized)">
             <i class="fas fa-check"></i>
             Update
         </button>

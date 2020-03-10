@@ -10,6 +10,7 @@
     "serve": "nodemon server.js"
   },
   "dependencies": {
+    "@azure/msal-angularjs": "^0.1.1",
     "app-root-path": "^2.1.0",
     "body-parser": "^1.15.2",
     "bower": "^1.8.4",
@@ -17,6 +18,7 @@
     "dotenv": "^8.0.0",
     "express": "^4.14.0",
     "jade": "^1.11.0",
+    "jsonwebtoken": "^8.5.1",
     "method-override": "^3.0.0",
     "mongoose": "^5.8.11",
     "mongoose-geojson-schema": "^2.1.1",

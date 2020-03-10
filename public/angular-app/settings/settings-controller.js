@@ -17,6 +17,7 @@ function SettingsController(SettingsFactory, ngToast, $route, UtilityService) {
     vm.userLocationsOptions = UtilityService.userLocationsOptions();
     vm.tempLocationsOptions = UtilityService.tempLocationsOptions();
     vm.projectInfoSources = UtilityService.projectInfoSources();
+    vm.authorized = false;
 
     getSettings();
 
@@ -187,13 +188,14 @@ function SettingsController(SettingsFactory, ngToast, $route, UtilityService) {
     function getSettings() {
         SettingsFactory.get()
             .then(function (response) {
-                if (!response || response.status !== 200) throw {
-                    message: 'Unable to retrieve the Settings.'
-                };
-
+                if (!response || response.status !== 200) {
+                    vm.authorized = false;
+                    throw {
+                        message: 'Unable to retrieve the Settings.'
+                    };
+                }
+                vm.authorized = true;
                 vm.settings = response.data;
-
-                console.log(response.data);
             })
             .catch(function (err) {
                 toasts.push(ngToast.danger({
