@@ -121,6 +121,9 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
                         url: '<your Mission Control URL>',
                         clientID: '<your Azure AD app client ID',
                         tenantID: '<your Azure AD tenant ID'
+                        protectedRoutes: [
+                            {url: <Regex of protected endpoint>, method: <HTTP method to protect>}
+                        ]
                     }
                 */
                 clientID: window.applicationConfig.clientID,

@@ -115,5 +115,6 @@ typings/
 # next.js build output
 .next
 
-#Config files for frontend
-public/config/
+#Config files for frontend (except example files: file.ex.js)
+public/config/*
+!public/config/*.ex.js
