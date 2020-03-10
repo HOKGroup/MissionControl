@@ -118,6 +118,7 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
                 Application config set by config/azure-ad.js as follows:
 
                     window.applicationConfig = {
+                        url: '<your Mission Control URL>',
                         clientID: '<your Azure AD app client ID',
                         tenantID: '<your Azure AD tenant ID'
                     }
@@ -127,7 +128,7 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
                 tokenReceivedCallback: function (errorDesc, token, error, tokenType) {
                     if (error) {
                         console.error(error, errorDesc);
-                        window.location.href = `http://localhost:3000/#/error?error=${error}&error_desc=${errorDesc}`;
+                        window.location.href = `${window.applicationConfig.url}/#/error?error=${error}&error_desc=${errorDesc}`;
                     }
 
                 }

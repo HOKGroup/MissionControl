@@ -5,11 +5,7 @@ function ProtectedRouteInterceptor(authService, $q, $rootScope) {
         request: function (config) {
             if (config) {
                 config.headers = config.headers || {};
-                var protectedRoutes = [
-                    {url: new RegExp(/\/api\/v2\/settings/), method: 'PUT' },
-                    {url: new RegExp(/\/api\/v2\/configurations\/(.+)\/updatefilepath/), method: 'PUT' },
-                    {url: new RegExp(/\/api\/v2\/configurations\/(.+)/), method: 'PUT' },
-                ];
+                var protectedRoutes = window.applicationConfig.protectedRoutes || [];
                 var protected = protectedRoutes.some( function (route) { 
                     return route.url.test(config.url) && route.method === config.method;
                 });
