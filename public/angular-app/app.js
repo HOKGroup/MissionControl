@@ -113,29 +113,31 @@ angular.module('MissionControlApp', ['ngRoute', 'ui.bootstrap', 'ngAnimate', 'da
                 controllerAs: 'vm'
             });
 
-        $msalProvider.init({
-                /* 
-                Application config set by config/azure-ad.js as follows:
+        if (window.applicationConfig && window.applicationConfig.AZURE_AD_AUTH_ENABLED) {
+            $msalProvider.init({
+                    /* 
+                    Application config set by config/azure-ad.js as follows:
 
-                    window.applicationConfig = {
-                        url: '<your Mission Control URL>',
-                        clientID: '<your Azure AD app client ID',
-                        tenantID: '<your Azure AD tenant ID'
-                        protectedRoutes: [
-                            {url: <Regex of protected endpoint>, method: <HTTP method to protect>}
-                        ]
+                        window.applicationConfig = {
+                            url: '<your Mission Control URL>',
+                            clientID: '<your Azure AD app client ID',
+                            tenantID: '<your Azure AD tenant ID'
+                            protectedRoutes: [
+                                {url: <Regex of protected endpoint>, method: <HTTP method to protect>}
+                            ]
+                        }
+                    */
+                    clientID: window.applicationConfig.clientID,
+                    authority: 'https://login.microsoftonline.com/' + window.applicationConfig.tenantID + '/',
+                    tokenReceivedCallback: function (errorDesc, token, error, tokenType) {
+                        if (error) {
+                            console.error(error, errorDesc);
+                            window.location.href = `${window.applicationConfig.url}/#/error?error=${error}&error_desc=${errorDesc}`;
+                        }
+
                     }
-                */
-                clientID: window.applicationConfig.clientID,
-                authority: 'https://login.microsoftonline.com/' + window.applicationConfig.tenantID + '/',
-                tokenReceivedCallback: function (errorDesc, token, error, tokenType) {
-                    if (error) {
-                        console.error(error, errorDesc);
-                        window.location.href = `${window.applicationConfig.url}/#/error?error=${error}&error_desc=${errorDesc}`;
-                    }
+                });
 
-                }
-            });
-
-        $httpProvider.interceptors.push('ProtectedRouteInterceptor');
+            $httpProvider.interceptors.push('ProtectedRouteInterceptor');
+            }
 }]);
