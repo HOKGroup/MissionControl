@@ -2,6 +2,10 @@ var jwt = require('jsonwebtoken');
 
 module.exports = {
     protected: function (req, res, next) { 
+        // Bypass if Azure AD authorization is not enabled
+        if (process.env.USE_AZUREAD !== true) {
+            next();
+        }
         var token;
         if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
             token = req.headers.authorization.split(' ')[1];
