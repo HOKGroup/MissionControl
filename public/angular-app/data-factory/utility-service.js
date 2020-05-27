@@ -180,10 +180,10 @@ function UtilityService() {
 
         /**
          * Retrieves a list of all Revit versions that we support.
-         * @returns {[string,string,string,string,string]}
+         * @returns {[string,string,string,string,string,string]}
          */
         getRevitVersions: function () {
-            return ['All', '2016', '2017', '2018', '2019'];
+            return ['All', '2017', '2018', '2019', '2020', '2021'];
         }
     };
 }
