@@ -23,7 +23,10 @@ function WarningsController($routeParams, HealthReportFactory, DTOptionsBuilder,
             if (newValue === true) createTable();
         });
 
-        setChartData();
+        $scope.$watch('vm.WarningData.warningStats', function (newValue) {
+            if (newValue && newValue.length > 0) setChartData();
+        });
+
 
         /**
          * Creates Warnings Table
@@ -34,7 +37,7 @@ function WarningsController($routeParams, HealthReportFactory, DTOptionsBuilder,
                 .withOption('ajax', {
                     url: '/api/v2/warnings/datatable',
                     type: 'POST',
-                    data: { centralPath: vm.WarningData.warningStats[0].centralPath }
+                    data: { centralPath: vm.WarningData.centralPath }
                 })
                 .withDataProp('data')
                 .withOption('processing', true)
@@ -70,7 +73,7 @@ function WarningsController($routeParams, HealthReportFactory, DTOptionsBuilder,
             var data = {
                 from: date.from,
                 to: date.to,
-                centralPath: vm.WarningData.warningStats[0].centralPath
+                centralPath: vm.WarningData.centralPath
             };
             HealthReportFactory.processWarningStats(data, function (result) {
                 if (!result) console.log('Given date range contains no data.');
@@ -107,30 +110,11 @@ function WarningsController($routeParams, HealthReportFactory, DTOptionsBuilder,
          *
          */
         function setChartData(){
-            var data = vm.WarningData.warningStats.reduce(function (data, item) {
-                var key = item.createdAt.split('T')[0];
-                var created = (data[key] || (data[key] = {'date': key, 'added': 0, 'removed': 0}));
-                created['added'] += 1;
-
-                if(!item.isOpen){
-                    var key1 = item.closedAt.split('T')[0];
-                    var closed = (data[key1] || (data[key1] = {'date': key1, 'added': 0, 'removed': 0}));
-                    closed['removed'] -= 1;
-                }
-
-                return data;
-            }, {});
-
-            // (Konrad) Set data for the histogram chart. IE doesn't support Object.values
-            vm.chartsData = Object.keys(data).map(function(item) { return data[item]; });
+            vm.chartsData = vm.WarningData.warningStats;
             vm.chartsData.sort(function(a,b){
                 return new Date(a.date) - new Date(b.date);
             }); // sort in reverse a-b
 
-            // (Konrad) Set data for the table.
-            vm.openWarnings = vm.WarningData.warningStats.filter(function (item) {
-                return item.isOpen;
-            });
         }
 
         //endregion

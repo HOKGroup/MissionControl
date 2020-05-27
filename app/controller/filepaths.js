@@ -268,6 +268,30 @@ FilePathsService = {
     },
 
     /**
+     * Updates File Path properties.
+     * @param req
+     * @param res
+     */
+    update: function (req, res) {
+        var id = mongoose.Types.ObjectId(req.params.id);
+        FilePaths.updateOne(
+            { '_id': id }, req.body, function (err, response) {
+                var result = {
+                    status: 201,
+                    message: response
+                };
+                if (err) {
+                    result.status = 500;
+                    result.message = err;
+                } else if (!response) {
+                    result.status = 404;
+                    result.message = err;
+                }
+                res.status(result.status).json(result.message);
+            });
+    },
+
+    /**
      * DataTables allow for server side processing. This method processes
      * File Paths table requests. Request come in following format:
      * {
@@ -293,6 +317,7 @@ FilePathsService = {
         var disabled = req.body['disabled'];
         var unassigned = req.body['unassigned'];
         var fileType = req.body['fileType'];
+        var localPathRgx = req.body['localPathRgx'];
         var query = {};
 
         // (Dan) Always check if disabled. Account for null or missing values.
@@ -300,7 +325,7 @@ FilePathsService = {
 
         // (Konrad) Additional filters.
         if (revitVersion !== 'All') query['revitVersion'] = revitVersion;
-        if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'].map(function (i) { return i.toLowerCase(); }) };
+        if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'].map(function (i) { return new RegExp(i, 'i'); }) };
         if (unassigned === 'true') query['projectId'] = null;
 
         // (Konrad) If we use aggregate here, then we can check for values being null. This matters because not
@@ -359,7 +384,10 @@ FilePathsService = {
                     var filePath = item.centralPath.toLowerCase();
                     switch(fileType){
                         case 'Local': 
-                            return filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
+                            return localPathRgx.some(function(pattern) { 
+                                var rgx = new RegExp(pattern, 'i');
+                                return rgx.test(filePath); 
+                            });
                         case 'BIM 360':
                             return filePath.lastIndexOf('bim 360://', 0) === 0;
                         case 'Revit Server':

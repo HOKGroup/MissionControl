@@ -105,7 +105,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
 
                     var desc = 'Families are integral part of Revit functionality. It is however, important to remember,' +
                         'that oversized (>1MB) families can be a sign of trouble (poorly modeled, imported DWGs etc.). That\'s ' +
-                        'why it\'s imperative to follow HOK\'s best practices in modeling and naming Revit Families. InPlace families ' +
+                        'why it\'s imperative to follow your company\'s best practices in modeling and naming Revit Families. InPlace families ' +
                         'should be limited in use as they do not allow full functionality of the regular Families.';
 
                     var bullets = [
@@ -127,9 +127,9 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         },
                         {
                             title: 'Misnamed Families',
-                            description: 'It\'s considered good practice to use HOK created and curated families. ' +
-                            'These families will typically have a name containing "_HOK" in it. Family naming has no ' +
-                            'performance impact, but is good practice that should be followed. Less than 10 is green, more ' +
+                            description: 'It\'s considered good practice to use your company\'s created and curated families. ' +
+                            'These families will typically have a name containing ' + nameCheckValues.join(', ') + ' in it. Family naming has no ' +
+                            'performance impact, but is good practice that should be followed. Less than 10 misnamed families is green, more ' +
                             'than 10 but less than 20 is orange while more than 20 is red.',
                             bulletText: misnamed,
                             bulletColor: misnamedFamiliesColor
@@ -888,10 +888,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                         } else {
                             callback(process(response.data));
                         }
-                    });
+                    }); 
             } else {
                 var uri = UtilityService.getHttpSafeFilePath(data.centralPath);
-                WarningsFactory.getByCentralPath(uri).then(function (response) {
+                WarningsFactory.getByCentralPathOpenCount(uri).then(function (response) {
                     if(!response || response.status !== 200){
                         callback(null);
                         return;
@@ -902,7 +902,10 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                             centralPath: data.centralPath
                         });
                     } else {
-                        callback(process(response.data));
+                        callback(process({
+                            responseData: response.data,
+                            centralPath: data.centralPath
+                        }));
                     }
                 }).catch(function (error) {
                     console.log(error);
@@ -916,10 +919,7 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
              */
             function process(data) {
                 var passingChecks = 0;
-
-                var openWarnings = data.filter(function (item) {
-                    return item.isOpen;
-                }).length;
+                var openWarnings = data.responseData;
                 var warningsColor = UtilityService.color().red;
 
                 if (openWarnings <= 15){
@@ -965,12 +965,35 @@ function HealthReportFactory(UtilityService, ConfigFactory, ModelsFactory, Style
                     modelScore: passingChecks,
                     description: desc,
                     name: 'Warnings',
-                    warningStats: data,
+                    warningStats: null,
                     bullets: bullets,
                     show: {name: 'warnings', value: false},
-                    color: color
+                    color: color,
+                    centralPath: data.centralPath
                 };
             }
+        },
+
+
+        /**
+         *
+         * @param data
+         * @param callback
+         */
+        processFullWarningStats: function(data, callback){
+            var uri = UtilityService.getHttpSafeFilePath(data.centralPath);
+            WarningsFactory.getByCentralPathTimeline(uri).then(function (response) {
+                if(!response || response.status !== 200){
+                    callback(null);
+                    return;
+                }
+                callback({
+                    warningStats: response.data,
+                    centralPath: data.centralPath
+                });
+            }).catch(function (error) {
+                console.log(error);
+            });
         },
 
         /**

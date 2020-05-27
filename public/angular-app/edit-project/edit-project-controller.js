@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('EditProjectController', EditProjectController);
 
-function EditProjectController($routeParams, $window, ProjectFactory, ConfigFactory, ModelsFactory, FilePathsFactory, ngToast, UtilityService){
+function EditProjectController($routeParams, $window, ProjectFactory, ConfigFactory, ModelsFactory, SettingsFactory, FilePathsFactory, ngToast, UtilityService){
     var vm = this;
     var toasts = [];
     var filePaths = []; // variable holding file paths for filter
@@ -21,10 +21,47 @@ function EditProjectController($routeParams, $window, ProjectFactory, ConfigFact
     vm.selectedRange = '7 days';
     vm.availableRanges = ['7 days', '14 days', '28 days', '84 days', 'All'];
     vm.loading = false;
+    vm.settings = null;
 
+    getSettings();
     getOpenTimes(vm.projectId);
 
     //endregion
+
+    /**
+     * Retrieves Mission Control Settings from the DB.
+     */
+    function getSettings() {
+        SettingsFactory.get()
+            .then(function (response) {
+                if(!response || response.status !== 200) throw { message: 'Unable to retrieve the Settings.'};
+
+                vm.settings = response.data;
+            })
+            .catch(function (err) {
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
+            });
+    }
+
+    /**
+     * 
+     */
+    vm.setOffice = function(office) {
+        vm.selectedProject.office = office.name;
+    };
+
+    /**
+     * Sets the selected State to address propety on a Project.
+     */
+    vm.setState = function(state) {
+        vm.selectedProject.address.state = state;
+    };
 
     /**
      * Filter for activity chart that queries additional data by date range.

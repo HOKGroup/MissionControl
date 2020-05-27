@@ -4,7 +4,7 @@
 angular.module('MissionControlApp').controller('ConfigController', ConfigController);
 
 function ConfigController($routeParams, FilePathsFactory, ConfigFactory, ProjectFactory, TriggerRecordsFactory,
-                          DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, UtilityService, $window, $uibModal, 
+                          DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, SettingsFactory, UtilityService, $window, $uibModal, 
                           $compile, $scope, ngToast){
 
     //region Init
@@ -22,7 +22,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     vm.fileWarningMsg = '';
     vm.sharedParamWarningMsg = '';
     vm.files = [];
-    vm.offices = UtilityService.getOffices();
+    vm.settings = null;
     vm.selectedOffice = { name: 'All', code: 'All' };
     vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'BIM 360'];
     vm.selectedType = 'All';
@@ -30,6 +30,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
     vm.selectedRevitVersion = 'All';
     vm.searchString = '';
 
+    getSettings();
     getSelectedProjectConfiguration(vm.projectId);
     createTable();
 
@@ -147,7 +148,6 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
             })
             .catch(function (err) {
                 vm.loading = false;
-                console.log(err);
                 toasts.push(ngToast.danger({
                     dismissButton: true,
                     dismissOnTimeout: true,
@@ -255,7 +255,10 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
 
         // (Konrad) Everything is lower case to make matching easier.
         // Checks if file path is one of the three (3) approved types.
-        var isLocal = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
+        var isLocal = vm.settings.localPathRgx.some(function(pattern) { 
+            var rgx = new RegExp(pattern, 'i');
+            return rgx.test(filePath); 
+        });
         var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
         var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
 
@@ -272,13 +275,13 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
 
         var uri = UtilityService.getHttpSafeFilePath(filePath);
         ConfigFactory.getByCentralPath(uri)
-            .then(function(response){
+            .then(function(response) {
                 if(!response || response.status !== 200) throw response;
 
                 var configFound = response.data;
                 var configNames = '';
                 var configMatched = false;
-                if(configFound.length > 0){
+                if(configFound.length > 0) {
                     //find an exact match from text search result
                     for(var i = 0; i < configFound.length; i++) {
                         var config = configFound[i];
@@ -292,8 +295,9 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                         }
                     }
                 }
-                if(configMatched){
+                if(configMatched) {
                     vm.fileWarningMsg = 'Warning! File already exists in other configurations.\n' + configNames;
+                    throw { message: 'File already exists in other configurations.\n' + configNames };
                 } else {
                     var file1 = { centralPath: filePath };
                     vm.selectedConfig.files.push(file1);
@@ -328,7 +332,6 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                 }));
             })
             .catch(function (err) {
-                console.log(err);
                 toasts.push(ngToast.danger({
                     dismissButton: true,
                     dismissOnTimeout: true,
@@ -343,7 +346,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
      * Removes selected file from MongoDB.
      * @param filePath
      */
-    vm.deleteFile = function(filePath){
+    vm.deleteFile = function(filePath) {
         for (var i = 0; i < vm.selectedConfig.files.length; i++) {
             var file =  vm.selectedConfig.files[i];
             if (file.centralPath.toLowerCase() === filePath.toLowerCase()) {
@@ -375,7 +378,6 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                         }));
                     })
                     .catch(function (err) {
-                        console.log(err);
                         toasts.push(ngToast.danger({
                             dismissButton: true,
                             dismissOnTimeout: true,
@@ -416,7 +418,6 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                 }
             })
             .catch(function (err) {
-                console.log(err);
                 toasts.push(ngToast.danger({
                     dismissButton: true,
                     dismissOnTimeout: true,
@@ -458,8 +459,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                 if(!response || response.status !== 201) throw response;
                 $window.location.reload();
             })
-            .catch(function (err) {
-                console.log(err);
+            .catch(function () {
                 toasts.push(ngToast.danger({
                     dismissButton: true,
                     dismissOnTimeout: true,
@@ -480,13 +480,34 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
             templateUrl: 'angular-app/configuration/file-path-help.html',
             controller: 'FilePathHelpController as vm',
             size: size
-        }).result.then(function(request){
+        }).result.then(function(){
             //model closed
 
         }).catch(function(){
             //if modal dismissed
         });
     };
+
+    /**
+     * Retrieves Mission Control Settings from the DB.
+     */
+    function getSettings() {
+        SettingsFactory.get()
+            .then(function (response) {
+                if(!response || response.status !== 200) throw { message: 'Unable to retrieve the Settings.'};
+
+                vm.settings = response.data;
+            })
+            .catch(function (err) {
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
+            });
+    }
 
     //region Utilities
     /**
@@ -510,7 +531,6 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                 }
             })
             .catch(function (err) {
-                console.log(err);
                 toasts.push(ngToast.danger({
                     dismissButton: true,
                     dismissOnTimeout: true,
@@ -560,6 +580,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                     d.fileType  = vm.selectedType;
                     d.disabled = false;
                     d.unassigned = true;
+                    d.localPathRgx = !vm.settings ? null : vm.settings.localPathRgx;
                 }
             })
             .withDataProp('data')

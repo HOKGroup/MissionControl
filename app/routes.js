@@ -14,8 +14,14 @@ var zombieLogs = require('./models/zombie-logs-model');
 var filePaths = require('./models/filepaths');
 var models = require('./models/models');
 var users = require('./models/users');
+var settings = require('./models/settings');
+var auth = require('./auth/azure-ad');
 
  module.exports = function(app) {
+     var settings = require('./controller/settings');
+     app.get('/api/v2/settings', settings.get);
+     app.put('/api/v2/settings/:id', auth.protected, settings.update);
+
      var projects = require('./controller/projects');
      app.get('/api/v2/projects/sort', projects.findAndSort);
      app.get('/api/v2/projects/:id', projects.findById);
@@ -41,8 +47,8 @@ var users = require('./models/users');
 
      var config = require('./controller/configurations');
      app.get('/api/v2/configurations/centralpath/:uri*', config.findByCentralPath);
-     app.put('/api/v2/configurations/:id', config.update);
-     app.put('/api/v2/configurations/:id/updatefilepath', config.updateFilePath);
+     app.put('/api/v2/configurations/:id', auth.protected, config.update);
+     app.put('/api/v2/configurations/:id/updatefilepath', auth.protected, config.updateFilePath);
      app.post('/api/v2/configurations', config.add);
      app.post('/api/v2/configurations/deletemany', config.deleteMany);
      app.post('/api/v2/configurations/:id/addfile', config.addFile);
@@ -136,8 +142,10 @@ var users = require('./models/users');
      var warnings = require('./controller/warnings');
      app.post('/api/v2/warnings/update', warnings.update);
      app.post('/api/v2/warnings/add', warnings.add);
-     app.get('/api/v2/warnings/centralpath/:uri*', warnings.getByCentralPath);
+     app.get('/api/v2/warnings/centralpath/:uri*/opencount', warnings.getOpenCountByCentralPath);
      app.get('/api/v2/warnings/centralpath/:uri*/open', warnings.getOpen);
+     app.get('/api/v2/warnings/centralpath/:uri*/timeline', warnings.getTimelineByCentralPath);
+     app.get('/api/v2/warnings/centralpath/:uri*', warnings.getByCentralPath);
      app.post('/api/v2/warnings/daterange', warnings.getWarningStats);
      app.put('/api/v2/warnings/updatefilepath', warnings.updateFilePath);
      app.post('/api/v2/warnings/datatable', warnings.datatable);
@@ -152,6 +160,7 @@ var users = require('./models/users');
      app.put('/api/v2/filepaths/removemany', filepaths.removeManyFromProject);
      app.put('/api/v2/filepaths/change', filepaths.changeFilePath);
      app.put('/api/v2/filepaths/:id/disable', filepaths.disable);
+     app.put('/api/v2/filepaths/:id/update', filepaths.update);
      app.post('/api/v2/filepaths/datatable', filepaths.datatable);
 
      var users = require('./controller/users');

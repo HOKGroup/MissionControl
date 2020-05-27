@@ -26,6 +26,9 @@
 ## File-based project format:
 *.iws
 
+## Ignore Environmental Variables Config File
+*.env
+
 ## Plugin-specific files:
 
 # IntelliJ
@@ -111,3 +114,7 @@ typings/
 
 # next.js build output
 .next
+
+#Config files for frontend (except example files: file.ex.js)
+public/config/*
+!public/config/*.ex.js

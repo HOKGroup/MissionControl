@@ -3,7 +3,7 @@
  */
 angular.module('MissionControlApp').controller('ZombieLogsController', ZombieLogsController);
 
-function ZombieLogsController(ZombieLogsFactory, UsersFactory, UtilityService, DTOptionsBuilder, DTColumnBuilder, ngToast){
+function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder, DTColumnBuilder, SettingsFactory, ngToast){
     var vm = this;
     var toasts = [];
 
@@ -13,7 +13,7 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, UtilityService, D
     vm.donutData = []; // data filtered for the donut chart
     vm.selectedMachines = []; // data filtered for second table
     vm.latestVersion = '0.0.0.0'; // latest version of the plugin (used to color chart)
-    vm.officeFilters = UtilityService.getOffices();
+    vm.settings = null;
     vm.selectedOffice = { name: 'All', code: 'All' };
     vm.MainChartColor = 'steelblue';
     vm.dtFrom = new Date();
@@ -30,30 +30,54 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, UtilityService, D
     vm.popup1 = { opened: false };
     vm.popup2 = { opened: false };
 
+    getSettings();
     getUsers();
 
     //endregion
 
-    function getUsers() {
-        UsersFactory.getAll().then(function (response) {
-            if(!response || response.status !== 200){
-                throw {message: 'Could not retrieve user info.'};
-            }
+    /**
+     * Retrieves Mission Control Settings from the DB.
+     */
+    function getSettings() {
+        SettingsFactory.get()
+            .then(function (response) {
+                if(!response || response.status !== 200) throw { message: 'Unable to retrieve the Settings.'};
 
-            vm.users = response.data.reduce(function (obj, item) {
-                obj[item.machine] = item.user;
-                return obj;
+                vm.settings = response.data;
+            })
+            .catch(function (err) {
+                toasts.push(ngToast.danger({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
             });
-            console.log(vm.users);
-        }).catch(function (err) {
-            toasts.push(ngToast.warning({
-                dismissButton: true,
-                dismissOnTimeout: true,
-                timeout: 4000,
-                newestOnTop: true,
-                content: err.message
-            }));
-        });
+    }
+
+    /**
+     * 
+     */
+    function getUsers() {
+        UsersFactory.getAll()
+            .then(function (response) {
+                if(!response || response.status !== 200) throw { message: 'Could not retrieve user info.' };
+
+                vm.users = response.data.reduce(function (obj, item) {
+                    obj[item.machine] = item.user;
+                    return obj;
+                });
+            })
+            .catch(function (err) {
+                toasts.push(ngToast.warning({
+                    dismissButton: true,
+                    dismissOnTimeout: true,
+                    timeout: 4000,
+                    newestOnTop: true,
+                    content: err.message
+                }));
+            });
     }
 
     //region Table

@@ -29,7 +29,6 @@ WarningsService = {
                             $setOnInsert: {
                                 'createdBy': 'Unknown', // override this to unknown
                                 'createdAt': Date.now(),
-                                'updatedAt': Date.now(),
                                 'descriptionText': item.descriptionText,
                                 'closedBy': item.closedBy,
                                 'closedAt': item.closedAt,
@@ -85,6 +84,11 @@ WarningsService = {
             });
     },
 
+    /**
+     * Retrieves all open warnings by central path.
+     * @param req
+     * @param res
+     */
     getOpen: function(req, res) {
         var rgx = global.utilities.uriToString(req.params.uri);
         Warnings.find({$and: [{'centralPath': rgx}, {'isOpen': true}]}, function (err, response) {
@@ -103,6 +107,35 @@ WarningsService = {
         });
     },
 
+    /**
+     * Retrieves the count of open warnings by central path.
+     * @param req
+     * @param res
+     */
+    getOpenCountByCentralPath: function (req, res) {
+        var rgx = global.utilities.uriToString(req.params.uri);
+        Warnings.count({$and: [{'centralPath': rgx}, {'isOpen': true}]}, function (err, response) {
+            var result = {
+                status: 200,
+                message: response
+            };
+            if (err){
+                result.status = 500;
+                result.message = err;
+            } else if (!response){
+                result.status = 404;
+                result.message = err;
+            }
+            res.status(result.status).json(result.message);
+        });
+    },
+
+
+    /**
+     * Retrieves all warnings by central path.
+     * @param req
+     * @param res
+     */
     getByCentralPath: function (req, res) {
         var rgx = global.utilities.uriToString(req.params.uri);
         Warnings.find({'centralPath': rgx}).exec(function (err, response) {
@@ -119,6 +152,68 @@ WarningsService = {
             }
             res.status(result.status).json(result.message);
         });
+    },
+
+    /**
+     * Retrieves 
+     * @param req
+     * @param res
+     */
+    getTimelineByCentralPath: async function (req, res) {
+        var rgx = global.utilities.uriToString(req.params.uri);
+        var result = { status: 200, message: '' };
+        try {
+            var aggQuery =  [
+                    { 
+                        $match: { centralPath: rgx }
+                    }, 
+                    { 
+                        $project: { createdAt: 1.0, closedAt: 1.0, isOpen: 1.0 }
+                    }, 
+                    { 
+                        $addFields: { 
+                            createDate: { 
+                                $dateToString: { 
+                                    format: '%Y-%m-%d',
+                                    date: '$createdAt'
+                                }
+                            }, 
+                            closeDate: { 
+                                $dateToString: { 
+                                    format: '%Y-%m-%d', 
+                                    date: '$closedAt'
+                                }
+                            }
+                        }
+                    }, 
+                    { 
+                        $group: { _id: '$createDate', added: { $sum: 1.0 } }
+                    }
+            ];
+            var createdWarnings = await Warnings.aggregate(aggQuery);
+            aggQuery.pop();
+            aggQuery.push({ $group: { _id: '$closeDate', removed: { $sum: -1.0 }}});
+            var closedWarnings = await Warnings.aggregate(aggQuery);
+            var createdEntries = createdWarnings.map(x => [x._id, {date: x._id, added: x.added, removed: 0 }]);
+            var warnings = Object.fromEntries(createdEntries);
+            closedWarnings.forEach((item) => {
+                if (warnings[item._id]) {
+                    warnings[item._id]['removed'] = item.removed;
+                } else {
+                    warnings[item._id] = { date: item._id, removed: item.removed, added: 0 };
+                }
+            })
+            delete warnings['0001-01-01'];
+
+            result.status = 200;
+            result.message = Object.values(warnings);
+        } catch (err) {
+            result.status = 500;
+            result.message = err;
+            console.error(err);
+        }
+
+        res.status(result.status).json(result.message);
     },
 
     /**
