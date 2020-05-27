@@ -17,7 +17,7 @@ function AddinsController(AddinsFactory, SettingsFactory, UtilityService, ngToas
     vm.UserChartColor = '#d9534f';
     vm.SelectedOffice = 'All'; //TODO: Do we need to define this as a {}?
     vm.settings = null;
-    vm.revitVersions = UtilityService.getRevitVersions().shift();
+    vm.revitVersions = UtilityService.getRevitVersions().slice(1);
 
     //endregion
 
