@@ -3,13 +3,13 @@
  */
 angular.module('MissionControlApp').controller('AddinsController', AddinsController);
 
-function AddinsController(AddinsFactory, SettingsFactory, ngToast) {
+function AddinsController(AddinsFactory, SettingsFactory, UtilityService, ngToast) {
     var vm = this;
 
     //region Properties
 
     var toasts = [];
-    vm.SelectedYear = '2019';
+    vm.SelectedYear = '2020';
     vm.SelectedPlugin = '';
     vm.UserDetails = [];
     vm.YearsAggregate = [];
@@ -17,6 +17,7 @@ function AddinsController(AddinsFactory, SettingsFactory, ngToast) {
     vm.UserChartColor = '#d9534f';
     vm.SelectedOffice = 'All'; //TODO: Do we need to define this as a {}?
     vm.settings = null;
+    vm.revitVersions = UtilityService.getRevitVersions().shift();
 
     //endregion
 
