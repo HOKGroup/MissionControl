@@ -259,7 +259,6 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
             var rgx = new RegExp(pattern, 'i');
             return rgx.test(filePath); 
         });
-        // var isLocal = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
         var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
         var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
 
