@@ -65,7 +65,7 @@
                             <tr ng-repeat="file in vm.selectedConfig.files">
                                 <td style="vertical-align: middle;"><strong>{{ $index + 1 }}.</strong> {{ file.centralPath | uppercase }}</td>
                                 <td style="vertical-align: middle;" class="text-right">
-                                    <button type="button" class="btn btn-default" ng-click="vm.editPath(file.centralPath, 'lg')">
+                                    <button type="button" class="btn btn-default" ng-click="vm.editPath(file, 'lg')">
                                         <i class="fas fa-edit" style="margin-right: 0;"></i>
                                     </button>
                                     <button type="button" class="btn btn-danger" ng-click="vm.deleteFile(file.centralPath)">

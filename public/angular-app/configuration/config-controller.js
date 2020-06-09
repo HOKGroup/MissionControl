@@ -195,24 +195,24 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
      * @param filePath
      * @param size
      */
-    vm.editPath = function(filePath, size){
+    vm.editPath = function(file, size){
         $uibModal.open({
             animation: true,
             templateUrl: 'angular-app/configuration/edit-file-path.html',
-            controller: 'EditFilePathController as vm',
+            controller: 'EditConfigFilePathController as vm',
             size: size,
             resolve: {
                 filePath: function () {
-                    return filePath;
+                    return file.centralPath;
                 },
                 id: function () {
-                    return vm.selectedConfig._id;
+                    return file._id;
                 }}
         }).result.then(function(request){
             if(!request) return;
 
             var data = request.response;
-
+            console.log(data);
             // (Konrad) Update config file path.
             vm.selectedConfig.files.forEach(function(item){
                 if(item.centralPath.toLowerCase() === data.before.toLowerCase()){

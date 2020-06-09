@@ -1,9 +1,9 @@
 /**
  * Created by konrad.sobon on 2018-01-03.
  */
-angular.module('MissionControlApp').controller('EditFilePathController', EditFilePathController);
+angular.module('MissionControlApp').controller('EditConfigFilePathController', EditConfigFilePathController);
 
-function EditFilePathController($uibModalInstance, ConfigFactory, FamiliesFactory, LinksFactory, ModelsFactory,
+function EditConfigFilePathController($uibModalInstance, ConfigFactory, FamiliesFactory, LinksFactory, ModelsFactory,
                                 SheetsFactory, StylesFactory, TriggerRecordsFactory, ViewsFactory, WorksetsFactory,
                                 FilePathsFactory, WarningsFactory, filePath, id) {
     var vm = this;
