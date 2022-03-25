@@ -155,9 +155,9 @@ function UtilityService() {
          */
         getHttpSafeFilePath: function (centralPath) {
             var isRevitServer = centralPath.match(/rsn:/i);
-            var isBim360 = centralPath.match(/bim 360:/i);
+            var isCloudModel = centralPath.match(/^(?!rsn).*:\/\//i);
             var rgx;
-            if (isRevitServer || isBim360) {
+            if (isRevitServer || isCloudModel) {
                 rgx = centralPath.replace(/\//g, '|').toLowerCase();
             } else {
                 rgx = centralPath.replace(/\\/g, '|').toLowerCase();

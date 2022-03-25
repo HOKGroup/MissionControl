@@ -11,16 +11,17 @@ ViewsService = {
      * @param res
      */
     findByCentralPath: function(req, res){
-        // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
-        // (Konrad) RSN and BIM 360 paths will have forward slashes instead of back slashes.
+                // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
+        // (Konrad) RSN and BIM 360 / ACC paths will have forward slashes instead of back slashes.
         var isRevitServer = req.params.uri.match(/rsn:/i);
-        var isBim360 = req.params.uri.match(/bim 360:/i);
+        var isCloudModel = req.params.uri.match(/^(?!rsn).*:\/\//i);
         var rgx;
-        if(isRevitServer || isBim360){
+        if(isRevitServer || isCloudModel){
             rgx = req.params.uri.replace(/\|/g, '/').toLowerCase();
         } else {
             rgx = req.params.uri.replace(/\|/g, '\\').toLowerCase();
         }
+
         Views
             .find(
                 {'centralPath': rgx}, function (err, response){
