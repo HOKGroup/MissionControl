@@ -11,7 +11,6 @@ require('dotenv').config()
 const express = require('express')
 const cool = require('cool-ascii-faces')
 const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
 const { Server } = require('socket.io')
 const morgan = require('morgan')
 const path = require('path')
@@ -31,8 +30,8 @@ db.on('error', function () {
 
 // set logging with morgan
 app.use(morgan('combined', { stream: winston.stream }))
-app.use(bodyParser.json({ limit: '15mb' }))
-app.use(bodyParser.urlencoded({ extended: true, limit: '15mb' }))
+app.use(express.json({ limit: '15mb' }))
+app.use(express.urlencoded({ extended: true, limit: '15mb' }))
 
 // set the static files location /public/img will be /img for users
 app.use(express.static(__dirname + '/public'))
