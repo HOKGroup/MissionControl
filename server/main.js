@@ -33,7 +33,6 @@ db.on('error', function () {
 app.use(morgan('combined', { stream: winston.stream }))
 app.use(bodyParser.json({ limit: '15mb' }))
 app.use(bodyParser.urlencoded({ extended: true, limit: '15mb' }))
-app.use(methodOverride('X-HTTP-Method-Override'))
 
 // set the static files location /public/img will be /img for users
 app.use(express.static(__dirname + '/public'))
@@ -42,9 +41,9 @@ app.use(express.static(__dirname + '/public'))
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
-require('./app/routes')(app)
+require('./routes')(app)
 app.get('/', function (_request, response) {
-    response.sendfile('./public/index.html')
+    response.sendFile('./public/index.html')
 })
 
 app.get('/cool', function (_request, response) {
@@ -82,7 +81,7 @@ const server = app.listen(
             + ' listening at port '
             + server.address().port + ' with '
             + 'hosted mongo db.')
-        global.io = io(server)
+        global.io = new Server(server, { allowEIO3: true })
         global.io.on('connection', (socket) => {
             socket.on('room', (room) => {
                 socket.join(room)
