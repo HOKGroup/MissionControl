@@ -1,23 +1,23 @@
 /**
  * Created by konrad.sobon on 2019-05-02.
  */
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
-var UserLocationSources = Object.freeze({
+const UserLocationSources = Object.freeze({
     MachineName: 'MachineName'
 })
 
-var TempLocationSources = Object.freeze({
+const TempLocationSources = Object.freeze({
     MachineName: 'MachineName'
 })
 
-var ProjectInfoSources = Object.freeze({
+const ProjectInfoSources = Object.freeze({
     FilePath: 'FilePath',
     //TODO: Add ProjectInfo so that we allow user to extract name, number, location 
     //from Revit's Project Info class.
 })
 
-var projectInfoSchema = new mongoose.Schema(
+const projectInfoSchema = new mongoose.Schema(
     {
         source: {
             type: String,
@@ -39,7 +39,7 @@ var projectInfoSchema = new mongoose.Schema(
     { _id: false }
 )
 
-var userLocationSchema = new mongoose.Schema(
+const userLocationSchema = new mongoose.Schema(
     {
         source: {
             type: String,
@@ -52,7 +52,7 @@ var userLocationSchema = new mongoose.Schema(
     { _id: false }
 )
 
-var tempLocationSchema = new mongoose.Schema(
+const tempLocationSchema = new mongoose.Schema(
     {
         source: {
             type: String,
@@ -64,7 +64,7 @@ var tempLocationSchema = new mongoose.Schema(
     { _id: false }
 )
 
-var officeSchema = new mongoose.Schema(
+const officeSchema = new mongoose.Schema(
     {
         name: String,
         code: [String]
@@ -72,7 +72,7 @@ var officeSchema = new mongoose.Schema(
     { _id: false }
 )
 
-var settingsSchema = new mongoose.Schema(
+const settingsSchema = new mongoose.Schema(
     {
         // (Konrad) We treat name as a "read only" field.
         name: {
@@ -155,7 +155,7 @@ var settingsSchema = new mongoose.Schema(
  * since name is set to be read only. 
  */
 settingsSchema.statics.findOneOrCreate = function findOneOrCreate(condition, callback) {
-    var self = this
+    const self = this
     self.findOne(condition, function (err, result) {
         return result ? callback(err, result) : self.create(condition, function (err, result) { return callback(err, result) })
     })
@@ -163,4 +163,5 @@ settingsSchema.statics.findOneOrCreate = function findOneOrCreate(condition, cal
 
 Object.assign(settingsSchema.statics, UserLocationSources)
 
-mongoose.model('Settings', settingsSchema)
+const Settings = mongoose.model('Settings', settingsSchema)
+module.exports = Settings

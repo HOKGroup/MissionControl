@@ -1,9 +1,9 @@
 /**
  * Created by konrad.sobon on 2018-05-16.
  */
-var mongoose = require( 'mongoose' )
+const mongoose = require('mongoose')
 
-var groupsSchema = new mongoose.Schema(
+const groupsSchema = new mongoose.Schema(
     {
         centralPath: String,
         groupStats: [{
@@ -23,4 +23,5 @@ var groupsSchema = new mongoose.Schema(
 )
 
 groupsSchema.index({'centralPath': 'text'})
-var Groups = mongoose.model( 'Groups', groupsSchema )
+const Groups = mongoose.model( 'Groups', groupsSchema )
+module.exports = Groups

@@ -1,9 +1,9 @@
 /**
  * Created by konrad.sobon on 2018-04-24.
  */
-var mongoose = require( 'mongoose' )
+const mongoose = require('mongoose')
 
-var stylesSchema = new mongoose.Schema(
+const stylesSchema = new mongoose.Schema(
     {
         centralPath: String,
         styleStats: [{
@@ -53,4 +53,5 @@ var stylesSchema = new mongoose.Schema(
 )
 
 stylesSchema.index({'centralPath': 'text'})
-var Styles = mongoose.model( 'Styles', stylesSchema )
+const Styles = mongoose.model( 'Styles', stylesSchema )
+module.exports = Styles

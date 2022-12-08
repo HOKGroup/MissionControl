@@ -1,10 +1,10 @@
 /**
  * Created by konrad.sobon on 2018-08-30.
  */
-var mongoose = require('mongoose');
-var FilePaths = mongoose.model('FilePaths');
+const mongoose = require('mongoose')
+const FilePaths = mongoose.model('FilePaths')
 
-FilePathsService = {
+const FilePathsService = {
     /**
      *
      * @param req
@@ -23,19 +23,19 @@ FilePathsService = {
                 'fileLocation': req.body.fileLocation
             }},
             { upsert: true }, function (err, response){
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -55,21 +55,21 @@ FilePathsService = {
                         }},
                         upsert: true
                     }
-                };
+                }
             }), function (err, response) {
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -82,19 +82,19 @@ FilePathsService = {
             { 'centralPath': req.body.centralPath },
             { $set: { 'centralPath': req.body.centralPath, 'projectId': req.body.projectId }},
             { upsert: true }, function (err, response) {
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -106,19 +106,19 @@ FilePathsService = {
         FilePaths.updateOne(
             { 'centralPath': req.body.centralPath },
             { $unset: { 'projectId': '' }}, function (err, response) {
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -136,21 +136,21 @@ FilePathsService = {
                             'projectId': ''
                         }}
                     }
-                };
+                }
             }), function (err, response) {
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -166,30 +166,30 @@ FilePathsService = {
         FilePaths.updateOne(
             { 'centralPath': req.body.before },
             { $set: { 'centralPath': req.body.after }}, function (err, response) {
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
+                }
                 if (err){
-                    result.status = 500;
-                    result.message = err;
+                    result.status = 500
+                    result.message = err
                 } else if (!response){
-                    result.status = 404;
-                    result.message = err;
+                    result.status = 404
+                    result.message = err
                 }
 
                 FilePaths.deleteOne(
                     { 'centralPath': req.body.after, 'projectId': null }, function (err, response) {
                         if (err){
-                            result.status = 500;
-                            result.message = err;
+                            result.status = 500
+                            result.message = err
                         } else if (!response){
-                            result.status = 404;
-                            result.message = err;
+                            result.status = 404
+                            result.message = err
                         }
-                        res.status(result.status).json(result.message);
-                    });
-            });
+                        res.status(result.status).json(result.message)
+                    })
+            })
     },
 
     /**
@@ -198,24 +198,24 @@ FilePathsService = {
      * @param res
      */
     getAll: function (req, res) {
-        var filter = {};
+        let filter = {}
         if (req.query.unassigned === 'true') {
-            filter = { 'projectId': null, 'isDisabled': false };
+            filter = { 'projectId': null, 'isDisabled': false }
         }
         FilePaths.find(filter, function (err, response){
-            var result = {
+            const result = {
                 status: 200,
                 message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err){
+                result.status = 500
+                result.message = err
+            } else if (!response){
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     },
 
     /**
@@ -224,21 +224,21 @@ FilePathsService = {
      * @param res
      */
     findById: function(req, res){
-        var id = req.params.id;
+        const id = req.params.id
         FilePaths.findById(id).exec(function (err, response){
-            var result = {
+            const result = {
                 status: 200,
                 message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err){
+                result.status = 500
+                result.message = err
+            } else if (!response){
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     },
 
     /**
@@ -247,24 +247,24 @@ FilePathsService = {
      * @param res
      */
     disable: function (req, res) {
-        var id = mongoose.Types.ObjectId(req.params.id);
-        var bool = Boolean(!req.body.isDisabled);
+        const id = mongoose.Types.ObjectId(req.params.id)
+        const bool = Boolean(!req.body.isDisabled)
         FilePaths.updateOne(
             { '_id': id },
             { $set: { 'isDisabled': bool }}, function (err, response){
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -273,22 +273,22 @@ FilePathsService = {
      * @param res
      */
     update: function (req, res) {
-        var id = mongoose.Types.ObjectId(req.params.id);
+        const id = mongoose.Types.ObjectId(req.params.id)
         FilePaths.updateOne(
             { '_id': id }, req.body, function (err, response) {
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err) {
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response) {
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err) {
+                    result.status = 500
+                    result.message = err
+                } else if (!response) {
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -312,21 +312,21 @@ FilePathsService = {
      */
     datatable: function (req, res) {
         // (Konrad) Process filters that can be applied directly to MongoDB search query
-        var revitVersion = req.body['revitVersion'];
-        var office = req.body['office'];
-        var disabled = req.body['disabled'];
-        var unassigned = req.body['unassigned'];
-        var fileType = req.body['fileType'];
-        var localPathRgx = req.body['localPathRgx'];
-        var query = {};
+        const revitVersion = req.body['revitVersion']
+        const office = req.body['office']
+        const disabled = req.body['disabled']
+        const unassigned = req.body['unassigned']
+        const fileType = req.body['fileType']
+        const localPathRgx = req.body['localPathRgx']
+        const query = {}
 
         // (Dan) Always check if disabled. Account for null or missing values.
-        query['isDisabled'] = disabled !== 'false' ? true : { $ne: true };
+        query['isDisabled'] = disabled !== 'false' ? true : { $ne: true }
 
         // (Konrad) Additional filters.
-        if (revitVersion !== 'All') query['revitVersion'] = revitVersion;
-        if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'].map(function (i) { return new RegExp(i, 'i'); }) };
-        if (unassigned === 'true') query['projectId'] = null;
+        if (revitVersion !== 'All') query['revitVersion'] = revitVersion
+        if (office['name'] !== 'All') query['fileLocation'] = { $in: office['code'].map(function (i) { return new RegExp(i, 'i') }) }
+        if (unassigned === 'true') query['projectId'] = null
 
         // (Konrad) If we use aggregate here, then we can check for values being null. This matters because not
         // all users would have the latest version of the plug-in on Revit side, and some values published to
@@ -344,72 +344,72 @@ FilePathsService = {
                 projectNumber: { $ifNull: ['$projectNumber', ''] }
             }}
         ]).exec(function (err, response){
-            var start = parseInt(req.body['start']);
-            var length = parseInt(req.body['length']);
-            var searched = req.body['search'].value !== '';
-            var typeFiltered = fileType !== 'All';
-            var order = req.body['order'][0].dir;
-            var column = req.body['order'][0].column;
+            const start = parseInt(req.body['start'])
+            const length = parseInt(req.body['length'])
+            const searched = req.body['search'].value !== ''
+            const typeFiltered = fileType !== 'All'
+            const order = req.body['order'][0].dir
+            const column = req.body['order'][0].column
 
             // (Konrad) By default table is sorted in asc order by centralPath property.
             response.sort(function (a, b) {
-                switch(column){
-                    case '0': //version
-                        if (order === 'asc') return (a.revitVersion).localeCompare(b.revitVersion);
-                        else return (b.revitVersion).localeCompare(a.revitVersion);
-                    case '1': //office
-                        if (order === 'asc') return (a.fileLocation).localeCompare(b.fileLocation);
-                        else return (b.fileLocation).localeCompare(a.fileLocation);
-                    case '2': //centralPath
-                    default:
-                        if (order === 'asc') return (a.centralPath).localeCompare(b.centralPath);
-                        else return (b.centralPath).localeCompare(a.centralPath);
+                switch (column){
+                case '0': //version
+                    if (order === 'asc') return (a.revitVersion).localeCompare(b.revitVersion)
+                    else return (b.revitVersion).localeCompare(a.revitVersion)
+                case '1': //office
+                    if (order === 'asc') return (a.fileLocation).localeCompare(b.fileLocation)
+                    else return (b.fileLocation).localeCompare(a.fileLocation)
+                case '2': //centralPath
+                default:
+                    if (order === 'asc') return (a.centralPath).localeCompare(b.centralPath)
+                    else return (b.centralPath).localeCompare(a.centralPath)
                 }
-            });
+            })
 
             // (Konrad) Filter the results collection by search value if one was set.
-            var filtered = [];
+            let filtered = []
             if (searched){
                 filtered = response.filter(function (item) {
                     return item.centralPath.indexOf(req.body['search'].value) !== -1 ||
                             item.revitVersion.indexOf(req.body['search'].value) !== -1 ||
-                            item.fileLocation.indexOf(req.body['search'].value) !== -1;
-                });
+                            item.fileLocation.indexOf(req.body['search'].value) !== -1
+                })
             }
 
             // (Dan) Filter the results collection by file type if one was set.
             if (typeFiltered) {
-                var dataToFilter = searched ? filtered : response; 
+                const dataToFilter = searched ? filtered : response 
                 filtered =  dataToFilter.filter(function(item){
-                    var filePath = item.centralPath.toLowerCase();
-                    switch(fileType){
-                        case 'Local': 
-                            return localPathRgx.some(function(pattern) { 
-                                var rgx = new RegExp(pattern, 'i');
-                                return rgx.test(filePath); 
-                            });
-                        case 'BIM 360':
-                            return filePath.lastIndexOf('bim 360://', 0) === 0;
-                        case 'Revit Server':
-                            return filePath.lastIndexOf('rsn://', 0) === 0;
-                        default: // Do not filter
-                            return true;
+                    const filePath = item.centralPath.toLowerCase()
+                    switch (fileType){
+                    case 'Local': 
+                        return localPathRgx.some(function(pattern) { 
+                            const rgx = new RegExp(pattern, 'i')
+                            return rgx.test(filePath) 
+                        })
+                    case 'BIM 360':
+                        return filePath.lastIndexOf('bim 360://', 0) === 0
+                    case 'Revit Server':
+                        return filePath.lastIndexOf('rsn://', 0) === 0
+                    default: // Do not filter
+                        return true
                     }
-                });
+                })
             }
 
             // (Konrad) Update 'end'. It might be that start + length is more than total length
             // of the array so we must adjust that.
-            var end = start + length;
-            if (end > response.length) end = response.length;
-            if ((searched || typeFiltered) && filtered.length < end) end = filtered.length;
+            let end = start + length
+            if (end > response.length) end = response.length
+            if ((searched || typeFiltered) && filtered.length < end) end = filtered.length
 
             // (Konrad) Slice the final collection by start/end.
-            var data;
-            if (searched || typeFiltered) data = filtered.slice(start, end);
-            else data = response.slice(start, end);
+            let data
+            if (searched || typeFiltered) data = filtered.slice(start, end)
+            else data = response.slice(start, end)
 
-            var result = {
+            const result = {
                 status: 201,
                 message: {
                     draw: req.body['draw'],
@@ -417,17 +417,17 @@ FilePathsService = {
                     recordsFiltered: filtered.length > 0 ? filtered.length : response.length,
                     data: data
                 }
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err){
+                result.status = 500
+                result.message = err
+            } else if (!response){
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     }
-};
+}
 
-module.exports = FilePathsService;
+module.exports = FilePathsService

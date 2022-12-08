@@ -1,11 +1,11 @@
 /**
  * Created by konrad.sobon on 2018-10-03.
  */
-var winston = require('winston');
-var appRoot = require('app-root-path');
-require('winston-daily-rotate-file');
+const winston = require('winston')
+const appRoot = require('app-root-path')
+require('winston-daily-rotate-file')
 
-var options = {
+const options = {
     // file: {
     //     level: 'info',
     //     filename: appRoot + '/logs/app.log',
@@ -34,21 +34,21 @@ var options = {
             winston.format.json()
         )
     }
-};
+}
 
-var logger = winston.createLogger({
+const logger = winston.createLogger({
     transports: [
         new winston.transports.DailyRotateFile(options.rotate),
         new winston.transports.Console(options.console)
         // new winston.transports.File(options.file)
     ],
     exitOnError: false
-});
+})
 
 logger.stream = {
-    write: function(message, encoding){
-        logger.info(message);
+    write: function(message, _encoding){
+        logger.info(message)
     }
-};
+}
 
-module.exports = logger;
+module.exports = logger

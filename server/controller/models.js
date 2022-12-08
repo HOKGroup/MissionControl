@@ -1,11 +1,11 @@
 /**
  * Created by konrad.sobon on 2018-09-06.
  */
-var utils = require('./socket/global').utilities;
-var mongoose = require('mongoose');
-var OpenTimes = mongoose.model('OpenTimes');
-var SynchTimes = mongoose.model('SynchTimes');
-var ModelSizes = mongoose.model('ModelSizes');
+const utils = require('./socket/global').utilities
+const mongoose = require('mongoose')
+const OpenTimes = mongoose.model('OpenTimes')
+const SynchTimes = mongoose.model('SynchTimes')
+const ModelSizes = mongoose.model('ModelSizes')
 
 module.exports = {
     /**
@@ -15,19 +15,19 @@ module.exports = {
      */
     addOpenTime: function(req, res){
         OpenTimes.create(req.body, function (err, response){
-            var result = {
+            const result = {
                 status: 201,
                 message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err){
+                result.status = 500
+                result.message = err
+            } else if (!response){
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     },
 
     /**
@@ -37,19 +37,19 @@ module.exports = {
      */
     addSynchTime: function(req, res){
         SynchTimes.create(req.body, function (err, response){
-            var result = {
+            const result = {
                 status: 201,
                 message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err){
+                result.status = 500
+                result.message = err
+            } else if (!response){
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     },
 
     /**
@@ -59,19 +59,19 @@ module.exports = {
      */
     addModelSize: function(req, res){
         ModelSizes.create(req.body, function (err, response){
-            var result = {
+            const result = {
                 status: 201,
                 message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err){
+                result.status = 500
+                result.message = err
+            } else if (!response){
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     },
 
     /**
@@ -81,25 +81,25 @@ module.exports = {
      * @param res
      */
     getUserNamesByCentralPath: function (req, res) {
-        var rgx = utils.uriToString(req.params.uri);
+        const rgx = utils.uriToString(req.params.uri)
         OpenTimes
             .find(
                 { 'centralPath': rgx},
                 { 'user': 1 }, function (err, response){
-                    var result = {
+                    const result = {
                         status: 200,
                         message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
                     }
-                    res.status(result.status).json(result.message);
+                    if (err){
+                        result.status = 500
+                        result.message = err
+                    } else if (!response){
+                        result.status = 404
+                        result.message = err
+                    }
+                    res.status(result.status).json(result.message)
                 }
-            );
+            )
     },
 
     /**
@@ -108,35 +108,35 @@ module.exports = {
      * @param res
      */
     updateFilePath: function (req, res) {
-        var before = req.body.before.replace(/\\/g, '\\').toLowerCase();
-        var after = req.body.after.replace(/\\/g, '\\').toLowerCase();
+        const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
+        const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
         OpenTimes.update(
             { 'centralPath': before },
             { $set: { 'centralPath' : after }},
-            { multi: true }, function (err, response){
+            { multi: true }, function (_err, _response){
                 SynchTimes.update(
                     { 'centralPath': before },
                     { $set: { 'centralPath': after }},
-                    { multi: true }, function (err, response) {
+                    { multi: true }, function (_err, _response) {
                         ModelSizes.update(
                             { 'centralPath': before },
                             { $set: { 'centralPath': after }},
                             { multi: true }, function (err, response) {
-                                var result = {
+                                const result = {
                                     status: 201,
                                     message: response
-                                };
-                                if (err){
-                                    result.status = 500;
-                                    result.message = err;
-                                } else if (!response){
-                                    result.status = 404;
-                                    result.message = err;
                                 }
-                                res.status(result.status).json(result.message);
-                            });
-                    });
-            });
+                                if (err){
+                                    result.status = 500
+                                    result.message = err
+                                } else if (!response){
+                                    result.status = 404
+                                    result.message = err
+                                }
+                                res.status(result.status).json(result.message)
+                            })
+                    })
+            })
     },
 
     /**
@@ -145,24 +145,24 @@ module.exports = {
      * @param res
      */
     getModelsData: function(req, res){
-        var limit = 200;
-        var pipeline = [];
-        var from = new Date(req.body.from);
-        var to = new Date(req.body.to);
+        const limit = 200
+        let pipeline = []
+        const from = new Date(req.body.from)
+        const to = new Date(req.body.to)
 
-        if(!req.body.from || !req.body.to){
+        if (!req.body.from || !req.body.to){
             pipeline = [
                 { $match: { 'centralPath': req.body.centralPath }},
                 { $sort: { 'createdOn': -1 }}, // latest
                 { $limit: limit }
-            ];
+            ]
         } else {
             pipeline = [
                 { $match: { $and: [
                     { 'centralPath': req.body.centralPath },
                     { 'createdOn': { $gte: from, $lte: to }}
                 ]}}
-            ];
+            ]
         }
 
         OpenTimes.aggregate([
@@ -216,19 +216,19 @@ module.exports = {
                 'onopened': { $reverseArray: '$onopened' },
                 'onsynched': { $reverseArray: '$onsynched' }}}
         ]).exec(function (err, response){
-            var result = {
+            const result = {
                 status: 201,
                 message: response
-            };
-            if (err) {
-                result.status = 500;
-                result.message = err;
-            } else if (!response) {
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err) {
+                result.status = 500
+                result.message = err
+            } else if (!response) {
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     },
 
     /**
@@ -237,8 +237,8 @@ module.exports = {
      * @param res
      */
     getByDate: function (req, res) {
-        var from = new Date(req.body.from);
-        var to = new Date(req.body.to);
+        const from = new Date(req.body.from)
+        const to = new Date(req.body.to)
         OpenTimes
             .aggregate([
                 { $facet: {
@@ -266,19 +266,19 @@ module.exports = {
                 }},
                 { $project: { 'opentimes': 1, 'synchtimes': 1 }}
             ]).exec(function (err, response){
-            var result = {
-                status: 201,
-                message: response
-            };
-            if (err) {
-                result.status = 500;
-                result.message = err;
-            } else if (!response) {
-                result.status = 404;
-                result.message = err;
-            }
-            res.status(result.status).json(result.message);
-        });
+                const result = {
+                    status: 201,
+                    message: response
+                }
+                if (err) {
+                    result.status = 500
+                    result.message = err
+                } else if (!response) {
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -308,18 +308,18 @@ module.exports = {
                 }},
                 { $project: { 'opentimes': 1, 'synchtimes': 1 }}
             ]).exec(function (err, response){
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err) {
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response) {
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err) {
+                    result.status = 500
+                    result.message = err
+                } else if (!response) {
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     }
-};
+}

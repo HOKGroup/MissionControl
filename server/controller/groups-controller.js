@@ -1,8 +1,8 @@
 /**
  * Created by konrad.sobon on 2018-05-16.
  */
-var mongoose = require('mongoose');
-var Groups = mongoose.model('Groups');
+const mongoose = require('mongoose')
+const Groups = mongoose.model('Groups')
 
 module.exports = {
     /**
@@ -12,19 +12,19 @@ module.exports = {
      */
     add: function(req, res){
         Groups.create(req.body, function (err, response){
-            var result = {
+            const result = {
                 status: 201,
                 message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err){
+                result.status = 500
+                result.message = err
+            } else if (!response){
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     },
 
     /**
@@ -33,23 +33,23 @@ module.exports = {
      * @param res
      */
     groupStats: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id
         Groups.update(
             { '_id': id },
             { '$push': { 'groupStats': req.body}}, function (err, response){
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -58,24 +58,24 @@ module.exports = {
      * @param res
      */
     updateFilePath: function (req, res) {
-        var before = req.body.before.replace(/\\/g, '\\').toLowerCase();
-        var after = req.body.after.replace(/\\/g, '\\').toLowerCase();
+        const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
+        const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
         Groups.update(
             { 'centralPath': before },
             { '$set': { 'centralPath' : after }}, function (err, response){
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -92,18 +92,18 @@ module.exports = {
                 'centralPath': 1
             }}]
         ).exec(function (err, response){
-            var result = {
+            const result = {
                 status: 201,
                 message: response[0]
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response[0]){
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err){
+                result.status = 500
+                result.message = err
+            } else if (!response[0]){
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     }
-};
+}

@@ -1,6 +1,6 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
-var addinsSchema = new mongoose.Schema(
+const addinsSchema = new mongoose.Schema(
     {
         pluginName: String,
         user: String,
@@ -17,4 +17,5 @@ var addinsSchema = new mongoose.Schema(
 )
 
 addinsSchema.index({'revitVersion': 'text'})
-mongoose.model('Addins', addinsSchema)
+const Addins = mongoose.model('Addins', addinsSchema)
+module.exports = Addins

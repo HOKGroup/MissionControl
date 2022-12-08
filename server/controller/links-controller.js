@@ -1,10 +1,10 @@
 /**
  * Created by konrad.sobon on 2018-04-24.
  */
-var mongoose = require('mongoose');
-var Links = mongoose.model('Links');
+const mongoose = require('mongoose')
+const Links = mongoose.model('Links')
 
-LinksService = {
+const LinksService = {
     /**
      * Creates Links Document.
      * @param req
@@ -13,19 +13,19 @@ LinksService = {
     add: function(req, res){
         Links
             .create(req.body, function (err, response){
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -34,24 +34,24 @@ LinksService = {
      * @param res
      */
     linkStats: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id
         Links
             .update(
                 { '_id': id },
                 { '$push': { 'linkStats': req.body}}, function (err, response){
-                    var result = {
+                    const result = {
                         status: 201,
                         message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
                     }
-                    res.status(result.status).json(result.message);
-                });
+                    if (err){
+                        result.status = 500
+                        result.message = err
+                    } else if (!response){
+                        result.status = 404
+                        result.message = err
+                    }
+                    res.status(result.status).json(result.message)
+                })
     },
 
     /**
@@ -60,25 +60,25 @@ LinksService = {
      * @param res
      */
     updateFilePath: function (req, res) {
-        var before = req.body.before.replace(/\\/g, '\\').toLowerCase();
-        var after = req.body.after.replace(/\\/g, '\\').toLowerCase();
+        const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
+        const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
         Links
             .update(
                 { 'centralPath': before },
                 { '$set': { 'centralPath' : after }}, function (err, response){
-                    var result = {
+                    const result = {
                         status: 201,
                         message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
                     }
-                    res.status(result.status).json(result.message);
-                });
+                    if (err){
+                        result.status = 500
+                        result.message = err
+                    } else if (!response){
+                        result.status = 404
+                        result.message = err
+                    }
+                    res.status(result.status).json(result.message)
+                })
     },
 
     /**
@@ -87,17 +87,17 @@ LinksService = {
      * @param res
      */
     getLinkStats: function (req, res) {
-        var limit = -200;
-        var pipeline = [];
-        var from = new Date(req.body.from);
-        var to = new Date(req.body.to);
+        const limit = -200
+        let pipeline = []
+        const from = new Date(req.body.from)
+        const to = new Date(req.body.to)
 
-        if(!req.body.from || !req.body.to){
+        if (!req.body.from || !req.body.to){
             pipeline = {
                 'linkStats': { $slice: ['$linkStats', limit]},
                 '_id': 1,
                 'centralPath': 1
-            };
+            }
         } else {
             pipeline = {
                 'linkStats': { $filter: {
@@ -110,27 +110,27 @@ LinksService = {
                 },
                 '_id': 1,
                 'centralPath': 1
-            };
+            }
         }
 
         Links.aggregate([
             { $match: { 'centralPath': req.body.centralPath }},
             { $project: pipeline }
         ]).exec(function (err, response){
-            var result = {
+            const result = {
                 status: 201,
                 message: response[0]
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response[0]){
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err){
+                result.status = 500
+                result.message = err
+            } else if (!response[0]){
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     }
-};
+}
 
-module.exports = LinksService;
+module.exports = LinksService

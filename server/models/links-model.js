@@ -1,9 +1,9 @@
 /**
  * Created by konrad.sobon on 2018-04-24.
  */
-var mongoose = require( 'mongoose' )
+const mongoose = require('mongoose')
 
-var linksSchema = new mongoose.Schema(
+const linksSchema = new mongoose.Schema(
     {
         centralPath: String,
         linkStats: [{
@@ -25,4 +25,5 @@ var linksSchema = new mongoose.Schema(
 )
 
 linksSchema.index({'centralPath': 'text'})
-var Links = mongoose.model( 'Links', linksSchema )
+const Links = mongoose.model( 'Links', linksSchema )
+module.exports = Links

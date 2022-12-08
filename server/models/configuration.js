@@ -1,6 +1,6 @@
-var mongoose = require( 'mongoose' )
+const mongoose = require('mongoose')
 
-var configSchema = new mongoose.Schema(
+const configSchema = new mongoose.Schema(
     {
         name: String,
         files: [{centralPath: String}], //revit projects
@@ -45,5 +45,6 @@ var configSchema = new mongoose.Schema(
 )
 
 configSchema.index({'files.centralPath': 'text'})
-var _Configuration = mongoose.model( 'Configuration', configSchema )
+const Configuration = mongoose.model( 'Configuration', configSchema )
+module.exports = Configuration
 

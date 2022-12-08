@@ -1,9 +1,9 @@
 /**
  * Created by konrad.sobon on 2018-04-24.
  */
-var mongoose = require( 'mongoose' )
+const mongoose = require('mongoose')
 
-var viewsSchema = new mongoose.Schema(
+const viewsSchema = new mongoose.Schema(
     {
         centralPath: String,
         viewStats: [{
@@ -20,4 +20,5 @@ var viewsSchema = new mongoose.Schema(
 )
 
 viewsSchema.index({'centralPath': 'text'})
-var Views = mongoose.model( 'Views', viewsSchema )
+const Views = mongoose.model( 'Views', viewsSchema )
+module.exports = Views

@@ -1,10 +1,10 @@
 /**
  * Created by konrad.sobon on 2018-04-24.
  */
-var mongoose = require('mongoose');
-var Styles = mongoose.model('Styles');
+const mongoose = require('mongoose')
+const Styles = mongoose.model('Styles')
 
-StylesService = {
+const StylesService = {
     /**
      * Creates Styles Document.
      * @param req
@@ -13,19 +13,19 @@ StylesService = {
     add: function(req, res){
         Styles
             .create(req.body, function (err, response){
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -34,24 +34,24 @@ StylesService = {
      * @param res
      */
     styleStats: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id
         Styles
             .update(
                 { '_id': id },
                 { '$push': { 'styleStats': req.body}}, function (err, response){
-                    var result = {
+                    const result = {
                         status: 201,
                         message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
                     }
-                    res.status(result.status).json(result.message);
-                });
+                    if (err){
+                        result.status = 500
+                        result.message = err
+                    } else if (!response){
+                        result.status = 404
+                        result.message = err
+                    }
+                    res.status(result.status).json(result.message)
+                })
     },
 
     /**
@@ -60,25 +60,25 @@ StylesService = {
      * @param res
      */
     updateFilePath: function (req, res) {
-        var before = req.body.before.replace(/\\/g, '\\').toLowerCase();
-        var after = req.body.after.replace(/\\/g, '\\').toLowerCase();
+        const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
+        const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
         Styles
             .update(
                 { 'centralPath': before },
                 { '$set': { 'centralPath' : after }}, function (err, response){
-                    var result = {
+                    const result = {
                         status: 201,
                         message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
                     }
-                    res.status(result.status).json(result.message);
-                });
+                    if (err){
+                        result.status = 500
+                        result.message = err
+                    } else if (!response){
+                        result.status = 404
+                        result.message = err
+                    }
+                    res.status(result.status).json(result.message)
+                })
     },
 
     /**
@@ -98,20 +98,20 @@ StylesService = {
                     'centralPath': 1
                 }}]
             ).exec(function (err, response){
-                var result = {
+                const result = {
                     status: 201,
                     message: response[0]
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response[0]){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response[0]){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     }
-};
+}
 
-module.exports = StylesService;
+module.exports = StylesService

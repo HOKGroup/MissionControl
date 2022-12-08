@@ -1,10 +1,10 @@
 /**
  * Created by konrad.sobon on 2018-04-24.
  */
-var mongoose = require('mongoose');
-var Views = mongoose.model('Views');
+const mongoose = require('mongoose')
+const Views = mongoose.model('Views')
 
-ViewsService = {
+const ViewsService = {
     /**
      * Finds Views collection by central path.
      * @param req
@@ -13,30 +13,30 @@ ViewsService = {
     findByCentralPath: function(req, res){
         // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
         // (Konrad) RSN and BIM 360 paths will have forward slashes instead of back slashes.
-        var isRevitServer = req.params.uri.match(/rsn:/i);
-        var isBim360 = req.params.uri.match(/bim 360:/i);
-        var rgx;
-        if(isRevitServer || isBim360){
-            rgx = req.params.uri.replace(/\|/g, '/').toLowerCase();
+        const isRevitServer = req.params.uri.match(/rsn:/i)
+        const isBim360 = req.params.uri.match(/bim 360:/i)
+        let rgx
+        if (isRevitServer || isBim360){
+            rgx = req.params.uri.replace(/\|/g, '/').toLowerCase()
         } else {
-            rgx = req.params.uri.replace(/\|/g, '\\').toLowerCase();
+            rgx = req.params.uri.replace(/\|/g, '\\').toLowerCase()
         }
         Views
             .find(
                 {'centralPath': rgx}, function (err, response){
-                    var result = {
+                    const result = {
                         status: 200,
                         message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
                     }
-                    res.status(result.status).json(result.message);
-                });
+                    if (err){
+                        result.status = 500
+                        result.message = err
+                    } else if (!response){
+                        result.status = 404
+                        result.message = err
+                    }
+                    res.status(result.status).json(result.message)
+                })
     },
 
     /**
@@ -47,19 +47,19 @@ ViewsService = {
     add: function(req, res){
         Views
             .create(req.body, function (err, response){
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -68,24 +68,24 @@ ViewsService = {
      * @param res
      */
     viewStats: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id
         Views
             .update(
                 { '_id': id },
                 { '$push': { 'viewStats': req.body }}, function (err, response){
-                    var result = {
+                    const result = {
                         status: 201,
                         message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
                     }
-                    res.status(result.status).json(result.message);
-                });
+                    if (err){
+                        result.status = 500
+                        result.message = err
+                    } else if (!response){
+                        result.status = 404
+                        result.message = err
+                    }
+                    res.status(result.status).json(result.message)
+                })
     },
 
     /**
@@ -94,25 +94,25 @@ ViewsService = {
      * @param res
      */
     updateFilePath: function (req, res) {
-        var before = req.body.before.replace(/\\/g, '\\').toLowerCase();
-        var after = req.body.after.replace(/\\/g, '\\').toLowerCase();
+        const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
+        const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
         Views
             .update(
                 { 'centralPath': before },
                 { '$set': { 'centralPath' : after }}, function (err, response){
-                    var result = {
+                    const result = {
                         status: 201,
                         message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
                     }
-                    res.status(result.status).json(result.message);
-                });
+                    if (err){
+                        result.status = 500
+                        result.message = err
+                    } else if (!response){
+                        result.status = 404
+                        result.message = err
+                    }
+                    res.status(result.status).json(result.message)
+                })
     },
 
     /**
@@ -121,17 +121,17 @@ ViewsService = {
      * @param res
      */
     getViewStats: function (req, res) {
-        var limit = -200;
-        var pipeline = [];
-        var from = new Date(req.body.from);
-        var to = new Date(req.body.to);
+        const limit = -200
+        let pipeline = []
+        const from = new Date(req.body.from)
+        const to = new Date(req.body.to)
 
-        if(!req.body.from || !req.body.to){
+        if (!req.body.from || !req.body.to){
             pipeline = {
                 'viewStats': { $slice: ['$viewStats', limit]},
                 '_id': 1,
                 'centralPath': 1
-            };
+            }
         } else {
             pipeline = {
                 'viewStats': { $filter: {
@@ -144,27 +144,27 @@ ViewsService = {
                 },
                 '_id': 1,
                 'centralPath': 1
-            };
+            }
         }
 
         Views.aggregate([
             { $match: { 'centralPath': req.body.centralPath }},
             { $project: pipeline }]
         ).exec(function (err, response){
-            var result = {
+            const result = {
                 status: 201,
                 message: response[0]
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response[0]){
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err){
+                result.status = 500
+                result.message = err
+            } else if (!response[0]){
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     }
-};
+}
 
-module.exports = ViewsService;
+module.exports = ViewsService

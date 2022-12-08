@@ -1,9 +1,9 @@
 /**
  * Created by konrad.sobon on 2018-09-13.
  */
-var mongoose = require( 'mongoose' )
+const mongoose = require('mongoose')
 
-var schema = new mongoose.Schema(
+const schema = new mongoose.Schema(
     {
         user: {type: String, default: 'Unknown'},
         machine: {type: String, default: ''}
@@ -14,4 +14,5 @@ var schema = new mongoose.Schema(
 )
 
 schema.index({'user': 'text'})
-var Users = mongoose.model( 'Users', schema )
+const Users = mongoose.model( 'Users', schema )
+module.exports = Users

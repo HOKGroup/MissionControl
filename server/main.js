@@ -8,23 +8,24 @@
 
 require('dotenv').config()
 
-var express = require('express')
-var cool = require('cool-ascii-faces')
-var mongoose = require('mongoose')
-var bodyParser = require('body-parser')
-var methodOverride = require('method-override')
-var io = require('socket.io')
-var global = require('./app/controller/socket/global')
-var morgan = require('morgan')
-var winston = require('./config/winston')
-var path = require('path')
-var app = express()
+const express = require('express')
+const cool = require('cool-ascii-faces')
+const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
+const { Server } = require('socket.io')
+const morgan = require('morgan')
+const path = require('path')
+
+const global = require('./controller/socket/global')
+const winston = require('./config/winston')
+
+const app = express()
 
 mongoose.connect(process.env.DB_HOST)
 
-var db = mongoose.connection
+const db = mongoose.connection
 db.on('error', function () {
-    var msg = 'unable to connect to database at '
+    const msg = 'unable to connect to database at '
     throw new Error(msg + process.env.DB_HOST)
 })
 
@@ -52,7 +53,7 @@ app.get('/cool', function (_request, response) {
 
 // catch 404 and forward to error handler
 app.use(function (_req, _res, next) {
-    var err = new Error('Not Found')
+    const err = new Error('Not Found')
     err.status = 404
     next(err)
 })
@@ -73,7 +74,7 @@ app.use(function (err, req, res, _next) {
 
 app.set('port', process.env.MC_PORT || 8080)
 
-var server = app.listen(
+const server = app.listen(
     app.get('port'),
     function () {
         console.log('HOK Mission Control server '
@@ -82,20 +83,20 @@ var server = app.listen(
             + server.address().port + ' with '
             + 'hosted mongo db.')
         global.io = io(server)
-        global.io.on('connection', function (socket) {
-            socket.on('room', function (room) {
+        global.io.on('connection', (socket) => {
+            socket.on('room', (room) => {
                 socket.join(room)
                 console.log('Client has joined the room!')
             })
-            socket.once('disconnect', function (_client) {
+            socket.once('disconnect', (_client) => {
                 console.log('Client has left the room!')
             })
         })
-        global.io.on('disconnect', function (_socket) {
+        global.io.on('disconnect', (_socket) => {
             console.log('Server socket disconnected!')
         })
 
-        global.io.on('error', function (err) {
+        global.io.on('error', (err) => {
             console.log(err)
         })
     }

@@ -1,6 +1,6 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
-var familiesSchema = new mongoose.Schema({
+const familiesSchema = new mongoose.Schema({
     centralPath: String,
     totalFamilies: Number,
     unusedFamilies: Number,
@@ -38,4 +38,5 @@ var familiesSchema = new mongoose.Schema({
 
 familiesSchema.index({'centralPath': 'text'})
 familiesSchema.index({'families.tasks.assignedTo': 'text'})
-mongoose.model('Families', familiesSchema)
+const Families = mongoose.model('Families', familiesSchema)
+module.exports = Families

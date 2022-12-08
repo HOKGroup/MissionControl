@@ -1,26 +1,26 @@
-var mongoose = require('mongoose');
-var Addins = mongoose.model('Addins');
+const mongoose = require('mongoose')
+const Addins = mongoose.model('Addins')
 
-AddinsService = {
+const AddinsService = {
     /**
      * 
      * @param req 
      * @param res 
      */
     aggregateByYear: function(req, res){
-        var matchFilter = {
+        const matchFilter = {
             $match: {
                 'revitVersion': req.params.year
             }
-        };
-        var groupByColumn = '$pluginName';
+        }
+        let groupByColumn = '$pluginName'
         if (req.query.name) {
-            matchFilter.$match['pluginName'] = req.query.name;
-            groupByColumn = '$user';
+            matchFilter.$match['pluginName'] = req.query.name
+            groupByColumn = '$user'
         }
         if (req.query.office) {
-            var officeCodes = req.query.office.split('|');
-            matchFilter.$match['office'] = { $in: officeCodes };
+            const officeCodes = req.query.office.split('|')
+            matchFilter.$match['office'] = { $in: officeCodes }
         }
         Addins
             .aggregate([
@@ -33,26 +33,26 @@ AddinsService = {
                     }
                 }
             ], function (err, response){
-                var data = response.map(function(addin) { 
+                const data = response.map(function(addin) { 
                     return {
                         name: addin['_id'],
                         office: addin['office'],
                         count: addin['count']
-                    };
-                });
-                var result = {
+                    }
+                })
+                const result = {
                     status: 200,
                     message: data
-                };
-                if (err) {
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response) {
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err) {
+                    result.status = 500
+                    result.message = err
+                } else if (!response) {
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -61,7 +61,7 @@ AddinsService = {
      * @param res
      */
     addinManagerDetails: function(req, res) {
-        var matchFilter = {
+        const matchFilter = {
             'revitVersion' : req.params.year, 
             'pluginName' : 'AddinManager', 
             'detailInfo' : {
@@ -70,10 +70,10 @@ AddinsService = {
             'detailInfo.1' : {
                 $exists : true
             }
-        };
+        }
         if (req.query.office) {
-            var officeCodes = req.query.office.split('|');
-            matchFilter['office'] = { $in: officeCodes };
+            const officeCodes = req.query.office.split('|')
+            matchFilter['office'] = { $in: officeCodes }
         }
         Addins
             .aggregate([
@@ -87,61 +87,61 @@ AddinsService = {
                     }
                 }
             ], function(err, response) {
-                var addinManagerDetails = {};
+                const addinManagerDetails = {}
                 response
-                    .reduce(function (acc, item) { return acc.concat(item.userData); }, [])
-                    .map(function (item) { { delete item._id; return item; } })
+                    .reduce(function (acc, item) { return acc.concat(item.userData) }, [])
+                    .map(function (item) { { delete item._id; return item } })
                     .forEach(function (detailItem) {
-                        if (addinManagerDetails.hasOwnProperty(detailItem.name)) {
+                        if (detailItem.name in addinManagerDetails) {
                             switch (detailItem.value) {
-                                case 'Never':
-                                    addinManagerDetails[detailItem.name].never += 1;
-                                    break;
-                                case 'Always':
-                                    addinManagerDetails[detailItem.name].always += 1;
-                                    break;
-                                case 'ThisSessionOnly':
-                                    addinManagerDetails[detailItem.name].thisSessionOnly += 1;
-                                    break;
+                            case 'Never':
+                                addinManagerDetails[detailItem.name].never += 1
+                                break
+                            case 'Always':
+                                addinManagerDetails[detailItem.name].always += 1
+                                break
+                            case 'ThisSessionOnly':
+                                addinManagerDetails[detailItem.name].thisSessionOnly += 1
+                                break
                             }
                         } else {
-                            var pluginDetail = {
+                            const pluginDetail = {
                                 name: detailItem.name,
                                 never: 0,
                                 always: 0,
                                 thisSessionOnly: 0
-                            };
-                            switch (detailItem.value) {
-                                case 'Never':
-                                    pluginDetail.never = 1;
-                                    break;
-                                case 'Always':
-                                    pluginDetail.always = 1;
-                                    break;
-                                case 'ThisSessionOnly':
-                                    pluginDetail.thisSessionOnly = 1;
-                                    break;
                             }
-                            addinManagerDetails[detailItem.name] = pluginDetail;
+                            switch (detailItem.value) {
+                            case 'Never':
+                                pluginDetail.never = 1
+                                break
+                            case 'Always':
+                                pluginDetail.always = 1
+                                break
+                            case 'ThisSessionOnly':
+                                pluginDetail.thisSessionOnly = 1
+                                break
+                            }
+                            addinManagerDetails[detailItem.name] = pluginDetail
 
                         }
-                    });
-                var addinManagerStats = Object.keys(addinManagerDetails).map(function (item) {
-                    return addinManagerDetails[item];
-                });
-                var result = {
+                    })
+                const addinManagerStats = Object.keys(addinManagerDetails).map(function (item) {
+                    return addinManagerDetails[item]
+                })
+                const result = {
                     status: 200,
                     message: addinManagerStats
-                };
-                if (err) {
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response) {
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-        });
+                if (err) {
+                    result.status = 500
+                    result.message = err
+                } else if (!response) {
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -152,20 +152,20 @@ AddinsService = {
     add: function(req, res) {
         Addins
             .create(req.body, function (err, response) {
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     }
-};
+}
 
-module.exports = AddinsService;
+module.exports = AddinsService

@@ -1,6 +1,6 @@
-var mongoose = require( 'mongoose' )
+const mongoose = require('mongoose')
 
-var geoSchema = new mongoose.Schema({
+const geoSchema = new mongoose.Schema({
     type:{
         type: String,
         required: true,
@@ -11,7 +11,7 @@ var geoSchema = new mongoose.Schema({
     }
 },{_id: false})
 
-var projectSchema = new mongoose.Schema({
+const projectSchema = new mongoose.Schema({
     number: String,
     name: String,
     office: String,
@@ -48,4 +48,5 @@ var projectSchema = new mongoose.Schema({
 
 projectSchema.index({ geoLocation: '2dsphere'})
 projectSchema.index({ geoPolygon: '2dsphere'})
-var Project = mongoose.model( 'Project', projectSchema )
+const Project = mongoose.model( 'Project', projectSchema )
+module.exports = Project

@@ -1,9 +1,9 @@
 /**
  * Created by konrad.sobon on 2018-07-27.
  */
-var mongoose = require( 'mongoose' )
+const mongoose = require('mongoose')
 
-var zombieLogsSchema = new mongoose.Schema(
+const zombieLogsSchema = new mongoose.Schema(
     {
         message: {type: String, default: ''},
         createdAt: {type: Date, default: Date.now()},
@@ -16,4 +16,5 @@ var zombieLogsSchema = new mongoose.Schema(
 )
 
 zombieLogsSchema.index({'machine': 'text'})
-var ZombieLogs = mongoose.model( 'ZombieLogs', zombieLogsSchema )
+const ZombieLogs = mongoose.model( 'ZombieLogs', zombieLogsSchema )
+module.exports = ZombieLogs

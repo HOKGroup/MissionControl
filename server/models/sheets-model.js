@@ -1,9 +1,9 @@
 /**
  * Created by konrad.sobon on 2017-10-23.
  */
-var mongoose = require( 'mongoose' )
+const mongoose = require('mongoose')
 
-var sheetItemSchema = new mongoose.Schema({
+const sheetItemSchema = new mongoose.Schema({
     name: String,
     number: String,
     uniqueId: String,
@@ -35,7 +35,7 @@ var sheetItemSchema = new mongoose.Schema({
     }]
 })
 
-var revisionItemSchema = new mongoose.Schema({
+const revisionItemSchema = new mongoose.Schema({
     description: String,
     sequence: Number,
     number: String,
@@ -46,7 +46,7 @@ var revisionItemSchema = new mongoose.Schema({
 })
 
 
-var sheetsSchema = new mongoose.Schema(
+const sheetsSchema = new mongoose.Schema(
     {
         centralPath: String,
         sheets: [sheetItemSchema],
@@ -55,4 +55,5 @@ var sheetsSchema = new mongoose.Schema(
 )
 
 sheetsSchema.index({'centralPath': 'text'})
-var Sheets = mongoose.model( 'Sheets', sheetsSchema )
+const Sheets = mongoose.model( 'Sheets', sheetsSchema )
+module.exports = Sheets

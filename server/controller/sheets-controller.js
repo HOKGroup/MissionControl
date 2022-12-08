@@ -4,11 +4,11 @@
 /**
  * @param {{ uniqueid: string }} Unique id for Sheet
  */
-var mongoose = require('mongoose');
-var global = require('./socket/global');
-var Sheets = mongoose.model('Sheets');
+const mongoose = require('mongoose')
+const global = require('./socket/global')
+const Sheets = mongoose.model('Sheets')
 
-SheetsServices = {
+const SheetsServices = {
     /**
      * Finds sheet collection by central path.
      * @param req
@@ -17,31 +17,31 @@ SheetsServices = {
     findByCentralPath: function(req, res){
         // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
         // (Konrad) RSN and BIM 360 paths will have forward slashes instead of back slashes.
-        var isRevitServer = req.params.uri.match(/rsn:/i);
-        var isBim360 = req.params.uri.match(/bim 360:/i);
-        var rgx;
-        if(isRevitServer || isBim360){
-            rgx = req.params.uri.replace(/\|/g, '/').toLowerCase();
+        const isRevitServer = req.params.uri.match(/rsn:/i)
+        const isBim360 = req.params.uri.match(/bim 360:/i)
+        let rgx
+        if (isRevitServer || isBim360){
+            rgx = req.params.uri.replace(/\|/g, '/').toLowerCase()
         } else {
-            rgx = req.params.uri.replace(/\|/g, '\\').toLowerCase();
+            rgx = req.params.uri.replace(/\|/g, '\\').toLowerCase()
         }
 
         Sheets
             .find(
                 {'centralPath': rgx}, function (err, response){
-                    var result = {
+                    const result = {
                         status: 200,
                         message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
                     }
-                    res.status(result.status).json(result.message);
-                });
+                    if (err){
+                        result.status = 500
+                        result.message = err
+                    } else if (!response){
+                        result.status = 404
+                        result.message = err
+                    }
+                    res.status(result.status).json(result.message)
+                })
     },
 
     /**
@@ -50,25 +50,25 @@ SheetsServices = {
      * @param res
      */
     updateFilePath: function (req, res) {
-        var before = req.body.before.replace(/\\/g, '\\').toLowerCase();
-        var after = req.body.after.replace(/\\/g, '\\').toLowerCase();
+        const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
+        const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
         Sheets
             .update(
                 {'centralPath': before},
                 {'$set': {'centralPath' : after}}, function (err, response){
-                    var result = {
+                    const result = {
                         status: 201,
                         message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
                     }
-                    res.status(result.status).json(result.message);
-                });
+                    if (err){
+                        result.status = 500
+                        result.message = err
+                    } else if (!response){
+                        result.status = 404
+                        result.message = err
+                    }
+                    res.status(result.status).json(result.message)
+                })
     },
 
     /**
@@ -79,19 +79,19 @@ SheetsServices = {
     add: function(req, res){
         Sheets
             .create(req.body, function (err, response){
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -104,23 +104,23 @@ SheetsServices = {
             .findById(req.params.id)
             .select('sheets')
             .exec(function (err, doc){
-                var response = {
+                const response = {
                     status: 201,
                     message: []
-                };
+                }
                 if (err){
-                    response.status = 500;
-                    response.message = err;
-                } else if(!doc){
-                    response.status = 404;
-                    response.message = {'message': 'SheetsChanges Id not found.'};
+                    response.status = 500
+                    response.message = err
+                } else if (!doc){
+                    response.status = 404
+                    response.message = {'message': 'SheetsChanges Id not found.'}
                 }
-                if(doc){
-                    updateAllSheets(req, res, doc);
+                if (doc){
+                    updateAllSheets(req, res, doc)
                 } else {
-                    res.status(response.status).json(response.message);
+                    res.status(response.status).json(response.message)
                 }
-            });
+            })
     },
 
     /**
@@ -133,23 +133,23 @@ SheetsServices = {
             .findById(req.params.id)
             .select('sheets')
             .exec(function (err, doc){
-                var response = {
+                const response = {
                     status: 201,
                     message: []
-                };
+                }
                 if (err){
-                    response.status = 500;
-                    response.message = err;
-                } else if(!doc){
-                    response.status = 404;
-                    response.message = {'message': 'Sheets Id not found.'};
+                    response.status = 500
+                    response.message = err
+                } else if (!doc){
+                    response.status = 404
+                    response.message = {'message': 'Sheets Id not found.'}
                 }
-                if(doc){
-                    addSheetTask(req, res, doc);
+                if (doc){
+                    addSheetTask(req, res, doc)
                 } else {
-                    res.status(response.status).json(response.message);
+                    res.status(response.status).json(response.message)
                 }
-            });
+            })
     },
 
     /**
@@ -158,28 +158,28 @@ SheetsServices = {
      * @param res
      */
     addSheets: function (req, res) {
-        var ids = [];
+        const ids = []
         req.body.forEach(function (item) {
-            var id = mongoose.Types.ObjectId();
-            item['_id'] = id;
-            ids.push(id.toString());
-        });
+            const id = mongoose.Types.ObjectId()
+            item['_id'] = id
+            ids.push(id.toString())
+        })
         Sheets
             .findOneAndUpdate(
                 {_id: req.params.id},
                 {$push: {'sheets': {$each: req.body}}},
                 {'new': true}) // returns newly updated collection
             .exec(function(err, data){
-                if(err){
-                    res.status(500).json(err);
+                if (err){
+                    res.status(500).json(err)
                 } else {
                     global.io.sockets.in(req.body[0].centralPath).emit('sheetTask_sheetsAdded', {
                         'body': data,
                         'sheetIds': ids
-                    });
-                    res.status(201).json({ 'data': data, 'newSheetIds': ids });
+                    })
+                    res.status(201).json({ 'data': data, 'newSheetIds': ids })
                 }
-            });
+            })
     },
 
     /**
@@ -192,23 +192,23 @@ SheetsServices = {
             .findById(req.params.id)
             .select('sheets')
             .exec(function (err, doc){
-                var response = {
+                const response = {
                     status: 201,
                     message: []
-                };
+                }
                 if (err){
-                    response.status = 500;
-                    response.message = err;
-                } else if(!doc){
-                    response.status = 404;
-                    response.message = {'message': 'SheetsChanges Id not found.'};
+                    response.status = 500
+                    response.message = err
+                } else if (!doc){
+                    response.status = 404
+                    response.message = {'message': 'SheetsChanges Id not found.'}
                 }
-                if(doc){
-                    approveCreateNewSheet(req, res, doc);
+                if (doc){
+                    approveCreateNewSheet(req, res, doc)
                 } else {
-                    res.status(response.status).json(response.message);
+                    res.status(response.status).json(response.message)
                 }
-            });
+            })
     },
 
     /**
@@ -221,15 +221,15 @@ SheetsServices = {
             .update(
                 { _id: req.params.id},
                 { $pull:{ 'sheets': { '_id': req.body.sheetId }}}, function(err){
-                    if(err) {
-                        res.status(201).json(err);
+                    if (err) {
+                        res.status(201).json(err)
                     } else {
                         global.io.sockets.in(req.body.centralPath).emit('sheetTask_sheetDeleted', {
                             'sheetId': req.body.sheetId.toString(),
-                            'deletedIds': req.body.deletedIds});
-                        res.status(201).json(req.body.sheetId.toString());
+                            'deletedIds': req.body.deletedIds})
+                        res.status(201).json(req.body.sheetId.toString())
                     }
-                });
+                })
     },
 
     /**
@@ -242,23 +242,23 @@ SheetsServices = {
             .findById(req.params.id)
             .select('sheets')
             .exec(function (err, doc){
-                var response = {
+                const response = {
                     status: 201,
                     message: []
-                };
+                }
                 if (err){
-                    response.status = 500;
-                    response.message = err;
-                } else if(!doc){
-                    response.status = 404;
-                    response.message = {'message': 'Sheets Id not found.'};
+                    response.status = 500
+                    response.message = err
+                } else if (!doc){
+                    response.status = 404
+                    response.message = {'message': 'Sheets Id not found.'}
                 }
-                if(doc){
-                    deleteSheetTask(req, res, doc);
+                if (doc){
+                    deleteSheetTask(req, res, doc)
                 } else {
-                    res.status(response.status).json(response.message);
+                    res.status(response.status).json(response.message)
                 }
-            });
+            })
     },
 
     /**
@@ -271,146 +271,146 @@ SheetsServices = {
             .findById(req.params.id)
             .select('sheets')
             .exec(function (err, doc){
-                var response = {
+                const response = {
                     status: 201,
                     message: []
-                };
+                }
                 if (err){
-                    response.status = 500;
-                    response.message = err;
-                } else if(!doc){
-                    response.status = 404;
-                    response.message = {'message': 'Sheets Id not found.'};
+                    response.status = 500
+                    response.message = err
+                } else if (!doc){
+                    response.status = 404
+                    response.message = {'message': 'Sheets Id not found.'}
                 }
-                if(doc){
-                    updateSheetTask(req, res, doc);
+                if (doc){
+                    updateSheetTask(req, res, doc)
                 } else {
-                    res.status(response.status).json(response.message);
+                    res.status(response.status).json(response.message)
                 }
-            });
+            })
     }
-};
+}
 
 //region Utilities
 
-var approveCreateNewSheet = function (req, res, doc) {
-    var sheetIndex = doc.sheets.findIndex(function (x) {
-        return x._id.toString() === req.body.Element._id.toString();
-    });
-    var sheet;
-    if(sheetIndex !== -1) sheet = doc.sheets[sheetIndex];
+const approveCreateNewSheet = function (req, res, doc) {
+    const sheetIndex = doc.sheets.findIndex(function (x) {
+        return x._id.toString() === req.body.Element._id.toString()
+    })
+    let sheet
+    if (sheetIndex !== -1) sheet = doc.sheets[sheetIndex]
 
-    var taskIndex = sheet.tasks.findIndex(function(x){
-        return x._id.toString() === req.body.Task._id.toString();
-    });
-    if(taskIndex !== -1) {
-        sheet.tasks[taskIndex] = req.body.Task; // update task
-        req.body.Element.tasks = sheet.tasks; // pull all tasks into new object
-        doc.sheets[sheetIndex] = req.body.Element; // update the doc with new sheet/tasks
+    const taskIndex = sheet.tasks.findIndex(function(x){
+        return x._id.toString() === req.body.Task._id.toString()
+    })
+    if (taskIndex !== -1) {
+        sheet.tasks[taskIndex] = req.body.Task // update task
+        req.body.Element.tasks = sheet.tasks // pull all tasks into new object
+        doc.sheets[sheetIndex] = req.body.Element // update the doc with new sheet/tasks
     }
 
     doc.save(function (err, sheetsUpdated) {
-        if(err){
-            res.status(500).json(err);
+        if (err){
+            res.status(500).json(err)
         } else {
             global.io.sockets.in(req.body.Element.centralPath).emit('sheetTask_updated', {
                 'body': sheetsUpdated,
                 'sheetId': req.body.Element._id.toString(),
                 'taskId': req.body.Task._id.toString()
-            });
-            res.status(201).json(sheetsUpdated);
+            })
+            res.status(201).json(sheetsUpdated)
         }
-    });
-};
+    })
+}
 
-var updateAllSheets = function (req, res, doc) {
-    doc.sheets = req.body.sheets;
-    doc.revisions = req.body.revisions;
+const updateAllSheets = function (req, res, doc) {
+    doc.sheets = req.body.sheets
+    doc.revisions = req.body.revisions
 
     doc.save(function (err, sheetsUpdated) {
-        if(err){
-            res.status(500).json(err);
+        if (err){
+            res.status(500).json(err)
         } else {
-            res.status(201).json(sheetsUpdated);
+            res.status(201).json(sheetsUpdated)
         }
-    });
-};
+    })
+}
 
-var addSheetTask = function(req, res, doc){
-    var sheet = doc.sheets.find(function(x){
-        return x._id.toString() === req.body.sheetId.toString();
-    });
+const addSheetTask = function(req, res, doc){
+    const sheet = doc.sheets.find(function(x){
+        return x._id.toString() === req.body.sheetId.toString()
+    })
     // (Konrad) We override the _id with a new one, so that we know exactly what
     // that new task is stored under, and can pass it along to client.
-    var newId = mongoose.Types.ObjectId();
-    req.body['_id'] = newId;
-    sheet.tasks.push(req.body);
+    const newId = mongoose.Types.ObjectId()
+    req.body['_id'] = newId
+    sheet.tasks.push(req.body)
 
     doc.save(function (err, sheetsUpdated) {
-        if(err){
-            res.status(500).json(err);
+        if (err){
+            res.status(500).json(err)
         } else {
             global.io.sockets.in(req.body.centralPath).emit('sheetTask_added', {
                 'body': sheetsUpdated,
                 'sheetId': req.body.sheetId.toString(),
                 'taskId': newId.toString()
-            });
-            res.status(201).json(sheetsUpdated);
+            })
+            res.status(201).json(sheetsUpdated)
         }
-    });
-};
+    })
+}
 
-var deleteSheetTask = function (req, res, doc) {
-    var sheet = doc.sheets.find(function (x) {
-        return x._id.toString() === req.body.sheetId.toString();
-    });
+const deleteSheetTask = function (req, res, doc) {
+    const sheet = doc.sheets.find(function (x) {
+        return x._id.toString() === req.body.sheetId.toString()
+    })
 
-    var deleted = [];
+    const deleted = []
     req.body.deletedIds.forEach(function (id) {
-        var taskIndex = sheet.tasks.findIndex(function (x) {
-            return x._id.toString() === id.toString();
-        });
-        if(taskIndex !== -1){
-            sheet.tasks.splice(taskIndex, 1);
-            deleted.push(id.toString());
+        const taskIndex = sheet.tasks.findIndex(function (x) {
+            return x._id.toString() === id.toString()
+        })
+        if (taskIndex !== -1){
+            sheet.tasks.splice(taskIndex, 1)
+            deleted.push(id.toString())
         }
-    });
+    })
 
     doc.save(function (err, sheetsUpdated) {
-        if(err){
-            res.status(500).json(err);
+        if (err){
+            res.status(500).json(err)
         } else {
             global.io.sockets.in(req.body.centralPath).emit('sheetTask_deleted', {
                 'sheetId': req.body.sheetId.toString(),
-                'deletedIds': deleted });
-            res.status(201).json(sheetsUpdated);
+                'deletedIds': deleted })
+            res.status(201).json(sheetsUpdated)
         }
-    });
-};
+    })
+}
 
-var updateSheetTask = function (req, res, doc) {
-    var sheet = doc.sheets.find(function (x) {
-        return x._id.toString() === req.body.sheetId.toString();
-    });
-    var index = sheet.tasks.findIndex(function(x){
-        return x._id.toString() === req.body._id.toString();
-    });
-    if(index !== -1) sheet.tasks[index] = req.body;
+const updateSheetTask = function (req, res, doc) {
+    const sheet = doc.sheets.find(function (x) {
+        return x._id.toString() === req.body.sheetId.toString()
+    })
+    const index = sheet.tasks.findIndex(function(x){
+        return x._id.toString() === req.body._id.toString()
+    })
+    if (index !== -1) sheet.tasks[index] = req.body
 
     doc.save(function (err, sheetsUpdated) {
-        if(err){
-            res.status(500).json(err);
+        if (err){
+            res.status(500).json(err)
         } else {
             global.io.sockets.in(req.body.centralPath).emit('sheetTask_updated', {
                 'body': sheetsUpdated,
                 'sheetId': req.body.sheetId.toString(),
                 'taskId': req.body._id.toString()
-            });
-            res.status(201).json(sheetsUpdated);
+            })
+            res.status(201).json(sheetsUpdated)
         }
-    });
-};
+    })
+}
 
 //endregion
 
-module.exports = SheetsServices;
+module.exports = SheetsServices

@@ -1,10 +1,10 @@
 /**
  * Created by konrad.sobon on 2018-09-10.
  */
-var mongoose = require('mongoose');
-var OnOpeneds = mongoose.model('OnOpeneds');
-var OnSyncheds = mongoose.model('OnSyncheds');
-var ItemCounts = mongoose.model('ItemCounts');
+const mongoose = require('mongoose')
+const OnOpeneds = mongoose.model('OnOpeneds')
+const OnSyncheds = mongoose.model('OnSyncheds')
+const ItemCounts = mongoose.model('ItemCounts')
 
 module.exports = {
 
@@ -15,19 +15,19 @@ module.exports = {
      */
     addOnOpened: function (req, res) {
         OnOpeneds.create(req.body, function (err, response){
-            var result = {
+            const result = {
                 status: 201,
                 message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err){
+                result.status = 500
+                result.message = err
+            } else if (!response){
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     },
 
     /**
@@ -37,19 +37,19 @@ module.exports = {
      */
     addOnSynched: function (req, res) {
         OnSyncheds.create(req.body, function (err, response){
-            var result = {
+            const result = {
                 status: 201,
                 message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err){
+                result.status = 500
+                result.message = err
+            } else if (!response){
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     },
 
     /**
@@ -59,19 +59,19 @@ module.exports = {
      */
     addItemsCount: function (req, res) {
         ItemCounts.create(req.body, function (err, response){
-            var result = {
+            const result = {
                 status: 201,
                 message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err){
+                result.status = 500
+                result.message = err
+            } else if (!response){
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     },
 
     /**
@@ -80,35 +80,35 @@ module.exports = {
      * @param res
      */
     updateFilePath: function (req, res) {
-        var before = req.body.before.replace(/\\/g, '\\').toLowerCase();
-        var after = req.body.after.replace(/\\/g, '\\').toLowerCase();
+        const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
+        const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
         OnOpeneds.update(
             { 'centralPath': before },
             { $set: { 'centralPath' : after }},
-            { multi: true }, function (err, response){
+            { multi: true }, function (_err, _response){
                 OnSyncheds.update(
                     { 'centralPath': before },
                     { $set: { 'centralPath' : after }},
-                    { multi: true }, function (err, response){
+                    { multi: true }, function (_err, _response){
                         ItemCounts.update(
                             { 'centralPath': before },
                             { $set: { 'centralPath' : after }},
                             { multi: true }, function (err, response){
-                                var result = {
+                                const result = {
                                     status: 201,
                                     message: response
-                                };
-                                if (err){
-                                    result.status = 500;
-                                    result.message = err;
-                                } else if (!response){
-                                    result.status = 404;
-                                    result.message = err;
                                 }
-                                res.status(result.status).json(result.message);
-                            });
-                    });
-            });
+                                if (err){
+                                    result.status = 500
+                                    result.message = err
+                                } else if (!response){
+                                    result.status = 404
+                                    result.message = err
+                                }
+                                res.status(result.status).json(result.message)
+                            })
+                    })
+            })
     },
 
     /**
@@ -117,24 +117,24 @@ module.exports = {
      * @param res
      */
     getWorksetsData: function(req, res){
-        var limit = 200;
-        var pipeline = [];
-        var from = new Date(req.body.from);
-        var to = new Date(req.body.to);
+        const limit = 200
+        let pipeline = []
+        const from = new Date(req.body.from)
+        const to = new Date(req.body.to)
 
-        if(!req.body.from || !req.body.to){
+        if (!req.body.from || !req.body.to){
             pipeline = [
                 { $match: { 'centralPath': req.body.centralPath }},
                 { $sort: { '_id': -1 }},
                 { $limit: limit }
-            ];
+            ]
         } else {
             pipeline = [
                 { $match: { $and: [
                     { 'centralPath': req.body.centralPath },
                     { 'createdOn': { $gte: from, $lte: to }}
                 ]}}
-            ];
+            ]
         }
 
         OnOpeneds.aggregate([
@@ -163,19 +163,19 @@ module.exports = {
             }},
             { $project: { 'onOpened': 1, 'onSynched': 1, 'itemCount': 1 }}
         ]).exec(function (err, response){
-            var result = {
+            const result = {
                 status: 201,
                 message: response
-            };
-            if (err) {
-                result.status = 500;
-                result.message = err;
-            } else if (!response) {
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err) {
+                result.status = 500
+                result.message = err
+            } else if (!response) {
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     }
-};
+}
 

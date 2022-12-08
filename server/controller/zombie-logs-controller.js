@@ -1,10 +1,10 @@
 /**
  * Created by konrad.sobon on 2018-07-27.
  */
-var mongoose = require('mongoose');
-var ZombieLogs = mongoose.model('ZombieLogs');
+const mongoose = require('mongoose')
+const ZombieLogs = mongoose.model('ZombieLogs')
 
-ZombieLogsService = {
+const ZombieLogsService = {
     /**
      * Creates a Log entry for ZombieService.
      * @param req
@@ -13,19 +13,19 @@ ZombieLogsService = {
     add: function(req, res){
         ZombieLogs
             .create(req.body, function (err, response){
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -39,19 +39,19 @@ ZombieLogsService = {
             .sort({'_id': -1})
             .limit(500)
             .exec(function (err, response){
-                var result = {
+                const result = {
                     status: 200,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
-            });
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
+            })
     },
 
     /**
@@ -60,54 +60,54 @@ ZombieLogsService = {
      * @param res
      */
     getByDate : function(req, res){
-        var from = new Date(req.body.from);
-        var to = new Date(req.body.to);
-        var office = req.body.office;
+        const from = new Date(req.body.from)
+        const to = new Date(req.body.to)
+        const office = req.body.office
         if (office.name === 'All'){
             ZombieLogs
                 .find(
                     {'createdAt': {'$gte': from, '$lte': to}}
                 )
                 .exec(function (err, response){
-                    var result = {
+                    const result = {
                         status: 201,
                         message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
                     }
-                    res.status(result.status).json(result.message);
-                });
+                    if (err){
+                        result.status = 500
+                        result.message = err
+                    } else if (!response){
+                        result.status = 404
+                        result.message = err
+                    }
+                    res.status(result.status).json(result.message)
+                })
         } else {
-            var regex = [];
+            const regex = []
             office.code.forEach(function (item) {
-                var ex = new RegExp('^' + item, 'i');
-                regex.push(ex);
-            });
+                const ex = new RegExp('^' + item, 'i')
+                regex.push(ex)
+            })
             ZombieLogs
                 .find(
                     {'createdAt': {'$gte': from, '$lte': to}, 'machine': {'$in': regex}}
                 )
                 .exec(function (err, response){
-                    var result = {
+                    const result = {
                         status: 201,
                         message: response
-                    };
-                    if (err){
-                        result.status = 500;
-                        result.message = err;
-                    } else if (!response){
-                        result.status = 404;
-                        result.message = err;
                     }
-                    res.status(result.status).json(result.message);
-                });
+                    if (err){
+                        result.status = 500
+                        result.message = err
+                    } else if (!response){
+                        result.status = 404
+                        result.message = err
+                    }
+                    res.status(result.status).json(result.message)
+                })
         }
     }
-};
+}
 
-module.exports = ZombieLogsService;
+module.exports = ZombieLogsService

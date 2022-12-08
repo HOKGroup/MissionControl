@@ -1,8 +1,8 @@
 /**
  * Created by konrad.sobon on 2018-09-13.
  */
-var mongoose = require('mongoose');
-var Users = mongoose.model('Users');
+const mongoose = require('mongoose')
+const Users = mongoose.model('Users')
 
 module.exports = {
     /**
@@ -15,20 +15,20 @@ module.exports = {
             { 'user': req.body.user },
             { $set: { 'machine': req.body.machine }},
             { upsert: true }, function (err, response) {
-                var result = {
+                const result = {
                     status: 201,
                     message: response
-                };
-                if (err){
-                    result.status = 500;
-                    result.message = err;
-                } else if (!response){
-                    result.status = 404;
-                    result.message = err;
                 }
-                res.status(result.status).json(result.message);
+                if (err){
+                    result.status = 500
+                    result.message = err
+                } else if (!response){
+                    result.status = 404
+                    result.message = err
+                }
+                res.status(result.status).json(result.message)
             }
-        );
+        )
     },
 
     /**
@@ -38,18 +38,18 @@ module.exports = {
      */
     getAll: function (req, res) {
         Users.find({}, function (err, response) {
-            var result = {
+            const result = {
                 status: 200,
                 message: response
-            };
-            if (err){
-                result.status = 500;
-                result.message = err;
-            } else if (!response){
-                result.status = 404;
-                result.message = err;
             }
-            res.status(result.status).json(result.message);
-        });
+            if (err){
+                result.status = 500
+                result.message = err
+            } else if (!response){
+                result.status = 404
+                result.message = err
+            }
+            res.status(result.status).json(result.message)
+        })
     }
-};
+}

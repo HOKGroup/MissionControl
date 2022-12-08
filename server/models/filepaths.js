@@ -1,9 +1,9 @@
 /**
  * Created by konrad.sobon on 2018-08-30.
  */
-var mongoose = require( 'mongoose' )
+const mongoose = require('mongoose')
 
-var schema = new mongoose.Schema(
+const schema = new mongoose.Schema(
     {
         centralPath: { type: String },
         projectId: { type: mongoose.Schema.Types.ObjectId, default: null },
@@ -16,4 +16,5 @@ var schema = new mongoose.Schema(
 )
 
 schema.index({ 'centralPath': 'text' })
-var FilePaths = mongoose.model( 'FilePaths', schema )
+const FilePaths = mongoose.model( 'FilePaths', schema )
+module.exports = FilePaths

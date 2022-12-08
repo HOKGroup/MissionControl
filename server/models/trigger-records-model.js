@@ -1,6 +1,6 @@
-var mongoose = require( 'mongoose' )
+const mongoose = require('mongoose')
 
-var triggerRecordSchema = new mongoose.Schema(
+const triggerRecordSchema = new mongoose.Schema(
     {
         centralPath: String,
         triggerRecords: [{
@@ -14,4 +14,5 @@ var triggerRecordSchema = new mongoose.Schema(
 )
 
 triggerRecordSchema.index({'centralPath': 'text'})
-module.exports = mongoose.model( 'TriggerRecord', triggerRecordSchema )
+const TriggerRecord = mongoose.model( 'TriggerRecord', triggerRecordSchema )
+module.exports = TriggerRecord

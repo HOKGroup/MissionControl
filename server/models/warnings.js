@@ -1,9 +1,9 @@
 /**
  * Created by konrad.sobon on 2018-08-16.
  */
-var mongoose = require( 'mongoose' )
+const mongoose = require('mongoose')
 
-var warningsSchema = new mongoose.Schema(
+const warningsSchema = new mongoose.Schema(
     {
         centralPath: String,
         failingElements: [String],
@@ -22,4 +22,5 @@ var warningsSchema = new mongoose.Schema(
 )
 
 warningsSchema.index({'centralPath': 'text'})
-var Warnings = mongoose.model( 'Warnings', warningsSchema )
+const Warnings = mongoose.model( 'Warnings', warningsSchema )
+module.exports = Warnings
