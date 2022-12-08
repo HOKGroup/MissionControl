@@ -1,21 +1,21 @@
 /**
  * Created by konrad.sobon on 2019-05-02.
  */
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
 
 var UserLocationSources = Object.freeze({
     MachineName: 'MachineName'
-});
+})
 
 var TempLocationSources = Object.freeze({
     MachineName: 'MachineName'
-});
+})
 
 var ProjectInfoSources = Object.freeze({
     FilePath: 'FilePath',
     //TODO: Add ProjectInfo so that we allow user to extract name, number, location 
     //from Revit's Project Info class.
-});
+})
 
 var projectInfoSchema = new mongoose.Schema(
     {
@@ -37,7 +37,7 @@ var projectInfoSchema = new mongoose.Schema(
         }
     },
     { _id: false }
-);
+)
 
 var userLocationSchema = new mongoose.Schema(
     {
@@ -50,7 +50,7 @@ var userLocationSchema = new mongoose.Schema(
         group: Number
     },
     { _id: false }
-);
+)
 
 var tempLocationSchema = new mongoose.Schema(
     {
@@ -62,7 +62,7 @@ var tempLocationSchema = new mongoose.Schema(
         tempPath: String
     },
     { _id: false }
-);
+)
 
 var officeSchema = new mongoose.Schema(
     {
@@ -70,7 +70,7 @@ var officeSchema = new mongoose.Schema(
         code: [String]
     },
     { _id: false }
-);
+)
 
 var settingsSchema = new mongoose.Schema(
     {
@@ -78,7 +78,7 @@ var settingsSchema = new mongoose.Schema(
         name: {
             type: String,
             default: 'Settings',
-            set: function () { return 'Settings'; }
+            set: function () { return 'Settings' }
         },
         offices: {
             type: [officeSchema],
@@ -147,7 +147,7 @@ var settingsSchema = new mongoose.Schema(
             }
         }
     }
-);
+)
 
 /**
  * Static function for either finding the settings instance or creating a new one.
@@ -155,12 +155,12 @@ var settingsSchema = new mongoose.Schema(
  * since name is set to be read only. 
  */
 settingsSchema.statics.findOneOrCreate = function findOneOrCreate(condition, callback) {
-    var self = this;
+    var self = this
     self.findOne(condition, function (err, result) {
-        return result ? callback(err, result) : self.create(condition, function (err, result) { return callback(err, result); });
-    });
-};
+        return result ? callback(err, result) : self.create(condition, function (err, result) { return callback(err, result) })
+    })
+}
 
-Object.assign(settingsSchema.statics, UserLocationSources);
+Object.assign(settingsSchema.statics, UserLocationSources)
 
-mongoose.model('Settings', settingsSchema);
+mongoose.model('Settings', settingsSchema)

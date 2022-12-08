@@ -1,7 +1,7 @@
 /**
  * Created by konrad.sobon on 2018-04-24.
  */
-var mongoose = require( 'mongoose' );
+var mongoose = require( 'mongoose' )
 
 var stylesSchema = new mongoose.Schema(
     {
@@ -50,7 +50,7 @@ var stylesSchema = new mongoose.Schema(
             }]
         }]
     }
-);
+)
 
-stylesSchema.index({'centralPath': 'text'});
-var Styles = mongoose.model( 'Styles', stylesSchema );
+stylesSchema.index({'centralPath': 'text'})
+var Styles = mongoose.model( 'Styles', stylesSchema )

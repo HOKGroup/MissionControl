@@ -1,7 +1,7 @@
 /**
  * Created by konrad.sobon on 2018-08-16.
  */
-var mongoose = require( 'mongoose' );
+var mongoose = require( 'mongoose' )
 
 var warningsSchema = new mongoose.Schema(
     {
@@ -19,7 +19,7 @@ var warningsSchema = new mongoose.Schema(
     {
         timestamps: true
     }
-);
+)
 
-warningsSchema.index({'centralPath': 'text'});
-var Warnings = mongoose.model( 'Warnings', warningsSchema );
+warningsSchema.index({'centralPath': 'text'})
+var Warnings = mongoose.model( 'Warnings', warningsSchema )

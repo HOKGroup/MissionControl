@@ -1,7 +1,7 @@
 /**
  * Created by konrad.sobon on 2018-05-16.
  */
-var mongoose = require( 'mongoose' );
+var mongoose = require( 'mongoose' )
 
 var groupsSchema = new mongoose.Schema(
     {
@@ -20,7 +20,7 @@ var groupsSchema = new mongoose.Schema(
             }]
         }]
     }
-);
+)
 
-groupsSchema.index({'centralPath': 'text'});
-var Groups = mongoose.model( 'Groups', groupsSchema );
+groupsSchema.index({'centralPath': 'text'})
+var Groups = mongoose.model( 'Groups', groupsSchema )

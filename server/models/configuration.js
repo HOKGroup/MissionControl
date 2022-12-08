@@ -1,4 +1,4 @@
-var mongoose = require( 'mongoose' );
+var mongoose = require( 'mongoose' )
 
 var configSchema = new mongoose.Schema(
     {
@@ -12,7 +12,7 @@ var configSchema = new mongoose.Schema(
             addInName: String,
             filePath: String,
             isMonitorOn: Boolean
-		}, // shared param file path monitor
+        }, // shared param file path monitor
         updaters: [{
             updaterId: String,
             updaterName: String,
@@ -42,8 +42,8 @@ var configSchema = new mongoose.Schema(
         }]
     },
     { timestamps: true }
-);
+)
 
-configSchema.index({'files.centralPath': 'text'});
-var Configuration = mongoose.model( 'Configuration', configSchema );
+configSchema.index({'files.centralPath': 'text'})
+var _Configuration = mongoose.model( 'Configuration', configSchema )
 

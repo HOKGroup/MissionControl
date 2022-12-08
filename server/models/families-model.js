@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
 
 var familiesSchema = new mongoose.Schema({
     centralPath: String,
@@ -34,8 +34,8 @@ var familiesSchema = new mongoose.Schema({
             isSelected: Boolean
         }]
     }]
-});
+})
 
-familiesSchema.index({'centralPath': 'text'});
-familiesSchema.index({'families.tasks.assignedTo': 'text'});
-mongoose.model('Families', familiesSchema);
+familiesSchema.index({'centralPath': 'text'})
+familiesSchema.index({'families.tasks.assignedTo': 'text'})
+mongoose.model('Families', familiesSchema)

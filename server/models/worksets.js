@@ -1,7 +1,7 @@
 /**
  * Created by konrad.sobon on 2018-09-10.
  */
-var mongoose = require( 'mongoose' );
+var mongoose = require( 'mongoose' )
 
 var openSynchSchema = new mongoose.Schema(
     {
@@ -11,7 +11,7 @@ var openSynchSchema = new mongoose.Schema(
         closed: Number,
         createdOn: Date
     }
-);
+)
 
 var itemCountSchema = new mongoose.Schema(
     {
@@ -23,10 +23,10 @@ var itemCountSchema = new mongoose.Schema(
             count: Number
         }]
     }
-);
+)
 
-openSynchSchema.index({'centralPath': 'text'});
-itemCountSchema.index({'centralPath': 'text'});
-var OnOpeneds = mongoose.model( 'OnOpeneds', openSynchSchema );
-var OnSyncheds = mongoose.model( 'OnSyncheds', openSynchSchema );
-var ItemCounts = mongoose.model( 'ItemCounts', itemCountSchema );
+openSynchSchema.index({'centralPath': 'text'})
+itemCountSchema.index({'centralPath': 'text'})
+var OnOpeneds = mongoose.model( 'OnOpeneds', openSynchSchema )
+var OnSyncheds = mongoose.model( 'OnSyncheds', openSynchSchema )
+var ItemCounts = mongoose.model( 'ItemCounts', itemCountSchema )

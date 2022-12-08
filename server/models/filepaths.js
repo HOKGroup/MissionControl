@@ -1,7 +1,7 @@
 /**
  * Created by konrad.sobon on 2018-08-30.
  */
-var mongoose = require( 'mongoose' );
+var mongoose = require( 'mongoose' )
 
 var schema = new mongoose.Schema(
     {
@@ -13,7 +13,7 @@ var schema = new mongoose.Schema(
         projectName: { type: String, default: '' },
         fileLocation: { type: String, default: '' }
     }
-);
+)
 
-schema.index({ 'centralPath': 'text' });
-var FilePaths = mongoose.model( 'FilePaths', schema );
+schema.index({ 'centralPath': 'text' })
+var FilePaths = mongoose.model( 'FilePaths', schema )

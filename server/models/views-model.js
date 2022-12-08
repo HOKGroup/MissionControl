@@ -1,7 +1,7 @@
 /**
  * Created by konrad.sobon on 2018-04-24.
  */
-var mongoose = require( 'mongoose' );
+var mongoose = require( 'mongoose' )
 
 var viewsSchema = new mongoose.Schema(
     {
@@ -17,7 +17,7 @@ var viewsSchema = new mongoose.Schema(
             createdOn: Date
         }]
     }
-);
+)
 
-viewsSchema.index({'centralPath': 'text'});
-var Views = mongoose.model( 'Views', viewsSchema );
+viewsSchema.index({'centralPath': 'text'})
+var Views = mongoose.model( 'Views', viewsSchema )

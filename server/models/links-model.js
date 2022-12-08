@@ -1,7 +1,7 @@
 /**
  * Created by konrad.sobon on 2018-04-24.
  */
-var mongoose = require( 'mongoose' );
+var mongoose = require( 'mongoose' )
 
 var linksSchema = new mongoose.Schema(
     {
@@ -22,7 +22,7 @@ var linksSchema = new mongoose.Schema(
             createdOn: Date
         }]
     }
-);
+)
 
-linksSchema.index({'centralPath': 'text'});
-var Links = mongoose.model( 'Links', linksSchema );
+linksSchema.index({'centralPath': 'text'})
+var Links = mongoose.model( 'Links', linksSchema )

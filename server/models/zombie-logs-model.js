@@ -1,7 +1,7 @@
 /**
  * Created by konrad.sobon on 2018-07-27.
  */
-var mongoose = require( 'mongoose' );
+var mongoose = require( 'mongoose' )
 
 var zombieLogsSchema = new mongoose.Schema(
     {
@@ -13,7 +13,7 @@ var zombieLogsSchema = new mongoose.Schema(
         exception: {type: String, default: ''},
         source: {type: String, default: ''}
     }
-);
+)
 
-zombieLogsSchema.index({'machine': 'text'});
-var ZombieLogs = mongoose.model( 'ZombieLogs', zombieLogsSchema );
+zombieLogsSchema.index({'machine': 'text'})
+var ZombieLogs = mongoose.model( 'ZombieLogs', zombieLogsSchema )

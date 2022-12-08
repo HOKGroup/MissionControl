@@ -1,7 +1,7 @@
 /**
  * Created by konrad.sobon on 2017-10-23.
  */
-var mongoose = require( 'mongoose' );
+var mongoose = require( 'mongoose' )
 
 var sheetItemSchema = new mongoose.Schema({
     name: String,
@@ -33,7 +33,7 @@ var sheetItemSchema = new mongoose.Schema({
         submittedBy: String,
         completedBy: String
     }]
-});
+})
 
 var revisionItemSchema = new mongoose.Schema({
     description: String,
@@ -43,7 +43,7 @@ var revisionItemSchema = new mongoose.Schema({
     issuedTo: String,
     issuedBy: String,
     uniqueId: String
-});
+})
 
 
 var sheetsSchema = new mongoose.Schema(
@@ -52,7 +52,7 @@ var sheetsSchema = new mongoose.Schema(
         sheets: [sheetItemSchema],
         revisions: [revisionItemSchema]
     }
-);
+)
 
-sheetsSchema.index({'centralPath': 'text'});
-var Sheets = mongoose.model( 'Sheets', sheetsSchema );
+sheetsSchema.index({'centralPath': 'text'})
+var Sheets = mongoose.model( 'Sheets', sheetsSchema )

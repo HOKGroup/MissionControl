@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
 
 var addinsSchema = new mongoose.Schema(
     {
@@ -14,7 +14,7 @@ var addinsSchema = new mongoose.Schema(
             }
         ]
     }
-);
+)
 
-addinsSchema.index({'revitVersion': 'text'});
-mongoose.model('Addins', addinsSchema);
+addinsSchema.index({'revitVersion': 'text'})
+mongoose.model('Addins', addinsSchema)

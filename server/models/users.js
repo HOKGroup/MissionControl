@@ -1,7 +1,7 @@
 /**
  * Created by konrad.sobon on 2018-09-13.
  */
-var mongoose = require( 'mongoose' );
+var mongoose = require( 'mongoose' )
 
 var schema = new mongoose.Schema(
     {
@@ -11,7 +11,7 @@ var schema = new mongoose.Schema(
     {
         timestamps: true
     }
-);
+)
 
-schema.index({'user': 'text'});
-var Users = mongoose.model( 'Users', schema );
+schema.index({'user': 'text'})
+var Users = mongoose.model( 'Users', schema )

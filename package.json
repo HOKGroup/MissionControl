@@ -6,8 +6,8 @@
   "main": "server.js",
   "license": "MIT",
   "scripts": {
-    "start": "node server.js",
-    "serve": "nodemon server.js"
+    "start": "node server/main.js",
+    "serve": "nodemon server/main.js"
   },
   "dependencies": {
     "@azure/msal-angularjs": "^0.1.1",
