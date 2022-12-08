@@ -1,3 +1,40 @@
+const project = require('./models/project')
+const configuration = require('./models/configuration')
+const triggerrecords = require('./models/trigger-records-model')
+const addins = require('./models/addins-model')
+const families = require('./models/families-model')
+const sheets = require('./models/sheets-model')
+const worksets = require('./models/worksets')
+const styles = require('./models/styles-model')
+const links = require('./models/links-model')
+const views = require('./models/views-model')
+const groups = require('./models/groups-model')
+const warnings = require('./models/warnings')
+const zombieLogs = require('./models/zombie-logs-model')
+const filePaths = require('./models/filepaths')
+const models = require('./models/models')
+const users = require('./models/users')
+const settings = require('./models/settings')
+// eslint-disable-next-line no-unused-vars
+const MongooseModels = {
+    project,
+    configuration,
+    triggerrecords,
+    addins,
+    families,
+    sheets,
+    worksets,
+    styles,
+    links,
+    views,
+    groups,
+    warnings,
+    zombieLogs,
+    filePaths,
+    models,
+    users,
+    settings
+}
 const auth = require('./auth/azure-ad')
 
 module.exports = function(app) {
