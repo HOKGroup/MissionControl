@@ -88,6 +88,9 @@ global.io.on('connection', (socket) => {
         socket.join(room)
         console.log('Client has joined the room!')
     })
+    socket.on('error', (err) => {
+        console.log(err)
+    })
     socket.once('disconnect', (_client) => {
         console.log('Client has left the room!')
     })
