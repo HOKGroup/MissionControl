@@ -50,7 +50,7 @@ const FamiliesService = {
     update: function(req, res) {
         const id = req.params.id
         Families
-            .update({ '_id': id }, req.body, { upsert: true }, function (err, response){
+            .updateOne({ '_id': id }, req.body, { upsert: true }, function (err, response){
                 const result = {
                     status: 201,
                     message: response
@@ -75,9 +75,10 @@ const FamiliesService = {
         const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
         const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
         Families
-            .update(
+            .updateMany(
                 { 'centralPath': before },
-                { '$set': { 'centralPath' : after }}, function (err, response){
+                { '$set': { 'centralPath' : after }}, 
+                { multi: true }, function (err, response){
                     const result = {
                         status: 201,
                         message: response

@@ -36,7 +36,7 @@ const StylesService = {
     styleStats: function (req, res) {
         const id = req.params.id
         Styles
-            .update(
+            .updateOne(
                 { '_id': id },
                 { '$push': { 'styleStats': req.body}}, function (err, response){
                     const result = {
@@ -63,9 +63,10 @@ const StylesService = {
         const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
         const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
         Styles
-            .update(
+            .updateMany(
                 { 'centralPath': before },
-                { '$set': { 'centralPath' : after }}, function (err, response){
+                { '$set': { 'centralPath' : after }}, 
+                { multi: true }, function (err, response){
                     const result = {
                         status: 201,
                         message: response

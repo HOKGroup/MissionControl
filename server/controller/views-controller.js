@@ -70,7 +70,7 @@ const ViewsService = {
     viewStats: function (req, res) {
         const id = req.params.id
         Views
-            .update(
+            .updateOne(
                 { '_id': id },
                 { '$push': { 'viewStats': req.body }}, function (err, response){
                     const result = {
@@ -97,9 +97,10 @@ const ViewsService = {
         const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
         const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
         Views
-            .update(
+            .updateMany(
                 { 'centralPath': before },
-                { '$set': { 'centralPath' : after }}, function (err, response){
+                { '$set': { 'centralPath' : after }}, 
+                { multi: true }, function (err, response){
                     const result = {
                         status: 201,
                         message: response

@@ -132,7 +132,7 @@ const ProjectService = {
     update : function(req, res) {
         const id = req.params.id
         Project
-            .update(
+            .updateOne(
                 { '_id': id },
                 req.body,
                 { upsert: true }, function (err, response){
@@ -160,7 +160,7 @@ const ProjectService = {
         const projectId = req.params.id
         const configId = req.params.configid
         Project
-            .update(
+            .updateOne(
                 { '_id': projectId},
                 { $pull: { 'configurations': configId }},function (err, response){
                     const result = {
@@ -189,7 +189,7 @@ const ProjectService = {
             return mongoose.Types.ObjectId(item)
         })
         Project
-            .update(
+            .updateOne(
                 { '_id': projectId },
                 { $pull: { 'triggerRecords': { $in: ids }}}, function (err, response){
                     const result = {
@@ -216,7 +216,7 @@ const ProjectService = {
         const projectId = req.params.id
         const configId = req.params.configid
         Project
-            .update(
+            .updateOne(
                 { '_id': projectId},
                 { $push:{ 'configurations': configId }}, function (err, response){
                     const result = {
@@ -243,7 +243,7 @@ const ProjectService = {
         const projectId = req.params.id
         const worksetId = mongoose.Types.ObjectId(req.body['id'])
         Project
-            .update(
+            .updateOne(
                 { '_id': projectId},
                 { $push:{ 'worksetStats': worksetId }}, function (err, response){
                     const result = {
@@ -270,7 +270,7 @@ const ProjectService = {
         const projectId = req.params.id
         const familiesId = mongoose.Types.ObjectId(req.body['id'])
         Project
-            .update(
+            .updateOne(
                 { '_id': projectId},
                 { $push:{ 'familyStats': familiesId }}, function (err, response){
                     const result = {
@@ -297,7 +297,7 @@ const ProjectService = {
         const projectId = req.params.id
         const stylesId = mongoose.Types.ObjectId(req.body['id'])
         Project
-            .update(
+            .updateOne(
                 { '_id': projectId},
                 { $push:{ 'styleStats': stylesId }}, function (err, response){
                     const result = {
@@ -324,7 +324,7 @@ const ProjectService = {
         const projectId = req.params.id
         const linksId = mongoose.Types.ObjectId(req.body['id'])
         Project
-            .update(
+            .updateOne(
                 { '_id': projectId},
                 { $push:{ 'linkStats': linksId }}, function (err, response){
                     const result = {
@@ -351,7 +351,7 @@ const ProjectService = {
         const projectId = req.params.id
         const linksId = mongoose.Types.ObjectId(req.body['id'])
         Project
-            .update(
+            .updateOne(
                 { '_id': projectId},
                 { $push:{ 'viewStats': linksId }}, function (err, response){
                     const result = {
@@ -378,7 +378,7 @@ const ProjectService = {
         const projectId = req.params.id
         const modelsId = mongoose.Types.ObjectId(req.body['id'])
         Project
-            .update(
+            .updateOne(
                 { '_id': projectId},
                 { $push:{ 'modelStats': modelsId }}, function (err, response){
                     const result = {
@@ -405,7 +405,7 @@ const ProjectService = {
         const projectId = req.params.id
         const sheetsId = mongoose.Types.ObjectId(req.body['id'])
         Project
-            .update(
+            .updateOne(
                 { '_id': projectId },
                 { $push:{ 'sheets': sheetsId }}, function (err, response){
                     const result = {
@@ -432,7 +432,7 @@ const ProjectService = {
         const projectId = req.params.id
         const groupsId = mongoose.Types.ObjectId(req.body['id'])
         Project
-            .update(
+            .updateOne(
                 { '_id': projectId },
                 { $push:{ 'groupStats': groupsId }}, function (err, response){
                     const result = {
@@ -459,7 +459,7 @@ const ProjectService = {
         const projectId = req.params.id
         const trId = mongoose.Types.ObjectId(req.body['id'])
         Project
-            .update(
+            .updateOne(
                 { '_id': projectId },
                 { $push:{ 'triggerRecords': trId }}, function (err, response){
                     const result = {

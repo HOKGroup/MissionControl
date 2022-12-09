@@ -34,7 +34,7 @@ module.exports = {
      */
     groupStats: function (req, res) {
         const id = req.params.id
-        Groups.update(
+        Groups.updateOne(
             { '_id': id },
             { '$push': { 'groupStats': req.body}}, function (err, response){
                 const result = {
@@ -60,9 +60,10 @@ module.exports = {
     updateFilePath: function (req, res) {
         const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
         const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
-        Groups.update(
+        Groups.updateMany(
             { 'centralPath': before },
-            { '$set': { 'centralPath' : after }}, function (err, response){
+            { '$set': { 'centralPath' : after }}, 
+            { multi: true }, function (err, response){
                 const result = {
                     status: 201,
                     message: response

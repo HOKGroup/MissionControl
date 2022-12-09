@@ -11,7 +11,7 @@ module.exports = {
      * @param res
      */
     add: function (req, res) {
-        Users.update(
+        Users.updateOne(
             { 'user': req.body.user },
             { $set: { 'machine': req.body.machine }},
             { upsert: true }, function (err, response) {

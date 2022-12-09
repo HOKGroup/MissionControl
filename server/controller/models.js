@@ -110,15 +110,15 @@ module.exports = {
     updateFilePath: function (req, res) {
         const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
         const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
-        OpenTimes.update(
+        OpenTimes.updateMany(
             { 'centralPath': before },
             { $set: { 'centralPath' : after }},
             { multi: true }, function (_err, _response){
-                SynchTimes.update(
+                SynchTimes.updateMany(
                     { 'centralPath': before },
                     { $set: { 'centralPath': after }},
                     { multi: true }, function (_err, _response) {
-                        ModelSizes.update(
+                        ModelSizes.updateMany(
                             { 'centralPath': before },
                             { $set: { 'centralPath': after }},
                             { multi: true }, function (err, response) {

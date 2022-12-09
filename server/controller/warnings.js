@@ -63,7 +63,7 @@ const WarningsService = {
      * @param res
      */
     update: function(req, res){
-        Warnings.update(
+        Warnings.updateMany(
             {'centralPath': req.body.centralPath, 'isOpen': true, 'uniqueId': {$nin: req.body.existingWarningIds}},
             {$set: {'isOpen': false, 'closedBy': req.body.closedBy, 'closedAt': Date.now()}},
             {multi: true}, function (err, response){
@@ -250,7 +250,7 @@ const WarningsService = {
     updateFilePath: function (req, res) {
         const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
         const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
-        Warnings.update(
+        Warnings.updateMany(
             { 'centralPath': before },
             { $set: { 'centralPath': after }},
             { multi: true }, function (err, response){

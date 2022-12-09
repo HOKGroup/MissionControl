@@ -98,7 +98,7 @@ const TriggerRecordService = {
     postTriggerRecord: function (req, res) {
         const id = req.params.id
         TriggerRecord
-            .update(
+            .updateOne(
                 {'_id': id},
                 {$push: {'triggerRecords': req.body}}, function (err, response) {
                     const result = {
@@ -167,9 +167,10 @@ const TriggerRecordService = {
         const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
         const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
         TriggerRecord
-            .update(
+            .updateMany(
                 {'centralPath': before},
-                {'$set': {'centralPath': after}}, function (err, response) {
+                {'$set': {'centralPath': after}}, 
+                { multi: true } , function (err, response) {
                     const result = {
                         status: 201,
                         message: response

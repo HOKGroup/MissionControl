@@ -53,9 +53,10 @@ const SheetsServices = {
         const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
         const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
         Sheets
-            .update(
+            .updateMany(
                 {'centralPath': before},
-                {'$set': {'centralPath' : after}}, function (err, response){
+                {'$set': {'centralPath' : after}}, 
+                { multi: true }, function (err, response){
                     const result = {
                         status: 201,
                         message: response
@@ -218,7 +219,7 @@ const SheetsServices = {
      */
     deleteNewSheet: function (req, res) {
         Sheets
-            .update(
+            .updateOne(
                 { _id: req.params.id},
                 { $pull:{ 'sheets': { '_id': req.body.sheetId }}}, function(err){
                     if (err) {

@@ -82,15 +82,15 @@ module.exports = {
     updateFilePath: function (req, res) {
         const before = req.body.before.replace(/\\/g, '\\').toLowerCase()
         const after = req.body.after.replace(/\\/g, '\\').toLowerCase()
-        OnOpeneds.update(
+        OnOpeneds.updateMany(
             { 'centralPath': before },
             { $set: { 'centralPath' : after }},
             { multi: true }, function (_err, _response){
-                OnSyncheds.update(
+                OnSyncheds.updateMany(
                     { 'centralPath': before },
                     { $set: { 'centralPath' : after }},
                     { multi: true }, function (_err, _response){
-                        ItemCounts.update(
+                        ItemCounts.updateMany(
                             { 'centralPath': before },
                             { $set: { 'centralPath' : after }},
                             { multi: true }, function (err, response){

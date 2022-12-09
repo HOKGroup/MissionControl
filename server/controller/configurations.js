@@ -70,7 +70,7 @@ const ConfigurationService = {
     update: function(req, res) {
         const id = req.params.id
         Configuration
-            .update(
+            .updateOne(
                 { '_id': id }, req.body, { upsert: true }, function (err, response){
                     const result = {
                         status: 201,
@@ -171,7 +171,7 @@ const ConfigurationService = {
     updateFilePath: function (req, res) {
         const id = req.params.id
         Configuration
-            .update(
+            .updateOne(
                 {'_id': id, 'files.centralPath': req.body.before.toLowerCase()},
                 {'$set': {'files.$.centralPath' : req.body.after.toLowerCase()}}, function (err, response){
                     const result = {
@@ -197,7 +197,7 @@ const ConfigurationService = {
     addFile: function (req, res) {
         const id = req.params.id
         Configuration
-            .update(
+            .updateOne(
                 { '_id': id },
                 { $push: { 'files': req.body }}, function (err, response){
                     const result = {
@@ -223,7 +223,7 @@ const ConfigurationService = {
     deleteFile: function (req, res) {
         const id = req.params.id
         Configuration
-            .update(
+            .updateOne(
                 { '_id': id },
                 { $pull: { 'files': {'centralPath': req.body.centralPath.toLowerCase()}}}, function (err, response){
                     const result = {
