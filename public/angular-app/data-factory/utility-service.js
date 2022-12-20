@@ -155,7 +155,7 @@ function UtilityService() {
          */
         getHttpSafeFilePath: function (centralPath) {
             var isRevitServer = centralPath.match(/rsn:/i);
-            var isCloudModel = centralPath.match(/^(?!rsn).*:\/\//i);
+            var isCloudModel = centralPath.match(/^(?!rsn).*:[\/|][\/|]/i);
             var rgx;
             if (isRevitServer || isCloudModel) {
                 rgx = centralPath.replace(/\//g, '|').toLowerCase();
