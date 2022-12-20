@@ -14,9 +14,9 @@ const ConfigurationService = {
         // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
         // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.
         const isRevitServer = req.params.uri.match(/rsn:/i)
-        const isBim360 = req.params.uri.match(/bim 360:/i)
+        const isCloudModel = req.params.uri.match(/^(?!rsn).*:\/\//i)
         let rgx
-        if (isRevitServer || isBim360){
+        if (isRevitServer || isCloudModel) {
             rgx = req.params.uri.replace(/\|/g, '/').toLowerCase()
         } else {
             rgx = req.params.uri.replace(/\|/g, '\\').toLowerCase()

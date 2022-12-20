@@ -382,18 +382,18 @@ const FilePathsService = {
                 const dataToFilter = searched ? filtered : response 
                 filtered =  dataToFilter.filter(function(item){
                     const filePath = item.centralPath.toLowerCase()
-                    switch (fileType){
-                    case 'Local': 
-                        return localPathRgx.some(function(pattern) { 
-                            const rgx = new RegExp(pattern, 'i')
-                            return rgx.test(filePath) 
-                        })
-                    case 'BIM 360':
-                        return filePath.lastIndexOf('bim 360://', 0) === 0
-                    case 'Revit Server':
-                        return filePath.lastIndexOf('rsn://', 0) === 0
-                    default: // Do not filter
-                        return true
+                    switch (fileType) {
+                        case 'Local': 
+                            return localPathRgx.some(function(pattern) { 
+                                const rgx = new RegExp(pattern, 'i')
+                                return rgx.test(filePath)
+                            });
+                        case 'Revit Server':
+                            return filePath.lastIndexOf('rsn://', 0) === 0
+                        case 'Cloud Model':
+                            return filePath.includes('://')
+                        default: // Do not filter
+                            return true
                     }
                 })
             }

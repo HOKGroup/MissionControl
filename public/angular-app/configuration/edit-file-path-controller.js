@@ -26,11 +26,11 @@ function EditConfigFilePathController($uibModalInstance, ConfigFactory, Families
         // (Konrad) Everything is lower case to make matching easier.
         // Checks if file path is one of the three (3) approved types
         var isLocal = filePath.lastIndexOf('\\\\group\\hok\\', 0) === 0;
-        var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
         var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
+        var isCloudModel = !isRevitServer && filePath.includes('://');
 
-        if(!isLocal && !isBim360 && !isRevitServer){
-            vm.warning = 'File Path must be either Local, BIM 360 or Revit Server.';
+        if(!isLocal && !isCloudModel && !isRevitServer){
+            vm.warning = 'File Path must be either Local, Cloud Model or Revit Server.';
             return;
         }
 
