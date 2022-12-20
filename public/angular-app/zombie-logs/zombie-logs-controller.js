@@ -29,6 +29,7 @@ function ZombieLogsController(ZombieLogsFactory, UsersFactory, DTOptionsBuilder,
     };
     vm.popup1 = { opened: false };
     vm.popup2 = { opened: false };
+    vm.users = {};
 
     getSettings();
     getUsers();

@@ -21,7 +21,7 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
     vm.files = [];
     vm.settings = null;
     vm.selectedOffice = { name: 'All', code: 'All' };
-    vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'BIM 360'];
+    vm.fileTypes = [ 'All', 'Local', 'Revit Server', 'Cloud Model'];
     vm.selectedType = 'All';
     vm.revitVersions = UtilityService.getRevitVersions();
     vm.selectedRevitVersion = 'All';
@@ -50,11 +50,11 @@ function AddConfigController($routeParams, ConfigFactory, ProjectFactory, FilePa
             var rgx = new RegExp(pattern, 'i');
             return rgx.test(filePath); 
         });
-        var isBim360 = filePath.lastIndexOf('bim 360://', 0) === 0;
         var isRevitServer = filePath.lastIndexOf('rsn://', 0) === 0;
+        var isCloudModel = !isRevitServer && filePath.includes('://');
 
-        if(!isLocal && !isBim360 && !isRevitServer) {
-            vm.fileWarningMsg = 'File Path must be either Local, BIM 360 or Revit Server.';
+        if(!isLocal && !isCloudModel && !isRevitServer) {
+            vm.fileWarningMsg = 'File Path must be either Local, Cloud Model or Revit Server.';
             return;
         }
 
