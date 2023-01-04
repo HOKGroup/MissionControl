@@ -19,16 +19,8 @@ steps:
     npm install
   displayName: 'npm install '
 
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(Build.SourcesDirectory)'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
-
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    ArtifactName: 'build'
+    PathtoPublish: '$(Build.SourcesDirectory)'
+    ArtifactName: '$(Build.BuildId)'
     publishLocation: 'Container'
