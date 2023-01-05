@@ -7,7 +7,6 @@
   "license": "MIT",
   "scripts": {
     "start": "node server/main.js",
-    "start:clean": "npm ci && node server/main.js",
     "serve": "nodemon server/main.js"
   },
   "dependencies": {
