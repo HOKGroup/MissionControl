@@ -13,16 +13,7 @@ const FamiliesService = {
      * @param res
      */
     findByCentralPath: function(req, res) {
-        // (Konrad) Since we cannot pass file path with "\" they were replaced with illegal pipe char "|".
-        // (Konrad) RSN and A360 paths will have forward slashes instead of back slashes.
-        const isRevitServer = req.params.uri.match(/rsn:/i)
-        const isCloudModel = req.params.uri.match(/^(?!rsn).*:\/\//i)
-        let rgx
-        if (isRevitServer || isCloudModel) {
-            rgx = req.params.uri.replace(/\|/g, '/').toLowerCase()
-        } else {
-            rgx = req.params.uri.replace(/\|/g, '\\').toLowerCase()
-        }
+        const rgx = global.utilities.uriToString(req.params.uri)
 
         Families
             .find(
