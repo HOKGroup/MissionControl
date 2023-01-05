@@ -1,6 +1,7 @@
 module.exports = {
     name: "server",
-    script: "./server/main.js",
+    script: "npm",
+    args: "start:clean",
     env_production: {
         NODE_ENV: "production"
     },
