@@ -1,4 +1,5 @@
 # User-specific stuff:
+shell.nix
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/dictionaries
