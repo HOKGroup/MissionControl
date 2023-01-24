@@ -1,28 +1,25 @@
 {
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-        "@typescript-eslint",
-        "lean-imports"
-    ],
-    "extends": [
-        "react-app",
-        "react-app/jest",
-        "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "prettier"
-    ],
-    "rules": {
-        "lean-imports/import": [1, [
-            "react-bootstrap"
-        ]],
-        "@typescript-eslint/ban-ts-comment": 1,
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": [
-            "warn",
-            {
-                "varsIgnorePattern": "^_"
-            }
-        ]
-    }
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "lean-imports"],
+  "extends": [
+    "react-app",
+    "react-app/jest",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "lean-imports/import": [1, ["react-bootstrap"]],
+    "@typescript-eslint/ban-ts-comment": 1,
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ]
+  }
 }

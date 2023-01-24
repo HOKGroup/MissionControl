@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
-import { toast } from "react-toastify";
 
 import { apiHooks } from "../api/api";
 import { Office } from "../api/schema/shared";
 import { ZombieLog } from "../api/schema/zombieLogs";
+import { useToastError } from "../effects";
 import Logs from "./zombieLogs/Logs";
 import OfficeFilter from "./zombieLogs/OfficeFilter";
 import Selected from "./zombieLogs/Selected";
@@ -96,6 +96,8 @@ const ZombieLogs: React.FC = () => {
 
   const [donutData, setDonutData] = useState([] as DonutData[]);
 
+  const [selectedMachines, setSelectedMachines] = useState([] as ZombieLog[]);
+
   const {
     data: zombieLogsData,
     isLoading: _zombieLogsIsLoading,
@@ -114,29 +116,15 @@ const ZombieLogs: React.FC = () => {
     error: settingsError,
   } = apiHooks.useGetSettings();
 
-  useEffect(() => {
-    if (zombieLogsError) {
-      toast.error(zombieLogsError.message);
-    }
-  }, [zombieLogsError]);
-
-  useEffect(() => {
-    if (usersError) {
-      toast.error(usersError.message);
-    }
-  }, [usersError]);
-
-  useEffect(() => {
-    if (settingsError) {
-      toast.error(settingsError.message);
-    }
-  }, [settingsError]);
+  useToastError(zombieLogsError);
+  useToastError(usersError);
+  useToastError(settingsError);
 
   useEffect(() => {
     if (zombieLogsData) {
       const temp: Record<string, ZombieLog> = {};
       const donuts: Record<string, number> = {};
-      const fatal = [];
+      const fatal: ZombieLog[] = [];
 
       const logs = zombieLogsData.sort(
         (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
@@ -177,6 +165,7 @@ const ZombieLogs: React.FC = () => {
       });
 
       setDonutData(donutData);
+      setSelectedMachines(fatal);
     }
   }, [zombieLogsData, latestVersion]);
 
@@ -188,7 +177,7 @@ const ZombieLogs: React.FC = () => {
         setSelectedOffice={setSelectedOffice}
       />
       <OfficeFilter selectedOffice={selectedOffice} donutData={donutData} />
-      <Selected />
+      <Selected selectedMachines={selectedMachines} />
     </Container>
   );
 };

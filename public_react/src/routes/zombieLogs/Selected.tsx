@@ -4,7 +4,13 @@ import CardGroup from "react-bootstrap/CardGroup";
 import Collapse from "react-bootstrap/Collapse";
 import Row from "react-bootstrap/Row";
 
-const Selected: React.FC = () => {
+import { ZombieLog } from "../../api/schema/zombieLogs";
+
+interface SelectedProps {
+  selectedMachines: ZombieLog[];
+}
+
+const Selected: React.FC<SelectedProps> = () => {
   const [isCollapsed, setCollapsed] = useState(false);
 
   return (
