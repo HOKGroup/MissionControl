@@ -7,7 +7,7 @@ const Home: React.FC = () => {
   return (
     <Container>
       <Row>
-        <div className="jumbotron">
+        <div className="bg-light p-5 rounded-lg">
           <h1>HOK Mission Control</h1>
           <p>
             This web application has ability to interact with Revit Projects.{" "}

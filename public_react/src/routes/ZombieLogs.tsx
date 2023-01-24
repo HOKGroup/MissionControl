@@ -98,6 +98,8 @@ const ZombieLogs: React.FC = () => {
 
   const [selectedMachines, setSelectedMachines] = useState([] as ZombieLog[]);
 
+  const [users, setUsers] = useState({});
+
   const {
     data: zombieLogsData,
     isLoading: _zombieLogsIsLoading,
@@ -105,7 +107,7 @@ const ZombieLogs: React.FC = () => {
   } = apiHooks.useGetZombieLogs();
 
   const {
-    data: _usersData,
+    data: usersData,
     isLoading: _usersIsLoading,
     error: usersError,
   } = apiHooks.useGetAllUsers();
@@ -169,6 +171,17 @@ const ZombieLogs: React.FC = () => {
     }
   }, [zombieLogsData, latestVersion]);
 
+  useEffect(() => {
+    if (usersData) {
+      const users = usersData.reduce((obj, item) => {
+        obj[item.machine] = item.user;
+        return obj;
+      }, {} as Record<string, string>);
+
+      setUsers(users);
+    }
+  }, [usersData]);
+
   return (
     <Container fluid>
       <Title />
@@ -177,7 +190,7 @@ const ZombieLogs: React.FC = () => {
         setSelectedOffice={setSelectedOffice}
       />
       <OfficeFilter selectedOffice={selectedOffice} donutData={donutData} />
-      <Selected selectedMachines={selectedMachines} />
+      <Selected selectedMachines={selectedMachines} users={users} />
     </Container>
   );
 };

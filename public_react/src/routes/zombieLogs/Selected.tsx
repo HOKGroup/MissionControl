@@ -5,12 +5,14 @@ import Collapse from "react-bootstrap/Collapse";
 import Row from "react-bootstrap/Row";
 
 import { ZombieLog } from "../../api/schema/zombieLogs";
+import MachinesTable from "./MachinesTable";
 
 interface SelectedProps {
   selectedMachines: ZombieLog[];
+  users: Record<string, string>;
 }
 
-const Selected: React.FC<SelectedProps> = () => {
+const Selected: React.FC<SelectedProps> = ({ selectedMachines, users }) => {
   const [isCollapsed, setCollapsed] = useState(false);
 
   return (
@@ -22,7 +24,10 @@ const Selected: React.FC<SelectedProps> = () => {
           </Card.Header>
           <Collapse in={!isCollapsed}>
             <Card.Body>
-              <Card.Text>MACHINES TABLE</Card.Text>
+              <MachinesTable
+                selectedMachines={selectedMachines}
+                users={users}
+              />
             </Card.Body>
           </Collapse>
         </Card>
