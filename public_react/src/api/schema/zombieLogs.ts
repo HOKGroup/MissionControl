@@ -9,7 +9,7 @@ export const zombieLog = z.object({
   machine: z.string(),
   exception: z.string(),
   source: z.string(),
-  __v: z.number(),
+  __v: z.number()
 });
 
 export type ZombieLog = z.infer<typeof zombieLog>;

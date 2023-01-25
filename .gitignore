@@ -1,3 +1,6 @@
+# Certificate file
+wildcardexp2023.pfx
+
 # User-specific stuff:
 shell.nix
 .idea/workspace.xml
@@ -31,6 +34,9 @@ shell.nix
 *.env
 
 ## Plugin-specific files:
+
+# VSCode
+.vscode/
 
 # IntelliJ
 /out/

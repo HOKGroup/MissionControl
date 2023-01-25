@@ -17,56 +17,56 @@ const serverData = [
     name: "My Project",
     number: "1",
     office: "My office",
-    address: "MY address",
+    address: "MY address"
   },
   {
     name: "My Project",
     number: "2",
     office: "My office",
-    address: "MY address",
+    address: "MY address"
   },
   {
     name: "My Project",
     number: "3",
     office: "My office",
-    address: "MY address",
+    address: "MY address"
   },
   {
     name: "My Project",
     number: "4",
     office: "My office",
-    address: "MY address",
+    address: "MY address"
   },
   {
     name: "My Project",
     number: "5",
     office: "My office",
-    address: "MY address",
+    address: "MY address"
   },
   {
     name: "My Project",
     number: "6",
     office: "My office",
-    address: "MY address",
+    address: "MY address"
   },
   {
     name: "My Project",
     number: "7",
     office: "My office",
-    address: "MY address",
+    address: "MY address"
   },
   {
     name: "My Project",
     number: "8",
     office: "My office",
-    address: "MY address",
+    address: "MY address"
   },
   {
     name: "My Project",
     number: "9",
     office: "My office",
-    address: "MY address",
-  },
+    address: "MY address"
+  }
 ];
 
 const Projects: React.FC = () => {

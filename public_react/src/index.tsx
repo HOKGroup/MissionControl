@@ -23,46 +23,46 @@ const router = createHashRouter([
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: <Home />
       },
       {
         path: "/home",
-        element: <Home />,
+        element: <Home />
       },
       {
         path: "/settings",
-        element: <div>SETTINGS</div>,
+        element: <div>SETTINGS</div>
       },
       {
         path: "/projects",
-        element: <Projects />,
+        element: <Projects />
       },
       {
         path: "/file-paths",
-        element: <div>FILE PATHS</div>,
+        element: <div>FILE PATHS</div>
       },
       {
         path: "/addins",
-        element: <div>ADDINS</div>,
+        element: <div>ADDINS</div>
       },
       {
         path: "/zombie-logs",
-        element: <ZombieLogs />,
+        element: <ZombieLogs />
       },
       {
         path: "/projects/add",
-        element: <AddProject />,
-      },
-    ],
-  },
+        element: <AddProject />
+      }
+    ]
+  }
 ]);
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false,
-    },
-  },
+      retry: false
+    }
+  }
 });
 
 const root = ReactDOM.createRoot(

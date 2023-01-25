@@ -1,5 +1,6 @@
-import DataTable, { TableColumn } from "react-data-table-component";
+import { ColumnDef, Row } from "@tanstack/react-table";
 
+import Datatable from "../../Datatable";
 import { ZombieLog } from "../../api/schema/zombieLogs";
 
 const parseLocation = (machine: string) => {
@@ -42,57 +43,43 @@ interface MachinesTableProps {
 
 const MachinesTable: React.FC<MachinesTableProps> = ({
   users,
-  selectedMachines,
+  selectedMachines
 }) => {
-  const columns: TableColumn<ZombieLog>[] = [
+  const columns: ColumnDef<ZombieLog>[] = [
     {
-      name: "Location",
-      selector: (row) => parseLocation(row.machine),
-      sortable: true,
+      header: "Location",
+      accessorFn: (row) => parseLocation(row.machine)
     },
     {
-      name: "Machine",
-      selector: (row) => parseMachine(users, row.machine),
-      sortable: true,
+      header: "Machine",
+      accessorFn: (row) => parseMachine(users, row.machine)
     },
     {
-      name: "User",
-      selector: (row) => parseUsername(users, row.machine),
-      sortable: true,
+      header: "User",
+      accessorFn: (row) => parseUsername(users, row.machine)
     },
     {
-      name: "Message",
-      selector: (row) => row.message,
-      sortable: true,
-    },
+      header: "Message",
+      accessorKey: "message"
+    }
   ];
 
   return (
-    <DataTable
+    <Datatable
       columns={columns}
       data={selectedMachines}
-      pagination
-      conditionalRowStyles={[
-        {
-          when: (row) => row.level === "Info",
-          classNames: ["table-info"],
-        },
-        {
-          when: (row) => row.level === "Error",
-          classNames: ["bg-warning"],
-        },
-        {
-          when: (row) => row.level === "Fatal",
-          classNames: ["bg-danger"],
-        },
-        {
-          when: (row) =>
-            row.level !== "Info" &&
-            row.level !== "Error" &&
-            row.level !== "Fatal",
-          classNames: ["table-info"],
-        },
-      ]}
+      getRowClassNames={(row: Row<ZombieLog>) => {
+        switch (row.original.level) {
+          case "Info":
+            return "table-info";
+          case "Error":
+            return "bg-warning";
+          case "Fatal":
+            return "bg-danger";
+          default:
+            return "table-info";
+        }
+      }}
     />
   );
 };

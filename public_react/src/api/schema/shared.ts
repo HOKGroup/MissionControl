@@ -2,12 +2,12 @@ import { z } from "zod";
 
 export const deleteResponse = z.object({
   acknowledged: z.boolean(),
-  deletedCount: z.number(),
+  deletedCount: z.number()
 });
 
 export const office = z.object({
-  code: z.string(),
-  name: z.string(),
+  code: z.array(z.string()),
+  name: z.string()
 });
 
 export type Office = z.infer<typeof office>;

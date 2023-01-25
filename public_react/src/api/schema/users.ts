@@ -6,7 +6,7 @@ export const user = z.object({
   __v: z.number(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-  machine: z.string(),
+  machine: z.string()
 });
 
 export type User = z.infer<typeof user>;

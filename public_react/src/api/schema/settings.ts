@@ -5,31 +5,31 @@ import { offices } from "./shared";
 export const projectSubInfoDetails = z.object({
   pattern: z.string(),
   match: z.number().int(),
-  group: z.number().int(),
+  group: z.number().int()
 });
 
 export const projectSubInfo = z.object({
   local: projectSubInfoDetails,
   revitServer: projectSubInfoDetails,
-  bimThreeSixty: projectSubInfoDetails,
+  bimThreeSixty: projectSubInfoDetails
 });
 
 export const projectInfo = z.object({
   source: z.string(),
-  projectName: projectSubInfo,
+  projectName: projectSubInfo
 });
 
 export const tempLocation = z.object({
   source: z.string(),
   pattern: z.string(),
-  tempPath: z.string(),
+  tempPath: z.string()
 });
 
 export const userLocation = z.object({
   source: z.string(),
-  patthern: z.string(),
+  pattern: z.string(),
   match: z.number().int(),
-  group: z.number().int(),
+  group: z.number().int()
 });
 
 export const settings = z.object({
@@ -41,7 +41,7 @@ export const settings = z.object({
   projectInfo: projectInfo,
   states: z.array(z.string()),
   tempLocation: tempLocation,
-  userLocation: userLocation,
+  userLocation: userLocation
 });
 
 export type Settings = z.infer<typeof settings>;

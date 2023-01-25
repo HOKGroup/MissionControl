@@ -85,9 +85,9 @@ export interface DonutData {
 }
 
 const ZombieLogs: React.FC = () => {
-  const initialSelectedOffice: Office = {
+  const initialSelectedOffice = {
     name: "All",
-    code: "All",
+    code: "All"
   };
 
   const [selectedOffice, setSelectedOffice] = useState(initialSelectedOffice);
@@ -103,19 +103,19 @@ const ZombieLogs: React.FC = () => {
   const {
     data: zombieLogsData,
     isLoading: _zombieLogsIsLoading,
-    error: zombieLogsError,
+    error: zombieLogsError
   } = apiHooks.useGetZombieLogs();
 
   const {
     data: usersData,
     isLoading: _usersIsLoading,
-    error: usersError,
+    error: usersError
   } = apiHooks.useGetAllUsers();
 
   const {
     data: _settingsData,
     isLoading: _settingsIsLoading,
-    error: settingsError,
+    error: settingsError
   } = apiHooks.useGetSettings();
 
   useToastError(zombieLogsError);
@@ -162,7 +162,7 @@ const ZombieLogs: React.FC = () => {
 
         return {
           name: key,
-          count: donuts[key],
+          count: donuts[key]
         };
       });
 

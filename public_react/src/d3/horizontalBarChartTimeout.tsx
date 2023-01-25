@@ -33,7 +33,7 @@ const HorizontalBarChartTimeout: React.FC<HorizontalBarChartTimeoutProps> = ({
   domainPadding,
   onClick,
   clickable,
-  fillColor,
+  fillColor
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -47,7 +47,7 @@ const HorizontalBarChartTimeout: React.FC<HorizontalBarChartTimeoutProps> = ({
       top: 25,
       right: 30,
       bottom: 25,
-      left: marginLeft,
+      left: marginLeft
     };
 
     const width =

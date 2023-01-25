@@ -6,13 +6,13 @@ import settingsApi from "./endpoints/settings";
 import usersApi from "./endpoints/users";
 import zombieLogsApi from "./endpoints/zombieLogs";
 
-const apiUrl = "api_url";
+const apiUrl = "/api/v2";
 
 const apiClient = new Zodios(apiUrl, [
   ...projectsApi,
   ...zombieLogsApi,
   ...usersApi,
-  ...settingsApi,
+  ...settingsApi
 ]);
 
 const apiHooks = new ZodiosHooks("api", apiClient);

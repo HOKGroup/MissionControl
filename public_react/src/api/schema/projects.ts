@@ -6,7 +6,7 @@ export const address = z.object({
   city: z.optional(z.string()),
   state: z.optional(z.string()),
   zipCode: z.optional(z.string()),
-  country: z.optional(z.string()),
+  country: z.optional(z.string())
 });
 
 export type Address = z.infer<typeof address>;
@@ -29,7 +29,7 @@ export const project = z.object({
   __v: z.number(),
   styleStats: z.array(z.string()),
   groupStats: z.array(z.string()),
-  address: z.optional(address),
+  address: z.optional(address)
 });
 
 export type Project = z.infer<typeof project>;

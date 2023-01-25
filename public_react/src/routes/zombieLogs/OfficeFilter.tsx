@@ -9,13 +9,16 @@ import HorizontalBarChartTimeout from "../../d3/horizontalBarChartTimeout";
 import type { DonutData } from "../ZombieLogs";
 
 interface OfficeFilterProps {
-  selectedOffice: Office;
+  selectedOffice: {
+    name: string;
+    code: string;
+  };
   donutData: DonutData[];
 }
 
 const OfficeFilter: React.FC<OfficeFilterProps> = ({
   selectedOffice,
-  donutData,
+  donutData
 }) => {
   const [isCollapsed, setCollapsed] = useState(false);
 

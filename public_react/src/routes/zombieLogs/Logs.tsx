@@ -9,7 +9,10 @@ import Dropdown from "react-bootstrap/Dropdown";
 import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
 
-import { Office } from "../../api/schema/shared";
+type Office = {
+  name: string;
+  code: string;
+};
 
 interface LogsProps {
   selectedOffice: Office;
