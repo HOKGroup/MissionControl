@@ -1,46 +1,98 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
 import Collapse from "react-bootstrap/Collapse";
 import Row from "react-bootstrap/Row";
+import {
+  Bar,
+  BarChart,
+  Cell,
+  LabelList,
+  ResponsiveContainer,
+  XAxis,
+  YAxis
+} from "recharts";
 
-import { Office } from "../../api/schema/shared";
-import HorizontalBarChartTimeout from "../../d3/horizontalBarChartTimeout";
 import type { DonutData } from "../ZombieLogs";
 
+interface Office {
+  name: string;
+  code: string;
+}
+
 interface OfficeFilterProps {
-  selectedOffice: {
-    name: string;
-    code: string;
-  };
+  officeName: string;
   donutData: DonutData[];
+  handleChartClick: (item: Office) => void;
 }
 
 const OfficeFilter: React.FC<OfficeFilterProps> = ({
-  selectedOffice,
-  donutData
+  officeName,
+  donutData,
+  handleChartClick
 }) => {
   const [isCollapsed, setCollapsed] = useState(false);
+  const [selectedBar, setSelectedBar] = useState(null as string | null);
 
   return (
     <Row>
-      <CardGroup>
+      <CardGroup className="pb-4">
         <Card>
           <Card.Header onClick={() => setCollapsed(!isCollapsed)}>
-            <Card.Title>Office Filter: {selectedOffice.name}</Card.Title>
+            <Card.Title>Office Filter: {officeName}</Card.Title>
           </Card.Header>
           <Collapse in={!isCollapsed}>
             <Card.Body>
-              <HorizontalBarChartTimeout
-                data={donutData}
-                marginLeft="60"
-                domainPadding={10}
-                clickable={true}
-                fillColor="steelblue"
-                countTotal="="
-                axisTop="="
-                onClick={() => console.log("Clicked horizontal bar chart")}
-              />
+              {donutData.length > 0 && (
+                <ResponsiveContainer
+                  width="100%"
+                  height={donutData.length * 60}
+                >
+                  <BarChart
+                    width={500}
+                    height={500}
+                    layout="vertical"
+                    data={donutData}
+                    barSize={17}
+                  >
+                    <XAxis type="number" dataKey="count" />
+                    <YAxis
+                      type="category"
+                      dataKey="name"
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <Bar
+                      dataKey="count"
+                      fill="steelblue"
+                      animationDuration={1_000}
+                      onClick={(data: Office) => {
+                        if (selectedBar === data.name) {
+                          setSelectedBar(null);
+                        } else {
+                          setSelectedBar(data.name);
+                          handleChartClick(data);
+                        }
+                      }}
+                    >
+                      <LabelList
+                        dataKey="count"
+                        position="insideRight"
+                        fill="black"
+                        offset={20}
+                      />
+                      {donutData.map((entry, index) => (
+                        <Cell
+                          key={index}
+                          fill={
+                            entry.name === selectedBar ? "#d9534f" : "steelblue"
+                          }
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
             </Card.Body>
           </Collapse>
         </Card>
@@ -49,4 +101,4 @@ const OfficeFilter: React.FC<OfficeFilterProps> = ({
   );
 };
 
-export default OfficeFilter;
+export default memo(OfficeFilter);

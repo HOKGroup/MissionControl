@@ -1,7 +1,6 @@
 import { makeApi } from "@zodios/core";
+import { user, users } from "api/schema/users";
 import { z } from "zod";
-
-import { user, users } from "../schema/users";
 
 const usersApi = makeApi([
   {

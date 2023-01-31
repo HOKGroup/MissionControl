@@ -1,8 +1,6 @@
 import { makeApi } from "@zodios/core";
+import { zombieLog, zombieLogs } from "api/schema/zombieLogs";
 import { z } from "zod";
-
-import { office } from "../schema/shared";
-import { zombieLog, zombieLogs } from "../schema/zombieLogs";
 
 const zombieLogsApi = makeApi([
   {
@@ -30,18 +28,24 @@ const zombieLogsApi = makeApi([
     ]
   },
   {
-    method: "get",
+    method: "post",
     path: "/zombielogs/filter",
     alias: "getFilteredZombieLogs",
     description: "Get filtered zombie logs",
+    immutable: true,
     parameters: [
       {
-        name: "filter",
+        name: "body",
         type: "Body",
         schema: z.object({
-          from: z.string(),
-          to: z.string(),
-          office: office
+          filter: z.object({
+            from: z.coerce.date(),
+            to: z.coerce.date(),
+            office: z.object({
+              name: z.string(),
+              code: z.array(z.string())
+            })
+          })
         })
       }
     ],

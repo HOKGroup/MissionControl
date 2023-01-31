@@ -1,8 +1,7 @@
 import { makeApi } from "@zodios/core";
+import { address, project, projects } from "api/schema/projects";
+import { deleteResponse, office } from "api/schema/shared";
 import { z } from "zod";
-
-import { project, projects } from "../schema/projects";
-import { deleteResponse } from "../schema/shared";
 
 const projectsApi = makeApi([
   {
@@ -45,6 +44,18 @@ const projectsApi = makeApi([
     alias: "addProject",
     response: project,
     status: 201,
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: z.object({
+          name: z.string(),
+          number: z.string(),
+          office: z.string(),
+          address: address.optional()
+        })
+      }
+    ],
     errors: [
       {
         status: 404,

@@ -1,141 +1,272 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
-import DropdownMenu from "react-bootstrap//DropdownMenu";
+import { apiHooks } from "api/api";
+import { useCallback } from "react";
 import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Card from "react-bootstrap/Card";
-import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import Feedback from "react-bootstrap/Feedback";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
+import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
+import Select from "react-select";
 
 import Title from "./addProject/Title";
 
-type ProjectName = string | null;
-type ProjectNumber = string | null;
+interface FormInputs {
+  projectName: string;
+  projectNumber: string;
+  state: string;
+  office: {
+    value: string[];
+    label: string;
+  };
+  street1?: string;
+  street2?: string;
+  zipCode?: string;
+  country?: string;
+}
 
 const AddProject: React.FC = () => {
-  const [projectName, setProjectName] = useState(null as ProjectName);
-  const [projectNumber, setProjectNumber] = useState(null as ProjectNumber);
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    formState: { errors, touchedFields, isValid, isDirty }
+  } = useForm<FormInputs>({
+    mode: "all"
+  });
+
+  const {
+    data: settingsData,
+    isLoading: settingsIsLoading,
+    error: _settingsError
+  } = apiHooks.useGetSettings();
+
+  const { mutate } = apiHooks.useAddProject();
+
+  const projectName = watch("projectName");
+  const projectNumber = watch("projectNumber");
+
+  const handleCancel = useCallback(() => navigate("/projects"), [navigate]);
+
+  const onSubmit = useCallback(
+    (data: FormInputs) => {
+      mutate({
+        name: data.projectName,
+        number: data.projectNumber,
+        office: data.office.value[0],
+        address: {
+          street1: data.street1,
+          street2: data.street2,
+          zipCode: data.zipCode,
+          country: data.country
+        }
+      });
+    },
+    [mutate]
+  );
 
   return (
     <Container>
       <Title projectName={projectName} projectNumber={projectNumber} />
       <Row>
-        <Form>
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <Card>
             <Card.Header>
               <Card.Title>Project Info</Card.Title>
             </Card.Header>
             <Card.Body>
-              <Form>
-                <Form.Group>
-                  <Form.Label>
-                    Project Number
-                    <Button>
-                      <FontAwesomeIcon icon="check" color="green" size="sm" />
-                    </Button>
-                    <Button>
-                      <FontAwesomeIcon icon="asterisk" size="sm" color="red" />
-                    </Button>
-                  </Form.Label>
-                  <Col>
-                    <Form.Control
-                      type="text"
-                      onChange={(evt) => setProjectNumber(evt.target.value)}
-                    ></Form.Control>
-                  </Col>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>
-                    Project Name
-                    <Button>
-                      <FontAwesomeIcon icon="check" color="green" size="sm" />
-                    </Button>
-                    <Button>
-                      <FontAwesomeIcon icon="asterisk" color="red" size="sm" />
-                    </Button>
-                  </Form.Label>
-                  <Col sm="9" className="no-padding-right">
-                    <Form.Control
-                      required
-                      type="text"
-                      placeholder="Project Name"
-                      onChange={(evt) => setProjectName(evt.target.value)}
+              <Form.Group className="mb-4">
+                <Form.Label>
+                  Project Number
+                  {touchedFields.projectNumber && !errors.projectNumber && (
+                    <FontAwesomeIcon
+                      icon="check"
+                      size="sm"
+                      className="text-success ps-1"
                     />
-                    <Form.Control.Feedback>
-                      (*) Project Name is required.
-                    </Form.Control.Feedback>
-                    {projectName && projectName.length > 35 && (
-                      <div>
-                        <Form.Control.Feedback
-                          type="invalid"
-                          className="text-danger"
-                        >
-                          (*) Project Name is too long.
-                        </Form.Control.Feedback>
-                      </div>
-                    )}
-                  </Col>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>
-                    Office
-                    {projectName && (
-                      <Button>
-                        <FontAwesomeIcon icon="check" color="green" size="sm" />
-                      </Button>
-                    )}
-                    {!projectName && (
-                      <Button>
-                        <FontAwesomeIcon
-                          icon="asterisk"
-                          color="red"
-                          size="sm"
-                        />
-                      </Button>
-                    )}
-                  </Form.Label>
-                  <Col>
-                    <ButtonGroup>
-                      <Button></Button>
-                      <DropdownMenu></DropdownMenu>
-                    </ButtonGroup>
-                  </Col>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>Street Address</Form.Label>
-                  <Col>
-                    <Form.Control type="text"></Form.Control>
-                  </Col>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>Street Address2</Form.Label>
-                  <Col>
-                    <Form.Control type="text"></Form.Control>
-                  </Col>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>City</Form.Label>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>State</Form.Label>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>Zip Code</Form.Label>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>Country</Form.Label>
-                </Form.Group>
-              </Form>
-              <Button type="submit" variant="primary" className="pull-right">
-                <FontAwesomeIcon icon="plus" />
-                Add Project
-              </Button>
-              <Button variant="secondary" className="pull-right">
-                Cancel
-              </Button>
+                  )}
+                  {(!touchedFields.projectNumber || errors.projectNumber) && (
+                    <FontAwesomeIcon
+                      icon="asterisk"
+                      size="sm"
+                      className="text-danger ps-1"
+                    />
+                  )}
+                </Form.Label>
+                <Form.Control
+                  isInvalid={!!errors.projectNumber}
+                  {...register("projectNumber", { required: true })}
+                />
+                {errors.projectNumber?.type === "required" && (
+                  <p className="text-danger pt-1">
+                    (*) Project Number is required.
+                  </p>
+                )}
+              </Form.Group>
+              <Form.Group className="mb-4">
+                <Form.Label>
+                  Project Name
+                  {touchedFields.projectName && !errors.projectName && (
+                    <FontAwesomeIcon
+                      icon="check"
+                      size="sm"
+                      className="text-success ps-1"
+                    />
+                  )}
+                  {(!touchedFields.projectName || errors.projectName) && (
+                    <FontAwesomeIcon
+                      icon="asterisk"
+                      size="sm"
+                      className="text-danger ps-1"
+                    />
+                  )}
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  isInvalid={!!errors.projectName}
+                  {...register("projectName", {
+                    required: true,
+                    maxLength: 35
+                  })}
+                />
+                {errors.projectName?.type === "required" && (
+                  <p className="text-danger pt-1">
+                    (*) Project Name is required.
+                  </p>
+                )}
+                {errors.projectName?.type === "maxLength" && (
+                  <p className="text-danger pt-1">
+                    (*) Project Name is too long.
+                  </p>
+                )}
+              </Form.Group>
+
+              <Form.Group className="mb-4">
+                <Form.Label>
+                  Office
+                  {touchedFields.office && !errors.office && (
+                    <FontAwesomeIcon
+                      icon="check"
+                      size="sm"
+                      className="text-success ps-1"
+                    />
+                  )}
+                  {(!touchedFields.office || errors.office) && (
+                    <FontAwesomeIcon
+                      icon="asterisk"
+                      size="sm"
+                      className="text-danger ps-1"
+                    />
+                  )}
+                </Form.Label>
+                <Controller
+                  name="office"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      isMulti={false}
+                      isSearchable={true}
+                      isLoading={settingsIsLoading}
+                      isDisabled={!settingsData}
+                      options={
+                        settingsData?.offices.map((office) => ({
+                          value: office.code[0],
+                          label: office.name
+                        })) as any
+                      }
+                    />
+                  )}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-4">
+                <Form.Label>Street Address</Form.Label>
+                <Form.Control
+                  placeholder="Street address, P.O. box, company name"
+                  type="text"
+                  isInvalid={!!errors.street1}
+                  {...register("street1")}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-4">
+                <Form.Label>Street Address2</Form.Label>
+                <Form.Control
+                  placeholder="Apartment, suite, unit, building, floor, etc."
+                  type="text"
+                  isInvalid={!!errors.street2}
+                  {...register("street2")}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-4">
+                <Form.Label>State</Form.Label>
+                <Controller
+                  name="state"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      isSearchable={true}
+                      isLoading={settingsIsLoading}
+                      isDisabled={!settingsData}
+                      options={
+                        settingsData?.states.map((state) => ({
+                          value: state,
+                          label: state
+                        })) as any
+                      }
+                    />
+                  )}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-4">
+                <Form.Label>Zip Code</Form.Label>
+                <Form.Control
+                  type="text"
+                  isInvalid={!!errors.zipCode}
+                  {...register("zipCode")}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-4">
+                <Form.Label>Country</Form.Label>
+                <Form.Control
+                  type="text"
+                  isInvalid={!!errors.country}
+                  {...register("country")}
+                />
+              </Form.Group>
+
+              <div
+                className="d-flex justify-content-end"
+                style={{
+                  cursor: !isValid || !isDirty ? "not-allowed" : "pointer"
+                }}
+              >
+                <Button
+                  variant="secondary"
+                  className="me-2"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  disabled={!isValid || !isDirty}
+                  type="submit"
+                  variant="primary"
+                >
+                  <FontAwesomeIcon icon="plus" />
+                  Add Project
+                </Button>
+              </div>
             </Card.Body>
           </Card>
         </Form>

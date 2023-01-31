@@ -1,62 +1,39 @@
 import { ColumnDef, Row } from "@tanstack/react-table";
 
-import Datatable from "../../Datatable";
 import { ZombieLog } from "../../api/schema/zombieLogs";
-
-const parseLocation = (machine: string) => {
-  if (!machine) {
-    return "N/A";
-  }
-
-  const parts = machine.split("-");
-  return parts[0];
-};
-
-const parseMachine = (users: Record<string, string>, machine: string) => {
-  if (!machine) {
-    return "N/A";
-  }
-
-  if (Object.prototype.hasOwnProperty.call(users, machine)) {
-    return users[machine];
-  } else {
-    return "Unknown";
-  }
-};
-
-const parseUsername = (users: Record<string, string>, machine: string) => {
-  if (!machine) {
-    return "N/A";
-  }
-
-  if (Object.prototype.hasOwnProperty.call(users, machine)) {
-    return users[machine];
-  } else {
-    return "Unknown";
-  }
-};
+import Datatable from "../../components/Datatable";
+import { parseLocation, parseMachine, parseUsername } from "./util";
 
 interface MachinesTableProps {
   selectedMachines: ZombieLog[];
-  users: Record<string, string>;
+  machineUsers: Record<string, string>;
 }
 
 const MachinesTable: React.FC<MachinesTableProps> = ({
-  users,
+  machineUsers,
   selectedMachines
 }) => {
   const columns: ColumnDef<ZombieLog>[] = [
     {
       header: "Location",
-      accessorFn: (row) => parseLocation(row.machine)
+      accessorFn: parseLocation,
+      meta: {
+        className: "text-center"
+      }
     },
     {
       header: "Machine",
-      accessorFn: (row) => parseMachine(users, row.machine)
+      accessorFn: parseMachine,
+      meta: {
+        className: "text-center"
+      }
     },
     {
       header: "User",
-      accessorFn: (row) => parseUsername(users, row.machine)
+      accessorFn: (row) => parseUsername(machineUsers, row),
+      meta: {
+        className: "text-center"
+      }
     },
     {
       header: "Message",
@@ -68,16 +45,16 @@ const MachinesTable: React.FC<MachinesTableProps> = ({
     <Datatable
       columns={columns}
       data={selectedMachines}
-      getRowClassNames={(row: Row<ZombieLog>) => {
+      getRowClassName={(row: Row<ZombieLog>) => {
         switch (row.original.level) {
           case "Info":
-            return "table-info";
+            return "";
           case "Error":
             return "bg-warning";
           case "Fatal":
             return "bg-danger";
           default:
-            return "table-info";
+            return "";
         }
       }}
     />

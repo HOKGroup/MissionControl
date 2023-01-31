@@ -1,66 +1,25 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import React from "react";
+import "react-day-picker/dist/style.css";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createHashRouter } from "react-router-dom";
 
-import App from "./App";
-import Layout from "./Layout";
+import "./custom.scss";
 import registerIcons from "./fontAwesome";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import AddProject from "./routes/AddProject";
-import Home from "./routes/Home";
-import Projects from "./routes/Projects";
-import ZombieLogs from "./routes/ZombieLogs";
+import routes from "./routes";
 
 registerIcons();
 
-const router = createHashRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
-        path: "/",
-        element: <Home />
-      },
-      {
-        path: "/home",
-        element: <Home />
-      },
-      {
-        path: "/settings",
-        element: <div>SETTINGS</div>
-      },
-      {
-        path: "/projects",
-        element: <Projects />
-      },
-      {
-        path: "/file-paths",
-        element: <div>FILE PATHS</div>
-      },
-      {
-        path: "/addins",
-        element: <div>ADDINS</div>
-      },
-      {
-        path: "/zombie-logs",
-        element: <ZombieLogs />
-      },
-      {
-        path: "/projects/add",
-        element: <AddProject />
-      }
-    ]
-  }
-]);
+const router = createHashRouter(routes);
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false
+      retry: false,
+      refetchOnWindowFocus: false
     }
   }
 });
@@ -72,6 +31,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <RouterProvider router={router} />
     </QueryClientProvider>
   </React.StrictMode>

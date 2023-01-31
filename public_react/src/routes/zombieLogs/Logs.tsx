@@ -1,13 +1,13 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Dispatch, SetStateAction, useState } from "react";
-import Button from "react-bootstrap/Button";
+import { ZombieLog } from "api/schema/zombieLogs";
+import useToggle from "hooks/useToggle";
+import { useCallback } from "react";
 import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
-import Col from "react-bootstrap/Col";
 import Collapse from "react-bootstrap/Collapse";
-import Dropdown from "react-bootstrap/Dropdown";
-import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
+
+import LogsFilter from "./logs/LogsFilter";
+import LogsTable from "./logs/LogsTable";
 
 type Office = {
   name: string;
@@ -15,62 +15,102 @@ type Office = {
 };
 
 interface LogsProps {
+  offices: { name: string; code: string[] }[] | undefined;
+  officesIsLoading: boolean;
+  dateFrom: Date;
+  dateTo: Date;
+  setDateFrom: (date: Date) => void;
+  setDateTo: (date: Date) => void;
   selectedOffice: Office;
-  setSelectedOffice: Dispatch<SetStateAction<Office>>;
+  setSelectedOffice: (selectedOffice: Office) => void;
+  fetchFilteredZombieLogs: () => void;
+  isLoadingFilteredZombieLogs: boolean;
+  zombieLogs: ZombieLog[] | undefined;
+  isLoadingZombieLogs: boolean;
+  machineUsers: Record<string, string> | undefined;
 }
 
-const Logs: React.FC<LogsProps> = ({ selectedOffice }) => {
-  const [isCollapsed, setCollapsed] = useState(false);
+const Logs: React.FC<LogsProps> = ({
+  offices,
+  officesIsLoading,
+  dateFrom,
+  dateTo,
+  setDateFrom,
+  setDateTo,
+  selectedOffice,
+  setSelectedOffice,
+  fetchFilteredZombieLogs,
+  isLoadingFilteredZombieLogs,
+  zombieLogs,
+  machineUsers
+}) => {
+  const [isCollapsed, toggleCollapsed] = useToggle();
+
+  const setDateFromCb = useCallback(
+    (date: Date | undefined) => {
+      if (!date) return;
+      setDateFrom(date);
+    },
+    [setDateFrom]
+  );
+
+  const setDateToCb = useCallback(
+    (date: Date | undefined) => {
+      if (!date) return;
+      setDateTo(date);
+    },
+    [setDateTo]
+  );
+  const onSelectOffice = useCallback(
+    (officeName: string | null) => {
+      if (!officeName) {
+        setSelectedOffice({
+          name: "All",
+          code: "All"
+        });
+
+        return;
+      }
+
+      const splitName = officeName.split(":");
+      if (splitName.length === 2) {
+        const name = splitName[0];
+        const code = splitName[1];
+
+        setSelectedOffice({ name, code });
+      }
+    },
+    [setSelectedOffice]
+  );
+
   return (
     <Row>
-      <CardGroup>
+      <CardGroup className="pb-4">
         <Card>
-          <Card.Header onClick={() => setCollapsed(!isCollapsed)}>
-            <Card.Title className="pt-5">Logs</Card.Title>
+          <Card.Header onClick={toggleCollapsed}>
+            <Card.Title>Logs</Card.Title>
           </Card.Header>
           <Collapse in={!isCollapsed}>
             <Card.Body>
+              <LogsFilter
+                dateTo={dateTo}
+                dateFrom={dateFrom}
+                setDateTo={setDateToCb}
+                setDateFrom={setDateFromCb}
+                selectedOffice={selectedOffice}
+                onSelectOffice={onSelectOffice}
+                officesIsLoading={officesIsLoading}
+                offices={offices}
+                fetchFilteredZombieLogs={fetchFilteredZombieLogs}
+                isLoadingFilteredZombieLogs={isLoadingFilteredZombieLogs}
+              />
               <Row>
-                <Col md="4" className="no-padding-left">
-                  <Col sm="2" className="p-0">
-                    <label htmlFor="fromInput">From: </label>
-                  </Col>
-                  <Col>
-                    <InputGroup>
-                      <InputGroup.Text id="fromInput"></InputGroup.Text>
-                    </InputGroup>
-                    <Button>
-                      <FontAwesomeIcon icon="calendar" />
-                    </Button>
-                  </Col>
-                </Col>
-                <Col md="4" className="no-padding-left">
-                  <Col sm="2" className="p-0">
-                    <label htmlFor="fromInput">To: </label>
-                  </Col>
-                  <Col
-                    sm="10"
-                    className="no-padding-right no-padding-left"
-                  ></Col>
-                </Col>
-                <Col md="2">
-                  <Dropdown>
-                    <Dropdown.Toggle>{selectedOffice.name}</Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item>PLACEHOLDER OFFICE</Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </Col>
-                <Col md="2" className="no-padding-right">
-                  <FontAwesomeIcon
-                    icon="spinner"
-                    spin={true}
-                    className="fa-spin"
+                {zombieLogs && machineUsers && (
+                  <LogsTable
+                    zombieLogs={zombieLogs}
+                    machineUsers={machineUsers}
                   />
-                  <Button variant="primary" size="sm" className="pull-right">
-                    Filter
-                  </Button>
-                </Col>
+                )}
               </Row>
             </Card.Body>
           </Collapse>

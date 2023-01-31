@@ -6,7 +6,7 @@ import { LinkContainer } from "react-router-bootstrap";
 
 const LayoutNavbar: React.FC = () => {
   return (
-    <Navbar>
+    <Navbar sticky="top" bg="light">
       <Container>
         <Navbar.Toggle aria-controls="navbar-collapse">
           <span className="sr-only">Toggle navigation</span>
@@ -45,7 +45,7 @@ const LayoutNavbar: React.FC = () => {
           <Nav className="ms-auto">
             <Nav.Link href="http://www.hok.com/">
               <img
-                src="images/hoklogo.ico"
+                src={`${process.env.PUBLIC_URL}/hoklogo.ico`}
                 height="32"
                 width="32"
                 style={{ marginTop: 0 }}

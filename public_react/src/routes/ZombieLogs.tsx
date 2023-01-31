@@ -1,88 +1,33 @@
-import { useEffect, useState } from "react";
-import Container from "react-bootstrap/Container";
+import { apiHooks } from "api/api";
+import { User } from "api/schema/users";
+import { ZombieLog } from "api/schema/zombieLogs";
+import Page from "components/Page";
+import { useCallback } from "react";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
-import { apiHooks } from "../api/api";
-import { Office } from "../api/schema/shared";
-import { ZombieLog } from "../api/schema/zombieLogs";
-import { useToastError } from "../effects";
 import Logs from "./zombieLogs/Logs";
 import OfficeFilter from "./zombieLogs/OfficeFilter";
 import Selected from "./zombieLogs/Selected";
-import Title from "./zombieLogs/Title";
+import { getVersion } from "./zombieLogs/util";
 
-interface VersionCompareOptions {
-  lexicographical?: boolean;
-  zeroExtend?: boolean;
-}
-
-function versionCompare(
-  v1: string,
-  v2: string,
-  options?: VersionCompareOptions
-) {
-  const lexicographical = options && options.lexicographical;
-  const zeroExtend = options && options.zeroExtend;
-
-  let v1parts: string[] | number[] = v1.split(".");
-  let v2parts: string[] | number[] = v2.split(".");
-
-  function isValidPart(x: string) {
-    return (lexicographical ? /^\d+[A-Za-z]*$/ : /^\d+$/).test(x);
-  }
-
-  if (!v1parts.every(isValidPart) || !v2parts.every(isValidPart)) {
-    return NaN;
-  }
-
-  if (zeroExtend) {
-    while (v1parts.length < v2parts.length) v1parts.push("0");
-    while (v2parts.length < v1parts.length) v2parts.push("0");
-  }
-
-  if (!lexicographical) {
-    v1parts = v1parts.map(Number);
-    v2parts = v2parts.map(Number);
-  }
-
-  for (let i = 0; i < v1parts.length; ++i) {
-    if (v2parts.length === i) {
-      return 1;
-    }
-
-    if (v1parts[i] === v2parts[i]) {
-      // continue
-    } else if (v1parts[i] > v2parts[i]) {
-      return 1;
-    } else {
-      return -1;
-    }
-  }
-
-  if (v1parts.length !== v2parts.length) {
-    return -1;
-  }
-
-  return 0;
-}
-
-function getVersion(s: string): string {
-  const myRegexp = /Version:\s?(.*?)$/g;
-  const myRegexp1 = /version:\s?(.*?)$/g;
-  const match = myRegexp.exec(s);
-  const match1 = myRegexp1.exec(s);
-  if (match !== null) {
-    return match[1];
-  }
-  if (match1 !== null) {
-    return match1[1];
-  }
-  return "Fatal";
-}
+type MachineUser = Record<string, string>;
 
 export interface DonutData {
   name: string;
   count: number;
 }
+
+const sortZombieLogs = (zombieLogs: ZombieLog[]) => {
+  return zombieLogs.sort(
+    (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+  );
+};
+
+const onZombieLogsError = () =>
+  toast.error("Unable to retrieve the Zombie Logs.");
+const onUsersError = () => toast.error("Could not retrieve user info.");
+const onSettingsError = () => toast.error("Unable to retrieve the Settings.");
 
 const ZombieLogs: React.FC = () => {
   const initialSelectedOffice = {
@@ -90,51 +35,138 @@ const ZombieLogs: React.FC = () => {
     code: "All"
   };
 
-  const [selectedOffice, setSelectedOffice] = useState(initialSelectedOffice);
+  const [dateFrom, setDateFrom] = useState(new Date());
+  const [dateTo, setDateTo] = useState(new Date());
 
-  const [latestVersion, setLatestVersion] = useState("0.0.0.0");
+  const [selectedOffice, setSelectedOffice] = useState(initialSelectedOffice);
 
   const [donutData, setDonutData] = useState([] as DonutData[]);
 
-  const [selectedMachines, setSelectedMachines] = useState([] as ZombieLog[]);
+  const [selectedMachines, setSelectedMachines] = useState(
+    null as ZombieLog[] | null
+  );
 
-  const [users, setUsers] = useState({});
+  const onZombieLogsData = useCallback((zombieLogs: ZombieLog[]) => {
+    const fatal: ZombieLog[] = [];
+
+    const machineLogs = new Map<string, ZombieLog>();
+    const chartCounts = new Map<string, number>();
+
+    zombieLogs.reduce((map, log) => {
+      const existing = map.get(log.machine);
+      if (existing) {
+        if (log.level === "info" && existing.level !== "Info") {
+          map.set(log.machine, log);
+        }
+      } else {
+        map.set(log.machine, log);
+      }
+
+      return map;
+    }, machineLogs);
+
+    machineLogs.forEach((log, _machine) => {
+      const version = getVersion(log.message);
+      if (version === "Fatal") {
+        fatal.push(log);
+      }
+
+      const existingCount = chartCounts.get(version);
+      if (existingCount) {
+        chartCounts.set(version, existingCount + 1);
+      } else {
+        chartCounts.set(version, 1);
+      }
+    });
+
+    const chartData: DonutData[] = [];
+
+    chartCounts.forEach((count, version) => {
+      chartData.push({
+        name: version,
+        count
+      });
+    });
+
+    chartData.sort((a, b) => b.count - a.count);
+
+    setDonutData(chartData);
+    //setSelectedMachines(fatal);
+  }, []);
 
   const {
     data: zombieLogsData,
-    isLoading: _zombieLogsIsLoading,
-    error: zombieLogsError
-  } = apiHooks.useGetZombieLogs();
+    isLoading: zombieLogsIsLoading,
+    error: _zombieLogsError
+  } = apiHooks.useGetZombieLogs(undefined, {
+    select: sortZombieLogs,
+    onError: onZombieLogsError,
+    onSuccess: onZombieLogsData
+  });
+
+  const filter = {
+    from: dateFrom,
+    to: dateTo,
+    office: {
+      name: selectedOffice.name,
+      code: [selectedOffice.code]
+    }
+  };
 
   const {
-    data: usersData,
-    isLoading: _usersIsLoading,
-    error: usersError
-  } = apiHooks.useGetAllUsers();
+    data: filteredZombieLogsData,
+    isRefetching: filteredZombieLogsIsLoading,
+    error: _filteredZombieLogsError,
+    refetch: refetchFilteredZombieLogsData
+  } = apiHooks.useGetFilteredZombieLogs(
+    {
+      filter
+    },
+    undefined,
+    {
+      enabled: false,
+      select: sortZombieLogs,
+      onSuccess: onZombieLogsData,
+      onError: onZombieLogsError
+    }
+  );
+
+  const selectMachineUsers = useCallback((users: User[]) => {
+    return users.reduce(
+      (obj, user) => ({
+        ...obj,
+        [user.machine]: user.user
+      }),
+      {} as MachineUser
+    );
+  }, []);
 
   const {
-    data: _settingsData,
-    isLoading: _settingsIsLoading,
-    error: settingsError
-  } = apiHooks.useGetSettings();
+    data: machineUsers,
+    isLoading: usersIsLoading,
+    error: _usersError
+  } = apiHooks.useGetAllUsers(undefined, {
+    onError: onUsersError,
+    select: selectMachineUsers
+  });
 
-  useToastError(zombieLogsError);
-  useToastError(usersError);
-  useToastError(settingsError);
+  const {
+    data: settingsData,
+    isLoading: settingsIsLoading,
+    error: _settingsError
+  } = apiHooks.useGetSettings(undefined, {
+    onError: onSettingsError
+  });
 
-  useEffect(() => {
-    if (zombieLogsData) {
+  const handleChartClick = useCallback(
+    (item: { name: string; code: string }) => {
+      if (!zombieLogsData) return;
+
       const temp: Record<string, ZombieLog> = {};
-      const donuts: Record<string, number> = {};
-      const fatal: ZombieLog[] = [];
-
-      const logs = zombieLogsData.sort(
-        (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-      );
-
-      logs.forEach((log) => {
+      zombieLogsData.forEach((log) => {
         if (Object.prototype.hasOwnProperty.call(temp, log.machine)) {
           const existing = temp[log.machine];
+
           if (log.level === "Info" && existing.level !== "Info") {
             temp[log.machine] = log;
           }
@@ -143,55 +175,56 @@ const ZombieLogs: React.FC = () => {
         }
       });
 
+      const result: ZombieLog[] = [];
+
       Object.keys(temp).forEach((key) => {
         const version = getVersion(temp[key].message);
-        if (version === "Fatal") {
-          fatal.push(temp[key]);
-        }
-        if (Object.prototype.hasOwnProperty.call(donuts, version)) {
-          donuts[version] = donuts[version] + 1;
+        if (item.name === "Fatal") {
+          if (version === "Fatal") {
+            result.push(temp[key]);
+          }
         } else {
-          donuts[version] = 1;
-        }
-      });
-
-      const donutData = Object.keys(donuts).map((key) => {
-        if (versionCompare(key, latestVersion) === 1) {
-          setLatestVersion(key);
+          if (version === item.name) {
+            result.push(temp[key]);
+          }
         }
 
-        return {
-          name: key,
-          count: donuts[key]
-        };
+        setSelectedMachines(result);
       });
+    },
+    [zombieLogsData]
+  );
 
-      setDonutData(donutData);
-      setSelectedMachines(fatal);
-    }
-  }, [zombieLogsData, latestVersion]);
-
-  useEffect(() => {
-    if (usersData) {
-      const users = usersData.reduce((obj, item) => {
-        obj[item.machine] = item.user;
-        return obj;
-      }, {} as Record<string, string>);
-
-      setUsers(users);
-    }
-  }, [usersData]);
+  const zombieLogs = filteredZombieLogsData || zombieLogsData;
 
   return (
-    <Container fluid>
-      <Title />
+    <Page title="Zombie Logs">
       <Logs
+        dateFrom={dateFrom}
+        dateTo={dateTo}
+        setDateFrom={setDateFrom}
+        setDateTo={setDateTo}
+        officesIsLoading={settingsIsLoading}
+        offices={settingsData?.offices}
         selectedOffice={selectedOffice}
         setSelectedOffice={setSelectedOffice}
+        fetchFilteredZombieLogs={refetchFilteredZombieLogsData}
+        isLoadingFilteredZombieLogs={filteredZombieLogsIsLoading}
+        zombieLogs={zombieLogs}
+        isLoadingZombieLogs={zombieLogsIsLoading}
+        machineUsers={machineUsers}
       />
-      <OfficeFilter selectedOffice={selectedOffice} donutData={donutData} />
-      <Selected selectedMachines={selectedMachines} users={users} />
-    </Container>
+      <OfficeFilter
+        officeName={selectedOffice.name}
+        donutData={donutData}
+        handleChartClick={handleChartClick}
+      />
+      <Selected
+        isLoading={zombieLogsIsLoading || usersIsLoading}
+        selectedMachines={selectedMachines}
+        machineUsers={machineUsers}
+      />
+    </Page>
   );
 };
 

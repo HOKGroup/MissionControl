@@ -11,3 +11,35 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.dialog-sheet {
+  z-index: 99;
+  background-color: "white";
+  border: 1px solid gray;
+  box-shadow: 4px 4px 4px 2px #888;
+  -webkit-box-shadow: 4px 4px 4px 2px #888;
+}
+
+.fa-button {
+  border-style: none;
+  background-color: transparent;
+  padding: 0;
+  outline: none;
+}
+
+.text {
+  font: 10px sans-serif;
+}
+
+label {
+  font-weight: 700;
+}
+
+.small {
+  font-size: 85%;
+}
+
+.card-group {
+  padding-left: 0;
+  padding-right: 0;
+}

@@ -1,8 +1,8 @@
 import Row from "react-bootstrap/Row";
 
 interface TitleProps {
-  projectName: string | null;
-  projectNumber: string | null;
+  projectName: string | undefined;
+  projectNumber: string | undefined;
 }
 
 const Title: React.FC<TitleProps> = ({ projectName, projectNumber }) => {

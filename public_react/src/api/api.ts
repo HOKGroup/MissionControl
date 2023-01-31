@@ -1,6 +1,7 @@
 import { Zodios } from "@zodios/core";
 import { ZodiosHooks } from "@zodios/react";
 
+import addinsApi from "./endpoints/addins";
 import projectsApi from "./endpoints/projects";
 import settingsApi from "./endpoints/settings";
 import usersApi from "./endpoints/users";
@@ -12,7 +13,8 @@ const apiClient = new Zodios(apiUrl, [
   ...projectsApi,
   ...zombieLogsApi,
   ...usersApi,
-  ...settingsApi
+  ...settingsApi,
+  ...addinsApi
 ]);
 
 const apiHooks = new ZodiosHooks("api", apiClient);

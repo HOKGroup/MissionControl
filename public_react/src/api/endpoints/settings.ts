@@ -1,7 +1,6 @@
 import { makeApi } from "@zodios/core";
+import { settings } from "api/schema/settings";
 import { z } from "zod";
-
-import { settings } from "../schema/settings";
 
 const settingsApi = makeApi([
   {

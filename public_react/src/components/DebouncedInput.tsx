@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FormControl, FormControlProps } from "react-bootstrap";
+import FormControl, { FormControlProps } from "react-bootstrap/FormControl";
 
 function DebouncedInput({
   value: initialValue,
@@ -23,7 +23,7 @@ function DebouncedInput({
     }, debounce);
 
     return () => clearTimeout(timeout);
-  }, [value]);
+  }, [value, debounce, onChange]);
 
   return (
     <FormControl

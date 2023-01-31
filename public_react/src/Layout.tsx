@@ -9,7 +9,7 @@ const Layout: React.FC = () => {
   return (
     <>
       <LayoutNavbar />
-      <Container id="main-content-container">
+      <Container id="main-content-container" className="pb-5">
         <Outlet />
         <ToastContainer
           position="top-right"

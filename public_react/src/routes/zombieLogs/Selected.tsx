@@ -1,33 +1,42 @@
-import { useState } from "react";
+import { ZombieLog } from "api/schema/zombieLogs";
+import LoadingBar from "components/LoadingBar";
+import useToggle from "hooks/useToggle";
 import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
 import Collapse from "react-bootstrap/Collapse";
 import Row from "react-bootstrap/Row";
 
-import { ZombieLog } from "../../api/schema/zombieLogs";
 import MachinesTable from "./MachinesTable";
 
 interface SelectedProps {
-  selectedMachines: ZombieLog[];
-  users: Record<string, string>;
+  isLoading: boolean;
+  selectedMachines: ZombieLog[] | null;
+  machineUsers: Record<string, string> | undefined;
 }
 
-const Selected: React.FC<SelectedProps> = ({ selectedMachines, users }) => {
-  const [isCollapsed, setCollapsed] = useState(false);
+const Selected: React.FC<SelectedProps> = ({
+  isLoading,
+  selectedMachines,
+  machineUsers
+}) => {
+  const [isCollapsed, toggleCollapsed] = useToggle();
 
   return (
     <Row>
       <CardGroup>
         <Card>
-          <Card.Header onClick={() => setCollapsed(!isCollapsed)}>
+          <Card.Header onClick={toggleCollapsed}>
             <Card.Title>Selected</Card.Title>
           </Card.Header>
           <Collapse in={!isCollapsed}>
             <Card.Body>
-              <MachinesTable
-                selectedMachines={selectedMachines}
-                users={users}
-              />
+              {isLoading && <LoadingBar />}
+              {machineUsers && (
+                <MachinesTable
+                  selectedMachines={selectedMachines || []}
+                  machineUsers={machineUsers}
+                />
+              )}
             </Card.Body>
           </Collapse>
         </Card>

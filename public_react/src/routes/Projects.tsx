@@ -1,94 +1,68 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import { apiHooks } from "api/api";
+import { Project } from "api/schema/projects";
+import Datatable from "components/Datatable";
+import Page from "components/Page";
 import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
+import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import { useNavigate } from "react-router";
 import { LinkContainer } from "react-router-bootstrap";
 
-interface Project {
-  number: any;
-  name: any;
-  office: any;
-  address: any;
-}
-
-const serverData = [
-  {
-    name: "My Project",
-    number: "1",
-    office: "My office",
-    address: "MY address"
-  },
-  {
-    name: "My Project",
-    number: "2",
-    office: "My office",
-    address: "MY address"
-  },
-  {
-    name: "My Project",
-    number: "3",
-    office: "My office",
-    address: "MY address"
-  },
-  {
-    name: "My Project",
-    number: "4",
-    office: "My office",
-    address: "MY address"
-  },
-  {
-    name: "My Project",
-    number: "5",
-    office: "My office",
-    address: "MY address"
-  },
-  {
-    name: "My Project",
-    number: "6",
-    office: "My office",
-    address: "MY address"
-  },
-  {
-    name: "My Project",
-    number: "7",
-    office: "My office",
-    address: "MY address"
-  },
-  {
-    name: "My Project",
-    number: "8",
-    office: "My office",
-    address: "MY address"
-  },
-  {
-    name: "My Project",
-    number: "9",
-    office: "My office",
-    address: "MY address"
-  }
-];
-
 const Projects: React.FC = () => {
-  const [data, setData] = useState<Project[]>([]);
+  const navigate = useNavigate();
 
+  const {
+    data: projectsData,
+    isLoading: _projectsDataIsLoading,
+    error: _projectsError
+  } = apiHooks.useGetProjects();
+
+  const columns: ColumnDef<Project>[] = [
+    {
+      header: "Project Number",
+      accessorKey: "number"
+    },
+    {
+      header: "Project Name",
+      accessorKey: "name"
+    },
+    {
+      header: "Office",
+      accessorKey: "office"
+    },
+    {
+      header: "Project Address",
+      accessorFn: (row) =>
+        `${row.address?.city || ""}, ${row.address?.state || ""}`
+    }
+  ];
   return (
-    <Container>
+    <Page title="Projects">
       <Row>
-        <div className="page-header">
-          <h1>Projects</h1>
-        </div>
+        <Datatable
+          initialPageSize={25}
+          allowedPageSizes={[25, 50, 100, -1]}
+          columns={columns}
+          data={projectsData || []}
+          onClickRow={(row) => {
+            navigate(`/projects/edit/${row.original._id}`);
+          }}
+        />
       </Row>
-      <Row>TABLE HERE</Row>
-      <Row>
-        <LinkContainer to="/projects/add">
-          <Button variant="primary" className="pull-right">
-            <FontAwesomeIcon icon="plus" />
-            New Project
-          </Button>
-        </LinkContainer>
+      <Row className="pt-4">
+        <Col md={9} />
+        <Col md={3}>
+          <LinkContainer to="/projects/add">
+            <Button variant="primary" className="float-end">
+              <FontAwesomeIcon icon="plus" />
+              New Project
+            </Button>
+          </LinkContainer>
+        </Col>
       </Row>
-    </Container>
+    </Page>
   );
 };
 
