@@ -3,7 +3,7 @@ import { Addin } from "api/schema/addins";
 import { useCallback } from "react";
 import Card from "react-bootstrap/Card";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import DropdownItem from "react-bootstrap/esm/DropdownItem";
+import DropdownItem from "react-bootstrap/DropdownItem";
 import {
   Bar,
   BarChart,
@@ -55,12 +55,9 @@ const Users: React.FC<UsersProps> = ({
   return (
     <Card className="mb-4">
       <Card.Header>
-        <Card.Title>
+        <Card.Title className="d-flex align-items-center justify-content-between">
           Users: {addinName}
-          <DropdownButton
-            title={selectedOffice?.name || "All"}
-            className="float-end"
-          >
+          <DropdownButton title={selectedOffice?.name || "All"} size="sm">
             {offices &&
               offices.map((office) => {
                 return (

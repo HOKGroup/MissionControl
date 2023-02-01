@@ -19,6 +19,8 @@ import Container from "react-bootstrap/Container";
 import BRow from "react-bootstrap/Row";
 import BTable from "react-bootstrap/Table";
 
+const defaultAllowedPageSizes = [10, 25, 50, 100, -1];
+
 interface TableProps<T> {
   data: T[];
   columns: ColumnDef<T>[];
@@ -75,7 +77,7 @@ function Datatable<T>({
     <Container>
       <DatatableControls
         maxPageSize={table.getPrePaginationRowModel().rows.length}
-        allowedPageSizes={allowedPageSizes || [10, 25, 50, 100, -1]}
+        allowedPageSizes={allowedPageSizes || defaultAllowedPageSizes}
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         pageSize={table.getState().pagination.pageSize}

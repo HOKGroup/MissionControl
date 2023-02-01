@@ -15,7 +15,7 @@ const Projects: React.FC = () => {
 
   const {
     data: projectsData,
-    isLoading: _projectsDataIsLoading,
+    isLoading: projectsDataIsLoading,
     error: _projectsError
   } = apiHooks.useGetProjects();
 
@@ -38,8 +38,9 @@ const Projects: React.FC = () => {
         `${row.address?.city || ""}, ${row.address?.state || ""}`
     }
   ];
+
   return (
-    <Page title="Projects">
+    <Page title="Projects" isLoading={projectsDataIsLoading}>
       <Row>
         <Datatable
           initialPageSize={25}

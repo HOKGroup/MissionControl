@@ -1,4 +1,6 @@
+import ErrorFallback from "ErrorFallback";
 import Container from "react-bootstrap/Container";
+import { ErrorBoundary } from "react-error-boundary";
 import { Outlet } from "react-router";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,7 +12,9 @@ const Layout: React.FC = () => {
     <>
       <LayoutNavbar />
       <Container id="main-content-container" className="pb-5">
-        <Outlet />
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <Outlet />
+        </ErrorBoundary>
         <ToastContainer
           position="top-right"
           closeButton={true}

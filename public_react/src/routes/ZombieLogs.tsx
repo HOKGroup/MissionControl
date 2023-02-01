@@ -213,14 +213,22 @@ const ZombieLogs: React.FC = () => {
         zombieLogs={zombieLogs}
         isLoadingZombieLogs={zombieLogsIsLoading}
         machineUsers={machineUsers}
+        isLoadingUsers={usersIsLoading}
       />
       <OfficeFilter
+        isLoading={
+          zombieLogsIsLoading ||
+          filteredZombieLogsIsLoading ||
+          settingsIsLoading
+        }
         officeName={selectedOffice.name}
         donutData={donutData}
         handleChartClick={handleChartClick}
       />
       <Selected
-        isLoading={zombieLogsIsLoading || usersIsLoading}
+        isLoading={
+          zombieLogsIsLoading || filteredZombieLogsIsLoading || usersIsLoading
+        }
         selectedMachines={selectedMachines}
         machineUsers={machineUsers}
       />

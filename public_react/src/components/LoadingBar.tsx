@@ -17,17 +17,16 @@ const LoadingBar: React.FC<LoadingBarProps & ProgressBarProps> = ({
   const interval = propsInterval || 200;
 
   const updateNow = useCallback(
-    () => setNow((now) => now + increment),
+    () => setNow((now) => Math.min(now + increment, 95)),
     [increment]
   );
 
   useEffect(() => {
     const intervalId = setInterval(updateNow, interval);
-
     return () => clearInterval(intervalId);
   }, [interval, updateNow]);
 
-  return <ProgressBar now={now} max={95} {...progressBarProps} />;
+  return <ProgressBar now={now} striped={true} {...progressBarProps} />;
 };
 
 export default LoadingBar;

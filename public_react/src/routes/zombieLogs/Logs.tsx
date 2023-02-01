@@ -1,4 +1,5 @@
 import { ZombieLog } from "api/schema/zombieLogs";
+import CardHeaderWithLoadingBar from "components/CardHeaderWithLoadingBar";
 import useToggle from "hooks/useToggle";
 import { useCallback } from "react";
 import Card from "react-bootstrap/Card";
@@ -27,6 +28,7 @@ interface LogsProps {
   isLoadingFilteredZombieLogs: boolean;
   zombieLogs: ZombieLog[] | undefined;
   isLoadingZombieLogs: boolean;
+  isLoadingUsers: boolean;
   machineUsers: Record<string, string> | undefined;
 }
 
@@ -40,10 +42,15 @@ const Logs: React.FC<LogsProps> = ({
   selectedOffice,
   setSelectedOffice,
   fetchFilteredZombieLogs,
+  isLoadingZombieLogs,
   isLoadingFilteredZombieLogs,
+  isLoadingUsers,
   zombieLogs,
   machineUsers
 }) => {
+  const isLoading =
+    isLoadingZombieLogs || isLoadingFilteredZombieLogs || isLoadingUsers;
+
   const [isCollapsed, toggleCollapsed] = useToggle();
 
   const setDateFromCb = useCallback(
@@ -87,31 +94,38 @@ const Logs: React.FC<LogsProps> = ({
     <Row>
       <CardGroup className="pb-4">
         <Card>
-          <Card.Header onClick={toggleCollapsed}>
+          <CardHeaderWithLoadingBar
+            isLoading={isLoading}
+            onClick={toggleCollapsed}
+          >
             <Card.Title>Logs</Card.Title>
-          </Card.Header>
+          </CardHeaderWithLoadingBar>
           <Collapse in={!isCollapsed}>
             <Card.Body>
-              <LogsFilter
-                dateTo={dateTo}
-                dateFrom={dateFrom}
-                setDateTo={setDateToCb}
-                setDateFrom={setDateFromCb}
-                selectedOffice={selectedOffice}
-                onSelectOffice={onSelectOffice}
-                officesIsLoading={officesIsLoading}
-                offices={offices}
-                fetchFilteredZombieLogs={fetchFilteredZombieLogs}
-                isLoadingFilteredZombieLogs={isLoadingFilteredZombieLogs}
-              />
-              <Row>
-                {zombieLogs && machineUsers && (
-                  <LogsTable
-                    zombieLogs={zombieLogs}
-                    machineUsers={machineUsers}
+              {zombieLogs && (
+                <>
+                  <LogsFilter
+                    dateTo={dateTo}
+                    dateFrom={dateFrom}
+                    setDateTo={setDateToCb}
+                    setDateFrom={setDateFromCb}
+                    selectedOffice={selectedOffice}
+                    onSelectOffice={onSelectOffice}
+                    officesIsLoading={officesIsLoading}
+                    offices={offices}
+                    fetchFilteredZombieLogs={fetchFilteredZombieLogs}
+                    isLoadingFilteredZombieLogs={isLoadingFilteredZombieLogs}
                   />
-                )}
-              </Row>
+                  <Row>
+                    {zombieLogs && machineUsers && (
+                      <LogsTable
+                        zombieLogs={zombieLogs}
+                        machineUsers={machineUsers}
+                      />
+                    )}
+                  </Row>
+                </>
+              )}
             </Card.Body>
           </Collapse>
         </Card>

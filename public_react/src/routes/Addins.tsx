@@ -37,6 +37,7 @@ const YearButton: React.FC<YearButtonProps> = ({
   );
   return (
     <ToggleButton
+      size="sm"
       type="radio"
       value={year}
       onClick={onClick}
@@ -108,9 +109,9 @@ const Addins: React.FC = () => {
     <Page title="Addins">
       <Card className="mb-4">
         <CardHeader>
-          <Card.Title>
+          <Card.Title className="d-flex align-items-center justify-content-between">
             Plugin Use Frequency:
-            <ButtonGroup className="float-end">
+            <ButtonGroup className="flex-end">
               {revitVersions.map((v) => (
                 <YearButton
                   key={v}

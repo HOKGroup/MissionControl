@@ -5,12 +5,17 @@ import PageTitle from "./PageTitle";
 
 interface PageProps {
   title: string;
+  isLoading?: boolean;
 }
 
-const Page: React.FC<PropsWithChildren<PageProps>> = ({ title, children }) => {
+const Page: React.FC<PropsWithChildren<PageProps>> = ({
+  title,
+  isLoading,
+  children
+}) => {
   return (
     <Container>
-      <PageTitle title={title} />
+      <PageTitle title={title} isLoading={isLoading} />
       {children}
     </Container>
   );

@@ -1,10 +1,10 @@
 import { Updater } from "@tanstack/react-table";
 import DebouncedInput from "components/DebouncedInput";
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 import Col from "react-bootstrap/Col";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import DropdownItem from "react-bootstrap/DropdownItem";
 import Row from "react-bootstrap/Row";
-import DropdownItem from "react-bootstrap/esm/DropdownItem";
 
 interface DatatableControlsProps {
   globalFilter: string;
@@ -72,4 +72,4 @@ const DatatableControls: React.FC<DatatableControlsProps> = ({
   );
 };
 
-export default DatatableControls;
+export default memo(DatatableControls);

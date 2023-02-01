@@ -1,3 +1,4 @@
+import Jumbotron from "components/Jumbotron";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -7,7 +8,7 @@ const Home: React.FC = () => {
   return (
     <Container>
       <Row>
-        <div className="bg-light p-5 rounded-lg">
+        <Jumbotron>
           <h1>HOK Mission Control</h1>
           <p>
             This web application has ability to interact with Revit Projects.{" "}
@@ -21,7 +22,7 @@ const Home: React.FC = () => {
               </Button>
             </LinkContainer>
           </p>
-        </div>
+        </Jumbotron>
       </Row>
     </Container>
   );

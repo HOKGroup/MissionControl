@@ -1,27 +1,28 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { apiHooks } from "api/api";
+import Page from "components/Page";
 import { useCallback } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import Select from "react-select";
 
-import Title from "./addProject/Title";
-
 interface FormInputs {
-  projectName: string;
   projectNumber: string;
-  state: string;
+  projectName: string;
   office: {
-    value: string[];
+    value: string;
     label: string;
   };
   street1?: string;
   street2?: string;
+  state: {
+    value: string;
+    label: string;
+  };
   zipCode?: string;
   country?: string;
 }
@@ -55,12 +56,13 @@ const AddProject: React.FC = () => {
   const onSubmit = useCallback(
     (data: FormInputs) => {
       mutate({
-        name: data.projectName,
         number: data.projectNumber,
-        office: data.office.value[0],
+        name: data.projectName,
+        office: data.office.value,
         address: {
           street1: data.street1,
           street2: data.street2,
+          state: data.state.value,
           zipCode: data.zipCode,
           country: data.country
         }
@@ -69,9 +71,13 @@ const AddProject: React.FC = () => {
     [mutate]
   );
 
+  const pageTitle =
+    projectName || projectNumber
+      ? [projectName, projectNumber].join(" ").trim()
+      : "New Project";
+
   return (
-    <Container>
-      <Title projectName={projectName} projectNumber={projectNumber} />
+    <Page title={pageTitle}>
       <Row>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Card>
@@ -174,12 +180,10 @@ const AddProject: React.FC = () => {
                       isSearchable={true}
                       isLoading={settingsIsLoading}
                       isDisabled={!settingsData}
-                      options={
-                        settingsData?.offices.map((office) => ({
-                          value: office.code[0],
-                          label: office.name
-                        })) as any
-                      }
+                      options={settingsData?.offices.map((office) => ({
+                        value: office.code[0],
+                        label: office.name
+                      }))}
                     />
                   )}
                 />
@@ -216,12 +220,10 @@ const AddProject: React.FC = () => {
                       isSearchable={true}
                       isLoading={settingsIsLoading}
                       isDisabled={!settingsData}
-                      options={
-                        settingsData?.states.map((state) => ({
-                          value: state,
-                          label: state
-                        })) as any
-                      }
+                      options={settingsData?.states.map((state) => ({
+                        value: state,
+                        label: state
+                      }))}
                     />
                   )}
                 />
@@ -271,7 +273,7 @@ const AddProject: React.FC = () => {
           </Card>
         </Form>
       </Row>
-    </Container>
+    </Page>
   );
 };
 

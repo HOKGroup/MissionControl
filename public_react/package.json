@@ -19,6 +19,7 @@
     "react-bootstrap": "^2.7.0",
     "react-day-picker": "^8.5.1",
     "react-dom": "^18.2.0",
+    "react-error-boundary": "^3.1.4",
     "react-hook-form": "^7.42.1",
     "react-popper": "^2.3.0",
     "react-router": "^6.7.0",

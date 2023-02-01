@@ -1,4 +1,5 @@
-import React, { memo, useState } from "react";
+import CardHeaderWithLoadingBar from "components/CardHeaderWithLoadingBar";
+import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
 import Collapse from "react-bootstrap/Collapse";
@@ -24,12 +25,14 @@ interface OfficeFilterProps {
   officeName: string;
   donutData: DonutData[];
   handleChartClick: (item: Office) => void;
+  isLoading: boolean;
 }
 
 const OfficeFilter: React.FC<OfficeFilterProps> = ({
   officeName,
   donutData,
-  handleChartClick
+  handleChartClick,
+  isLoading
 }) => {
   const [isCollapsed, setCollapsed] = useState(false);
   const [selectedBar, setSelectedBar] = useState(null as string | null);
@@ -38,9 +41,12 @@ const OfficeFilter: React.FC<OfficeFilterProps> = ({
     <Row>
       <CardGroup className="pb-4">
         <Card>
-          <Card.Header onClick={() => setCollapsed(!isCollapsed)}>
+          <CardHeaderWithLoadingBar
+            isLoading={isLoading}
+            onClick={() => setCollapsed(!isCollapsed)}
+          >
             <Card.Title>Office Filter: {officeName}</Card.Title>
-          </Card.Header>
+          </CardHeaderWithLoadingBar>
           <Collapse in={!isCollapsed}>
             <Card.Body>
               {donutData.length > 0 && (
@@ -101,4 +107,4 @@ const OfficeFilter: React.FC<OfficeFilterProps> = ({
   );
 };
 
-export default memo(OfficeFilter);
+export default OfficeFilter;

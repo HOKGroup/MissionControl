@@ -1,5 +1,5 @@
 import { ZombieLog } from "api/schema/zombieLogs";
-import LoadingBar from "components/LoadingBar";
+import CardHeaderWithLoadingBar from "components/CardHeaderWithLoadingBar";
 import useToggle from "hooks/useToggle";
 import Card from "react-bootstrap/Card";
 import CardGroup from "react-bootstrap/CardGroup";
@@ -25,12 +25,14 @@ const Selected: React.FC<SelectedProps> = ({
     <Row>
       <CardGroup>
         <Card>
-          <Card.Header onClick={toggleCollapsed}>
+          <CardHeaderWithLoadingBar
+            isLoading={isLoading}
+            onClick={toggleCollapsed}
+          >
             <Card.Title>Selected</Card.Title>
-          </Card.Header>
+          </CardHeaderWithLoadingBar>
           <Collapse in={!isCollapsed}>
             <Card.Body>
-              {isLoading && <LoadingBar />}
               {machineUsers && (
                 <MachinesTable
                   selectedMachines={selectedMachines || []}

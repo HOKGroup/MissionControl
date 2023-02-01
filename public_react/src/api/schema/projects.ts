@@ -1,13 +1,15 @@
 import { z } from "zod";
 
-export const address = z.object({
-  street1: z.optional(z.string()),
-  street2: z.optional(z.string()),
-  city: z.optional(z.string()),
-  state: z.optional(z.string()),
-  zipCode: z.optional(z.string()),
-  country: z.optional(z.string())
-});
+export const address = z
+  .object({
+    street1: z.string(),
+    street2: z.string(),
+    city: z.string(),
+    state: z.string(),
+    zipCode: z.string(),
+    country: z.string()
+  })
+  .partial();
 
 export type Address = z.infer<typeof address>;
 
