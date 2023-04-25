@@ -206,7 +206,7 @@ function ConfigController($routeParams, FilePathsFactory, ConfigFactory, Project
                     return file.centralPath;
                 },
                 id: function () {
-                    return file._id;
+                    return vm.selectedConfig._id;
                 }}
         }).result.then(function(request){
             if(!request) return;
