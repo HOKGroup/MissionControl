@@ -68,7 +68,7 @@ module.exports = function(app) {
     const config = require('./controller/configurations')
     app.get('/api/v2/configurations/centralpath/:uri*', config.findByCentralPath)
     app.put('/api/v2/configurations/:id', auth.protected, config.update)
-    app.put('/api/v2/configurations/:id/updatefilepath', auth.protected, config.updateFilePath)
+    app.put('/api/v2/configurations/:id/updatefilepath', config.updateFilePath)
     app.post('/api/v2/configurations', config.add)
     app.post('/api/v2/configurations/deletemany', config.deleteMany)
     app.post('/api/v2/configurations/:id/addfile', config.addFile)
