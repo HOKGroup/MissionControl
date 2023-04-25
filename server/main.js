@@ -17,12 +17,12 @@ const mongoose = require('mongoose')
 const { Server } = require('socket.io')
 const morgan = require('morgan')
 const path = require('path')
-const certificate = fs.readFileSync('./server/config/wildcardexp2023.pfx')
 
 const global = require('./controller/socket/global')
 const winston = require('./config/winston')
 
 const app = express()
+const isProd = process.env.NODE_ENV === 'production'
 
 mongoose.connect(process.env.DB_HOST)
 
@@ -75,14 +75,18 @@ app.use(function (err, req, res, _next) {
 })
 
 app.set('port', process.env.MC_PORT_HTTP || 8080)
-
-const passphrase = process.env.CERT_PASSPHRASE
-const credentials = { pfx: certificate, passphrase: passphrase }
-const httpsServer = https.createServer(credentials, app)
-httpsServer.listen(process.env.MC_POST_HTTPS || 443)
 const server = http.createServer(app)
+if (isProd) {
+    const certificate = fs.readFileSync('./server/config/wildcardexp2023.pfx')
+    const passphrase = process.env.CERT_PASSPHRASE
+    const credentials = { pfx: certificate, passphrase: passphrase }
+    const httpsServer = https.createServer(credentials, app)
+    httpsServer.listen(process.env.MC_POST_HTTPS || 443)
+    global.io = new Server(httpsServer, { allowEIO3: true })
+} else {
+    global.io = new Server(server, { allowEIO3: true })
+}
 
-global.io = new Server(httpsServer, { allowEIO3: true })
 global.io.on('connection', (socket) => {
     socket.on('room', (room) => {
         socket.join(room)
