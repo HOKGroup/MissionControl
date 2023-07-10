@@ -77,7 +77,7 @@ app.use(function (err, req, res, _next) {
 app.set('port', process.env.MC_PORT_HTTP || 8080)
 const server = http.createServer(app)
 if (isProd) {
-    const certificate = fs.readFileSync('./server/config/wildcardexp2023.pfx')
+    const certificate = fs.readFileSync(`./server/config/${process.env.CERT_FILENAME ?? 'certificate.pfx'}`)
     const passphrase = process.env.CERT_PASSPHRASE
     const credentials = { pfx: certificate, passphrase: passphrase }
     const httpsServer = https.createServer(credentials, app)
