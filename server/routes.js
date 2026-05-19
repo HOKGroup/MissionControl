@@ -40,7 +40,7 @@ const auth = require('./auth/azure-ad')
 module.exports = function(app) {
     const settings = require('./controller/settings')
     app.get('/api/v2/settings', settings.get)
-    app.put('/api/v2/settings/:id', auth.protected, settings.update)
+    app.put('/api/v2/settings/:id', auth.requireRole(process.env.AZUREAD_ADMIN_ROLE), settings.update)
 
     const projects = require('./controller/projects')
     app.get('/api/v2/projects/sort', projects.findAndSort)
@@ -67,7 +67,7 @@ module.exports = function(app) {
 
     const config = require('./controller/configurations')
     app.get('/api/v2/configurations/centralpath/:uri*', config.findByCentralPath)
-    app.put('/api/v2/configurations/:id', auth.protected, config.update)
+    app.put('/api/v2/configurations/:id', auth.requireRole(process.env.AZUREAD_ADMIN_ROLE), config.update)
     app.put('/api/v2/configurations/:id/updatefilepath', config.updateFilePath)
     app.post('/api/v2/configurations', config.add)
     app.post('/api/v2/configurations/deletemany', config.deleteMany)

@@ -12,6 +12,8 @@ const fs = require('fs')
 const http = require('http')
 const https = require('https')
 const express = require('express')
+const session = require('express-session')
+const MemoryStore = require('memorystore')(session)
 const cool = require('cool-ascii-faces')
 const mongoose = require('mongoose')
 const { Server } = require('socket.io')
@@ -20,9 +22,25 @@ const path = require('path')
 
 const global = require('./controller/socket/global')
 const winston = require('./config/winston')
+const authRouter = require('./auth/authRoutes')
+const isAuthenticated = require('./auth/authMiddleware')
 
 const app = express()
 const isProd = process.env.NODE_ENV === 'production'
+
+app.use(session({
+    secret: process.env.EXPRESS_SESSION_SECRET,
+    store: new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+    }),
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 86400000,
+        httpOnly: false,
+        secure: true
+    }
+}))
 
 mongoose.connect(process.env.DB_HOST)
 
@@ -38,15 +56,17 @@ app.use(express.json({ limit: '15mb' }))
 app.use(express.urlencoded({ extended: true, limit: '15mb' }))
 
 // set the static files location /public/img will be /img for users
-app.use(express.static(path.join(__dirname, '../public')))
+app.use(express.static(path.join(__dirname, '../public'), { index: false }))
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
 require('./routes')(app)
-app.get('/', function (_request, response) {
-    response.sendFile(path.join(__dirname, '../public/index.html'))
+app.use('/auth', authRouter)
+
+app.get('/', isAuthenticated, function (_request, response) {
+    response.sendFile(path.join(__dirname, '../server/index.html'))
 })
 
 app.get('/cool', function (_request, response) {
@@ -74,30 +94,21 @@ app.use(function (err, req, res, _next) {
     res.render('error')
 })
 
-app.set('port', process.env.MC_PORT_HTTP || 8080)
+app.set('port', process.env.MC_PORT_HTTP || 8081)
 const server = http.createServer(app)
 if (isProd) {
     const certificate = fs.readFileSync(`./server/config/${process.env.CERT_FILENAME ?? 'certificate.pfx'}`)
-    const passphrase = process.env.CERT_PASSPHRASE
-    const credentials = { pfx: certificate, passphrase: passphrase }
+    const key = fs.readFileSync(`./server/config/${process.env.KEY_FILENAME ?? 'certificate.key'}`)
+    const credentials = { cert: certificate, key }
     const httpsServer = https.createServer(credentials, app)
-    httpsServer.listen(process.env.MC_POST_HTTPS || 443)
+    httpsServer.listen(process.env.MC_PORT_HTTPS || 443)
     global.io = new Server(httpsServer, { allowEIO3: true })
 } else {
     global.io = new Server(server, { allowEIO3: true })
 }
 
 global.io.on('connection', (socket) => {
-    socket.on('room', (room) => {
-        socket.join(room)
-        console.log('Client has joined the room!')
-    })
-    socket.on('error', (err) => {
-        console.log(err)
-    })
-    socket.once('disconnect', (_client) => {
-        console.log('Client has left the room!')
-    })
+    socket.disconnect(true) // Drop socket connections, no longer being used
 })
 global.io.on('disconnect', (_socket) => {
     console.log('Server socket disconnected!')
