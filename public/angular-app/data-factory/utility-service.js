@@ -183,7 +183,7 @@ function UtilityService() {
          * @returns {[string,string,string,string,string,string]}
          */
         getRevitVersions: function () {
-            return ['All', '2017', '2018', '2019', '2020', '2021', '2022'];
+            return ['All', '2022', '2023', '2024', '2025', '2026'];
         }
     };
 }
