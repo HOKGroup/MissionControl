@@ -35,7 +35,7 @@ const MongooseModels = {
     users,
     settings
 }
-const auth = require('./auth/azure-ad')
+const auth = require('./auth/authMiddleware')
 
 module.exports = function(app) {
     const settings = require('./controller/settings')

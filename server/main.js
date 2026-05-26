@@ -107,8 +107,9 @@ if (isProd) {
     global.io = new Server(server, { allowEIO3: true })
 }
 
+// Drop socet connections, no longer being used
 global.io.on('connection', (socket) => {
-    socket.disconnect(true) // Drop socket connections, no longer being used
+    socket.disconnect(true)
 })
 global.io.on('disconnect', (_socket) => {
     console.log('Server socket disconnected!')
